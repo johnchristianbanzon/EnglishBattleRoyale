@@ -67,9 +67,9 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		if (dataSnapShot.Key.ToString ().Equals ("Home")) {
 			Debug.Log ("hi");
 			if (GameData.Instance.isHost) {
-				BattleView.Instance.SetStateParam (dataSnapShot, true);
+				BattleController.Instance.SetStateParam (dataSnapShot, true);
 			} else {
-				BattleView.Instance.SetStateParam (dataSnapShot, false);
+				BattleController.Instance.SetStateParam (dataSnapShot, false);
 			}
 		}
 		//TEMPORARY SOLUTION FOR PLAYER DETAILS
@@ -77,9 +77,9 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			isMatchMakeSuccess = true;
 			onSuccessMatchMake (true);
 			if (GameData.Instance.isHost) {
-				BattleView.Instance.SetStateParam (dataSnapShot, false);
+				BattleController.Instance.SetStateParam (dataSnapShot, false);
 			} else {
-				BattleView.Instance.SetStateParam (dataSnapShot, true);
+				BattleController.Instance.SetStateParam (dataSnapShot, true);
 			}
 			Debug.Log ("Matching Success!");
 		}

@@ -76,7 +76,7 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 			}
 
 			if (skill.skillKey == ParamNames.Recover.ToString ()) {
-				BattleView.Instance.PlayerHP += skill.skillValue;
+				BattleController.Instance.PlayerHP += skill.skillValue;
 				Debug.Log ("skill player " + skill.skillKey + " value " + skill.skillValue);
 			}
 		}
@@ -88,7 +88,7 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 
 		foreach (SkillParameter skill in skillResult.skillList) {
 			if (skill.skillKey == ParamNames.Recover.ToString ()) {
-				BattleView.Instance.EnemyHP += skill.skillValue;
+				BattleController.Instance.EnemyHP += skill.skillValue;
 				Debug.Log ("skill enemy " + skill.skillKey + " value " + skill.skillValue);
 			}
 		}

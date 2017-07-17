@@ -49,9 +49,9 @@ public class BattleStatusManager : SingletonMonoBehaviour<BattleStatusManager>, 
 					if (battleCount > 1) {
 						Debug.Log ("switching phases");
 						if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
-							PhaseManager.Instance.StartPhase3 ();
+							PhaseManager.StartPhase3 ();
 						} else {
-							PhaseManager.Instance.StartPhase2 ();
+							PhaseManager.StartPhase2 ();
 						}
 						SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 					} 
@@ -62,9 +62,9 @@ public class BattleStatusManager : SingletonMonoBehaviour<BattleStatusManager>, 
 					if (battleCount > 1) {
 						Debug.Log ("switching phases");
 						if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
-							PhaseManager.Instance.StartPhase2 ();
+							PhaseManager.StartPhase2 ();
 						} else {
-							PhaseManager.Instance.StartPhase3 ();
+							PhaseManager.StartPhase3 ();
 						}
 						SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 					}

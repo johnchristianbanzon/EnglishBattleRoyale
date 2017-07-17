@@ -17,7 +17,7 @@ public class PhaseSkillController : BasePhase
 
 	private void SkillButtonInteractable (int skillNumber, Button button)
 	{
-		if (SkillManager.Instance.GetSkill (skillNumber).skillGpCost > BattleView.Instance.PlayerGP) {
+		if (SkillManager.Instance.GetSkill (skillNumber).skillGpCost > BattleController.Instance.PlayerGP) {
 			button.interactable = false;
 		} else {
 			button.interactable = true;

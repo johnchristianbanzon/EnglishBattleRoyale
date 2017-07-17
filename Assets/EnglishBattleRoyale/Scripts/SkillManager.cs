@@ -65,7 +65,7 @@ public class SkillManager : SingletonMonoBehaviour<SkillManager>
 
 	IEnumerator StartSkillDeductDelay(SkillModel skill){
 		yield return new WaitForSeconds (0.5f);
-		BattleView.Instance.PlayerGP -= skill.skillGpCost;
+		BattleController.Instance.PlayerGP -= skill.skillGpCost;
 	}
 
 	/// <summary>
@@ -76,7 +76,7 @@ public class SkillManager : SingletonMonoBehaviour<SkillManager>
 	public void SetSkill (int skillIndex, SkillModel skill)
 	{
 		this.skill [skillIndex] = skill;
-		BattleView.Instance.SetSkillUI (skillIndex + 1, skill.skillName, skill.skillGpCost);
+		BattleController.Instance.SetSkillUI (skillIndex + 1, skill.skillName, skill.skillGpCost);
 	}
 
 	public SkillModel GetSkill (int skillNumber)
