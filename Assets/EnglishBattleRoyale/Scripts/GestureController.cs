@@ -37,30 +37,13 @@ public class GestureController : SingletonMonoBehaviour<GestureController>, IRPC
 	}
 
 
-	public void ShowPlayerGesture1 ()
+	public void ShowPlayerGesture (int gestureNum)
 	{
-		ShowGesture (true, "Gesture1");
+		ShowGesture (true, "Gesture" + gestureNum);
 
-		SendGesture (1);
+		SendGesture (gestureNum);
 	}
-
-	public void ShowPlayerGesture2 ()
-	{
-		ShowGesture (true, "Gesture2");
-		SendGesture (2);
-	}
-
-	public void ShowPlayerGesture3 ()
-	{
-		ShowGesture (true, "Gesture3");
-		SendGesture (3);
-	}
-
-	public void ShowPlayerGesture4 ()
-	{
-		ShowGesture (true, "Gesture4");
-		SendGesture (4);
-	}
+		
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
@@ -126,7 +109,7 @@ public class GestureController : SingletonMonoBehaviour<GestureController>, IRPC
 	private void ShowGesture (bool isPlayer, string param)
 	{
 		StartCoroutine (StartTimer (isPlayer));
-		CharacterAnimationController.Instance.SetTriggerAnim (isPlayer, param);
+		CharacterAvatarsController.Instance.SetTriggerAnim (isPlayer, param);
 		if (!isPlayer) {
 			CameraWorksController.Instance.ShowGestureCamera ();
 		}
