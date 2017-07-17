@@ -75,14 +75,14 @@ public class PhaseAnswerController : BasePhase
 		Debug.Log (GameData.Instance.gpEarned);
 
 		GameData.Instance.gpEarned = gp;
-		BattleView.Instance.PlayerGP += gp;
+		BattleController.Instance.PlayerGP += gp;
 		SystemFirebaseDBController.Instance.AnswerPhase (qtimeLeft, gp);
 
 		//for mode 3
 		FindObjectOfType<PhaseSkillController> ().CheckSkillActivate ();
 
 		if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
-			if (GameData.Instance.skillChosenCost <= BattleView.Instance.PlayerGP) {
+			if (GameData.Instance.skillChosenCost <= BattleController.Instance.PlayerGP) {
 				if (GameData.Instance.playerSkillChosen != null) {
 					GameData.Instance.playerSkillChosen ();
 				}
