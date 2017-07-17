@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: c50090eeee7e24247b95732af447ddd8
+timeCreated: 1500012377
+licenseType: Pro
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Geometos
+  fontNames:
+  - Geometos
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

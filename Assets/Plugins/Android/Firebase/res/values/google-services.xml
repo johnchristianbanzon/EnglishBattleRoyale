@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="firebase_database_url" translatable="false">https://chatprototype-39807.firebaseio.com</string>
+  <string name="gcm_defaultSenderId" translatable="false">1000480270026</string>
+  <string name="google_storage_bucket" translatable="false">chatprototype-39807.appspot.com</string>
+  <string name="project_id" translatable="false">chatprototype-39807</string>
+  <string name="google_api_key" translatable="false">AIzaSyARFKtruOMHmZ6SQUELCbvr5u0AUKEB-Gg</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyARFKtruOMHmZ6SQUELCbvr5u0AUKEB-Gg</string>
+  <string name="google_app_id" translatable="false">1:1000480270026:android:9c058d5450017d48</string>
+  <string name="default_web_client_id" translatable="false">1000480270026-hae9kp04aoupf2indbm1e1hak8b4hhq6.apps.googleusercontent.com</string>
+</resources>

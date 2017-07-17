@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 0c157288816fd4ad5a74e85ad59684e5
+timeCreated: 1500019838
+licenseType: Pro
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: KG Inimitable Original
+  fontNames:
+  - KG Inimitable Original
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

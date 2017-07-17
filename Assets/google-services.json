@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1000480270026",
+    "firebase_url": "https://chatprototype-39807.firebaseio.com",
+    "project_id": "chatprototype-39807",
+    "storage_bucket": "chatprototype-39807.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000480270026:android:9c058d5450017d48",
+        "android_client_info": {
+          "package_name": "com.chatprototype.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000480270026-hae9kp04aoupf2indbm1e1hak8b4hhq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARFKtruOMHmZ6SQUELCbvr5u0AUKEB-Gg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
