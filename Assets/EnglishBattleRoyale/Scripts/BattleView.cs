@@ -39,6 +39,9 @@ public class BattleView : SingletonMonoBehaviour<BattleView>
 	public Text backToLobbyText;
 	public Image backToLobbyImage;
 
+	private int timeLeft = 3;
+	private bool stoptimer = true;
+
 	public int PlayerHP {
 		get{ return playerHP; }
 		set {
@@ -85,6 +88,39 @@ public class BattleView : SingletonMonoBehaviour<BattleView>
 	public void ReturnToLobby ()
 	{
 		SceneManager.LoadScene ("scene1");
+	}
+
+	void Start(){
+		SystemLoadScreenController.Instance.StopLoadingScreen ();
+		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
+		StartPreTimer ();
+		CameraWorksController.Instance.StartIntroCamera ();
+	}
+
+	/// <summary>
+	/// Delay before start of battle
+	/// </summary>
+	public void StartPreTimer ()
+	{
+		timeLeft = 3;
+		stoptimer = true;
+		InvokeRepeating ("StartTimer", 0, 1);
+	}
+
+	private void StartTimer ()
+	{
+		if (stoptimer) {
+			GameTimerView.Instance.ToggleTimer (true);
+			if (timeLeft > 0) {
+				GameTimerView.Instance.gameTimerText.text = "" + timeLeft;
+				timeLeft--;
+				return;
+			} 
+			PhaseManager.Instance.StartPhase1 ();
+			GameTimerView.Instance.ToggleTimer (false);
+			stoptimer = false;
+			CancelInvoke ("StartTimer");
+		}
 	}
 
 
