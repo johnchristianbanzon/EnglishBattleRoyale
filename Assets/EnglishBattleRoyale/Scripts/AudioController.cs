@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 public class AudioController: SingletonMonoBehaviour<AudioController>
 {
-	public AudioSource bgm;
+	public AudioSource bgmBattle;
 	public AudioSource clickButton;
 	public AudioSource attack;
 	public AudioSource lose;
@@ -16,7 +16,7 @@ public class AudioController: SingletonMonoBehaviour<AudioController>
 	{
 		switch (audioName) {
 		case AudioEnum.Bgm:
-			bgm.Play ();
+			bgmBattle.Play ();
 			break;
 		case AudioEnum.ClickButton:
 			clickButton.Play ();
