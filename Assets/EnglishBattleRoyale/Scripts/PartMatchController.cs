@@ -6,13 +6,8 @@ using System.Collections.Generic;
 /* UI For searching matches */
 public class PartMatchController : SingletonMonoBehaviour<PartMatchController>
 {
-	public GameObject gameRoomUI;
-	public GameObject lobbyRoom;
-	public GameObject gameRoomAssets;
 	public ToggleGroup toggleGroup;
-	public GameObject roomViews;
-	private int timeLeft = 3;
-	private bool stoptimer = true;
+
 	public GameObject matchSword;
 	public Text matchingText;
 	public GameObject menu;
@@ -76,49 +71,18 @@ public class PartMatchController : SingletonMonoBehaviour<PartMatchController>
 
 	public void CancelRoomSearch ()
 	{
-//		FDController.Instance.CancelRoomSearch ();
+		SystemFirebaseDBController.Instance.CancelRoomSearch ();
 	}
 
 
 	private void GoToGameRoom ()
 	{
-		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
-		lobbyRoom.SetActive (false);
-		roomViews.SetActive (false);
-		gameRoomUI.SetActive (true);
-		gameRoomAssets.SetActive (true);
-		SystemLoadScreenController.Instance.StopLoadingScreen ();
-		StartPreTimer ();
-		CameraWorksController.Instance.StartIntroCamera ();
 		RPCDicObserver.AddObserver (GestureController.Instance);
 		RPCDicObserver.AddObserver (BattleStatusManager.Instance);
 		RPCDicObserver.AddObserver(SkillActivator.Instance);
+		SystemScreenController.Instance.ShowScreen ("ScreenBattle");
 	}
 
-	/// <summary>
-	/// Delay before start of battle
-	/// </summary>
-	public void StartPreTimer ()
-	{
-		timeLeft = 3;
-		stoptimer = true;
-		InvokeRepeating ("StartTimer", 0, 1);
-	}
 
-	private void StartTimer ()
-	{
-		if (stoptimer) {
-			GameTimerView.Instance.ToggleTimer (true);
-			if (timeLeft > 0) {
-				GameTimerView.Instance.gameTimerText.text = "" + timeLeft;
-				timeLeft--;
-				return;
-			} 
-			PhaseManager.Instance.StartPhase1 ();
-			GameTimerView.Instance.ToggleTimer (false);
-			stoptimer = false;
-			CancelInvoke ("StartTimer");
-		}
-	}
 
 }
