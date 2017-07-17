@@ -229,7 +229,7 @@ public class SystemBattleManager: SingletonMonoBehaviour<SystemBattleManager>, I
 	private void StartAttackSequenceReduce (AudioEnum audioType, bool isPlayer, string animParam)
 	{
 
-		CharacterAnimationController.Instance.SetTriggerAnim (isPlayer, animParam);
+		CharacterAvatarsController.Instance.SetTriggerAnim (isPlayer, animParam);
 		AudioController.Instance.PlayAudio (audioType);
 	}
 

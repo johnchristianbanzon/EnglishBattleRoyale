@@ -176,8 +176,8 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 
 	public void ShowWinLose (string param1, string param2, string param3, AudioEnum param4)
 	{
-		CharacterAnimationController.Instance.SetTriggerAnim (true, param1);
-		CharacterAnimationController.Instance.SetTriggerAnim (false, param2);
+		CharacterAvatarsController.Instance.SetTriggerAnim (true, param1);
+		CharacterAvatarsController.Instance.SetTriggerAnim (false, param2);
 		battleResultText.text = param3;
 		battleResultText.enabled = true;
 		backToLobbyButton.enabled = true;

@@ -126,9 +126,9 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 	private void SetAnimation (string animationName)
 	{
 		if (GameData.Instance.attackerBool.Equals (GameData.Instance.isHost)) {
-			CharacterAnimationController.Instance.SetTriggerAnim (true, animationName);
+			CharacterAvatarsController.Instance.SetTriggerAnim (true, animationName);
 		} else {
-			CharacterAnimationController.Instance.SetTriggerAnim (false, animationName);
+			CharacterAvatarsController.Instance.SetTriggerAnim (false, animationName);
 		}
 	
 	}
