@@ -67,7 +67,7 @@ public class PartMatchController : SingletonMonoBehaviour<PartMatchController>
 				modeChosen = ModeEnum.Mode2;
 				break;
 			}
-			GameData.Instance.modePrototype = modeChosen;
+			GlobalDataManager.modePrototype = modeChosen;
 		}
 	}
 

@@ -8,7 +8,7 @@ public class SystemScreenController : SingletonMonoBehaviour<SystemScreenControl
 
 	public void ShowScreen(string screenName){
 		ClearAllScreen ();
-		screenObject = SystemPrefabController.Instance.LoadPrefab (screenName,screen);
+		screenObject = SystemResourceController.Instance.LoadPrefab (screenName,screen);
 	}
 
 	public void ClearScreen(string screenName){

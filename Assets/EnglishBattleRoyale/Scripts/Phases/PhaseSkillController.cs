@@ -29,7 +29,7 @@ public class PhaseSkillController : BasePhase
 	{
 		if (!activateAutoSkill) {
 			Debug.Log ("Starting Skill Phase");
-			if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+			if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
 				ButtonEnable (true);
 			} else {
 				SkillButtonInteractable (1, skillButton [0]);
@@ -138,7 +138,7 @@ public class PhaseSkillController : BasePhase
 			SkillManager.ActivateSkill (skillNumber);
 
 		}, delegate() {
-			GameData.Instance.skillChosenCost = SkillManager.GetSkill (skillNumber).skillGpCost;
+			GlobalDataManager.skillChosenCost = SkillManager.GetSkill (skillNumber).skillGpCost;
 
 		});
 
@@ -150,8 +150,8 @@ public class PhaseSkillController : BasePhase
 			activateSkill ();
 		} else {
 			//change to mode 2
-			if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
-				GameData.Instance.playerSkillChosen = delegate() {
+			if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
+				GlobalDataManager.playerSkillChosen = delegate() {
 					activateSkill ();
 				};
 				skillCost ();

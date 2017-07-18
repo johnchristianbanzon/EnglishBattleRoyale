@@ -1,38 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 /* Sets initial game preferences*/
-public class GameController : SingletonMonoBehaviour<GameController>
+public static class GameManager
 {
-	[SerializeField] private int playerLife = 45;
-	[SerializeField] private int answerQuestionTime = 25;
-	[SerializeField] private int playerGP = 0;
-	[SerializeField] private int playerMaxGP = 9;
-	[SerializeField] private float playerDamage = 4;
-	public InputField gameName;
+	private static PlayerModel player;
+	private static int answerQuestionTime;
+	private static List<List<string>> gameSettingList;
 
-	void Start ()
-	{
-		gameName.text = PlayerPrefs.GetString ("GameName", "");
-		GameData.Instance.modePrototype = ModeEnum.Mode1;
+	public static void SetSettings(){
+		gameSettingList = CSVParser.ParseCSV ("GameSettings");
+		player.playerName = ScreenLobbyController.Instance.GetPlayerName ();
 	}
 
-	public void UpdateGame ()
-	{
-		PlayerPrefs.SetString ("GameName", gameName.text);
-
-		PlayerModel player = new PlayerModel (gameName.text, playerLife, playerGP, playerMaxGP, playerDamage);
-		GameData.Instance.player = player;
-
-		GameData.Instance.answerQuestionTime = answerQuestionTime;
-	}
-
-	public void ResetPlayerDamage ()
-	{
-		GameData.Instance.player.playerDamage = playerDamage;
+	public static PlayerModel GetPlayer(){
+		return player;
 	}
 
 
+		
 }
 
 

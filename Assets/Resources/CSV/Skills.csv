@@ -1,0 +1,2 @@
+SkillName,SkillDescription,SkillGPCost,SkillParam
+Sunder,sunder skill,10,"{\""skillList\"":[{\""skillKey\"":\""Recover\"",\""skillValue\"":10}, {\""skillKey\"":\""Damage\"",\""skillValue\"":15}]}"

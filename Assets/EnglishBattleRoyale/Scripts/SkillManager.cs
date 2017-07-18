@@ -8,9 +8,18 @@ public static class SkillManager
 
 	public static List<SkillModel> skillList = new List<SkillModel> ();
 
+	private static List<List<string>> csvSkillList;
+
+
+	public static void SetSkills(){
+		csvSkillList = CSVParser.ParseCSV ("Skills");
+	}
+
 	//TESTING ONLY!!!!
 	static void Start ()
 	{
+
+
 		//test skill 1
 		List<SkillParameter> skillData1 = new List<SkillParameter> ();
 		skillData1.Add (new SkillParameter (ParamNames.Damage.ToString(), 10));
@@ -55,7 +64,7 @@ public static class SkillManager
 	{
 		BattleController.Instance.PlayerGP -= skillmodel.skillGpCost;
 		SystemFirebaseDBController.Instance.SetSkillParam (skillmodel);
-		if (GameData.Instance.modePrototype == ModeEnum.Mode1) {
+		if (GlobalDataManager.modePrototype == ModeEnum.Mode1) {
 			SystemFirebaseDBController.Instance.SkillPhase ();
 		} 
 	}
