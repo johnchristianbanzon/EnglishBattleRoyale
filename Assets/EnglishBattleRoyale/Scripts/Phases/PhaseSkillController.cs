@@ -7,17 +7,18 @@ public class PhaseSkillController : BasePhase
 {
 	public bool activateAutoSkill;
 	public Button[] skillButton;
-	public GameObject skillDescription;
-	public Text skillDescriptionText;
 	public Button attackButton;
 	private bool[] skillButtonToggleOn = new bool[3];
-	public GameObject[] skillToggleEffect;
 
-
+	void Start(){
+		skillButtonToggleOn [0] = false;
+		skillButtonToggleOn [1] = false;
+		skillButtonToggleOn [2] = false;
+	}
 
 	private void SkillButtonInteractable (int skillNumber, Button button)
 	{
-		if (SkillManager.Instance.GetSkill (skillNumber).skillGpCost > BattleController.Instance.PlayerGP) {
+		if (SkillManager.GetSkill (skillNumber).skillGpCost > BattleController.Instance.PlayerGP) {
 			button.interactable = false;
 		} else {
 			button.interactable = true;
@@ -27,18 +28,18 @@ public class PhaseSkillController : BasePhase
 	public override void OnStartPhase ()
 	{
 		if (!activateAutoSkill) {
-		Debug.Log ("Starting Skill Phase");
-		if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
-			ButtonEnable (true);
-		} else {
-			SkillButtonInteractable (1, skillButton [0]);
-			SkillButtonInteractable (2, skillButton [1]);
-			SkillButtonInteractable (3, skillButton [2]);
-		}
+			Debug.Log ("Starting Skill Phase");
+			if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+				ButtonEnable (true);
+			} else {
+				SkillButtonInteractable (1, skillButton [0]);
+				SkillButtonInteractable (2, skillButton [1]);
+				SkillButtonInteractable (3, skillButton [2]);
+			}
 
 			attackButton.interactable = true;
 			attackButton.gameObject.SetActive (true);
-		
+
 			timeLeft = 5;
 			stoptimer = true;
 			InvokeRepeating ("StartTimer", 0, 1);
@@ -83,7 +84,7 @@ public class PhaseSkillController : BasePhase
 	{
 		if (activateAutoSkill) {
 			skillButtonToggleOn [skillNumber -1] = !skillButtonToggleOn [skillNumber -1];
-			ActivateSkillIndicator(skillNumber);
+			ActivateSkillIndicator(skillNumber-1);
 		} else {
 			if (skillButton [skillNumber - 1].interactable) {
 				TweenLogic.TweenScaleToLarge (EventSystem.current.currentSelectedGameObject.transform, Vector3.one, 0.3f);
@@ -94,7 +95,15 @@ public class PhaseSkillController : BasePhase
 	}
 
 	private void ActivateSkillIndicator(int skillNumber){
-		skillToggleEffect [skillNumber].SetActive (skillButtonToggleOn[skillNumber]);
+		if (skillButtonToggleOn [skillNumber]) {
+			//if clicked
+			skillButton [skillNumber].GetComponent<Outline>() .enabled = true;
+			skillButton [skillNumber].GetComponent<Outline>() .effectColor = new Color32 (255,96,26,255);
+
+		} else {
+			//if not
+			skillButton [skillNumber].GetComponent<Outline>() .enabled = false;
+		}
 	}
 
 	public void CheckSkillActivate ()
@@ -109,33 +118,30 @@ public class PhaseSkillController : BasePhase
 	}
 
 
-	public void SkillDescription (int skillNumber)
+	public void ShowSkillDescription (int skillNumber)
 	{
-		SkillDescriptionReduce (SkillManager.Instance.GetSkill (skillNumber).skillDescription, true);
+		SkillDescriptionReduce (SkillManager.GetSkill (skillNumber).skillDescription, true);
 
 	}
 
 	private void SkillDescriptionReduce (string description, bool isShow)
 	{
-		skillDescriptionText.text = description;
-		skillDescription.SetActive (isShow);
+		GameObject skillDescription = SystemPopupController.Instance.ShowPopUp ("PopUpSkillDescription");
+		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (description);
 	}
 
-	public void CloseDescription ()
-	{
-		skillDescription.SetActive (false);
-	}
+
 
 	private void SelectSkillReduce (int skillNumber)
 	{
 		SelectSkillActivate (delegate() {
-			SkillManager.Instance.ActivateSkill (skillNumber);
+			SkillManager.ActivateSkill (skillNumber);
 
 		}, delegate() {
-			GameData.Instance.skillChosenCost = SkillManager.Instance.GetSkill (skillNumber).skillGpCost;
+			GameData.Instance.skillChosenCost = SkillManager.GetSkill (skillNumber).skillGpCost;
 
 		});
-	
+
 	}
 
 	private void SelectSkillActivate (Action activateSkill, Action skillCost)
@@ -171,13 +177,13 @@ public class PhaseSkillController : BasePhase
 			} 
 			ButtonEnable (false);
 			GameTimerView.Instance.ToggleTimer (false);
-				
+
 			SystemFirebaseDBController.Instance.SkillPhase ();
 			Debug.Log ("stopped phase2 timer");
 			stoptimer = false;
 
 		}
 	}
-		
+
 
 }

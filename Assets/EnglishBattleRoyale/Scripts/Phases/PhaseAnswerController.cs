@@ -32,11 +32,9 @@ public class PhaseAnswerController : BasePhase
 		CancelInvoke ("StartTimer");
 	}
 
-	public void OnQuestionSelect ()
+	public void OnQuestionSelect (int questionNumber)
 	{
 		stoptimer = false;
-		string questionSelectedName = EventSystem.current.currentSelectedGameObject.name;
-		int questionNumber = Int32.Parse (questionSelectedName [questionSelectedName.Length - 1].ToString ()) - 1;	
 		hasAnswered = true;
 		questionSelect.SetActive (false);
 		//call question callback here

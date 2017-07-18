@@ -1,18 +1,15 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
 
-
-public class SkillManager : SingletonMonoBehaviour<SkillManager>
+public static class SkillManager
 {
 	
-	private SkillModel[] skill = new SkillModel[3];
+	private static SkillModel[] skill = new SkillModel[3];
 
-	public List<SkillModel> skillList = new List<SkillModel> ();
+	public static List<SkillModel> skillList = new List<SkillModel> ();
 
 	//TESTING ONLY!!!!
-	void Start ()
+	static void Start ()
 	{
 		//test skill 1
 		List<SkillParameter> skillData1 = new List<SkillParameter> ();
@@ -49,23 +46,18 @@ public class SkillManager : SingletonMonoBehaviour<SkillManager>
 	/// <summary>
 	/// Activates the skills.
 	/// </summary>
-	public void ActivateSkill (int skillNumber)
+	public static void ActivateSkill (int skillNumber)
 	{
 		StartSkill (skill [skillNumber - 1]);
 	}
 
-	public void StartSkill (SkillModel skill)
+	public static void StartSkill (SkillModel skillmodel)
 	{
-		StartCoroutine (StartSkillDeductDelay(skill));
-		SystemFirebaseDBController.Instance.SetSkillParam (skill);
+		BattleController.Instance.PlayerGP -= skillmodel.skillGpCost;
+		SystemFirebaseDBController.Instance.SetSkillParam (skillmodel);
 		if (GameData.Instance.modePrototype == ModeEnum.Mode1) {
 			SystemFirebaseDBController.Instance.SkillPhase ();
 		} 
-	}
-
-	IEnumerator StartSkillDeductDelay(SkillModel skill){
-		yield return new WaitForSeconds (0.5f);
-		BattleController.Instance.PlayerGP -= skill.skillGpCost;
 	}
 
 	/// <summary>
@@ -73,13 +65,13 @@ public class SkillManager : SingletonMonoBehaviour<SkillManager>
 	/// </summary>
 	/// <param name="skill1">Skill1.</param>
 
-	public void SetSkill (int skillIndex, SkillModel skill)
+	public static void SetSkill (int skillIndex, SkillModel skillmodel)
 	{
-		this.skill [skillIndex] = skill;
-		BattleController.Instance.SetSkillUI (skillIndex + 1, skill.skillName, skill.skillGpCost);
+		skill [skillIndex] = skillmodel;
+		BattleController.Instance.SetSkillUI (skillIndex + 1, skillmodel.skillName, skillmodel.skillGpCost);
 	}
 
-	public SkillModel GetSkill (int skillNumber)
+	public static SkillModel GetSkill (int skillNumber)
 	{
 		return skill [skillNumber -1];
 	}

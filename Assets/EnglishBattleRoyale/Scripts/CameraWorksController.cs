@@ -5,13 +5,13 @@ public class CameraWorksController: SingletonMonoBehaviour<CameraWorksController
 	public GameObject gestureCamera;
 
 	public void StartIntroCamera(){
-		introCamera.SetActive (true);
-		winLoseCamera.SetActive (false);
+//		introCamera.SetActive (true);
+//		winLoseCamera.SetActive (false);
 	}
 
 	public void StartWinLoseCamera(){
-		introCamera.SetActive (false);
-		winLoseCamera.SetActive (true);
+//		introCamera.SetActive (false);
+//		winLoseCamera.SetActive (true);
 	}
 
 	public void ShowGestureCamera(){

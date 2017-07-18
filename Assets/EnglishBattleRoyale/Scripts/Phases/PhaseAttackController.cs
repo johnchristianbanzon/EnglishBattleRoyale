@@ -9,7 +9,7 @@ public class PhaseAttackController : BasePhase
 		FindObjectOfType<PhaseSkillController> ().ShowAutoActivateButtons (false);
 		Debug.Log ("Starting attack phase");
 		AnswerIndicatorController.Instance.ResetAnswer ();
-		RPCDicObserver.AddObserver (SystemBattleManager.Instance);
+		RPCDicObserver.AddObserver (ScreenBattleController.Instance);
 		GameTimerView.Instance.ToggleTimer (false);
 		stoptimer = true;
 		timeLeft = 20;
@@ -27,7 +27,7 @@ public class PhaseAttackController : BasePhase
 
 	public override void OnEndPhase(){
 		FindObjectOfType<PhaseSkillController> ().ShowAutoActivateButtons (true);
-		RPCDicObserver.RemoveObserver (SystemBattleManager.Instance);
+		RPCDicObserver.RemoveObserver (ScreenBattleController.Instance);
 		CancelInvoke ("StartTimer");
 	}
 
