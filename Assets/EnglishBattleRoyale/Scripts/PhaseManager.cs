@@ -3,7 +3,7 @@ public static class PhaseManager
 {
 	public static void StartPhase1 ()
 	{
-		if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+		if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
 			PhaseActivate (false, true, false);
 		} else {
 
@@ -14,7 +14,7 @@ public static class PhaseManager
 	public static void StartPhase2 ()
 	{
 		
-		if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+		if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
 			PhaseActivate (true, false, false);
 		} else {
 			PhaseActivate (false, true, false);

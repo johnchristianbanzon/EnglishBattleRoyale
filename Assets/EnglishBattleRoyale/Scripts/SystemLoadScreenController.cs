@@ -17,7 +17,7 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 	public void StartLoadingScreen(Action action){
 		ClearAllLoadingScreen ();
 
-		loadingScreen = SystemPrefabController.Instance.LoadPrefab (LOADING_SCREEN,loadScreen);
+		loadingScreen = SystemResourceController.Instance.LoadPrefab (LOADING_SCREEN,loadScreen);
 		action ();
 	}
 		
@@ -29,7 +29,7 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 	public void StartWaitOpponentScreen(){
 		ClearAllLoadingScreen ();
 
-		waitOpponent = SystemPrefabController.Instance.LoadPrefab (WAIT_OPPONENT,loadScreen);
+		waitOpponent = SystemResourceController.Instance.LoadPrefab (WAIT_OPPONENT,loadScreen);
 		TweenLogic.TweenScaleToNormal (waitOpponentTweenTime, waitOpponent,waitOpponent.transform.Find("LoadingIndicator").gameObject);
 
 	}

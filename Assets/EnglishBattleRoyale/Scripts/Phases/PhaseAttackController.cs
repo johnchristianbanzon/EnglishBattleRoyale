@@ -20,7 +20,7 @@ public class PhaseAttackController : BasePhase
 	public void Attack ()
 	{
 		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-		param [ParamNames.Attack.ToString ()] = GameData.Instance.player.playerDamage + GameData.Instance.gpEarned;
+		param [ParamNames.Attack.ToString ()] = GlobalDataManager.player.playerBaseDamage + GlobalDataManager.gpEarned;
 		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel(JsonConverter.DicToJsonStr(param)));
 	}
 

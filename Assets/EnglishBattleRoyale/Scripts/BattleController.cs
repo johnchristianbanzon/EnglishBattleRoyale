@@ -153,11 +153,11 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 		this.playerHP = playerHP;
 		this.playerName = playerName;
 		this.playerGP = playerGP;
-		playerGPBar.maxValue = GameData.Instance.player.playerMaxGP;
+		playerGPBar.maxValue = GlobalDataManager.player.playerMaxGP;
 		playerGPBar.value = 0;
 		playerMaxHP = playerHP;
 		playerHPBar.maxValue = playerMaxHP;
-		playerMaxGP = GameData.Instance.player.playerMaxGP;
+		playerMaxGP = GlobalDataManager.player.playerMaxGP;
 	}
 
 	public void SetInitialEnemyState (string enemyName, int enemyHP)

@@ -38,7 +38,7 @@ public class PhaseAnswerController : BasePhase
 		hasAnswered = true;
 		questionSelect.SetActive (false);
 		//call question callback here
-		QuestionManager.Instance.SetQuestionEntry (questionNumber, GameData.Instance.answerQuestionTime, delegate(int gp, int qtimeLeft) {
+		QuestionManager.Instance.SetQuestionEntry (questionNumber, GlobalDataManager.answerQuestionTime, delegate(int gp, int qtimeLeft) {
 			QuestionStart (gp, qtimeLeft);
 		});
 
@@ -56,7 +56,7 @@ public class PhaseAnswerController : BasePhase
 			} 
 
 			HideUI ();
-			QuestionManager.Instance.SetQuestionEntry (UnityEngine.Random.Range (0, 2), GameData.Instance.answerQuestionTime, delegate(int gp, int qtimeLeft) {
+			QuestionManager.Instance.SetQuestionEntry (UnityEngine.Random.Range (0, 2), GlobalDataManager.answerQuestionTime, delegate(int gp, int qtimeLeft) {
 				
 				QuestionStart (gp, qtimeLeft);
 			});
@@ -70,19 +70,19 @@ public class PhaseAnswerController : BasePhase
 	private void QuestionStart (int gp, int qtimeLeft)
 	{
 		Debug.Log (gp);
-		Debug.Log (GameData.Instance.gpEarned);
+		Debug.Log (GlobalDataManager.gpEarned);
 
-		GameData.Instance.gpEarned = gp;
+		GlobalDataManager.gpEarned = gp;
 		BattleController.Instance.PlayerGP += gp;
 		SystemFirebaseDBController.Instance.AnswerPhase (qtimeLeft, gp);
 
 		//for mode 3
 		FindObjectOfType<PhaseSkillController> ().CheckSkillActivate ();
 
-		if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
-			if (GameData.Instance.skillChosenCost <= BattleController.Instance.PlayerGP) {
-				if (GameData.Instance.playerSkillChosen != null) {
-					GameData.Instance.playerSkillChosen ();
+		if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
+			if (GlobalDataManager.skillChosenCost <= BattleController.Instance.PlayerGP) {
+				if (GlobalDataManager.playerSkillChosen != null) {
+					GlobalDataManager.playerSkillChosen ();
 				}
 			} else {
 				Debug.Log ("LESS GP CANNOT ACTIVATE SKILL");

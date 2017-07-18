@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenLobbyController : MonoBehaviour {
+public class ScreenLobbyController : SingletonMonoBehaviour<ScreenLobbyController> {
 	public GameObject partSkill;
 	public GameObject homeGroup;
 	public GameObject partMatch;
@@ -12,6 +12,12 @@ public class ScreenLobbyController : MonoBehaviour {
 	public GameObject homeButton;
 	public GameObject lobbyView;
 	public GameObject menuIndicator;
+	public InputField playerName;
+
+	public string GetPlayerName(){
+		return playerName.text;
+	}
+
 
 	public void LerpProfileView(Button start){
 		TweenLogic.TweenMoveTo(homeGroup.transform, -partProfile.transform.localPosition, 0.3f);

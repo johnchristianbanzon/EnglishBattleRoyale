@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SystemPrefabController : SingletonMonoBehaviour<SystemPrefabController>
+public class SystemResourceController : SingletonMonoBehaviour<SystemResourceController>
 {
 	public GameObject LoadPrefab (string prefabName, GameObject parentObject)
 	{
@@ -8,4 +8,13 @@ public class SystemPrefabController : SingletonMonoBehaviour<SystemPrefabControl
 		prefabObject.transform.SetParent (parentObject.transform, false);
 		return prefabObject;
 	}
+
+	public TextAsset LoadCSV (string csvName){
+		TextAsset csvObject = Resources.Load (csvName) as TextAsset;
+		return csvObject;
+	}
+
+
+
+
 }

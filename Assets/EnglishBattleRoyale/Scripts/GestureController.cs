@@ -51,12 +51,12 @@ public class GestureController : SingletonMonoBehaviour<GestureController>, IRPC
 		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 		if (rpcReceive.ContainsKey ("param")) {
 			bool userHome = (bool)rpcReceive ["userHome"];
-			GameData.Instance.attackerBool = userHome;
+				GlobalDataManager.attackerBool = userHome;
 
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 			if (param.ContainsKey ("Gesture")) {
 				string stringParam = param ["Gesture"].ToString ();
-				if (GameData.Instance.attackerBool.Equals (!GameData.Instance.isHost))
+					if (GlobalDataManager.attackerBool.Equals (!GlobalDataManager.isHost))
 					SetEnemyGesture (stringParam);
 			}
 		}

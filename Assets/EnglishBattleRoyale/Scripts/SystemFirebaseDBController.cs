@@ -66,7 +66,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		//TEMPORARY SOLUTION FOR PLAYER DETAILS
 		if (dataSnapShot.Key.ToString ().Equals ("Home")) {
 			Debug.Log ("hi");
-			if (GameData.Instance.isHost) {
+			if (GlobalDataManager.isHost) {
 				BattleController.Instance.SetStateParam (dataSnapShot, true);
 			} else {
 				BattleController.Instance.SetStateParam (dataSnapShot, false);
@@ -76,7 +76,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		if (dataSnapShot.Key.ToString ().Equals ("Visitor")) {
 			isMatchMakeSuccess = true;
 			onSuccessMatchMake (true);
-			if (GameData.Instance.isHost) {
+			if (GlobalDataManager.isHost) {
 				BattleController.Instance.SetStateParam (dataSnapShot, false);
 			} else {
 				BattleController.Instance.SetStateParam (dataSnapShot, true);
@@ -93,9 +93,9 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 				foreach (DataSnapshot snapshot in dataSnapshot.Children) {
 				
 					//get prototype mode type from host
-					GameData.Instance.modePrototype = (ModeEnum)int.Parse (snapshot.Child (MyConst.GAMEROOM_PROTOTYPE_MODE).Value.ToString ());
+					GlobalDataManager.modePrototype = (ModeEnum)int.Parse (snapshot.Child (MyConst.GAMEROOM_PROTOTYPE_MODE).Value.ToString ());
 
-					GameController.Instance.UpdateGame ();
+					GameManager.SetSettings();
 
 					if (snapshot.Child (MyConst.GAMEROOM_STATUS).Value.ToString ().Equals ("0")) {
 
@@ -128,20 +128,20 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	private void CreateRoom ()
 	{
-		GameController.Instance.UpdateGame ();
+		GameManager.SetSettings();
 		gameRoomKey = FirebaseDBManager.CreateKey (reference.Child (MyConst.GAMEROOM_NAME));
 		RoomCreateJoin (true, MyConst.GAMEROOM_HOME);
 
 		//set prototype mode type
-		FirebaseDBManager.SetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_PROTOTYPE_MODE), "" + (int)GameData.Instance.modePrototype);
+		FirebaseDBManager.SetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_PROTOTYPE_MODE), "" + (int)GlobalDataManager.modePrototype);
 	}
 
 	public void CancelRoomSearch ()
 	{
 		if (!isMatchMakeSuccess) {
-			if (GameData.Instance.isHost) {
+			if (GlobalDataManager.isHost) {
 				DeleteRoom ();
-				GameData.Instance.isHost = false;
+				GlobalDataManager.isHost = false;
 				//return;
 			} 
 		}
@@ -192,10 +192,10 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	private void RoomCreateJoin (bool isHost, string userPlace)
 	{
-		GameData.Instance.isHost = isHost;
+		GlobalDataManager.isHost = isHost;
 		RPCListener ();
 
-		Dictionary<string, System.Object> entryValues = GameData.Instance.player.ToDictionary ();
+		Dictionary<string, System.Object> entryValues = GlobalDataManager.player.ToDictionary ();
 
 		string directory = MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_INITITAL_STATE + "/" + userPlace + "/param/";
 		FirebaseDBManager.CreateTableChildrenAsync (directory, reference, entryValues);
@@ -224,9 +224,9 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 
 			if (dataSnapshot.Value == null) {
-				if (GameData.Instance.modePrototype == ModeEnum.Mode1) {
+				if (GlobalDataManager.modePrototype == ModeEnum.Mode1) {
 					UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
-				} else if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+				} else if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
 					UpdateBattleStatus (MyConst.BATTLE_STATUS_SKILL, 0);
 				}
 			} else {
@@ -302,7 +302,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		string	rpcKey = reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_RPC).Push ().Key;
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result ["userHome"] = GameData.Instance.isHost;
+		result ["userHome"] = GlobalDataManager.isHost;
 		result ["param"] = toDictionary;
 
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_RPC + "/" + rpcKey;
@@ -313,7 +313,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	{
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
 		int modulusNum = 1;
-		if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+		if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
 			modulusNum = 2;
 		} else {
 			modulusNum = 1;
@@ -322,7 +322,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			FirebaseDBManager.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ANSWER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
-					if (GameData.Instance.isHost) {
+					if (GlobalDataManager.isHost) {
 						battleStatus [MyConst.BATTLE_STATUS_HANSWER] = receiveAnswer.ToString ();
 						battleStatus [MyConst.BATTLE_STATUS_HTIME] = receiveTime.ToString ();
 					} else {
@@ -330,7 +330,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 						battleStatus [MyConst.BATTLE_STATUS_VTIME] = receiveTime.ToString ();
 					}
 					if (battleCount == 2) {
-						if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+						if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
 							UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
 						} else {
 							UpdateBattleStatus (MyConst.BATTLE_STATUS_SKILL, 0);
@@ -346,7 +346,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	{
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
 		int modulusNum = 2;
-		if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+		if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
 			modulusNum = 1;
 		} else {
 			modulusNum = 2;
@@ -355,7 +355,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			FirebaseDBManager.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_SKILL, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					if (battleCount == 2) {
-						if (GameData.Instance.modePrototype == ModeEnum.Mode2) {
+						if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
 							UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
 						} else {
 							UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);

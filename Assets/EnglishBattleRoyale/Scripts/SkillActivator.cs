@@ -38,12 +38,12 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 			if (rpcReceive.ContainsKey ("param")) {
 
 				bool userHome = (bool)rpcReceive ["userHome"];
-				GameData.Instance.attackerBool = userHome;
+				GlobalDataManager.attackerBool = userHome;
 
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 				if (param.ContainsKey ("SkillParam")) {
 					string stringParam = param ["SkillParam"].ToString ();
-					if (GameData.Instance.attackerBool.Equals (GameData.Instance.isHost)) {
+					if (GlobalDataManager.attackerBool.Equals (GlobalDataManager.isHost)) {
 						SetPlayerSkillParameter (stringParam);
 					} else {
 						SetEnemySkillParameter (stringParam);
@@ -71,7 +71,7 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 		foreach (SkillParameter skill in skillResult.skillList) {
 
 			if (skill.skillKey == ParamNames.Damage.ToString ()) {
-				GameData.Instance.player.playerDamage += skill.skillValue;
+				GlobalDataManager.player.playerBaseDamage += skill.skillValue;
 				Debug.Log ("skill player " + skill.skillKey + " value " + skill.skillValue);
 			}
 
@@ -125,7 +125,7 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 	/// <param name="animationName">Animation name.</param>
 	private void SetAnimation (string animationName)
 	{
-		if (GameData.Instance.attackerBool.Equals (GameData.Instance.isHost)) {
+		if (GlobalDataManager.attackerBool.Equals (GlobalDataManager.isHost)) {
 			CharacterAvatarsController.Instance.SetTriggerAnim (true, animationName);
 		} else {
 			CharacterAvatarsController.Instance.SetTriggerAnim (false, animationName);

@@ -1,0 +1,2 @@
+PlayerHP,PlayerGP,PlayerMaxGP,PlayerBaseDamage,PlayerGuardDamage,PlayerCriticalDamageRate
+100,0,30,4,1,1
