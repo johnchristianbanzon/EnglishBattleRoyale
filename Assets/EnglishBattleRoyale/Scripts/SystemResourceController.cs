@@ -10,7 +10,7 @@ public class SystemResourceController : SingletonMonoBehaviour<SystemResourceCon
 	}
 
 	public TextAsset LoadCSV (string csvName){
-		TextAsset csvObject = Resources.Load (csvName) as TextAsset;
+		TextAsset csvObject = Resources.Load ("CSV/" + csvName) as TextAsset;
 		return csvObject;
 	}
 

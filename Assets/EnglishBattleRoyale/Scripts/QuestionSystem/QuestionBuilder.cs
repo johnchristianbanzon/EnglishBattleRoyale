@@ -21,7 +21,7 @@ public static class QuestionBuilder
 	public static void PopulateQuestion (string questionName)
 	{
 		questionList.Clear ();
-		parsedData = getParsedCSV (questionName);
+		parsedData = CSVParser.ParseCSV (questionName);
 
 		for (int listIndex = 0; listIndex < parsedData.Count - 1; listIndex++) {
 			bool hasSynonym = parsedData [listIndex] ["sy"].ToString() == "1" ? true : false;
@@ -105,30 +105,5 @@ public static class QuestionBuilder
 		return wrongChoice;
 	}
 		
-	public static List<Dictionary<string,System.Object>> getParsedCSV (string csv)
-	{
-		int csvHeaderLines = 1;
-		TextAsset csvData = Resources.Load (csv) as TextAsset;
-		Result parsed = Papa.parse (csvData.ToString ());
-		List<List<string>> rows = parsed.data;
-		List<string> csvHeader = new List<string>();
-		List<Dictionary<string,System.Object>> csvParsedData = new List<Dictionary<string,System.Object>>();
-		int csvLineIndex = 0;
 
-		for (int listIndex = 0; listIndex < rows.Count; listIndex++) {
-			csvParsedData.Add(new Dictionary<string,object>());
-			for (int subListIndex = 0; subListIndex < rows [listIndex].Count; subListIndex++) {
-				if (listIndex < csvHeaderLines) {
-					csvHeader.Add (rows [listIndex] [subListIndex]);
-				} else {
-					//NON HEADER BELOW 
-					csvParsedData [csvLineIndex].Add (csvHeader[subListIndex],rows[listIndex][subListIndex]);
-					if (subListIndex.Equals (rows [listIndex].Count-1)) {
-						csvLineIndex += 1;
-					}
-				}
-			}
-		}
-		return csvParsedData;
-	}
 }

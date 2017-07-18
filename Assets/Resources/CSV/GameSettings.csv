@@ -1,2 +1,2 @@
-PlayerHP,PlayerGP,PlayerMaxGP,PlayerBaseDamage,PlayerGuardDamage,PlayerCriticalDamageRate
-100,0,30,4,1,1
+PlayerHP,PlayerGP,PlayerMaxGP,PlayerBaseDamage,PlayerGuardDamage,PlayerCriticalDamageRate,AnswerQuestionTime
+100,0,30,4,1,1,25

@@ -21,7 +21,7 @@ public class AnswerIndicatorController : SingletonMonoBehaviour<AnswerIndicatorC
 		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 		if (rpcReceive.ContainsKey ("param")) {
 			bool userHome = (bool)rpcReceive ["userHome"];
-			GlobalDataManager.attackerBool = userHome;
+			SystemGlobalDataController.Instance.attackerBool = userHome;
 
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 			if (param.ContainsKey ("AnswerIndicator")) {
@@ -51,7 +51,7 @@ public class AnswerIndicatorController : SingletonMonoBehaviour<AnswerIndicatorC
 	{
 		Debug.Log ("AnswerCorrect: " + isCorrect);
 		Debug.Log ("Question No : " + questionNumber);
-		if (GlobalDataManager.attackerBool.Equals (GlobalDataManager.isHost)) {
+		if (SystemGlobalDataController.Instance.attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
 			SetValidateAnswer (isCorrect, playerPlaceHolder [questionNumber - 1]);
 		} else {
 			SetValidateAnswer (isCorrect, enemyPlaceHolder [questionNumber - 1]);

@@ -41,13 +41,13 @@ public class BattleStatusManager : SingletonMonoBehaviour<BattleStatusManager>, 
 				switch (battleState) {
 				case MyConst.BATTLE_STATUS_ANSWER:
 
-					GlobalDataManager.hAnswer = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_HANSWER].ToString ());
-					GlobalDataManager.hTime = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_HTIME].ToString ());
-					GlobalDataManager.vAnswer = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VANSWER].ToString ());
-					GlobalDataManager.vTime = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VTIME].ToString ());
+					SystemGlobalDataController.Instance.hAnswer = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_HANSWER].ToString ());
+					SystemGlobalDataController.Instance.hTime = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_HTIME].ToString ());
+					SystemGlobalDataController.Instance.vAnswer = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VANSWER].ToString ());
+					SystemGlobalDataController.Instance.vTime = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VTIME].ToString ());
 
 					CheckBattleCount (battleCount, delegate() {
-						if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
+						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 							PhaseManager.StartPhase3 ();
 						} else {
 							PhaseManager.StartPhase2 ();
@@ -58,7 +58,7 @@ public class BattleStatusManager : SingletonMonoBehaviour<BattleStatusManager>, 
 
 				case MyConst.BATTLE_STATUS_SKILL:
 					CheckBattleCount (battleCount, delegate() {
-						if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
+						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 							PhaseManager.StartPhase2 ();
 						} else {
 							PhaseManager.StartPhase3 ();

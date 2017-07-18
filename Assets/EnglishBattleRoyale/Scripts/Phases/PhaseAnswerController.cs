@@ -38,7 +38,7 @@ public class PhaseAnswerController : BasePhase
 		hasAnswered = true;
 		questionSelect.SetActive (false);
 		//call question callback here
-		QuestionManager.Instance.SetQuestionEntry (questionNumber, GlobalDataManager.answerQuestionTime, delegate(int gp, int qtimeLeft) {
+		QuestionManager.Instance.SetQuestionEntry (questionNumber, SystemGlobalDataController.Instance.answerQuestionTime, delegate(int gp, int qtimeLeft) {
 			QuestionStart (gp, qtimeLeft);
 		});
 
@@ -56,7 +56,7 @@ public class PhaseAnswerController : BasePhase
 			} 
 
 			HideUI ();
-			QuestionManager.Instance.SetQuestionEntry (UnityEngine.Random.Range (0, 2), GlobalDataManager.answerQuestionTime, delegate(int gp, int qtimeLeft) {
+			QuestionManager.Instance.SetQuestionEntry (UnityEngine.Random.Range (0, 2), SystemGlobalDataController.Instance.answerQuestionTime, delegate(int gp, int qtimeLeft) {
 				
 				QuestionStart (gp, qtimeLeft);
 			});
@@ -70,19 +70,19 @@ public class PhaseAnswerController : BasePhase
 	private void QuestionStart (int gp, int qtimeLeft)
 	{
 		Debug.Log (gp);
-		Debug.Log (GlobalDataManager.gpEarned);
+		Debug.Log (SystemGlobalDataController.Instance.gpEarned);
 
-		GlobalDataManager.gpEarned = gp;
+		SystemGlobalDataController.Instance.gpEarned = gp;
 		BattleController.Instance.PlayerGP += gp;
 		SystemFirebaseDBController.Instance.AnswerPhase (qtimeLeft, gp);
 
 		//for mode 3
 		FindObjectOfType<PhaseSkillController> ().CheckSkillActivate ();
 
-		if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
-			if (GlobalDataManager.skillChosenCost <= BattleController.Instance.PlayerGP) {
-				if (GlobalDataManager.playerSkillChosen != null) {
-					GlobalDataManager.playerSkillChosen ();
+		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
+			if (SystemGlobalDataController.Instance.skillChosenCost <= BattleController.Instance.PlayerGP) {
+				if (SystemGlobalDataController.Instance.playerSkillChosen != null) {
+					SystemGlobalDataController.Instance.playerSkillChosen ();
 				}
 			} else {
 				Debug.Log ("LESS GP CANNOT ACTIVATE SKILL");
