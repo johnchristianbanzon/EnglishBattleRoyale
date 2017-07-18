@@ -7,10 +7,11 @@ public class SystemPopupController : SingletonMonoBehaviour<SystemPopupControlle
 	public GameObject backUnclickable;
 //	private List<GameObject> nowShownPopUp = new List<GameObject> ();
 
-	public void ShowPopUp(string screenName){
+	public GameObject ShowPopUp(string screenName){
 		ClearAllPopUp ();
 		BackUnclickable (true);
 		popUpObject = SystemPrefabController.Instance.LoadPrefab (screenName,popUp);
+		return popUpObject;
 	}
 
 	public void ClearPopUp(string popUpName){

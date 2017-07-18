@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SystemBattleManager: SingletonMonoBehaviour<SystemBattleManager>, IRPCDicObserver
+public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleController>, IRPCDicObserver
 {
 
 	private List<bool> userHome = new List<bool> ();

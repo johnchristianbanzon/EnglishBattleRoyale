@@ -39,8 +39,8 @@ public class SlotControl : MonoBehaviour , IDropHandler{
 				skillIndex = 2;
 				break;
 			}
-			SkillManager.Instance.SetSkill (position, 
-				SkillManager.Instance.skillList[skillIndex]);
+			SkillManager.SetSkill (position, 
+				SkillManager.skillList[skillIndex]);
 		}
 	}
 	#endregion

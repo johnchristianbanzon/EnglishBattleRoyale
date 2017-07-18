@@ -61,25 +61,25 @@ public class SkillViewController : MonoBehaviour {
 		skillSprite.GetComponentInChildren<Image>().sprite = currentSelectedButton.transform.GetChild(2).GetComponentInChildren<Image> ().sprite;
 		switch (currentSelectedButton.name) {
 		case "BicPunch":
-			skillOverViewDesc.GetComponentInChildren<Text> ().text = SkillManager.Instance.skillList[0].skillDescription;
+			skillOverViewDesc.GetComponentInChildren<Text> ().text = SkillManager.skillList[0].skillDescription;
 			skillDamage.GetComponentInChildren<Text> ().text = "9";
 			skillHeal.GetComponentInChildren<Text> ().text = "0";
 			skillGp.GetComponentInChildren<Text> ().text = "3";
-			skillName.GetComponentInChildren<Text> ().text = SkillManager.Instance.skillList[0].skillName.ToString();
+			skillName.GetComponentInChildren<Text> ().text = SkillManager.skillList[0].skillName.ToString();
 			break;
 		case "Sunder":
-			skillOverViewDesc.GetComponentInChildren<Text> ().text = SkillManager.Instance.skillList[1].skillDescription;
+			skillOverViewDesc.GetComponentInChildren<Text> ().text = SkillManager.skillList[1].skillDescription;
 			skillDamage.GetComponentInChildren<Text> ().text = "10";
 			skillHeal.GetComponentInChildren<Text> ().text = "5";
 			skillGp.GetComponentInChildren<Text> ().text = "9";
-			skillName.GetComponentInChildren<Text> ().text = SkillManager.Instance.skillList[1].skillName.ToString();
+			skillName.GetComponentInChildren<Text> ().text = SkillManager.skillList[1].skillName.ToString();
 			break;
 		case "Rejuvenation":
-			skillOverViewDesc.GetComponentInChildren<Text> ().text = SkillManager.Instance.skillList[2].skillDescription;
+			skillOverViewDesc.GetComponentInChildren<Text> ().text = SkillManager.skillList[2].skillDescription;
 			skillDamage.GetComponentInChildren<Text> ().text = "0";
 			skillHeal.GetComponentInChildren<Text> ().text = "8";
 			skillGp.GetComponentInChildren<Text> ().text = "4";
-			skillName.GetComponentInChildren<Text> ().text = SkillManager.Instance.skillList[2].skillName.ToString();
+			skillName.GetComponentInChildren<Text> ().text = SkillManager.skillList[2].skillName.ToString();
 			break;
 		}
 		Destroy (EventSystem.current.currentSelectedGameObject.transform.parent.gameObject);
