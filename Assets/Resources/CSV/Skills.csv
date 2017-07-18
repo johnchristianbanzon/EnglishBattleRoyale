@@ -1,2 +1,4 @@
 SkillName,SkillDescription,SkillGPCost,SkillParam
 Sunder,sunder skill,10,"{\""skillList\"":[{\""skillKey\"":\""Recover\"",\""skillValue\"":10}, {\""skillKey\"":\""Damage\"",\""skillValue\"":15}]}"
+Rejuvination,rejuvination skill,10,"{\""skillList\"":[{\""skillKey\"":\""Recover\"",\""skillValue\"":10}]}"
+BicPunch,bicpunch skill,3,"{\""skillList\"":[{\""skillKey\"":\""Damage\"",\""skillValue\"":15}]}"
