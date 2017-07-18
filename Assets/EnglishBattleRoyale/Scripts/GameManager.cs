@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-/* Sets initial game preferences*/
+/* Sets GameSettings*/
 public static class GameManager
 {
 	private static PlayerModel player;
@@ -11,20 +11,26 @@ public static class GameManager
 
 	public static void SetSettings ()
 	{
+		
 		gameSettingList = CSVParser.ParseCSV ("GameSettings");
-		for (int i = 0; i < gameSettingList.Count; i++) {
-			player.playerHP = int.Parse (gameSettingList [i] ["PlayerHP"].ToString ());
-			player.playerGP = int.Parse (gameSettingList [i] ["PlayerGP"].ToString ());
-			player.playerMaxGP = int.Parse (gameSettingList [i] ["PlayerMaxGP"].ToString ());
-			player.playerBaseDamage = int.Parse (gameSettingList [i] ["PlayerBaseDamage"].ToString ());
-			player.playerGuardDamage = int.Parse (gameSettingList [i] ["PlayerGuardDamage"].ToString ());
-			player.playerCriticalDamageRate = int.Parse (gameSettingList [i] ["PlayerCriticalDamageRate"].ToString ());
-			answerQuestionTime = int.Parse (gameSettingList [i] ["AnswerQuestionTime"].ToString ());
-		}
+		player = new PlayerModel ( ScreenLobbyController.Instance.GetPlayerName (),GetFloatList());
 
-		player.playerName = ScreenLobbyController.Instance.GetPlayerName ();
+		Debug.Log (player.playerMaxGP);
+		answerQuestionTime = int.Parse(gameSettingList [6] ["Value"].ToString());
+
 		SystemGlobalDataController.Instance.player = player;
 		SystemGlobalDataController.Instance.answerQuestionTime = answerQuestionTime;
+	}
+
+	private static float[] GetFloatList(){
+
+		float[] floatList = new float[6];
+
+		for (int i = 0; i < 5; i++) {
+			floatList[i] = float.Parse (gameSettingList [i] ["Value"].ToString ());
+		}
+
+		return floatList;
 	}
 
 	public static PlayerModel GetPlayer ()
@@ -32,8 +38,6 @@ public static class GameManager
 		return player;
 	}
 
-
-		
 }
 
 

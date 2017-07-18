@@ -13,21 +13,21 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 	private string playerName;
 	public Text playerNameText;
 
-	private int playerHP;
+	private float playerHP;
 
-	private int playerMaxHP = 10;
+	private float playerMaxHP = 10;
 	public Slider playerHPBar;
 	public Text playerHPText;
 	public Text playerGPText;
 
-	private int playerGP;
+	private float playerGP;
 
-	private int playerMaxGP = 10;
+	private float playerMaxGP = 10;
 	public Slider playerGPBar;
 
 	private string enemyName;
 
-	private int enemyHP;
+	private float enemyHP;
 
 	private int enemyMaxHP = 10;
 	public Slider enemyHPBar;
@@ -42,7 +42,7 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 	private int timeLeft = 3;
 	private bool stoptimer = true;
 
-	public int PlayerHP {
+	public float PlayerHP {
 		get{ return playerHP; }
 		set {
 			playerHP = value;
@@ -50,7 +50,7 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 		}
 	}
 
-	public int PlayerGP {
+	public float PlayerGP {
 		get{ return playerGP; }
 		set {
 			playerGP = value;
@@ -58,7 +58,7 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 		}
 	}
 
-	public int EnemyHP {
+	public float EnemyHP {
 		get{ return enemyHP; }
 		set {
 			enemyHP = value;
@@ -148,7 +148,7 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 		}
 	}
 
-	public void SetInitialPlayerState (string playerName, int playerHP, int playerGP)
+	public void SetInitialPlayerState (string playerName, float playerHP, float playerGP)
 	{
 		this.playerHP = playerHP;
 		this.playerName = playerName;

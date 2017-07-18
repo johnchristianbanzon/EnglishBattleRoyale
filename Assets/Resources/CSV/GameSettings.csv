@@ -1,2 +1,8 @@
-PlayerHP,PlayerGP,PlayerMaxGP,PlayerBaseDamage,PlayerGuardDamage,PlayerCriticalDamageRate,AnswerQuestionTime
-100,0,30,4,1,1,25
+Key,Value
+PlayerHP,100
+PlayerGP,0
+PlayerMaxGP,30
+PlayerBaseDamage,4
+PlayerGuardDamage,1
+PlayerCriticalDamageRate,1
+AnswerQuestionTime,25
