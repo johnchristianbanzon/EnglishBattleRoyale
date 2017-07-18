@@ -15,13 +15,13 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 		if (rpcReceive.ContainsKey ("param")) {
 			bool userHome = (bool)rpcReceive ["userHome"];
-			GlobalDataManager.attackerBool = userHome;
+			SystemGlobalDataController.Instance.attackerBool = userHome;
 
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 			string stringParam = param ["Attack"].ToString ();
 
 			Dictionary<string, System.Object> attackerParam = JsonConverter.JsonStrToDic (stringParam);
-			thisCurrentParameter.Add (GlobalDataManager.attackerBool, attackerParam);
+			thisCurrentParameter.Add (SystemGlobalDataController.Instance.attackerBool, attackerParam);
 			if (thisCurrentParameter.Count == 2) {
 				Attack (thisCurrentParameter);
 				thisCurrentParameter.Clear ();
@@ -37,12 +37,12 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		}
 
 		//change order of list if host or visitor
-		if (GlobalDataManager.isHost) {
-			if (userHome [0] != GlobalDataManager.isHost) {
+		if (SystemGlobalDataController.Instance.isHost) {
+			if (userHome [0] != SystemGlobalDataController.Instance.isHost) {
 				ChangeUserOrder (0, 1);
 			}
 		} else {
-			if (userHome [1] !=GlobalDataManager.isHost) {
+			if (userHome [1] !=SystemGlobalDataController.Instance.isHost) {
 				ChangeUserOrder (1, 0);
 			}
 
@@ -53,14 +53,14 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		//set attack order between opponents
 		int attackOrder = 0;
 
-		if (GlobalDataManager.hAnswer > GlobalDataManager.vAnswer) {
+		if (SystemGlobalDataController.Instance.hAnswer > SystemGlobalDataController.Instance.vAnswer) {
 			attackOrder = 0;
-		} else if (GlobalDataManager.hAnswer < GlobalDataManager.vAnswer) {
+		} else if (SystemGlobalDataController.Instance.hAnswer < SystemGlobalDataController.Instance.vAnswer) {
 			attackOrder = 1;
 		} else {
-			if (GlobalDataManager.hTime > GlobalDataManager.vTime) {
+			if (SystemGlobalDataController.Instance.hTime > SystemGlobalDataController.Instance.vTime) {
 				attackOrder = 0;
-			} else if (GlobalDataManager.hTime < GlobalDataManager.vTime) {
+			} else if (SystemGlobalDataController.Instance.hTime < SystemGlobalDataController.Instance.vTime) {
 				attackOrder = 1;
 			} else {
 				attackOrder = 2;
@@ -138,10 +138,10 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 		} else {
 			if (secondCheck) {
-				if (GlobalDataManager.isHost) {
-					if (GlobalDataManager.modePrototype == ModeEnum.Mode1) {
+				if (SystemGlobalDataController.Instance.isHost) {
+					if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
 						SystemFirebaseDBController.Instance.UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
-					} else if (GlobalDataManager.modePrototype == ModeEnum.Mode2) {
+					} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_SKILL, 0);
 
 					}
@@ -149,11 +149,11 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 				yield return new WaitForSeconds (3);
 				PhaseManager.StartPhase1 ();
 				//reset effects done by skill and battle data
-				GlobalDataManager.ResetPlayer();
+				SystemGlobalDataController.Instance.ResetPlayer();
 
 
 				param.Clear ();
-				Debug.Log ("player damage reset! now damage is: " + GlobalDataManager.player.playerBaseDamage);
+				Debug.Log ("player damage reset! now damage is: " + SystemGlobalDataController.Instance.player.playerBaseDamage);
 			}
 		}
 	}
@@ -164,7 +164,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		if (attackerParam [ParamNames.Attack.ToString ()] != null) {
 			int damage = int.Parse (attackerParam [ParamNames.Attack.ToString ()].ToString ());
 
-			if (attackerBool.Equals (GlobalDataManager.isHost)) {
+			if (attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
 				Debug.Log ("PLAYER DAMAGE: " + damage);
 				BattleController.Instance.EnemyHP -= damage;
 				if (sameAttack == false) {

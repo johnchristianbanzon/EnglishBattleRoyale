@@ -3,7 +3,7 @@
 public class SkillModel{
 
 	public bool userHome;
-	public ParamNames skillName;
+	public string skillName;
 	public int skillGpCost;
 	public string skillDescription;
 	public string skillParam;
@@ -11,7 +11,7 @@ public class SkillModel{
 	public SkillModel(){
 	}
 
-	public SkillModel(ParamNames skillName, int skillGpCost, string skillDescription, string skillParam){
+	public SkillModel(string skillName, int skillGpCost, string skillDescription, string skillParam){
 		this.skillName = skillName;
 		this.skillGpCost = skillGpCost;
 		this.skillDescription = skillDescription;

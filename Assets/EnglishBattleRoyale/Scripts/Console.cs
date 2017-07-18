@@ -60,7 +60,7 @@ public class Console : MonoBehaviour
 	public void OnDrag ()
 	{
 		Vector2 pos = new Vector2(0,0);
-		Canvas myCanvas = GlobalDataManager.gameCanvas; 
+		Canvas myCanvas = SystemGlobalDataController.Instance.gameCanvas; 
 		RectTransformUtility.ScreenPointToLocalPointInRectangle(myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
 
 		consoleButton.transform.position = myCanvas.transform.TransformPoint(pos);

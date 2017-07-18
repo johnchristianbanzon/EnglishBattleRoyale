@@ -153,11 +153,11 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 		this.playerHP = playerHP;
 		this.playerName = playerName;
 		this.playerGP = playerGP;
-		playerGPBar.maxValue = GlobalDataManager.player.playerMaxGP;
+		playerGPBar.maxValue = SystemGlobalDataController.Instance.player.playerMaxGP;
 		playerGPBar.value = 0;
 		playerMaxHP = playerHP;
 		playerHPBar.maxValue = playerMaxHP;
-		playerMaxGP = GlobalDataManager.player.playerMaxGP;
+		playerMaxGP = SystemGlobalDataController.Instance.player.playerMaxGP;
 	}
 
 	public void SetInitialEnemyState (string enemyName, int enemyHP)
@@ -168,7 +168,7 @@ public class BattleController : SingletonMonoBehaviour<BattleController>
 		enemyHPBar.maxValue = enemyMaxHP;
 	}
 
-	public void SetSkillUI (int skillNumber, ParamNames skillName, int skillGp)
+	public void SetSkillUI (int skillNumber, string skillName, int skillGp)
 	{
 		this.skillName [skillNumber - 1].text = skillName.ToString ();
 		this.skillGpCost [skillNumber - 1].text = "" + skillGp + "GP";

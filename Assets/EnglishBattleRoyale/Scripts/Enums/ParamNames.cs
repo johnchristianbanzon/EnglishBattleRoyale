@@ -12,13 +12,5 @@ public enum ParamNames {
 	Damage,
 	Recover,
 
-	//skillname
-	Sunder,
-	AirRender,
-	Rejuvination,
-	BicPunch,
-
-
-
 
 }

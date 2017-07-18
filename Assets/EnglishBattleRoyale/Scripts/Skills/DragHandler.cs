@@ -25,7 +25,7 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 	public void OnDrag(PointerEventData eventData)
 	{
 		Vector2 pos = new Vector2(0,0);
-		Canvas myCanvas = GlobalDataManager.gameCanvas; 
+		Canvas myCanvas = SystemGlobalDataController.Instance.gameCanvas; 
 		RectTransformUtility.ScreenPointToLocalPointInRectangle(myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
 		transform.position =myCanvas.transform.TransformPoint(pos);
 		//transform.localPosition = new Vector3(Input.mousePosition.x -578f,Input.mousePosition.y - 745f,0);

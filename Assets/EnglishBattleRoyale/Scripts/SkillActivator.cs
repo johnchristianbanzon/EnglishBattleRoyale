@@ -3,34 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/*This class activates the skill received from database*/
 public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObserver
 {
-	/// <summary>
-	/// Animates the skill.
-	/// </summary>
-	/// <param name="paramName">Parameter name.</param>
-	/// <param name="gpEarned">Gp earned.</param>
-	public void AnimateSkill (ParamNames paramName)
-	{
-		switch (paramName) {
-		case ParamNames.AirRender:
-			SetAnimation ("skill1");
-			break;
-		case ParamNames.Rejuvination:
-			SetAnimation ("skill2");
-			break;
-		case ParamNames.Sunder:
-			SetAnimation ("skill3");
-			break;
-
-		case ParamNames.BicPunch:
-			SetAnimation ("skill4");
-			break;
-
-		}
 	
-	}
-
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
 		try {
@@ -38,12 +14,12 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 			if (rpcReceive.ContainsKey ("param")) {
 
 				bool userHome = (bool)rpcReceive ["userHome"];
-				GlobalDataManager.attackerBool = userHome;
+				SystemGlobalDataController.Instance.attackerBool = userHome;
 
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 				if (param.ContainsKey ("SkillParam")) {
 					string stringParam = param ["SkillParam"].ToString ();
-					if (GlobalDataManager.attackerBool.Equals (GlobalDataManager.isHost)) {
+					if (SystemGlobalDataController.Instance.attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
 						SetPlayerSkillParameter (stringParam);
 					} else {
 						SetEnemySkillParameter (stringParam);
@@ -52,7 +28,7 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 				}
 				if (param.ContainsKey ("SkillName")) {
 					string stringParam = param ["SkillName"].ToString ();
-					CheckSkillName (stringParam);
+					SetSkillAnimation (stringParam);
 				}
 			}
 		} catch (System.Exception e) {
@@ -71,7 +47,7 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 		foreach (SkillParameter skill in skillResult.skillList) {
 
 			if (skill.skillKey == ParamNames.Damage.ToString ()) {
-				GlobalDataManager.player.playerBaseDamage += skill.skillValue;
+				SystemGlobalDataController.Instance.player.playerBaseDamage += skill.skillValue;
 				Debug.Log ("skill player " + skill.skillKey + " value " + skill.skillValue);
 			}
 
@@ -95,42 +71,15 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 	}
 
 	/// <summary>
-	/// Sets the enemy skill parameter.
-	/// </summary>
-	/// <param name="skillParameter">Skill parameter.</param>
-
-
-	/// <summary>
 	/// Checks the name of the skill and set animation
 	/// </summary>
 	/// <param name="newParam">New parameter.</param>
-	public void CheckSkillName (string skillName)
+	public void SetSkillAnimation (string skillName)
 	{
-		if (skillName == ParamNames.AirRender.ToString ()) {
-			AnimateSkill (ParamNames.AirRender);
-		} else if (skillName == ParamNames.Sunder.ToString ()) {
-			AnimateSkill (ParamNames.Sunder);
-		} else if (skillName == ParamNames.Rejuvination.ToString ()) {
-			AnimateSkill (ParamNames.Rejuvination);
-		} else if (skillName == ParamNames.BicPunch.ToString ()) {
-			AnimateSkill (ParamNames.BicPunch);
-		}
-			
-	}
-
-
-	/// <summary>
-	/// Sets the animation.
-	/// </summary>
-	/// <param name="animationName">Animation name.</param>
-	private void SetAnimation (string animationName)
-	{
-		if (GlobalDataManager.attackerBool.Equals (GlobalDataManager.isHost)) {
-			CharacterAvatarsController.Instance.SetTriggerAnim (true, animationName);
+		if (SystemGlobalDataController.Instance.attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
+			CharacterAvatarsController.Instance.SetTriggerAnim (true, skillName);
 		} else {
-			CharacterAvatarsController.Instance.SetTriggerAnim (false, animationName);
+			CharacterAvatarsController.Instance.SetTriggerAnim (false, skillName);
 		}
-	
 	}
-
 }
