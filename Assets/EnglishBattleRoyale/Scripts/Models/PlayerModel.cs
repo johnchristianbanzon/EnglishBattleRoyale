@@ -5,11 +5,11 @@ public class PlayerModel
 {
 	public string playerName;
 
-	public int playerHP;
+	public float playerHP;
 
-	public int playerGP;
+	public float playerGP;
 
-	public int playerMaxGP;
+	public float playerMaxGP;
 
 	public float playerBaseDamage;
 
@@ -17,7 +17,7 @@ public class PlayerModel
 
 	public float playerCriticalDamageRate;
 
-	public PlayerModel (string playerName, int playerHP, int playerGP, int playerMaxGP, float playerBaseDamage, float playerGuardDamage, float playerCriticalDamageRate)
+	public PlayerModel (string playerName, float playerHP, float playerGP, float playerMaxGP, float playerBaseDamage, float playerGuardDamage, float playerCriticalDamageRate)
 	{
 		this.playerName = playerName;
 		this.playerHP = playerHP;
@@ -26,6 +26,17 @@ public class PlayerModel
 		this.playerBaseDamage = playerBaseDamage;
 		this.playerGuardDamage = playerGuardDamage;
 		this.playerCriticalDamageRate = playerCriticalDamageRate;
+	}
+
+	public PlayerModel (string playerName, float[] playerParam)
+	{
+		this.playerName = playerName;
+		this.playerHP = playerParam[0];
+		this.playerGP = playerParam[1];
+		this.playerMaxGP = playerParam[2];
+		this.playerBaseDamage = playerParam[3];
+		this.playerGuardDamage = playerParam[4];
+		this.playerCriticalDamageRate = playerParam[5];
 	}
 
 	public Dictionary<string, System.Object> ToDictionary() {
