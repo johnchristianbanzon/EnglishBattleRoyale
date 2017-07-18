@@ -186,7 +186,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		if (joinCounter < 2) {
 			RoomCreateJoin (false, MyConst.GAMEROOM_VISITOR);
 		} else {
-			PartMatchController.Instance.SearchRoom ();
+			FindObjectOfType<PartMatchController> ().SearchRoom ();
 		}
 
 		joinCounter = 0;
