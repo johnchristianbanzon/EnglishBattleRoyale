@@ -5,10 +5,9 @@ using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class QuestionManager: SingletonMonoBehaviour<QuestionManager>
+public class PartQuestionController: SingletonMonoBehaviour<PartQuestionController>
 {
 	public GameObject[] questionTypeModals;
-	public GameObject questionUI;
 	public void QuestionHide(){
 		for (int i = 0; i < questionTypeModals.Length; i++) {
 			//Debug.Log (questionTypeModals[i].name);
@@ -23,9 +22,6 @@ public class QuestionManager: SingletonMonoBehaviour<QuestionManager>
 	public void SetQuestionEntry(int questionType, int questionTime, Action<int, int> onResult){
 		questionTypeModals[questionType].SetActive (true);
 
-		//questionUI.SetActive (true);
-	//	ChangeOrderIcon chaord = new ChangeOrderIcon ();
-	//QuestionController.Instance.SetQuestion (chaord, questionTime, onResult);
 
 		switch (questionType) {
 		case 0:

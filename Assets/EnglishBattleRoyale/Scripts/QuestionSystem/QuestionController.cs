@@ -80,7 +80,7 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 
 	public void ComputeScore ()
 	{
-		QuestionManager questionManagement = FindObjectOfType<QuestionManager>();
+		PartQuestionController questionManagement = FindObjectOfType<PartQuestionController>();
 		questionManagement.QuestionHide ();
 
 		for (int i = 0; i < 12; i++) {
