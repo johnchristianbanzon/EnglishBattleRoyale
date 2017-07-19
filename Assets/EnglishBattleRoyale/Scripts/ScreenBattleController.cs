@@ -52,7 +52,6 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	void Start ()
 	{
 		RPCDicObserver.AddObserver (this);
-
 		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in SystemGlobalDataController.Instance.InitialState) {
 			SetStateParam (initialState.Key, initialState.Value);
 		}
@@ -240,7 +239,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 					}
 				}
 				yield return new WaitForSeconds (3);
-				PhaseManager.StartPhase1 ();
+				PartPhaseController.Instance.StartPhase1 ();
 				//reset effects done by skill and battle data
 				SystemGlobalDataController.Instance.ResetPlayer ();
 
