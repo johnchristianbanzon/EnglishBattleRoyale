@@ -13,7 +13,7 @@ public class ScreenSettingController : MonoBehaviour {
 	public void StartButton(){
 		GameManager.SetPLayerName (playerName.text);
 		PlayerPrefs.SetString ("PlayerInputName", playerName.text);
-		SystemScreenController.Instance.ShowScreen ("ScreenLobby");
+		SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
 	}
 
 	public void OnModeChange ()
