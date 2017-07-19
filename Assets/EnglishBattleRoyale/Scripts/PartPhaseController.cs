@@ -4,9 +4,9 @@
 public class PartPhaseController: SingletonMonoBehaviour<PartPhaseController>
 {
 
-	public BasePhase phaseAnswerController = new PhaseAnswerController();
-	public BasePhase phaseSkillController = new PhaseSkillController();
-	public BasePhase phaseAttackController = new PhaseAttackController();
+	public BasePhase phaseAnswerController;
+	public BasePhase phaseSkillController;
+	public BasePhase phaseAttackController;
 
 
 	public void StartPhase1 ()
