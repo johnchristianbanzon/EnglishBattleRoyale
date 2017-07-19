@@ -1,7 +1,15 @@
-﻿/* Manages phases */
-public static class PhaseManager
+﻿using UnityEngine;
+
+/* Manages phases */
+public class PartPhaseController: SingletonMonoBehaviour<PartPhaseController>
 {
-	public static void StartPhase1 ()
+
+	public BasePhase phaseAnswerController = new PhaseAnswerController();
+	public BasePhase phaseSkillController = new PhaseSkillController();
+	public BasePhase phaseAttackController = new PhaseAttackController();
+
+
+	public void StartPhase1 ()
 	{
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 			PhaseActivate (false, true, false);
@@ -11,7 +19,7 @@ public static class PhaseManager
 		}
 	}
 
-	public static void StartPhase2 ()
+	public void StartPhase2 ()
 	{
 		
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
@@ -21,22 +29,20 @@ public static class PhaseManager
 		}
 	}
 
-	public static void StartPhase3 ()
+	public void StartPhase3 ()
 	{
 		
 		PhaseActivate (false, false, true);
 	}
 
-	public static void StopAll ()
+	public void StopAll ()
 	{
 		PhaseActivate (false, false, false);
 	}
 
-	private static void PhaseActivate (bool answer, bool skill, bool attack)
+	private void PhaseActivate (bool answer, bool skill, bool attack)
 	{
-		BasePhase phaseAnswerController = new PhaseAnswerController();
-		BasePhase phaseSkillController = new PhaseSkillController();
-		BasePhase phaseAttackController = new PhaseAttackController();
+
 
 		if (answer) {
 			phaseAnswerController.OnStartPhase ();

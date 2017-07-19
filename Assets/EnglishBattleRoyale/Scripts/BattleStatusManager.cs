@@ -52,9 +52,9 @@ public class BattleStatusManager: IRPCDicObserver
 
 					CheckBattleCount (battleCount, delegate() {
 						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-							PhaseManager.StartPhase3 ();
+							PartPhaseController.Instance.StartPhase3 ();
 						} else {
-							PhaseManager.StartPhase2 ();
+							PartPhaseController.Instance.StartPhase2 ();
 						}
 					});
 
@@ -63,9 +63,9 @@ public class BattleStatusManager: IRPCDicObserver
 				case MyConst.BATTLE_STATUS_SKILL:
 					CheckBattleCount (battleCount, delegate() {
 						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-							PhaseManager.StartPhase2 ();
+							PartPhaseController.Instance.StartPhase2 ();
 						} else {
-							PhaseManager.StartPhase3 ();
+							PartPhaseController.Instance.StartPhase3 ();
 						}
 					});
 					break;

@@ -29,16 +29,16 @@ public class PartBattleUIController : SingletonMonoBehaviour<PartBattleUIControl
 	private bool stoptimer = true;
 
 	void Start(){
-		SystemLoadScreenController.Instance.StopLoadingScreen ();
-		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
 		StartPreTimer ();
+		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
+
 		PartCameraWorksController.Instance.StartIntroCamera ();
 	}
 
 	/// <summary>
 	/// Delay before start of battle
 	/// </summary>
-	public void StartPreTimer ()
+	private void StartPreTimer ()
 	{
 		timeLeft = 3;
 		stoptimer = true;
@@ -54,7 +54,7 @@ public class PartBattleUIController : SingletonMonoBehaviour<PartBattleUIControl
 				timeLeft--;
 				return;
 			} 
-			PhaseManager.StartPhase1 ();
+			PartPhaseController.Instance.StartPhase1 ();
 			GameTimerController.Instance.ToggleTimer (false);
 			stoptimer = false;
 			CancelInvoke ("StartTimer");
