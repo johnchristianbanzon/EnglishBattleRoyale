@@ -67,7 +67,7 @@ public abstract class BaseQuestion : MonoBehaviour{
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 		string answerclicked = "";
 		if (string.IsNullOrEmpty (answerButton.transform.GetChild (0).GetComponent<Text> ().text)) {
-			TweenLogic.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
+			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
 		} else {
 			Debug.Log (answerButton.name);
 			for (int i = 1; i < 12 + 1; i++) {
@@ -133,7 +133,7 @@ public abstract class BaseQuestion : MonoBehaviour{
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 
 		if (string.IsNullOrEmpty (letterButton.transform.GetChild (0).GetComponent<Text> ().text)) {
-			TweenLogic.TweenShakePosition (letterButton.transform, 1.0f, 30.0f, 50, 90f);
+			TweenFacade.TweenShakePosition (letterButton.transform, 1.0f, 30.0f, 50, 90f);
 		} else {
 			answerIdentifier[answerIndex] = letterButton.gameObject;
 			answerWrote = "";

@@ -64,14 +64,14 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 	private void StartTimer ()
 	{
 		if (stoptimer) {
-			GameTimerView.Instance.ToggleTimer (true);
+			GameTimerController.Instance.ToggleTimer (true);
 			if (timeLeft > 0) {
-				GameTimerView.Instance.gameTimerText.text = "" + timeLeft;
+				GameTimerController.Instance.gameTimerText.text = "" + timeLeft;
 				timeLeft--;
 				return;
 			} 
 				
-			GameTimerView.Instance.ToggleTimer (false);
+			GameTimerController.Instance.ToggleTimer (false);
 			stoptimer = false;
 			ComputeScore ();
 				  

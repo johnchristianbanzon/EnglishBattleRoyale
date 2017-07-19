@@ -24,7 +24,7 @@ public class QuestionSpecialEffects : MonoBehaviour  {
 			AudioEffect (AudioEnum.Mistake);
 		}
 		questionTypeComponent = questionType;
-		TweenLogic.TweenShakePosition (questionTypeComponent.transform, 1.0f, 30.0f, 50, 90f);
+		TweenFacade.TweenShakePosition (questionTypeComponent.transform, 1.0f, 30.0f, 50, 90f);
 	}
 
 	private void AudioEffect(AudioEnum audioNum){
@@ -33,7 +33,7 @@ public class QuestionSpecialEffects : MonoBehaviour  {
 
 	private void GpGotEffect(GameObject gpText){
 		gpText.GetComponent<Text> ().text = "1 GP";
-		TweenLogic.TweenTextScale (gpText.transform, new Vector3 (3, 3, 3), 1.0f);
+		TweenFacade.TweenTextScale (gpText.transform, new Vector3 (3, 3, 3), 1.0f);
 	}
 
 	private void CorrectAnswerEffect(string questionAnswer, List<GameObject> answerButtons, GameObject questionType){

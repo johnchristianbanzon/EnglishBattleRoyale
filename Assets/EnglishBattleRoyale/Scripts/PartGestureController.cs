@@ -4,19 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class GestureController : SingletonMonoBehaviour<GestureController>, IRPCDicObserver
+public class PartGestureController : MonoBehaviour, IRPCDicObserver
 {
 	public GameObject gestureButtonContainer;
 	public Sprite closeImage;
 	public Sprite gestureImage;
 	public GameObject gestureButton;
 	private Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
+	public PartAvatarsController partAvatar;
+
+	void Start(){
+		RPCDicObserver.AddObserver (this);
+	}
 
 	public void ShowGestureButtons (Transform button)
 	{
 		if (!gestureButtonContainer.activeInHierarchy) {
 			gestureButtonContainer.SetActive (true);
-			TweenLogic.TweenScaleToLarge (gestureButtonContainer.transform, new Vector3(1,1,1), 0.4f);
+			TweenFacade.TweenScaleToLarge (gestureButtonContainer.transform, new Vector3(1,1,1), 0.4f);
 
 			button.gameObject.GetComponent<Image> ().sprite = closeImage;
 		} else {
@@ -28,7 +33,7 @@ public class GestureController : SingletonMonoBehaviour<GestureController>, IRPC
 	}
 
 	public void ScaleToSmall(){
-		TweenLogic.TweenScaleToSmall (gestureButtonContainer.transform, new Vector3(0.7f,0.7f,0.7f), 0.1f);
+		TweenFacade.TweenScaleToSmall (gestureButtonContainer.transform, new Vector3(0.7f,0.7f,0.7f), 0.1f);
 		Invoke ("HideGestureButton", 0.05f);
 	}
 	public void HideGestureButton ()
@@ -102,16 +107,16 @@ public class GestureController : SingletonMonoBehaviour<GestureController>, IRPC
 	{
 		yield return new WaitForSeconds (1.5f);
 		if (!isPlayer) {
-			CameraWorksController.Instance.HideGestureCamera ();
+			PartCameraWorksController.Instance.HideGestureCamera ();
 		}
 	}
 
 	private void ShowGesture (bool isPlayer, string param)
 	{
 		StartCoroutine (StartTimer (isPlayer));
-		CharacterAvatarsController.Instance.SetTriggerAnim (isPlayer, param);
+		partAvatar.SetTriggerAnim (isPlayer, param);
 		if (!isPlayer) {
-			CameraWorksController.Instance.ShowGestureCamera ();
+			PartCameraWorksController.Instance.ShowGestureCamera ();
 		}
 	}
 

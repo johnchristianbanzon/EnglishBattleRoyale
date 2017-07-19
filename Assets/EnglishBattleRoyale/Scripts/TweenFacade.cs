@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using DG.Tweening;
 
-public static class TweenLogic{
+public static class TweenFacade{
 
 	//HP GP Sliders
 	public static void TweenPlayerGPSlider(float endValue, float duration, bool snapping, Slider playerGpSlider){

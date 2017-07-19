@@ -2,8 +2,12 @@
 using UnityEngine;
 using System;
 
-public class BattleStatusManager : SingletonMonoBehaviour<BattleStatusManager>, IRPCDicObserver
+public class BattleStatusManager: IRPCDicObserver
 {
+
+	void Start(){
+		RPCDicObserver.AddObserver (this);
+	}
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{

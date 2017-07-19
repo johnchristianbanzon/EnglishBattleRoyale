@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class PartMatchController : MonoBehaviour
 {
 	public Button searchRoomButton;
-	public Text searchRoomButtonText;
+	public Image searchRoomImage;
+	public Sprite searchRoomBattle;
+	public Sprite searchRoomCancel;
 	public Text searchRoomText;
 	private bool isSearchingRoom = false;
 
@@ -13,13 +15,13 @@ public class PartMatchController : MonoBehaviour
 	{
 		if (isSearchingRoom == false) {
 			searchRoomText.text = "Searching Opponent";
-			searchRoomButtonText.text = "Cancel";
+			searchRoomImage.sprite = searchRoomCancel;
 			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 			SystemFirebaseDBController.Instance.SearchRoom (delegate(bool result) {
 				if (result) {
 					GoToGameRoom ();	
 				} else {
-					searchRoomButtonText.text = "Battle";
+					searchRoomImage.sprite = searchRoomBattle;
 					searchRoomText.text = "Find Match";
 					Debug.Log ("Cancelled Search");
 					searchRoomButton.interactable = true;
@@ -42,9 +44,6 @@ public class PartMatchController : MonoBehaviour
 
 	private void GoToGameRoom ()
 	{
-		RPCDicObserver.AddObserver (GestureController.Instance);
-		RPCDicObserver.AddObserver (BattleStatusManager.Instance);
-		RPCDicObserver.AddObserver (SkillActivator.Instance);
 		SystemScreenController.Instance.ShowScreen ("ScreenBattle");
 	}
 
