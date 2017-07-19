@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public abstract class BaseQuestion : MonoBehaviour{
+
+public abstract class BaseQuestion : MonoBehaviour
+{
 
 	protected int currentRound = 1;
 	protected int correctAnswers;
@@ -13,7 +15,7 @@ public abstract class BaseQuestion : MonoBehaviour{
 	protected string questionAnswer = "";
 	protected List<GameObject> answerButtons = new List<GameObject> ();
 	protected List<GameObject> selectionButtons = new List<GameObject> ();
-	protected List<GameObject> answerGameObject = new List<GameObject>();
+	protected List<GameObject> answerGameObject = new List<GameObject> ();
 	protected GameObject[] answerIdentifier = new GameObject[30];
 	protected QuestionSystemEnums.SelectionType selectionType;
 
@@ -23,41 +25,42 @@ public abstract class BaseQuestion : MonoBehaviour{
 		string question = questionLoaded.question;
 		gameObject.transform.GetChild (0).GetComponent<Text> ().text = question;
 		questionAnswer = questionLoaded.answers.Length == 2 ? 
-			(questionLoaded.answers[0].ToUpper()+"/"+questionLoaded.answers[1].ToUpper()):
-			questionLoaded.answers[UnityEngine.Random.Range(0,questionLoaded.answers.Length)].ToUpper() ;
+			(questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ()) :
+			questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
 	}
-		
+
 	protected void PopulateAnswerHolder (GameObject g, GameObject outputPrefab, GameObject answerContent)
 	{
 		answerButtons.Clear ();
 		string[] temp = questionAnswer.Split ('/');
-		if(temp.Length>1){
-			questionAnswer = temp [UnityEngine.Random.Range (0,temp.Length)];
+		if (temp.Length > 1) {
+			questionAnswer = temp [UnityEngine.Random.Range (0, temp.Length)];
 			Debug.Log (questionAnswer);
 		}
 		for (int i = 0; i < questionAnswer.Length; i++) {
 			GameObject answerPrefab = Instantiate (outputPrefab) as GameObject; 
 			answerPrefab.transform.SetParent (answerContent.transform, false);
 			answerPrefab.GetComponent<Button> ().onClick.AddListener (() => {
-					OnAnswerClick (answerPrefab.GetComponent<Button> ());
+				OnAnswerClick (answerPrefab.GetComponent<Button> ());
 			});
-			answerPrefab.name = "output" + (i+1);
+			answerPrefab.name = "output" + (i + 1);
 			answerButtons.Add (answerPrefab);
 			answerPrefab.transform.GetChild (0).GetComponent<Text> ().text = "";
 			answerPrefab.GetComponent<Image> ().color = new Color (136f / 255, 236f / 255f, 246f / 255f);
 		}
 	}
 
-	public void PopulateSelectionHolder (GameObject g, GameObject outputPrefab, GameObject selectionContent){
+	public void PopulateSelectionHolder (GameObject g, GameObject outputPrefab, GameObject selectionContent)
+	{
 		selectionButtons.Clear ();
 		for (int i = 0; i < questionAnswer.Length; i++) {
 			GameObject input = Instantiate (outputPrefab) as GameObject; 
 			input.transform.SetParent (selectionContent.transform, false);
 			input.name = "input" + (i + 1);
 			input.GetComponent<Button> ().onClick.AddListener (() => {
-				OnSelectionClick (EventSystem.current.currentSelectedGameObject.GetComponent<Button>());
+				OnSelectionClick (EventSystem.current.currentSelectedGameObject.GetComponent<Button> ());
 			});
-			selectionButtons.Add(input);
+			selectionButtons.Add (input);
 			input.transform.GetChild (0).GetComponent<Text> ().text = "";
 		}
 	}
@@ -86,18 +89,20 @@ public abstract class BaseQuestion : MonoBehaviour{
 		QuestionSpecialEffects spe = new QuestionSpecialEffects ();
 		Debug.Log (answerButtons.Count);
 		spe.DeployEffect (result, answerButtons, questionAnswer, gameObject);
-		correctAnswers = result ?  correctAnswers + 1:correctAnswers ;
+		correctAnswers = result ? correctAnswers + 1 : correctAnswers;
 		UpdateFirebaseAnswerModel (result);
 		hasSkippedQuestion = true;
 		QuestionController.Instance.Stoptimer = false;
 		Invoke ("OnFinishQuestion", 1f);
 	}
 
-	protected void UpdateFirebaseAnswerModel(bool isCorrect){
-		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-		string isCorrectParam = isCorrect ? ParamNames.AnswerCorrect.ToString () : ParamNames.AnswerWrong.ToString ();
-		param [isCorrectParam] = currentRound;
-		SystemFirebaseDBController.Instance.SetAnswerParam (new AnswerModel(JsonConverter.DicToJsonStr (param).ToString()));
+	protected void UpdateFirebaseAnswerModel (bool isCorrect)
+	{
+		if (isCorrect) {
+			Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
+			param [ParamNames.AnswerCorrect.ToString ()] = currentRound;
+			SystemFirebaseDBController.Instance.SetAnswerParam (new AnswerModel (JsonConverter.DicToJsonStr (param).ToString ()));
+		}
 	}
 
 	protected void CheckAnswerHolder ()
@@ -105,7 +110,7 @@ public abstract class BaseQuestion : MonoBehaviour{
 		for (int j = 0; j < questionAnswer.Length; j++) {
 			GameObject findEmpty = answerButtons [j].transform.GetChild (0).gameObject;
 			if (string.IsNullOrEmpty (findEmpty.GetComponent<Text> ().text)) {
-				answerIndex = j +1;
+				answerIndex = j + 1;
 				break;
 			}
 		}
@@ -121,13 +126,15 @@ public abstract class BaseQuestion : MonoBehaviour{
 			}
 		}
 	}
+
 	public void OnSkipClick ()
 	{
 		if (!hasSkippedQuestion) {
-			CheckAnswer (false );
+			CheckAnswer (false);
 			hasSkippedQuestion = true;
 		}
 	}
+
 	public void OnSelectionClick (Button letterButton)
 	{
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
@@ -135,12 +142,12 @@ public abstract class BaseQuestion : MonoBehaviour{
 		if (string.IsNullOrEmpty (letterButton.transform.GetChild (0).GetComponent<Text> ().text)) {
 			TweenFacade.TweenShakePosition (letterButton.transform, 1.0f, 30.0f, 50, 90f);
 		} else {
-			answerIdentifier[answerIndex] = letterButton.gameObject;
+			answerIdentifier [answerIndex] = letterButton.gameObject;
 			answerWrote = "";
-			answerButtons [(answerIndex - 1)].GetComponentInChildren<Text>().text 
-			= letterButton.GetComponentInChildren<Text>().text;
-			letterButton.GetComponentInChildren<Text>().text = selectionType==QuestionSystemEnums.SelectionType.Typing
-				? letterButton.GetComponentInChildren<Text>().text: "";
+			answerButtons [(answerIndex - 1)].GetComponentInChildren<Text> ().text 
+			= letterButton.GetComponentInChildren<Text> ().text;
+			letterButton.GetComponentInChildren<Text> ().text = selectionType == QuestionSystemEnums.SelectionType.Typing
+				? letterButton.GetComponentInChildren<Text> ().text : "";
 
 			for (int j = 0; j < questionAnswer.Length; j++) {
 				answerWrote += answerButtons [j].transform.GetChild (0).GetComponent<Text> ().text;

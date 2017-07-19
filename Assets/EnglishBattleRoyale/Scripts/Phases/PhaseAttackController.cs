@@ -8,7 +8,7 @@ public class PhaseAttackController : BasePhase
 	{
 		FindObjectOfType<PhaseSkillController> ().ShowAutoActivateButtons (false);
 		Debug.Log ("Starting attack phase");
-		AnswerIndicatorController.Instance.ResetAnswer ();
+		PartAnswerIndicatorController.Instance.ResetAnswer ();
 
 		GameTimerController.Instance.ToggleTimer (false);
 		stoptimer = true;
