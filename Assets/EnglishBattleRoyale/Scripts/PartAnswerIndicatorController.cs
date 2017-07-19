@@ -4,12 +4,15 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 
-public class AnswerIndicatorController : SingletonMonoBehaviour<AnswerIndicatorController>, IRPCDicObserver
+public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIndicatorController>, IRPCDicObserver
 {
 
 	public Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-	public Image[] playerPlaceHolder;
-	public Image[] enemyPlaceHolder;
+	public Text playerAnswerText;
+	public Text enemyAnswerText;
+
+	private int playerAnswerCounter;
+	private int enemyAnswerCounter;
 
 	void Start ()
 	{
@@ -39,39 +42,24 @@ public class AnswerIndicatorController : SingletonMonoBehaviour<AnswerIndicatorC
 		foreach (KeyValuePair<string, System.Object> answer in answerResult) {
 
 			if (answer.Key == ParamNames.AnswerCorrect.ToString ()) {
-				ValidateAnswer (true, int.Parse (answer.Value.ToString ()));
-			} else {
-				ValidateAnswer (false, int.Parse (answer.Value.ToString ()));
+				if (SystemGlobalDataController.Instance.attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
+					playerAnswerCounter++;
+					playerAnswerText.text = "" +playerAnswerCounter;
 
+				} else {
+					enemyAnswerCounter++;
+					enemyAnswerText.text = "" +enemyAnswerCounter;
+				}
 			}
-		}
-	}
-
-	public void ValidateAnswer (bool isCorrect, int questionNumber)
-	{
-		Debug.Log ("AnswerCorrect: " + isCorrect);
-		Debug.Log ("Question No : " + questionNumber);
-		if (SystemGlobalDataController.Instance.attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
-			SetValidateAnswer (isCorrect, playerPlaceHolder [questionNumber - 1]);
-		} else {
-			SetValidateAnswer (isCorrect, enemyPlaceHolder [questionNumber - 1]);
-		}
-	}
-
-	private void SetValidateAnswer(bool isCorrect, Image image){
-		if (isCorrect) {
-			image.color = new Color32 (237, 232, 54, 255);
-		} else {
-			image.color = new Color32 (239, 87, 86, 255);
 		}
 	}
 
 	public void ResetAnswer ()
 	{
-		for (int i = 0; i < playerPlaceHolder.Length; i++) {
-			playerPlaceHolder [i].color = new Color32 (7, 61, 58, 255);
-			enemyPlaceHolder [i].color = new Color32 (7, 61, 58, 255);
-		}
-		Debug.Log ("reset answers");
+		playerAnswerText.text = "0";
+		enemyAnswerText.text = "0";
+		playerAnswerCounter = 0;
+		enemyAnswerCounter = 0;
+		Debug.Log ("reset answer indicators!");
 	}
 }

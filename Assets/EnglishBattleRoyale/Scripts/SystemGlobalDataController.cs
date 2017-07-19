@@ -30,6 +30,8 @@ public class SystemGlobalDataController: SingletonMonoBehaviour<SystemGlobalData
 
 	public int gpEarned{ get; set; }
 
+
+
 	public Dictionary<Firebase.Database.DataSnapshot, bool> InitialState{ get; set;}
 
 	//load default mode if none

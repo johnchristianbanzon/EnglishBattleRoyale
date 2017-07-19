@@ -13,7 +13,7 @@ public class PhaseAnswerController : BasePhase
 	{
 		FindObjectOfType<PhaseSkillController> ().ShowAutoActivateButtons (true);
 		Debug.Log ("Starting Answer Phase");
-		RPCDicObserver.AddObserver(AnswerIndicatorController.Instance);
+		RPCDicObserver.AddObserver(PartAnswerIndicatorController.Instance);
 		hasAnswered = false;
 
 		timeLeft = 5;
@@ -25,7 +25,7 @@ public class PhaseAnswerController : BasePhase
 
 	public override void OnEndPhase ()
 	{
-		RPCDicObserver.RemoveObserver(AnswerIndicatorController.Instance);
+		RPCDicObserver.RemoveObserver(PartAnswerIndicatorController.Instance);
 		if (questionSelect.activeInHierarchy) {
 			questionSelect.SetActive (false);
 		}
