@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 
 
-public static class FirebaseDBManager
+public static class FirebaseDBFacade
 {
 	
 	private static Dictionary<string, DatabaseReference> subscriberReference = new Dictionary<string, DatabaseReference>();
@@ -30,7 +30,7 @@ public static class FirebaseDBManager
 			Debug.LogError (args.DatabaseError.Message);
 			return;
 		}
-		RPCLogic.ReceiveDBConnection ((bool)args.Snapshot.Value);
+		RPCBoolObserver.Notify ((bool)args.Snapshot.Value);
 	}
 
 	//Create table using childrenasync
@@ -64,7 +64,7 @@ public static class FirebaseDBManager
 			Debug.LogError (args.DatabaseError.Message);
 			return;
 		}
-		RPCLogic.ReceiveRPC (args.Snapshot);
+		RPCDicObserver.Notify (args.Snapshot);
 	}
 
 	public static void QueryTable (string subscriberName, Query query)
@@ -88,7 +88,7 @@ public static class FirebaseDBManager
 			Debug.LogError (args.DatabaseError.Message);
 			return;
 		}
-		RPCLogic.ReceiveRPCQuery (args.Snapshot);
+		RPCQueryObserver.NotifyQuery (args.Snapshot);
 	}
 
 
@@ -108,7 +108,7 @@ public static class FirebaseDBManager
 			Debug.LogError (args.DatabaseError.Message);
 			return;
 		}
-		RPCLogic.ReceiveRPC (args.Snapshot);
+		RPCDicObserver.Notify (args.Snapshot);
 	}
 		
 	//Run a transaction

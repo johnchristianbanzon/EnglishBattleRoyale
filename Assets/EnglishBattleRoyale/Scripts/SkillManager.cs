@@ -37,7 +37,7 @@ public static class SkillManager
 
 	public static void StartSkill (SkillModel skillmodel)
 	{
-		BattleController.Instance.PlayerGP -= skillmodel.skillGpCost;
+		ScreenBattleController.Instance.PlayerGP -= skillmodel.skillGpCost;
 		SystemFirebaseDBController.Instance.SetSkillParam (skillmodel);
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
 			SystemFirebaseDBController.Instance.SkillPhase ();
@@ -52,7 +52,7 @@ public static class SkillManager
 	public static void SetSkill (int skillIndex, SkillModel skillmodel)
 	{
 		skill [skillIndex] = skillmodel;
-		BattleController.Instance.SetSkillUI (skillIndex + 1, skillmodel.skillName, skillmodel.skillGpCost);
+		PartBattleUIController.Instance.SetSkillUI (skillIndex + 1, skillmodel.skillName, skillmodel.skillGpCost);
 	}
 
 	public static SkillModel GetSkill (int skillNumber)

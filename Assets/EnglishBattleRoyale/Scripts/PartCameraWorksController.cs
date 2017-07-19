@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-public class CameraWorksController: SingletonMonoBehaviour<CameraWorksController> {
+public class PartCameraWorksController: SingletonMonoBehaviour<PartCameraWorksController> {
 	public GameObject introCamera;
 	public GameObject winLoseCamera;
 	public GameObject gestureCamera;

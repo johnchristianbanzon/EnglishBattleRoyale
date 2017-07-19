@@ -48,9 +48,9 @@ public class PhaseAnswerController : BasePhase
 	private void StartTimer ()
 	{
 		if (stoptimer) {
-			GameTimerView.Instance.ToggleTimer (true);
+			GameTimerController.Instance.ToggleTimer (true);
 			if (timeLeft > 0 && hasAnswered == false) {
-				GameTimerView.Instance.gameTimerText.text = "" + timeLeft;
+				GameTimerController.Instance.gameTimerText.text = "" + timeLeft;
 				timeLeft--;
 				return;
 			} 
@@ -61,7 +61,7 @@ public class PhaseAnswerController : BasePhase
 				QuestionStart (gp, qtimeLeft);
 			});
 				
-			GameTimerView.Instance.ToggleTimer (false);
+			GameTimerController.Instance.ToggleTimer (false);
 			stoptimer = false;
 		
 		}
@@ -73,14 +73,14 @@ public class PhaseAnswerController : BasePhase
 		Debug.Log (SystemGlobalDataController.Instance.gpEarned);
 
 		SystemGlobalDataController.Instance.gpEarned = gp;
-		BattleController.Instance.PlayerGP += gp;
+		ScreenBattleController.Instance.PlayerGP += gp;
 		SystemFirebaseDBController.Instance.AnswerPhase (qtimeLeft, gp);
 
 		//for mode 3
 		FindObjectOfType<PhaseSkillController> ().CheckSkillActivate ();
 
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			if (SystemGlobalDataController.Instance.skillChosenCost <= BattleController.Instance.PlayerGP) {
+			if (SystemGlobalDataController.Instance.skillChosenCost <= ScreenBattleController.Instance.PlayerGP) {
 				if (SystemGlobalDataController.Instance.playerSkillChosen != null) {
 					SystemGlobalDataController.Instance.playerSkillChosen ();
 				}
@@ -94,7 +94,7 @@ public class PhaseAnswerController : BasePhase
 	private void HideUI ()
 	{
 		questionSelect.SetActive (false);
-		GameTimerView.Instance.ToggleTimer (false);
+		GameTimerController.Instance.ToggleTimer (false);
 
 	}
 

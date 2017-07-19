@@ -29,9 +29,9 @@ public class SkillViewController : MonoBehaviour {
 			currentSelectedButton ;
 		GameObject answerPrefab = Instantiate (Resources.Load("Prefabs/SkillNav")) as GameObject; 
 		answerPrefab.transform.SetParent (EventSystem.current.currentSelectedGameObject.transform, false);
-		TweenLogic.TweenScaleToSmall (previousSelectedButton.transform,
+		TweenFacade.TweenScaleToSmall (previousSelectedButton.transform,
 			new Vector3(1.0f,1.0f,1.0f),0.5f);
-		TweenLogic.TweenScaleToLarge (EventSystem.current.currentSelectedGameObject.transform,
+		TweenFacade.TweenScaleToLarge (EventSystem.current.currentSelectedGameObject.transform,
 			new Vector3(1.10f,1.10f,1.10f),0.5f);
 		answerPrefab.name = "SkillNav";
 		answerPrefab.transform.localPosition = new Vector3(53,
@@ -57,7 +57,7 @@ public class SkillViewController : MonoBehaviour {
 	public void OnClickInfo(){
 
 		skillOverViewScreen.SetActive (true);
-		TweenLogic.TweenScaleToLarge (skillOverViewScreen.transform,new Vector3(1,1,1),0.2f);
+		TweenFacade.TweenScaleToLarge (skillOverViewScreen.transform,new Vector3(1,1,1),0.2f);
 		skillSprite.GetComponentInChildren<Image>().sprite = currentSelectedButton.transform.GetChild(2).GetComponentInChildren<Image> ().sprite;
 		switch (currentSelectedButton.name) {
 		case "BicPunch":
@@ -85,7 +85,7 @@ public class SkillViewController : MonoBehaviour {
 		Destroy (EventSystem.current.currentSelectedGameObject.transform.parent.gameObject);
 	}
 	public void OnCloseSkillOverView(){
-		TweenLogic.TweenTextScale (skillOverViewScreen.transform,new Vector3(1,1,1),0.5f);
+		TweenFacade.TweenTextScale (skillOverViewScreen.transform,new Vector3(1,1,1),0.5f);
 		skillOverViewScreen.SetActive (false);
 	}
 

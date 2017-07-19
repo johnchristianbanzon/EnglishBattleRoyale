@@ -18,7 +18,7 @@ public class PhaseSkillController : BasePhase
 
 	private void SkillButtonInteractable (int skillNumber, Button button)
 	{
-		if (SkillManager.GetSkill (skillNumber).skillGpCost > BattleController.Instance.PlayerGP) {
+		if (SkillManager.GetSkill (skillNumber).skillGpCost > ScreenBattleController.Instance.PlayerGP) {
 			button.interactable = false;
 		} else {
 			button.interactable = true;
@@ -67,7 +67,7 @@ public class PhaseSkillController : BasePhase
 	public void AttackButton ()
 	{
 		ButtonEnable (false);
-		GameTimerView.Instance.ToggleTimer (false);
+		GameTimerController.Instance.ToggleTimer (false);
 		SystemFirebaseDBController.Instance.SkillPhase ();
 		stoptimer = false;
 	}
@@ -87,7 +87,7 @@ public class PhaseSkillController : BasePhase
 			ActivateSkillIndicator(skillNumber-1);
 		} else {
 			if (skillButton [skillNumber - 1].interactable) {
-				TweenLogic.TweenScaleToLarge (EventSystem.current.currentSelectedGameObject.transform, Vector3.one, 0.3f);
+				TweenFacade.TweenScaleToLarge (EventSystem.current.currentSelectedGameObject.transform, Vector3.one, 0.3f);
 				SelectSkillReduce (skillNumber);
 			}
 		}
@@ -161,7 +161,7 @@ public class PhaseSkillController : BasePhase
 				activateSkill ();
 			}
 			ButtonEnable (false);
-			GameTimerView.Instance.ToggleTimer (false);
+			GameTimerController.Instance.ToggleTimer (false);
 			stoptimer = false;
 		}
 	}
@@ -169,14 +169,14 @@ public class PhaseSkillController : BasePhase
 	private void StartTimer ()
 	{
 		if (stoptimer) {
-			GameTimerView.Instance.ToggleTimer (true);
+			GameTimerController.Instance.ToggleTimer (true);
 			if (timeLeft > 0) {
-				GameTimerView.Instance.gameTimerText.text = "" + timeLeft;
+				GameTimerController.Instance.gameTimerText.text = "" + timeLeft;
 				timeLeft--;
 				return;
 			} 
 			ButtonEnable (false);
-			GameTimerView.Instance.ToggleTimer (false);
+			GameTimerController.Instance.ToggleTimer (false);
 
 			SystemFirebaseDBController.Instance.SkillPhase ();
 			Debug.Log ("stopped phase2 timer");

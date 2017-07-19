@@ -23,20 +23,20 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 		
 	public void StopLoadingScreen(){
 		Destroy (loadingScreen, loadingScreenTweenTime);
-		TweenLogic.TweenScaleToZero (loadingScreenTweenTime, loadingScreen);
+		TweenFacade.TweenScaleToZero (loadingScreenTweenTime, loadingScreen);
 	}
 
 	public void StartWaitOpponentScreen(){
 		ClearAllLoadingScreen ();
 
 		waitOpponent = SystemResourceController.Instance.LoadPrefab (WAIT_OPPONENT,loadScreen);
-		TweenLogic.TweenScaleToNormal (waitOpponentTweenTime, waitOpponent,waitOpponent.transform.Find("LoadingIndicator").gameObject);
+		TweenFacade.TweenScaleToNormal (waitOpponentTweenTime, waitOpponent,waitOpponent.transform.Find("LoadingIndicator").gameObject);
 
 	}
 
 	public void StopWaitOpponentScreen(){
 		Destroy (waitOpponent, waitOpponentTweenTime);
-		TweenLogic.TweenScaleToZero (waitOpponentTweenTime, waitOpponent);
+		TweenFacade.TweenScaleToZero (waitOpponentTweenTime, waitOpponent);
 	}
 
 

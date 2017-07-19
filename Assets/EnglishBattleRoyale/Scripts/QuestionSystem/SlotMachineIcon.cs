@@ -55,7 +55,7 @@ public class SlotMachineIcon : BaseQuestion, IQuestion{
 		
 	public void TweenCallBack ()
 	{
-		TweenLogic.TweenTextScale (gpText.transform, Vector3.one, 1.0f);
+		TweenFacade.TweenTextScale (gpText.transform, Vector3.one, 1.0f);
 		gpText.GetComponent<Text> ().text = " ";
 	}
 

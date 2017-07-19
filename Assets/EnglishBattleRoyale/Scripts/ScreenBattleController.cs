@@ -4,11 +4,100 @@ using UnityEngine;
 
 public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleController>, IRPCDicObserver
 {
+	private string playerName;
+	private float playerHP;
+	private float playerGP;
+
+	private string enemyName;
+	private float enemyHP;
 
 	private List<bool> userHome = new List<bool> ();
 	private List<Dictionary<string, System.Object>> param = new List<Dictionary<string, object>> ();
 	private Dictionary<bool, Dictionary<string, object>> thisCurrentParameter = new Dictionary<bool, Dictionary<string, object>> ();
 	private int attackCount = 0;
+
+	public float PlayerHP { 
+		get {
+			return playerHP;
+		} 
+		set {
+			playerHP = value;
+			PartBattleUIController.Instance.playerHPText.text = playerHP.ToString();
+			TweenFacade.TweenPlayerHPSlider (playerHP,2,true,PartBattleUIController.Instance.playerHPBar);
+		} 
+	}
+
+	public float PlayerGP { 
+		get {
+			return playerGP;
+		} 
+		set {
+			playerGP = value;
+			PartBattleUIController.Instance.playerGPText.text = playerGP.ToString();
+			TweenFacade.TweenPlayerHPSlider (playerHP,2,true,PartBattleUIController.Instance.playerGPBar);
+		} 
+	}
+
+	public float EnemyHP { 
+		get {
+			return enemyHP;
+		} 
+		set {
+			enemyHP = value;
+			PartBattleUIController.Instance.enemyHPText.text = enemyHP.ToString();
+			TweenFacade.TweenPlayerHPSlider (playerHP,2,true,PartBattleUIController.Instance.enemyHPBar);
+		} 
+	}
+
+	void Start ()
+	{
+		RPCDicObserver.AddObserver (this);
+
+		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in SystemGlobalDataController.Instance.InitialState) {
+			SetStateParam (initialState.Key, initialState.Value);
+		}
+	}
+
+	private void SetStateParam (Firebase.Database.DataSnapshot dataSnapShot, bool isHome)
+	{
+		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
+		if (rpcReceive.ContainsKey ("param")) {
+			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
+			ReceiveInitialState (param, isHome);
+		}
+	}
+
+	private void ReceiveInitialState (Dictionary<string, System.Object> initialState, bool isHome)
+	{
+		string playerName = (string)initialState ["playerName"];
+		int playerHP = int.Parse (initialState ["playerHP"].ToString ());
+		int playerGP = int.Parse (initialState ["playerGP"].ToString ());
+
+		if (isHome) {
+			SetInitialPlayerState (playerName, playerHP, playerGP);
+		} else {
+			SetInitialEnemyState (playerName, playerHP);
+		}
+	}
+
+	private void SetInitialPlayerState (string name, float hP, float gP)
+	{
+		playerName = name;
+		playerHP = hP;
+		playerGP = gP;
+		PartBattleUIController.Instance.SetInitialPlayerUI (playerName, playerHP, playerGP);
+	}
+
+	private void SetInitialEnemyState (string name, float hP)
+	{
+		enemyName = name;
+		enemyHP = hP;
+		PartBattleUIController.Instance.SetInitialEnemyUI (enemyName, enemyHP);
+	}
+
+
+
+
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
@@ -42,7 +131,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 				ChangeUserOrder (0, 1);
 			}
 		} else {
-			if (userHome [1] !=SystemGlobalDataController.Instance.isHost) {
+			if (userHome [1] != SystemGlobalDataController.Instance.isHost) {
 				ChangeUserOrder (1, 0);
 			}
 
@@ -75,7 +164,6 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 			break;
 		case 1:
 			Debug.Log ("enemy first attack");
-
 			StartCoroutine (SetAttack (1, 0, 2));
 
 			break;
@@ -101,12 +189,11 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 
 
-	private IEnumerator SetAttack (int firstIndex, int secondIndex, int yieldTime, bool isSameAttack = false)
+	IEnumerator SetAttack (int firstIndex, int secondIndex, int yieldTime, bool isSameAttack = false)
 	{
 		AttackParameter (userHome [firstIndex], param [firstIndex], isSameAttack);
 		yield return new WaitForSeconds (yieldTime);
 		AttackParameter (userHome [secondIndex], param [secondIndex], isSameAttack);
-
 		userHome.Clear ();
 	}
 
@@ -115,22 +202,28 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		StartCoroutine (CheckBattleDelay (secondCheck));
 	}
 
+	public void ShowWinLose (string winLoseText, AudioEnum winLoseAudio)
+	{
+		AudioController.Instance.PlayAudio (winLoseAudio);
+		GameObject battleResult = SystemPopupController.Instance.ShowPopUp ("PopUpBattleResult");
+		battleResult.GetComponent<PopUpBattleResultController> ().SetBattleResultText (winLoseText);
+	}
 
 
 	IEnumerator CheckBattleDelay (bool secondCheck)
 	{
-		if (BattleController.Instance.EnemyHP <= 0 || BattleController.Instance.PlayerHP <= 0) {
+		if (enemyHP <= 0 || playerHP <= 0) {
 			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
-			CameraWorksController.Instance.StartWinLoseCamera ();
+			PartCameraWorksController.Instance.StartWinLoseCamera ();
 
-			if (BattleController.Instance.EnemyHP > 0 && BattleController.Instance.PlayerHP <= 0) {
-				BattleController.Instance.ShowWinLose ("lose", "win", "LOSE", AudioEnum.Lose);
+			if (enemyHP > 0 && playerHP <= 0) {
+				ShowWinLose ("LOSE", AudioEnum.Lose);
 
-			} else if (BattleController.Instance.PlayerHP > 0 && BattleController.Instance.EnemyHP <= 0) {
-				BattleController.Instance.ShowWinLose ("win", "lose", "WIN", AudioEnum.Win);
+			} else if (playerHP > 0 && enemyHP <= 0) {
+				ShowWinLose ("WIN", AudioEnum.Win);
 
 			} else {
-				BattleController.Instance.ShowWinLose ("lose", "lose", "DRAW", AudioEnum.Lose);
+				ShowWinLose ("DRAW", AudioEnum.Lose);
 
 			}
 
@@ -149,7 +242,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 				yield return new WaitForSeconds (3);
 				PhaseManager.StartPhase1 ();
 				//reset effects done by skill and battle data
-				SystemGlobalDataController.Instance.ResetPlayer();
+				SystemGlobalDataController.Instance.ResetPlayer ();
 
 
 				param.Clear ();
@@ -166,14 +259,14 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 			if (attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
 				Debug.Log ("PLAYER DAMAGE: " + damage);
-				BattleController.Instance.EnemyHP -= damage;
+				enemyHP -= damage;
 				if (sameAttack == false) {
 					StartCoroutine (StartAttackSequence (1));
 				}
 
 			} else {
 				Debug.Log ("ENEMY DAMAGE: " + damage);
-				BattleController.Instance.PlayerHP -= damage;
+				playerHP -= damage;
 				if (sameAttack == false) {
 					StartCoroutine (StartAttackSequence (2));
 				}
@@ -215,7 +308,8 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 	}
 
-	private void CheckAttackCount(){
+	private void CheckAttackCount ()
+	{
 		attackCount++;
 		if (attackCount == 2) {
 			CheckBattleStatus (true);
@@ -227,8 +321,6 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 	private void StartAttackSequenceReduce (AudioEnum audioType, bool isPlayer, string animParam)
 	{
-
-		CharacterAvatarsController.Instance.SetTriggerAnim (isPlayer, animParam);
 		AudioController.Instance.PlayAudio (audioType);
 	}
 

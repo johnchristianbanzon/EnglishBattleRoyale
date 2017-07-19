@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CharacterAvatarsController :  SingletonMonoBehaviour<CharacterAvatarsController>
+public class PartAvatarsController :  MonoBehaviour
 {
 	public Animator playerAnim;
 	public Animator enemyAnim;

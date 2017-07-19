@@ -14,7 +14,7 @@ public class ConnectionStatus : MonoBehaviour, IRPCBoolObserver {
 	{
 		if (!isConnectedDB) {
 			connectionIndicator.enabled = true;
-			TweenLogic.TweenImageFadeInFadeOut (connectionIndicator);
+			TweenFacade.TweenImageFadeInFadeOut (connectionIndicator);
 		} else {
 			connectionIndicator.enabled = false;
 		}

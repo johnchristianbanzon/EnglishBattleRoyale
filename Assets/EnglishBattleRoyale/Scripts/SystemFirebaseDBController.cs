@@ -20,10 +20,10 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	string battleStatusKey = null;
 	private bool isMatchMakeSuccess = false;
 	private DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
+	private  Dictionary<DataSnapshot, bool> InitialState = new Dictionary<DataSnapshot, bool>();
 
 	void Start ()
 	{
-		GameManager.SetSettings ();
 
 		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
 			dependencyStatus = FirebaseApp.CheckDependencies ();
@@ -53,7 +53,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		FirebaseApp.DefaultInstance.SetEditorDatabaseUrl (MyConst.URL_FIREBASE_DATABASE);
 		#endif
 		SetReference ();
-		FirebaseDBManager.CheckDBConnection (FirebaseDatabase.DefaultInstance.GetReferenceFromUrl (MyConst.URL_FIREBASE_DATABASE_CONNECTION));
+		FirebaseDBFacade.CheckDBConnection (FirebaseDatabase.DefaultInstance.GetReferenceFromUrl (MyConst.URL_FIREBASE_DATABASE_CONNECTION));
 	}
 
 	private void SetReference ()
@@ -63,28 +63,38 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	}
 
 	//Do something when receives rpc from facade
-	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
+	public void OnNotify (DataSnapshot dataSnapShot)
 	{
-		//TEMPORARY SOLUTION FOR PLAYER DETAILS
-		if (dataSnapShot.Key.ToString ().Equals ("Home")) {
-			Debug.Log ("hi");
-			if (SystemGlobalDataController.Instance.isHost) {
-				BattleController.Instance.SetStateParam (dataSnapShot, true);
-			} else {
-				BattleController.Instance.SetStateParam (dataSnapShot, false);
+		
+		try {
+			//TEMPORARY SOLUTION FOR PLAYER DETAILS
+			if (dataSnapShot.Key.ToString ().Equals ("Home")) {
+				if (SystemGlobalDataController.Instance.isHost) {
+					InitialState.Add (dataSnapShot, true);
+				} else {
+					InitialState.Add (dataSnapShot, false);
+				}
+
+
 			}
-		}
-		//TEMPORARY SOLUTION FOR PLAYER DETAILS
-		if (dataSnapShot.Key.ToString ().Equals ("Visitor")) {
-			isMatchMakeSuccess = true;
-			onSuccessMatchMake (true);
-			if (SystemGlobalDataController.Instance.isHost) {
-				BattleController.Instance.SetStateParam (dataSnapShot, false);
-			} else {
-				BattleController.Instance.SetStateParam (dataSnapShot, true);
+			//TEMPORARY SOLUTION FOR PLAYER DETAILS
+			if (dataSnapShot.Key.ToString ().Equals ("Visitor")) {
+				isMatchMakeSuccess = true;
+				onSuccessMatchMake (true);
+				if (SystemGlobalDataController.Instance.isHost) {
+					InitialState.Add (dataSnapShot, false);
+				} else {
+					InitialState.Add (dataSnapShot, true);
+				}
+				Debug.Log ("Matching Success!");
 			}
-			Debug.Log ("Matching Success!");
+
+			SystemGlobalDataController.Instance.InitialState = InitialState;
+		} catch (Exception e) {
+			//do someting in future
 		}
+
+
 	}
 
 	public void OnNotifyQuery (DataSnapshot dataSnapshot)
@@ -97,7 +107,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 					//get prototype mode type from host
 					SystemGlobalDataController.Instance.modePrototype = (ModeEnum)int.Parse (snapshot.Child (MyConst.GAMEROOM_PROTOTYPE_MODE).Value.ToString ());
 
-					GameManager.SetSettings();
+					GameManager.SetSettings ();
 
 					if (snapshot.Child (MyConst.GAMEROOM_STATUS).Value.ToString ().Equals ("0")) {
 
@@ -122,7 +132,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		RPCDicObserver.AddObserver (this);
 		RPCQueryObserver.AddObserver (this);
 		//Order first to search fast
-		FirebaseDBManager.QueryTable ("SearchRoom", roomReference.OrderByChild (MyConst.GAMEROOM_STATUS).EqualTo ("0"));
+		FirebaseDBFacade.QueryTable ("SearchRoom", roomReference.OrderByChild (MyConst.GAMEROOM_STATUS).EqualTo ("0"));
 
 		onSuccessMatchMake = onResult;
 
@@ -130,12 +140,12 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	private void CreateRoom ()
 	{
-		GameManager.SetSettings();
-		gameRoomKey = FirebaseDBManager.CreateKey (reference.Child (MyConst.GAMEROOM_NAME));
+		GameManager.SetSettings ();
+		gameRoomKey = FirebaseDBFacade.CreateKey (reference.Child (MyConst.GAMEROOM_NAME));
 		RoomCreateJoin (true, MyConst.GAMEROOM_HOME);
 
 		//set prototype mode type
-		FirebaseDBManager.SetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_PROTOTYPE_MODE), "" + (int)SystemGlobalDataController.Instance.modePrototype);
+		FirebaseDBFacade.SetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_PROTOTYPE_MODE), "" + (int)SystemGlobalDataController.Instance.modePrototype);
 	}
 
 	public void CancelRoomSearch ()
@@ -152,22 +162,22 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		gameRoomKey = null;
 		searchingRoom = false;
 		onSuccessMatchMake (false);
-		FirebaseDBManager.RemoveQuery ("SearchRoom");
-		FirebaseDBManager.RemoveReference ("InitialStateListener");
-		FirebaseDBManager.RemoveReference ("BattleStatusValueChanged");
-		FirebaseDBManager.RemoveReference ("BattleStatusChildAdded");
-		FirebaseDBManager.RemoveReference ("RPCListener");
+		FirebaseDBFacade.RemoveQuery ("SearchRoom");
+		FirebaseDBFacade.RemoveReference ("InitialStateListener");
+		FirebaseDBFacade.RemoveReference ("BattleStatusValueChanged");
+		FirebaseDBFacade.RemoveReference ("BattleStatusChildAdded");
+		FirebaseDBFacade.RemoveReference ("RPCListener");
 	}
 
 	private void DeleteRoom ()
 	{
 		//add check room deleted successfully using childremove in fdfacade
-		FirebaseDBManager.RemoveTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey));
+		FirebaseDBFacade.RemoveTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey));
 	}
 
 	public void JoinRoom ()
 	{
-		FirebaseDBManager.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_STATUS), delegate(MutableData mutableData) {
+		FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_STATUS), delegate(MutableData mutableData) {
 			int playerCount = int.Parse (mutableData.Value.ToString ());
 		
 			playerCount++;
@@ -200,12 +210,12 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		Dictionary<string, System.Object> entryValues = SystemGlobalDataController.Instance.player.ToDictionary ();
 
 		string directory = MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_INITITAL_STATE + "/" + userPlace + "/param/";
-		FirebaseDBManager.CreateTableChildrenAsync (directory, reference, entryValues);
+		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
 
 
 		//set room status to open when create room
 		if (isHost) {
-			FirebaseDBManager.SetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_STATUS), "0");
+			FirebaseDBFacade.SetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_STATUS), "0");
 		}
 		//set battle status to answer when start of game
 		CheckInitialPhase ();
@@ -216,13 +226,13 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	private void RPCListener ()
 	{
 		if (gameRoomKey != null) {
-			FirebaseDBManager.CreateTableChildAddedListener ("RPCListener", reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_RPC));
+			FirebaseDBFacade.CreateTableChildAddedListener ("RPCListener", reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_RPC));
 		}
 	}
 
 	private void CheckInitialPhase ()
 	{
-		FirebaseDBManager.GetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS), delegate(DataSnapshot dataSnapshot) {
+		FirebaseDBFacade.GetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS), delegate(DataSnapshot dataSnapshot) {
 
 
 			if (dataSnapshot.Value == null) {
@@ -239,8 +249,8 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 				}
 			}
 
-			FirebaseDBManager.CreateTableChildAddedListener ("BattleStatusChildAdded", reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS));
-			FirebaseDBManager.CreateTableValueChangedListener ("BattleStatusValueChanged", reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS));
+			FirebaseDBFacade.CreateTableChildAddedListener ("BattleStatusChildAdded", reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS));
+			FirebaseDBFacade.CreateTableValueChangedListener ("BattleStatusValueChanged", reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS));
 		});
 
 	}
@@ -248,7 +258,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	private void InitialStateListener ()
 	{
 		if (gameRoomKey != null) {
-			FirebaseDBManager.CreateTableChildAddedListener ("InitialStateListener", reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_INITITAL_STATE));
+			FirebaseDBFacade.CreateTableChildAddedListener ("InitialStateListener", reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_INITITAL_STATE));
 		}
 	}
 
@@ -260,13 +270,13 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		entryValues.Add (MyConst.BATTLE_STATUS_COUNT, "" + stateCount);
 
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_BATTLE_STATUS + "/" + battleStatusKey + "/";
-		FirebaseDBManager.CreateTableChildrenAsync (directory, reference, entryValues);
+		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
 	}
 
 	//for mode 2
 	public void UpdateAnswerBattleStatus (string stateName, int stateCount, int hTime, int hAnswer, int vTime, int vAnswer)
 	{
-		battleStatusKey = FirebaseDBManager.CreateKey (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS));
+		battleStatusKey = FirebaseDBFacade.CreateKey (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS));
 		Dictionary<string, System.Object> entryValues = new Dictionary<string, System.Object> ();
 		entryValues.Add (MyConst.BATTLE_STATUS_STATE, stateName);
 		entryValues.Add (MyConst.BATTLE_STATUS_COUNT, "" + stateCount);
@@ -276,7 +286,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		entryValues.Add (MyConst.BATTLE_STATUS_VANSWER, "" + vAnswer);
 
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_BATTLE_STATUS + "/" + battleStatusKey + "/";
-		FirebaseDBManager.CreateTableChildrenAsync (directory, reference, entryValues);
+		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
 	}
 
 	public void SetAttackParam (AttackModel attack)
@@ -308,7 +318,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		result ["param"] = toDictionary;
 
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_RPC + "/" + rpcKey;
-		FirebaseDBManager.CreateTableChildrenAsync (directory, reference, result);
+		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, result);
 	}
 
 	public void AnswerPhase (int receiveTime, int receiveAnswer)
@@ -321,7 +331,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			modulusNum = 1;
 		}
 		GetLatestKey (modulusNum, delegate(string resultString) {
-			FirebaseDBManager.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
+			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ANSWER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					if (SystemGlobalDataController.Instance.isHost) {
@@ -354,7 +364,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			modulusNum = 2;
 		}
 		GetLatestKey (modulusNum, delegate(string resultString) {
-			FirebaseDBManager.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
+			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_SKILL, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					if (battleCount == 2) {
 						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
@@ -373,7 +383,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	{
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
 		GetLatestKey (3, delegate(string resultString) {
-			FirebaseDBManager.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
+			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					SetAttackParam (param);
 				});
@@ -400,7 +410,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	private void GetLatestKey (int numMod, Action<string> action)
 	{
-		FirebaseDBManager.GetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS), delegate(DataSnapshot dataSnapshot) {
+		FirebaseDBFacade.GetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS), delegate(DataSnapshot dataSnapshot) {
 		
 
 			if (dataSnapshot != null) {
