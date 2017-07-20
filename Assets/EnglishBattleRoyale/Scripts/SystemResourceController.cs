@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class SystemResourceController : SingletonMonoBehaviour<SystemResourceController>
 {
@@ -12,6 +13,11 @@ public class SystemResourceController : SingletonMonoBehaviour<SystemResourceCon
 	public TextAsset LoadCSV (string csvName){
 		TextAsset csvObject = Resources.Load ("CSV/" + csvName) as TextAsset;
 		return csvObject;
+	}
+
+	public Sprite LoadCharacterCardSprite (string spriteName){
+		Sprite charCardSprite = Resources.Load<Sprite>("CardSprites/" + spriteName);
+		return charCardSprite;
 	}
 
 
