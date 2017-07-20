@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class PartQuestionController: MonoBehaviour
 {
+
+	// JOCHRIS START HERE   ---------------------------------------------------------------------------------------------
 	public GameObject questionSelect;
 
 	public GameObject[] questionTypeModals;
@@ -64,7 +66,7 @@ public class PartQuestionController: MonoBehaviour
 			break;
 		}
 	}
-
+	// JOCHRIS END HERE   ---------------------------------------------------------------------------------------------
 
 	public void OnStartPhase ()
 	{
@@ -103,9 +105,6 @@ public class PartQuestionController: MonoBehaviour
 		});
 
 	}
-
-
-
 
 	private void QuestionStart (int gp, int qtimeLeft)
 	{
