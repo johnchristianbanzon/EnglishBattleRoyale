@@ -59,6 +59,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 	void Start ()
 	{
+		
 		RPCDicObserver.AddObserver (this);
 		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in SystemGlobalDataController.Instance.InitialState) {
 			SetStateParam (initialState.Key, initialState.Value);

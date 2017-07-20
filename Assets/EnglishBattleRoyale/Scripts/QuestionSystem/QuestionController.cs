@@ -35,7 +35,7 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 
 	void OnEnable ()
 	{
-		ScreenBattleController.Instance.partState.gameTimer.QuestionTimer (delegate() {
+		GameTimeManager.StartQuestionTimer (delegate() {
 			ComputeScore ();
 		}, timeLeft);
 	}
@@ -73,7 +73,7 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 		getround = round;
 		correctAnswers = answerScore;
 		if (round > roundlimit) {
-			ScreenBattleController.Instance.partState.gameTimer.StopTimer ();
+			GameTimeManager.StopTimer ();
 			ComputeScore ();
 		} 
 

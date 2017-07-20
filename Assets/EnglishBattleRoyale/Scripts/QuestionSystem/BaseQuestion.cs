@@ -92,7 +92,7 @@ public abstract class BaseQuestion : MonoBehaviour
 		correctAnswers = result ? correctAnswers + 1 : correctAnswers;
 		UpdateFirebaseAnswerModel (result);
 		hasSkippedQuestion = true;
-		ScreenBattleController.Instance.partState.gameTimer.StopTimer ();
+		GameTimeManager.StopTimer ();
 		Invoke ("OnFinishQuestion", 1f);
 	}
 

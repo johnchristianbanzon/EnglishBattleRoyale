@@ -71,15 +71,15 @@ public class PartQuestionController: MonoBehaviour
 		ScreenBattleController.Instance.partSkill.ShowAutoActivateButtons (true);
 		Debug.Log ("Starting Answer Phase");
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-		ScreenBattleController.Instance.partState.gameTimer.hasAnswered = false;
+		GameTimeManager.HasAnswered(false);
 
-		ScreenBattleController.Instance.partState.gameTimer.SelectQuestionTimer (delegate() {
+		GameTimeManager.StartSelectQuestionTimer (delegate() {
 			HideUI ();
 			SetQuestionEntry (UnityEngine.Random.Range (0, 2), SystemGlobalDataController.Instance.answerQuestionTime, delegate(int gp, int qtimeLeft) {
 
 				QuestionStart (gp, qtimeLeft);
 			});
-		});
+		},5);
 		questionSelect.SetActive (true);
 
 	}
@@ -90,13 +90,12 @@ public class PartQuestionController: MonoBehaviour
 		if (questionSelect.activeInHierarchy) {
 			questionSelect.SetActive (false);
 		}
-		ScreenBattleController.Instance.partState.gameTimer.CancelInvoke ("StartQuestionTimer");
 	}
 
 	public void OnQuestionSelect (int questionNumber)
 	{
-		ScreenBattleController.Instance.partState.gameTimer.StopTimer ();
-		ScreenBattleController.Instance.partState.gameTimer.hasAnswered = true;
+		GameTimeManager.StopTimer ();
+		GameTimeManager.HasAnswered (true);
 		questionSelect.SetActive (false);
 		//call question callback here
 		SetQuestionEntry (questionNumber, SystemGlobalDataController.Instance.answerQuestionTime, delegate(int gp, int qtimeLeft) {
@@ -135,7 +134,7 @@ public class PartQuestionController: MonoBehaviour
 	private void HideUI ()
 	{
 		questionSelect.SetActive (false);
-		ScreenBattleController.Instance.partState.gameTimer.ToggleTimer (false);
+		GameTimeManager.ToggleTimer (false);
 
 	}
 
