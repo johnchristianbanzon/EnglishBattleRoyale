@@ -17,7 +17,6 @@ public static class GameManager
 
 	public static void SetSettings ()
 	{
-		
 		gameSettingList = CSVParser.ParseCSV ("GameSettings");
 		player = new PlayerModel (playerName, GetFloatList ());
 		answerQuestionTime = int.Parse (gameSettingList [6] ["Value"].ToString ());
@@ -28,7 +27,6 @@ public static class GameManager
 
 	private static float[] GetFloatList ()
 	{
-
 		float[] floatList = new float[6];
 
 		for (int i = 0; i < 5; i++) {
