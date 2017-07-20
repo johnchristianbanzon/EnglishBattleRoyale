@@ -69,7 +69,7 @@ public static class SkillManager
 	public static void SetSkill (int skillIndex, SkillModel skillmodel)
 	{
 		skill [skillIndex] = skillmodel;
-		PartBattleUIController.Instance.SetSkillUI (skillIndex + 1, skillmodel.skillName, skillmodel.skillGpCost);
+		ScreenBattleController.Instance.partSkill.SetSkillUI (skillIndex + 1, skillmodel.skillName, skillmodel.skillGpCost);
 	}
 
 	public static SkillModel GetSkill (int skillNumber)

@@ -47,7 +47,6 @@ public class SelectLetterIcon :  BaseQuestion , IQuestion
 	{
 		TweenCallBack ();
 		hasSkippedQuestion = false;
-		QuestionController.Instance.Stoptimer = true;
 		ClearAnswerList ();
 		answerIndex = 1;
 		currentRound += 1;

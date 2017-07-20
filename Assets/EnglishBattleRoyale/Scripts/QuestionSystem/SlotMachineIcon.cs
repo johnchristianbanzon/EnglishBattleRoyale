@@ -88,7 +88,6 @@ public class SlotMachineIcon : BaseQuestion, IQuestion{
 		gotAnswer = true;
 		TweenCallBack ();
 		hasSkippedQuestion = false;
-		QuestionController.Instance.Stoptimer = true;
 		currentRound += 1;
 		NextQuestion ();
 		QuestionController.Instance.Returner (delegate {

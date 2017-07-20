@@ -45,7 +45,6 @@ public class ChangeOrderIcon : BaseQuestion, IQuestion
 		TweenCallBack ();
 		hasSkippedQuestion = false;
 		Clear ();
-		QuestionController.Instance.Stoptimer = true;
 		answerIndex = 1;
 		currentRound = currentRound + 1;
 

@@ -11,7 +11,6 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	public Sprite gestureImage;
 	public GameObject gestureButton;
 	private Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-	public PartAvatarsController partAvatar;
 
 	void Start(){
 		RPCDicObserver.AddObserver (this);
@@ -107,16 +106,16 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	{
 		yield return new WaitForSeconds (1.5f);
 		if (!isPlayer) {
-			PartCameraWorksController.Instance.HideGestureCamera ();
+			ScreenBattleController.Instance.partCameraWorks.HideGestureCamera ();
 		}
 	}
 
 	private void ShowGesture (bool isPlayer, string param)
 	{
 		StartCoroutine (StartTimer (isPlayer));
-		partAvatar.SetTriggerAnim (isPlayer, param);
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, param);
 		if (!isPlayer) {
-			PartCameraWorksController.Instance.ShowGestureCamera ();
+			ScreenBattleController.Instance.partCameraWorks.ShowGestureCamera ();
 		}
 	}
 

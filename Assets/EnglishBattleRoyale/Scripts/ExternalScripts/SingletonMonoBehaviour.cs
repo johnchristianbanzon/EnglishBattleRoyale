@@ -18,18 +18,20 @@ public class SingletonMonoBehaviour <T> : MonoBehaviour where T : MonoBehaviour
 			return instance;
 		}
 	}
-	public static bool HasInstance(){
+
+	public static bool HasInstance ()
+	{
 		if (instance == null) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	protected virtual void Awake ()
 	{
 		CheckInstance ();
 	}
-	
+
 	protected bool CheckInstance ()
 	{
 		if (this == Instance) {

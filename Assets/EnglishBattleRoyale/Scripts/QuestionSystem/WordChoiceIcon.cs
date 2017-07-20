@@ -44,7 +44,6 @@ public class WordChoiceIcon : BaseQuestion, IQuestion
 		TweenCallBack ();
 		justAnswered = false;
 		QuestionController qc = new QuestionController();
-		qc.Stoptimer = true;
 		hasSkippedQuestion = false;
 		Clear ();
 		currentRound = currentRound + 1;
