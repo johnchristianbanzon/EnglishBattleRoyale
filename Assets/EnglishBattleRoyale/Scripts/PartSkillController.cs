@@ -51,9 +51,9 @@ public class PartSkillController : MonoBehaviour
 			attackButton.interactable = true;
 			attackButton.gameObject.SetActive (true);
 
-			ScreenBattleController.Instance.partState.gameTimer.SkillTimer (delegate() {
+			GameTimeManager.StartSkillTimer (delegate() {
 				ButtonEnable (false);
-			});
+			}, 5);
 
 		} else {
 			SystemFirebaseDBController.Instance.SkillPhase ();
@@ -79,9 +79,9 @@ public class PartSkillController : MonoBehaviour
 	public void AttackButton ()
 	{
 		ButtonEnable (false);
-		ScreenBattleController.Instance.partState.gameTimer.ToggleTimer (false);
+		GameTimeManager.ToggleTimer (false);
 		SystemFirebaseDBController.Instance.SkillPhase ();
-		ScreenBattleController.Instance.partState.gameTimer.StopTimer ();
+		GameTimeManager.StopTimer ();
 	}
 
 	public void ButtonEnable (bool buttonEnable)
@@ -173,8 +173,8 @@ public class PartSkillController : MonoBehaviour
 				activateSkill ();
 			}
 			ButtonEnable (false);
-			ScreenBattleController.Instance.partState.gameTimer.ToggleTimer (false);
-			ScreenBattleController.Instance.partState.gameTimer.StopTimer ();
+			GameTimeManager.ToggleTimer (false);
+			GameTimeManager.StopTimer ();
 		}
 	}
 
