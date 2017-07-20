@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 /*This class activates the skill received from database*/
-public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObserver
+public class SkillActivator: IRPCDicObserver
 {
 
 	public PartAvatarsController partAvatar;
@@ -41,12 +39,8 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 			//do something with exception in future
 		}
 	}
-
-	/// <summary>
-	/// Sets the player skill parameter.
-	/// </summary>
-	/// <param name="skillParameter">Skill parameter.</param>
-	public void SetPlayerSkillParameter (string skillParameter)
+		
+	private void SetPlayerSkillParameter (string skillParameter)
 	{
 		SkillParameterList skillResult = JsonUtility.FromJson<SkillParameterList> (skillParameter);
 
@@ -64,7 +58,7 @@ public class SkillActivator: SingletonMonoBehaviour<SkillActivator>, IRPCDicObse
 		}
 	}
 
-	public void SetEnemySkillParameter (string skillParameter)
+	private void SetEnemySkillParameter (string skillParameter)
 	{
 		SkillParameterList skillResult = JsonUtility.FromJson<SkillParameterList> (skillParameter);
 

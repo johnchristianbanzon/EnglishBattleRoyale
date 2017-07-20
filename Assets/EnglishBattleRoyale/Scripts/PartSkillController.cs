@@ -1,16 +1,27 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using System;
-using UnityEngine.EventSystems;
 
-public class PhaseSkillController : BasePhase
+public class PartSkillController : MonoBehaviour
 {
 	public bool activateAutoSkill;
 	public Button[] skillButton;
 	public Button attackButton;
 	private bool[] skillButtonToggleOn = new bool[3];
 
-	void Start(){
+	public Text[] skillName;
+	public Text[] skillGpCost;
+
+	public void SetSkillUI (int skillNumber, string skillName, int skillGp)
+	{
+		this.skillName [skillNumber - 1].text = skillName.ToString ();
+		this.skillGpCost [skillNumber - 1].text = "" + skillGp + "GP";
+	}
+
+	void Start ()
+	{
 		skillButtonToggleOn [0] = false;
 		skillButtonToggleOn [1] = false;
 		skillButtonToggleOn [2] = false;
@@ -25,7 +36,7 @@ public class PhaseSkillController : BasePhase
 		}
 	}
 
-	public override void OnStartPhase ()
+	public void OnStartPhase ()
 	{
 		if (!activateAutoSkill) {
 			Debug.Log ("Starting Skill Phase");
@@ -40,24 +51,25 @@ public class PhaseSkillController : BasePhase
 			attackButton.interactable = true;
 			attackButton.gameObject.SetActive (true);
 
-			timeLeft = 5;
-			stoptimer = true;
-			InvokeRepeating ("StartTimer", 0, 1);
+			ScreenBattleController.Instance.partState.gameTimer.SkillTimer (delegate() {
+				ButtonEnable (false);
+			});
+
 		} else {
 			SystemFirebaseDBController.Instance.SkillPhase ();
 		}
 	}
 
-	public override void OnEndPhase ()
+	public void OnEndPhase ()
 	{
 		if (!activateAutoSkill) {
 			attackButton.gameObject.SetActive (false);
 			ButtonEnable (false);
-			CancelInvoke ("StartTimer");
 		}
 	}
 
-	public void ShowAutoActivateButtons(bool isShow){
+	public void ShowAutoActivateButtons (bool isShow)
+	{
 		if (activateAutoSkill) {
 			ButtonEnable (isShow);
 		}
@@ -67,9 +79,9 @@ public class PhaseSkillController : BasePhase
 	public void AttackButton ()
 	{
 		ButtonEnable (false);
-		GameTimerController.Instance.ToggleTimer (false);
+		ScreenBattleController.Instance.partState.gameTimer.ToggleTimer (false);
 		SystemFirebaseDBController.Instance.SkillPhase ();
-		stoptimer = false;
+		ScreenBattleController.Instance.partState.gameTimer.StopTimer ();
 	}
 
 	public void ButtonEnable (bool buttonEnable)
@@ -83,26 +95,26 @@ public class PhaseSkillController : BasePhase
 	public void SelectSkill (int skillNumber)
 	{
 		if (activateAutoSkill) {
-			skillButtonToggleOn [skillNumber -1] = !skillButtonToggleOn [skillNumber -1];
-			ActivateSkillIndicator(skillNumber-1);
+			skillButtonToggleOn [skillNumber - 1] = !skillButtonToggleOn [skillNumber - 1];
+			ActivateSkillIndicator (skillNumber - 1);
 		} else {
 			if (skillButton [skillNumber - 1].interactable) {
-				TweenFacade.TweenScaleToLarge (EventSystem.current.currentSelectedGameObject.transform, Vector3.one, 0.3f);
 				SelectSkillReduce (skillNumber);
 			}
 		}
 
 	}
 
-	private void ActivateSkillIndicator(int skillNumber){
+	private void ActivateSkillIndicator (int skillNumber)
+	{
 		if (skillButtonToggleOn [skillNumber]) {
 			//if clicked
-			skillButton [skillNumber].GetComponent<Outline>() .enabled = true;
-			skillButton [skillNumber].GetComponent<Outline>() .effectColor = new Color32 (255,96,26,255);
+			skillButton [skillNumber].GetComponent<Outline> ().enabled = true;
+			skillButton [skillNumber].GetComponent<Outline> ().effectColor = new Color32 (255, 96, 26, 255);
 
 		} else {
 			//if not
-			skillButton [skillNumber].GetComponent<Outline>() .enabled = false;
+			skillButton [skillNumber].GetComponent<Outline> ().enabled = false;
 		}
 	}
 
@@ -161,29 +173,12 @@ public class PhaseSkillController : BasePhase
 				activateSkill ();
 			}
 			ButtonEnable (false);
-			GameTimerController.Instance.ToggleTimer (false);
-			stoptimer = false;
+			ScreenBattleController.Instance.partState.gameTimer.ToggleTimer (false);
+			ScreenBattleController.Instance.partState.gameTimer.StopTimer ();
 		}
 	}
 
-	private void StartTimer ()
-	{
-		if (stoptimer) {
-			GameTimerController.Instance.ToggleTimer (true);
-			if (timeLeft > 0) {
-				GameTimerController.Instance.gameTimerText.text = "" + timeLeft;
-				timeLeft--;
-				return;
-			} 
-			ButtonEnable (false);
-			GameTimerController.Instance.ToggleTimer (false);
 
-			SystemFirebaseDBController.Instance.SkillPhase ();
-			Debug.Log ("stopped phase2 timer");
-			stoptimer = false;
-
-		}
-	}
 
 
 }

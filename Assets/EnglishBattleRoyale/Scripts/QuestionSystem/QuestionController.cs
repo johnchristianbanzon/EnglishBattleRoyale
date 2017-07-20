@@ -10,7 +10,6 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 {
 	public static int getround;
 	private static int correctAnswers;
-	private static bool stoptimer = false;
 	private static int timeLeft;
 	private static int timeDuration;
 	private static GameObject[] inputButton;
@@ -34,18 +33,11 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 
 	}
 
-	public bool Stoptimer {
-		get { 
-			return stoptimer;
-		}
-		set { 
-			stoptimer = value;
-		}
-	}
-
 	void OnEnable ()
 	{
-		InvokeRepeating ("StartTimer", 0, 1);
+		ScreenBattleController.Instance.partState.gameTimer.QuestionTimer (delegate() {
+			ComputeScore ();
+		}, timeLeft);
 	}
 
 	public void SetQuestion (IQuestion questiontype, int qTime, Action<int, int> Result)
@@ -57,30 +49,11 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 		}
 		timeLeft = qTime;
 		questiontype.Activate (Result);
-		stoptimer = true;
-	}
-
-
-	private void StartTimer ()
-	{
-		if (stoptimer) {
-			GameTimerController.Instance.ToggleTimer (true);
-			if (timeLeft > 0) {
-				GameTimerController.Instance.gameTimerText.text = "" + timeLeft;
-				timeLeft--;
-				return;
-			} 
-				
-			GameTimerController.Instance.ToggleTimer (false);
-			stoptimer = false;
-			ComputeScore ();
-				  
-		}
 	}
 
 	public void ComputeScore ()
 	{
-		PartQuestionController questionManagement = FindObjectOfType<PartQuestionController>();
+		PartQuestionController questionManagement = FindObjectOfType<PartQuestionController> ();
 		questionManagement.QuestionHide ();
 
 		for (int i = 0; i < 12; i++) {
@@ -89,7 +62,7 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 		for (int i = 0; i < 12; i++) {
 			Destroy (GameObject.Find ("output" + i));
 		}
-		onResult.Invoke (correctAnswers,timeLeft);
+		onResult.Invoke (correctAnswers, timeLeft);
 		correctAnswers = 0;
 	}
 
@@ -100,7 +73,7 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 		getround = round;
 		correctAnswers = answerScore;
 		if (round > roundlimit) {
-			stoptimer = false;
+			ScreenBattleController.Instance.partState.gameTimer.StopTimer ();
 			ComputeScore ();
 		} 
 

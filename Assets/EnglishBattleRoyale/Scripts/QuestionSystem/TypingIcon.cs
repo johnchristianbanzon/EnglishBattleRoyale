@@ -56,7 +56,6 @@ public class TypingIcon : BaseQuestion, IQuestion
 		answerIndex = 1;
 		currentRound = currentRound + 1;
 		NextRound ();
-		QuestionController.Instance.Stoptimer = true;
 		QuestionController.Instance.Returner (delegate {
 			QuestionController.Instance.onFinishQuestion = true;
 		}, currentRound, correctAnswers);

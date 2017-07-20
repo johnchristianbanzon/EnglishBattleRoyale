@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleController>, IRPCDicObserver
 {
+	public PartStateController partState;
+	public PartSkillController partSkill;
+	public PartQuestionController partQuestion;
+	public PartGestureController partGesture;
+	public PartCameraWorksController partCameraWorks;
+	public PartAvatarsController partAvatars;
+
+
 	private string playerName;
 	private float playerHP;
 	private float playerGP;
@@ -22,8 +30,8 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		} 
 		set {
 			playerHP = value;
-			PartBattleUIController.Instance.playerHPText.text = playerHP.ToString();
-			TweenFacade.TweenPlayerHPSlider (playerHP,2,true,PartBattleUIController.Instance.playerHPBar);
+			partState.playerHPText.text = playerHP.ToString ();
+			TweenFacade.TweenPlayerHPSlider (playerHP, 2, true, partState.playerHPBar);
 		} 
 	}
 
@@ -33,8 +41,8 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		} 
 		set {
 			playerGP = value;
-			PartBattleUIController.Instance.playerGPText.text = playerGP.ToString();
-			TweenFacade.TweenPlayerHPSlider (playerHP,2,true,PartBattleUIController.Instance.playerGPBar);
+			partState.playerGPText.text = playerGP.ToString ();
+			TweenFacade.TweenPlayerHPSlider (playerHP, 2, true, partState.playerGPBar);
 		} 
 	}
 
@@ -44,8 +52,8 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		} 
 		set {
 			enemyHP = value;
-			PartBattleUIController.Instance.enemyHPText.text = enemyHP.ToString();
-			TweenFacade.TweenPlayerHPSlider (playerHP,2,true,PartBattleUIController.Instance.enemyHPBar);
+			partState.enemyHPText.text = enemyHP.ToString ();
+			TweenFacade.TweenPlayerHPSlider (playerHP, 2, true, partState.enemyHPBar);
 		} 
 	}
 
@@ -84,14 +92,14 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		playerName = name;
 		playerHP = hP;
 		playerGP = gP;
-		PartBattleUIController.Instance.SetInitialPlayerUI (playerName, playerHP, playerGP);
+		partState.SetInitialPlayerUI (playerName, playerHP, playerGP);
 	}
 
 	private void SetInitialEnemyState (string name, float hP)
 	{
 		enemyName = name;
 		enemyHP = hP;
-		PartBattleUIController.Instance.SetInitialEnemyUI (enemyName, enemyHP);
+		partState.SetInitialEnemyUI (enemyName, enemyHP);
 	}
 
 
@@ -154,7 +162,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 				attackOrder = 2;
 			}
 		}
-			
+
 		switch (attackOrder) {
 		case 0:
 			Debug.Log ("player first attack");
@@ -213,7 +221,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	{
 		if (enemyHP <= 0 || playerHP <= 0) {
 			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
-			PartCameraWorksController.Instance.StartWinLoseCamera ();
+			partCameraWorks.StartWinLoseCamera ();
 
 			if (enemyHP > 0 && playerHP <= 0) {
 				ShowWinLose ("LOSE", AudioEnum.Lose);
@@ -239,7 +247,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 					}
 				}
 				yield return new WaitForSeconds (3);
-				PartPhaseController.Instance.StartPhase1 ();
+				PhaseManager.StartPhase1 ();
 				//reset effects done by skill and battle data
 				SystemGlobalDataController.Instance.ResetPlayer ();
 
@@ -274,14 +282,12 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 	}
 
-
-
 	IEnumerator StartAttackSequence (int sequenceType)
 	{
 
 		switch (sequenceType) {
 		case 1:
-			
+
 			StartAttackSequenceReduce (AudioEnum.Attack, true, "attack");
 			yield return new WaitForSeconds (0.5f);
 			StartAttackSequenceReduce (AudioEnum.Hit, false, "hit");
@@ -322,6 +328,8 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	{
 		AudioController.Instance.PlayAudio (audioType);
 	}
+
+
 
 
 }
