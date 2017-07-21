@@ -7,7 +7,6 @@ public static class GameManager
 {
 	private static PlayerModel player;
 	private static string playerName;
-	private static int answerQuestionTime;
 	private static List<Dictionary<string,System.Object>> gameSettingList;
 
 	public static void SetPLayerName (string name)
@@ -19,10 +18,8 @@ public static class GameManager
 	{
 		gameSettingList = CSVParser.ParseCSV ("GameSettings");
 		player = new PlayerModel (playerName, GetFloatList ());
-		answerQuestionTime = int.Parse (gameSettingList [6] ["Value"].ToString ());
 
 		SystemGlobalDataController.Instance.player = player;
-		SystemGlobalDataController.Instance.answerQuestionTime = answerQuestionTime;
 	}
 
 	private static float[] GetFloatList ()

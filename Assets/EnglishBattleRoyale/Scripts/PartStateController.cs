@@ -27,7 +27,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	{
 		
 		GameTimeManager.AddObserver (this);
-		GameTimeManager.StartPreBattleTimer (3);
+		GameTimeManager.StartPreBattleTimer ();
 		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
 
 		ScreenBattleController.Instance.partCameraWorks.StartIntroCamera ();

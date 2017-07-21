@@ -8,8 +8,6 @@ public class SystemGlobalDataController: SingletonMonoBehaviour<SystemGlobalData
 
 	public PlayerModel player{ get; set; }
 
-	public int answerQuestionTime{ get; set; }
-
 	public bool isHost{ get; set; }
 
 	public bool attackerBool{ get; set; }

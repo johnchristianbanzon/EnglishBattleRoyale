@@ -2,26 +2,31 @@
 
 public class GameTimeManager
 {
+	private static int preBattleTimer = 3;
+	private static int skillTimer = 5;
+	private static int selectQuestionTimer = 5;
+	private static int questionTimer = 25;
+
 	static IGameTimeObserver observer;
 
-	public static void StartPreBattleTimer (int timer)
+	public static void StartPreBattleTimer ()
 	{
-		observer.OnStartPreBattleTimer (timer);
+		observer.OnStartPreBattleTimer (preBattleTimer);
 	}
 
-	public static void StartSkillTimer (Action action,int timer)
+	public static void StartSkillTimer (Action action)
 	{
-		observer.OnStartSkillTimer (action, timer);
+		observer.OnStartSkillTimer (action, skillTimer);
 	}
 
-	public static void StartSelectQuestionTimer (Action action,int timer)
+	public static void StartSelectQuestionTimer (Action action)
 	{
-		observer.OnStartSelectQuestionTimer (action, timer);
+		observer.OnStartSelectQuestionTimer (action, selectQuestionTimer);
 	}
 
-	public static void StartQuestionTimer (Action action, int timer)
+	public static void StartQuestionTimer (Action action)
 	{
-		observer.OnStartQuestionTimer (action, timer);
+		observer.OnStartQuestionTimer (action, questionTimer);
 	}
 
 	public static void HasAnswered (bool hasAnswered)
