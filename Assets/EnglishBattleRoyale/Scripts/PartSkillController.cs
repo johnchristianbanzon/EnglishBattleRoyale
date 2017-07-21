@@ -36,6 +36,11 @@ public class PartSkillController : MonoBehaviour
 		}
 	}
 
+	private void OnEndQuestionTime ()
+	{
+		ButtonEnable (false);
+	}
+
 	public void OnStartPhase ()
 	{
 		if (!activateAutoSkill) {
@@ -51,9 +56,7 @@ public class PartSkillController : MonoBehaviour
 			attackButton.interactable = true;
 			attackButton.gameObject.SetActive (true);
 
-			GameTimeManager.StartSkillTimer (delegate() {
-				ButtonEnable (false);
-			}, 5);
+			GameTimeManager.StartSkillTimer (OnEndQuestionTime);
 
 		} else {
 			SystemFirebaseDBController.Instance.SkillPhase ();
@@ -142,18 +145,13 @@ public class PartSkillController : MonoBehaviour
 		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (description);
 	}
 
-
-
 	private void SelectSkillReduce (int skillNumber)
 	{
 		SelectSkillActivate (delegate() {
 			SkillManager.ActivateSkill (skillNumber);
-
 		}, delegate() {
 			SystemGlobalDataController.Instance.skillChosenCost = SkillManager.GetSkill (skillNumber).skillGpCost;
-
 		});
-
 	}
 
 	private void SelectSkillActivate (Action activateSkill, Action skillCost)

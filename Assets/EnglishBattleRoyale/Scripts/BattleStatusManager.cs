@@ -5,7 +5,8 @@ using System;
 public class BattleStatusManager: IRPCDicObserver
 {
 
-	void Start(){
+	void Start ()
+	{
 		RPCDicObserver.AddObserver (this);
 	}
 
@@ -16,6 +17,24 @@ public class BattleStatusManager: IRPCDicObserver
 			ReceiveBattleStatus (rpcReceive);
 		} catch (System.Exception e) {
 			//do something with exception
+		}
+	}
+
+	private void OnAnswerCountFull ()
+	{
+		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
+			PhaseManager.StartPhase3 ();
+		} else {
+			PhaseManager.StartPhase2 ();
+		}
+	}
+
+	private void OnSkillCountFull ()
+	{
+		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
+			PhaseManager.StartPhase2 ();
+		} else {
+			PhaseManager.StartPhase3 ();
 		}
 	}
 
@@ -50,24 +69,12 @@ public class BattleStatusManager: IRPCDicObserver
 					SystemGlobalDataController.Instance.vAnswer = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VANSWER].ToString ());
 					SystemGlobalDataController.Instance.vTime = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VTIME].ToString ());
 
-					CheckBattleCount (battleCount, delegate() {
-						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-							PhaseManager.StartPhase3 ();
-						} else {
-							PhaseManager.StartPhase2 ();
-						}
-					});
+					CheckBattleCount (battleCount, OnAnswerCountFull);
 
 					break;
 
 				case MyConst.BATTLE_STATUS_SKILL:
-					CheckBattleCount (battleCount, delegate() {
-						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-							PhaseManager.StartPhase2 ();
-						} else {
-							PhaseManager.StartPhase3 ();
-						}
-					});
+					CheckBattleCount (battleCount, OnSkillCountFull);
 					break;
 
 				case MyConst.BATTLE_STATUS_ATTACK:

@@ -32,22 +32,22 @@ public class QuestionController : SingletonMonoBehaviour<QuestionController>
 		}
 
 	}
+	private void OnEndQuestionTime(){
+		ComputeScore ();
+	}
 
 	void OnEnable ()
 	{
-		GameTimeManager.StartQuestionTimer (delegate() {
-			ComputeScore ();
-		}, timeLeft);
+		GameTimeManager.StartQuestionTimer (OnEndQuestionTime);
 	}
 
-	public void SetQuestion (IQuestion questiontype, int qTime, Action<int, int> Result)
+	public void SetQuestion (IQuestion questiontype, Action<int, int> Result)
 	{
 		for (int i = 0; i < 12; i++) {
 			Destroy (GameObject.Find ("input" + i));
 			Destroy (GameObject.Find ("output" + i));
 
 		}
-		timeLeft = qTime;
 		questiontype.Activate (Result);
 	}
 

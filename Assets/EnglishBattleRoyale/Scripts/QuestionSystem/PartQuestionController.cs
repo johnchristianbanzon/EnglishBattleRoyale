@@ -25,10 +25,10 @@ public class PartQuestionController: MonoBehaviour
 	{
 		QuestionBuilder.PopulateQuestion ("QuestionSystemCsv");
 		SelectLetterIcon typingicon = FindObjectOfType<SelectLetterIcon> ();
-		QuestionController.Instance.SetQuestion (typingicon, 15, null);
+		QuestionController.Instance.SetQuestion (typingicon, null);
 	}
 
-	public void SetQuestionEntry (int questionType, int questionTime, Action<int, int> onResult)
+	public void SetQuestionEntry (int questionType, Action<int, int> onResult)
 	{
 		questionTypeModals [questionType].SetActive (true);
 
@@ -37,36 +37,47 @@ public class PartQuestionController: MonoBehaviour
 		case 0:
 			SelectLetterIcon selectletterIcon = questionTypeModals [0].GetComponent<SelectLetterIcon> ();
 			//questionTypeModals[0].SetActive (true);
-			QuestionController.Instance.SetQuestion (selectletterIcon, questionTime, onResult);
+			QuestionController.Instance.SetQuestion (selectletterIcon, onResult);
 
 
 			break;
 		case 1:
 			TypingIcon typingicon = FindObjectOfType<TypingIcon> ();
 			//questionTypeModals[1].SetActive (true);
-			QuestionController.Instance.SetQuestion (typingicon, questionTime, onResult);
+			QuestionController.Instance.SetQuestion (typingicon, onResult);
 		
 			break;
 		case 2:
 			//questionTypeModals[2].SetActive (true);
 			ChangeOrderIcon changeOrderIcon = FindObjectOfType<ChangeOrderIcon> ();
-			QuestionController.Instance.SetQuestion (changeOrderIcon, questionTime, onResult);
+			QuestionController.Instance.SetQuestion (changeOrderIcon, onResult);
 		
 			break;
 		case 3:
 			//questionTypeModals[2].SetActive (true);
 			WordChoiceIcon wordchoiceIcon = FindObjectOfType<WordChoiceIcon> ();
-			QuestionController.Instance.SetQuestion (wordchoiceIcon, questionTime, onResult);
+			QuestionController.Instance.SetQuestion (wordchoiceIcon, onResult);
 
 			break;
 		case 4:
 			//questionTypeModals[2].SetActive (true);
 			SlotMachineIcon slotMachineIcon = questionTypeModals [4].GetComponent<SlotMachineIcon> ();
-			QuestionController.Instance.SetQuestion (slotMachineIcon, questionTime, onResult);
+			QuestionController.Instance.SetQuestion (slotMachineIcon, onResult);
 			break;
 		}
 	}
 	// JOCHRIS END HERE   ---------------------------------------------------------------------------------------------
+
+	private void OnEndQuestion(int gp, int qtimeLeft){
+		QuestionStart (gp, qtimeLeft);
+	}
+
+	private void OnEndSelectQuestionTime(){
+		HideUI ();
+		SetQuestionEntry (UnityEngine.Random.Range (0, 2), OnEndQuestion);
+	}
+
+
 
 	public void OnStartPhase ()
 	{
@@ -75,13 +86,7 @@ public class PartQuestionController: MonoBehaviour
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
 		GameTimeManager.HasAnswered(false);
 
-		GameTimeManager.StartSelectQuestionTimer (delegate() {
-			HideUI ();
-			SetQuestionEntry (UnityEngine.Random.Range (0, 2), SystemGlobalDataController.Instance.answerQuestionTime, delegate(int gp, int qtimeLeft) {
-
-				QuestionStart (gp, qtimeLeft);
-			});
-		},5);
+		GameTimeManager.StartSelectQuestionTimer (OnEndSelectQuestionTime);
 		questionSelect.SetActive (true);
 
 	}
@@ -94,15 +99,15 @@ public class PartQuestionController: MonoBehaviour
 		}
 	}
 
+
+
 	public void OnQuestionSelect (int questionNumber)
 	{
 		GameTimeManager.StopTimer ();
 		GameTimeManager.HasAnswered (true);
 		questionSelect.SetActive (false);
 		//call question callback here
-		SetQuestionEntry (questionNumber, SystemGlobalDataController.Instance.answerQuestionTime, delegate(int gp, int qtimeLeft) {
-			QuestionStart (gp, qtimeLeft);
-		});
+		SetQuestionEntry (questionNumber, OnEndQuestion);
 
 	}
 

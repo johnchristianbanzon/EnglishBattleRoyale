@@ -20,7 +20,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	string battleStatusKey = null;
 	private bool isMatchMakeSuccess = false;
 	private DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
-	private  Dictionary<DataSnapshot, bool> InitialState = new Dictionary<DataSnapshot, bool>();
+	private  Dictionary<DataSnapshot, bool> InitialState = new Dictionary<DataSnapshot, bool> ();
 
 	void Start ()
 	{
