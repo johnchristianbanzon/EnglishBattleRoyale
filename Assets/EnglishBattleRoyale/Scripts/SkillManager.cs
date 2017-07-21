@@ -5,8 +5,7 @@ public static class SkillManager
 {
 	
 	private static SkillModel[] skill = new SkillModel[3];
-
-
+	private static Queue<SkillModel> skillQueue = new Queue<SkillModel> (8);
 
 	/// <summary>
 	/// Load skill list from parsed CSV
@@ -14,7 +13,7 @@ public static class SkillManager
 	/// <returns>The skill list.</returns>
 	public static List<SkillModel>  GetCSVSkillList ()
 	{
-		List<Dictionary<string,System.Object>>  csvSkillList = CSVParser.ParseCSV ("Skills");
+		List<Dictionary<string,System.Object>> csvSkillList = CSVParser.ParseCSV ("Skills");
 		List<SkillModel> skillList = new List<SkillModel> ();
 		//count -1 because it counts also the header, we need not to count it
 		for (int i = 0; i < csvSkillList.Count - 1; i++) {
@@ -28,7 +27,7 @@ public static class SkillManager
 		return skillList;
 	}
 
-	//TEST ONLY!!!!!
+	//TEST ONLY FOR NOW!!!!!
 	public static List<SkillModel>  GetEquipSkillList ()
 	{
 		List<SkillModel> equipSkillList = new List<SkillModel> (8);
@@ -44,8 +43,6 @@ public static class SkillManager
 		return equipSkillList;
 	}
 
-
-
 	public static void ActivateSkill (int skillNumber)
 	{
 		StartSkill (skill [skillNumber - 1]);
@@ -59,23 +56,39 @@ public static class SkillManager
 			SystemFirebaseDBController.Instance.SkillPhase ();
 		} 
 	}
-
-
-	/// <summary>
-	/// Set the skill to placeholder UI in Battle
-	/// </summary>
-	/// <param name="skill1">Skill1.</param>
-
-	public static void SetSkill (int skillIndex, SkillModel skillmodel)
+		
+	//set the skill in the UI
+	public static void SetSkillUI (int skillIndex, SkillModel skillmodel)
 	{
 		skill [skillIndex] = skillmodel;
 		ScreenBattleController.Instance.partSkill.SetSkillUI (skillIndex + 1, skillmodel.skillName, skillmodel.skillGpCost);
+	}
+
+	//receive skill list from prepare phase and put in queue
+	public static void SetSkillEnqueue (List<SkillModel> skillList)
+	{
+		for (int i = 0; i < skillList.Count; i++) {
+			skillQueue.Enqueue (skillList [i]);
+		}
+	}
+
+	//Default 3 starting skills when starting the game
+	public static void SetStartSkills ()
+	{
+		for (int i = 0; i < 3; i++) {
+			SetSkillUI (i, skillQueue.Dequeue ());
+		}
+	}
+
+	//When skill is used, remove previous skill and enqueue replace with new skill in queue
+	public static void UseSkillUI (int skillIndex)
+	{
+		skillQueue.Enqueue (skill [skillIndex]);
+		SetSkillUI (skillIndex, skillQueue.Dequeue ());
 	}
 
 	public static SkillModel GetSkill (int skillNumber)
 	{
 		return skill [skillNumber - 1];
 	}
-
-
 }
