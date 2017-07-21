@@ -11,20 +11,22 @@ public class PartSkillController : MonoBehaviour
 	public Button attackButton;
 	private bool[] skillButtonToggleOn = new bool[3];
 
-	public Text[] skillName;
 	public Text[] skillGpCost;
-
-	public void SetSkillUI (int skillNumber, string skillName, int skillGp)
-	{
-		this.skillName [skillNumber - 1].text = skillName.ToString ();
-		this.skillGpCost [skillNumber - 1].text = "" + skillGp + "GP";
-	}
 
 	void Start ()
 	{
 		skillButtonToggleOn [0] = false;
 		skillButtonToggleOn [1] = false;
 		skillButtonToggleOn [2] = false;
+
+		//Set starting skills during start of battle
+		SkillManager.SetStartSkills ();
+	}
+
+	public void SetSkillUI (int skillNumber, SkillModel charCard)
+	{
+		skillGpCost [skillNumber].text = "" + charCard.skillGpCost + "GP";
+		skillButton [skillNumber].GetComponent<Image> ().sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.skillName);
 	}
 
 	private void SkillButtonInteractable (int skillNumber, Button button)

@@ -19,6 +19,6 @@ public class EquippedSkillController : MonoBehaviour {
 		}
 
 		unlockedSkill.ShowCharacterCards (equipCardList);
-
+		SkillManager.SetSkillEnqueue (equipCardList);
 	}
 }
