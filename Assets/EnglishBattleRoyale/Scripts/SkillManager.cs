@@ -61,7 +61,7 @@ public static class SkillManager
 	public static void SetSkillUI (int skillIndex, SkillModel skillmodel)
 	{
 		skill [skillIndex] = skillmodel;
-		ScreenBattleController.Instance.partSkill.SetSkillUI (skillIndex + 1, skillmodel.skillName, skillmodel.skillGpCost);
+		ScreenBattleController.Instance.partSkill.SetSkillUI (skillIndex, skillmodel);
 	}
 
 	//receive skill list from prepare phase and put in queue
