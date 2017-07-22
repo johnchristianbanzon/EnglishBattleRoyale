@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class NoAnswerType : MonoBehaviour {
+public class NoAnswerType : MonoBehaviour,IAnswer {
 	public GameObject correctAnswerContainer;
 
 	public void CheckAnswerFromSelection(string selectedAnswer, string questionAnswer){
@@ -13,7 +13,13 @@ public class NoAnswerType : MonoBehaviour {
 		}
 	}
 
-	public void CorrectSpecialEffect(QuestionSystemEnums.SelectionType selectionType){
+	public void DeployAnswerType(){
+		gameObject.SetActive (true);
+	}
+
+	public void CorrectSpecialEffect(ISelection selectionType){
+		
+		/*
 		switch (selectionType) {
 		case QuestionSystemEnums.SelectionType.ChangeOrder:
 			correctAnswerContainer.SetActive (true);
@@ -23,10 +29,11 @@ public class NoAnswerType : MonoBehaviour {
 				button.SetActive (false);
 				//TweenController.TweenMoveTo (button.transform,new Vector2(correctAnswerContainer.transform.localPosition.x,button.transform.localPosition.y),0.2f);
 			}
-			correctAnswerContainer.GetComponentInChildren<Text> ().text = QuestionSystemController.Instance.selectionController.changeOrderController.questionAnswer;
+			correctAnswerContainer.GetComponentInChildren<Text> ().text = QuestionSystemController.Instance.partSelectionController.changeOrderController.questionAnswer;
 			Invoke ("AfterScalingTween", 0.05f);
 			break;
 		}
+		*/
 	}
 
 	public void AfterScalingTween(){

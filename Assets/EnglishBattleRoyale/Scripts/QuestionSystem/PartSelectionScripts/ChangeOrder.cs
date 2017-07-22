@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class ChangeOrder : MonoBehaviour
+public class ChangeOrder : MonoBehaviour,ISelection
 {
 	public GameObject[] selectionContainers = new GameObject[5];
 	public GameObject inputContent;
@@ -26,7 +26,7 @@ public class ChangeOrder : MonoBehaviour
 		selectedButton.transform.SetParent (inputContent.transform);
 		selectedButton.GetComponent<Image> ().raycastTarget = true;
 		selectedButton.transform.SetSiblingIndex (selectedIndex);
-		QuestionSystemController.Instance.answerController.noAnswerController.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
+		QuestionSystemController.Instance.partAnswerController.noAnswerController.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
 		isDragging = false;
 	}
 
@@ -60,13 +60,13 @@ public class ChangeOrder : MonoBehaviour
 		}
 	}
 
-	public void ChangeOrderShuffle ()
+	public void ShuffleSelection ()
 	{
 		for (int i = 0; i < selectionContainers.Length; i++) {
 			selectionContainers [i].transform.SetSiblingIndex (UnityEngine.Random.Range (0, selectionContainers.Length));
 		}
 		if (GetSelectedAnswer ().Equals (questionAnswer)) {
-			ChangeOrderShuffle ();
+			ShuffleSelection ();
 		}
 	}
 
@@ -78,11 +78,11 @@ public class ChangeOrder : MonoBehaviour
 		}
 	}
 
-	public void PopulateLetterSelection (string answer)
+	public void DeploySelectionType (string answer)
 	{
-		
+		gameObject.SetActive (true);
 		ResetLetterSelection ();
-		QuestionSystemController.Instance.answerController.noAnswerController.correctAnswerContainer.SetActive (false);
+		QuestionSystemController.Instance.partAnswerController.noAnswerController.correctAnswerContainer.SetActive (false);
 		QuestionSystemController.Instance.correctAnswerButtons = new List<GameObject> (selectionContainers);
 		questionAnswer = answer;
 		if (answer.Length <= slotLimit) {
@@ -111,7 +111,7 @@ public class ChangeOrder : MonoBehaviour
 			}
 
 		}
-		ChangeOrderShuffle ();
+		ShuffleSelection ();
 	}
 
 }

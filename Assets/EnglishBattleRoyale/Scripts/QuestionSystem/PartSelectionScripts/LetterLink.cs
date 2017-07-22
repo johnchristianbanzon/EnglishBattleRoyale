@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class LetterLink : MonoBehaviour {
+public class LetterLink : MonoBehaviour ,ISelection{
 	public GameObject[] connectLetterButtons = new GameObject[9];
 	public List<GameObject> correctAnswerButtons = new List<GameObject>();
 	private bool startSelection = false;
@@ -20,7 +20,7 @@ public class LetterLink : MonoBehaviour {
 		if (startSelection && (currentSelectedLetter.GetComponent<Image> ().color != new Color (36f / 255, 189f / 255f, 88f / 255f))) {
 			currentSelectedLetter.GetComponent<Image> ().color = new Color (36f / 255, 189f / 255f, 88f / 255f);
 			writtenAnswer += currentSelectedLetter.GetComponentInChildren<Text> ().text;
-			QuestionSystemController.Instance.answerController.showAnswer.ShowLetterInView (currentSelectedLetter);
+			QuestionSystemController.Instance.partAnswerController.showAnswer.ShowLetterInView (currentSelectedLetter);
 		}
 	}
 	public void OnEndDrag(){
@@ -36,14 +36,20 @@ public class LetterLink : MonoBehaviour {
 	public void clearSelection(){
 		writtenAnswer = "";
 		startSelection = false;
-		QuestionSystemController.Instance.answerController.showAnswer.ClearLettersInView ();
+		QuestionSystemController.Instance.partAnswerController.showAnswer.ClearLettersInView ();
 		foreach (GameObject selection in connectLetterButtons) {
 			selection.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 		}
 	}
-	public void ConnectLetterShuffle(string answer){
+
+	public void DeploySelectionType(string questionAnswer){
+		this.questionAnswer = questionAnswer;
+		gameObject.SetActive (true);
+
+	}
+
+	public void ShuffleSelection(){
 		clearSelection ();
-		questionAnswer = answer;
 		correctAnswerButtons.Clear ();
 		string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		List<List<int>> selectableIndex = new List<List<int>> {
@@ -57,9 +63,9 @@ public class LetterLink : MonoBehaviour {
 			connectLetterButtons [i].GetComponentInChildren<Text> ().text = alphabet [UnityEngine.Random.Range (0, alphabet.Length)].ToString ();
 		}
 		int whileindex = 0;
-		for (int i = 0; i < answer.Length; i++) {
+		for (int i = 0; i < questionAnswer.Length; i++) {
 			int randomizedSelection = UnityEngine.Random.Range (0, selectableIndex [selectionIndex].Count);
-			connectLetterButtons [selectionIndex-1].GetComponentInChildren<Text> ().text = answer [i].ToString();
+			connectLetterButtons [selectionIndex-1].GetComponentInChildren<Text> ().text = questionAnswer [i].ToString();
 			while (numbersDone.Contains (selectableIndex[selectionIndex][randomizedSelection])) {
 				randomizedSelection = UnityEngine.Random.Range (0, selectableIndex [selectionIndex].Count);
 				if (whileindex > 100) {

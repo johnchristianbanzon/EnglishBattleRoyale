@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class Association : MonoBehaviour {
+public class Association : MonoBehaviour,ITarget {
 	public GameObject clueList;
 	private GameObject currenctClueSelected;
 	public GameObject cluePrefab;
@@ -11,7 +11,8 @@ public class Association : MonoBehaviour {
 	private int clueNumberLimit = 4;
 	private int clueNumber = 1;
 
-	public void ChangeTargetToAssociation(string targetString){
+	public void DeployTargetType(string targetString){
+		clueList.SetActive (true);
 		clues = ClueArrayToList (targetString);
 		GameObject clueObject = Instantiate (cluePrefab) as GameObject; 
 		clueObject.GetComponentInChildren<Text>().text = clues[clueNumber-1];

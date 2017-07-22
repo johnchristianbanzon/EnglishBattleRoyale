@@ -17,12 +17,13 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	private int correctAnswers;
 	private int currentQuestionNumber = 1;
 	private bool hasSkippedQuestion = false;
-	private string questionAnswer = "";
-	private string questionTarget = "";
-	//
-	public QuestionSystemEnums.AnswerType answerType;
+	public string questionAnswer = "";
+	public string questionTarget = "";
 	public QuestionSystemEnums.QuestionType questionType;
-	public QuestionSystemEnums.SelectionType selectionType;
+
+	public ITarget targetType;
+	public ISelection selectionType;
+	public IAnswer answerType;
 
 	public List<QuestionResultModel> roundResultList = new List<QuestionResultModel> ();
 	public Action<List<QuestionResultModel>> onRoundResult{ get; set; }
@@ -30,29 +31,24 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public List<GameObject> correctAnswerButtons{ get; set; }
 	//
 	public Text targetTypeUI;
-	public PartSelectionController selectionController;
-	public PartAnswerController answerController;
-	public PartQuestionController questionController;
+	public PartSelectionController partSelectionController;
+	public PartAnswerController partAnswerController;
+	public PartTargetController partTargetController;
 
 	public void StartQuestionRound (int timeLeft, Action<List<QuestionResultModel>> onRoundResult)
 	{
-//		questionTimerController.timeLeft = timeLeft;
-//		questionTimerController.stopTimer = true;
 		questionType = QuestionSystemEnums.QuestionType.Definition;
-		answerType = QuestionSystemEnums.AnswerType.ShowAnswer;
-		selectionType = QuestionSystemEnums.SelectionType.LetterLink;
+		targetType = partTargetController.singleQuestionController;
+		answerType = partAnswerController.fillAnswerController;
+		selectionType = partSelectionController.selectLetterController;
 		this.onRoundResult = onRoundResult;
-		/*
-		GameTimeManager.StartQuestionTimer (delegate() {
-			Debug.Log(timeLeft);
-		});*/
 		NextQuestion ();
 	}
 
 	public Question LoadQuestion ()
 	{
-		Question questionLoaded = QuestionBuilder.GetQuestion (questionType, selectionType);
-		questionAnswer = (questionLoaded.answers.Length == 2 && selectionType == QuestionSystemEnums.SelectionType.WordChoice) ? 
+		Question questionLoaded = QuestionBuilder.GetQuestion (questionType);
+		questionAnswer = (questionLoaded.answers.Length == 2 && selectionType.Equals(partSelectionController.wordChoiceController)) ? 
 			(questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ()) :
 				questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
 		questionTarget = questionLoaded.question;
@@ -88,23 +84,23 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void NextQuestion ()
 	{
 		hasSkippedQuestion = false;
-		GetNewQuestion (questionType, answerType, selectionType, delegate(QuestionResultModel onQuestionResult) {
+		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 			roundResultList.Add(onQuestionResult);
+			Debug.Log(onQuestionResult.isCorrect);
 			onRoundResult.Invoke(roundResultList);			
 		});
 	}
 
-	public void GetNewQuestion (QuestionSystemEnums.QuestionType questionType, QuestionSystemEnums.AnswerType answerType, 
-		QuestionSystemEnums.SelectionType selectionType, Action<QuestionResultModel> onQuestionResult)
+	public void GetNewQuestion (QuestionSystemEnums.QuestionType questionType, Action<QuestionResultModel> onQuestionResult)
 	{
 		LoadQuestion ();
 		targetTypeUI.GetComponentInChildren<Text> ().text = questionType.ToString ();
-		questionController.ActivatePartTarget (questionType, questionTarget);
-		correctAnswerButtons = answerController.AnswerContainerActivate (answerType, questionAnswer);
-		selectionController.DeploySelectionType (selectionType, questionAnswer);
+		partTargetController.DeployPartTarget (targetType, questionTarget);
+		partAnswerController.DeployAnswerType (answerType);
+		partSelectionController.DeploySelectionType (selectionType, questionAnswer);
 		this.onQuestionResult = onQuestionResult;
 	}
-
+		
 	public void UpdateFirebaseAnswerModel (bool isCorrect)
 	{
 		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();

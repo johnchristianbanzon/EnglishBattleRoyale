@@ -60,22 +60,8 @@ public class PartAnswerController : MonoBehaviour {
 
 	}
 
-	public List<GameObject> AnswerContainerActivate(QuestionSystemEnums.AnswerType answerType, string answer){
-		questionAnswer = answer;
-		switch (answerType) {
-		case QuestionSystemEnums.AnswerType.FillLetter:
-			answerContainer = fillAnswerController.FillAnswerActivate (questionAnswer);
-			fillAnswerController.gameObject.SetActive (true);
-			break;
-		case QuestionSystemEnums.AnswerType.NoAnswerType:
-			noAnswerController.gameObject.SetActive (true);
-			break;
-		case QuestionSystemEnums.AnswerType.ShowAnswer:
-			showAnswer.gameObject.SetActive (true);
-			break;
-		}
-
-		return answerContainer;
+	public void DeployAnswerType(IAnswer answerType){
+		answerType.DeployAnswerType ();
 	}
 
 }

@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShowAnswer : MonoBehaviour {
+public class ShowAnswer : MonoBehaviour,IAnswer {
 
 	public GameObject showLetterView;
 	public GameObject showLetterPrefab;
+
+	public void DeployAnswerType(){
+		this.gameObject.SetActive (true);
+	}
 
 	public void ShowLetterInView(GameObject selectedLetter){
 		GameObject letterPrefab = Instantiate (showLetterPrefab) as GameObject; 

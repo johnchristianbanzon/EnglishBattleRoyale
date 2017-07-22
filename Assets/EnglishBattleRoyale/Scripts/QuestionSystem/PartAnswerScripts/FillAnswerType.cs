@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class FillAnswerType : MonoBehaviour {
+public class FillAnswerType : MonoBehaviour,IAnswer {
 	
 	private List<GameObject> answerContainers = new List<GameObject>();
 	public GameObject answerContainerPrefab;
 	public GameObject outviewContent;
-	public List<GameObject> FillAnswerActivate(string questionAnswer){
-		return populateContainer (questionAnswer);
+	private string questionAnswer;
+
+	public void DeployAnswerType(){
+		gameObject.SetActive (true);
+		this.questionAnswer = QuestionSystemController.Instance.questionAnswer;
+		populateContainer ();
 	}
 
-	public List<GameObject>populateContainer(string questionAnswer){
+	public void populateContainer(){
 		
 		foreach (Transform child in outviewContent.transform) {
 				GameObject.Destroy(child.gameObject);
@@ -26,8 +30,7 @@ public class FillAnswerType : MonoBehaviour {
 				OnAnswerClick (answerPrefab.GetComponent<Button> ());
 			});
 		}
-
-		return answerContainers;
+		QuestionSystemController.Instance.correctAnswerButtons = answerContainers;
 	}
 		
 	public void OnAnswerClick (Button answerButton)
@@ -42,7 +45,7 @@ public class FillAnswerType : MonoBehaviour {
 				if (answerButton.name.Equals ("output" + (i+1))) {
 					answerclicked = answerContainers [i].transform.GetChild (0).GetComponent<Text> ().text;
 					answerContainers [i].transform.GetChild (0).GetComponent<Text> ().text = "";
-					QuestionSystemController.Instance.answerController.GetSelectionIdentifier (i)
+					QuestionSystemController.Instance.partAnswerController.GetSelectionIdentifier (i)
 						.GetComponentInChildren<Text>().text = answerclicked;
 //					answerIdentifier [i]
 

@@ -7,16 +7,20 @@ using UnityEngine.UI;
 using System.Net;
 using System.IO;
 
-public class SelectLetter : MonoBehaviour
+public class SelectLetter : MonoBehaviour, ISelection
 {
 	public GameObject[] selectionButtons = new GameObject[12];
-
+	private string questionAnswer;
 	public void OnSelect(){
-		QuestionSystemController.Instance.answerController.SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
+		QuestionSystemController.Instance.partAnswerController.SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
 		EventSystem.current.currentSelectedGameObject.GetComponentInChildren<Text> ().text = "";
 	}
 
-	public void SelectLetterShuffle (string questionAnswer)
+	public void DeploySelectionType(string questionAnswer){
+		gameObject.SetActive (true);
+		this.questionAnswer = questionAnswer;
+	}
+	public void ShuffleSelection ()
 	{
 		int numberOfLetters = questionAnswer.Length;
 		string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

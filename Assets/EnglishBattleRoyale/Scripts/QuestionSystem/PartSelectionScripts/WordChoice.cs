@@ -6,13 +6,15 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class WordChoice : MonoBehaviour
+public class WordChoice : MonoBehaviour, ISelection
 {
 	public bool justAnswered = false;
+	private string questionAnswer = "";
 	public GameObject[] selectionButtons = new GameObject[4];
 	private List<GameObject> answerClicked = new List<GameObject> ();
 	private List<GameObject> answerButtons = new List<GameObject> ();
 	private List<string> answerString = new List<string>();
+
 	public void OnClickSelection ()
 	{
 		if (!justAnswered) {
@@ -43,8 +45,11 @@ public class WordChoice : MonoBehaviour
 			QuestionSystemController.Instance.CheckAnswer(false);
 		}
 	}
-
-	public void WordChoiceShuffle (string questionAnswer)
+	public void DeploySelectionType(string questionAnswer){
+		this.gameObject.SetActive (true);
+		this.questionAnswer = questionAnswer;
+	}
+	public void ShuffleSelection ()
 	{
 		
 		answerButtons.Clear ();
