@@ -9,6 +9,7 @@ public class UnlockedSkillController : MonoBehaviour
 	public GameObject unlockedSkillTitle;
 	public GameObject currentSelectedCardSlot;
 	public GameObject currectSelectedCharacterCard;
+	public bool aboutToSwapCard = false;
 	// Show unlocked cards, if cards already in equip, do not show
 	public void ShowCharacterCards (List<SkillModel> equipCardList)
 	{
@@ -28,10 +29,7 @@ public class UnlockedSkillController : MonoBehaviour
 				for (int k = 0; k < this.transform.childCount; k++) {
 					if (this.transform.GetChild (k).childCount == 0) {
 						GameObject charCard = SystemResourceController.Instance.LoadPrefab ("CharCard", this.transform.GetChild (k).gameObject);
-						charCard.GetComponent<CharCardController> ().SetCardParameter (charCardList[i]);
-						charCard.GetComponent<Button>	().onClick.AddListener (() => {
-							OnClickCharacterCard(charCard.GetComponent<Button>());
-						});
+						charCard.GetComponent<CharCardController> ().SetCardParameter (charCardList[i],false);
 						break;
 					}
 				}
@@ -40,24 +38,7 @@ public class UnlockedSkillController : MonoBehaviour
 		}
 			
 	}
-	public void OnClickCharacterCard(Button clickedCharacterCard){
-		currentSelectedCardSlot = clickedCharacterCard.transform.parent.gameObject;
-		currectSelectedCharacterCard = clickedCharacterCard.gameObject;
-		GameObject selectionPrefab = SystemResourceController.Instance.LoadPrefab ("SkillSelectPrefab", clickedCharacterCard.gameObject);
-		selectionPrefab.transform.SetAsFirstSibling ();
-		selectionPrefab.transform.position = clickedCharacterCard.transform.position;
-		GameObject useButton = selectionPrefab.transform.GetChild (2).gameObject;
-		useButton.GetComponent<Button> ().onClick.AddListener (() => {
-			OnClickCharacterUse(clickedCharacterCard.gameObject);
-		});
-		TweenFacade.TweenScaleToLarge (selectionPrefab.transform.parent.transform,Vector3.one,0.3f);
-	}
 
-	public void OnClickCharacterUse(GameObject characterUsed){
-		Destroy (characterUsed.transform.GetChild (0).gameObject);
-		characterUsed.transform.parent = unlockedSkillTitle.transform.parent;
-		TweenFacade.TweenMoveTo (characterUsed.transform,unlockedSkillTitle.transform.localPosition,0.3f);
-		PartDeckController.Instance.equippedSkillController.InitiateSwapping ();
-	}
+
 
 }
