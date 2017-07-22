@@ -6,7 +6,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 {
 	public PartStateController partState;
 	public PartSkillController partSkill;
-	public PartQuestionController partQuestion;
+	public PartTargetController partTarget;
 	public PartGestureController partGesture;
 	public PartCameraWorksController partCameraWorks;
 	public PartAvatarsController partAvatars;
