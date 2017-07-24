@@ -53,9 +53,19 @@ public static class TweenFacade{
 	}
 
 	public static void TweenShakePosition(Transform obj,float duration, float strength, int vibrato, float randomness){
-		obj.transform.DOShakePosition(duration, strength, vibrato,randomness, true);
+		obj.DOShakePosition(duration, strength, vibrato,randomness, true);
 	}
 
+	public static void TweenDoShakeRotation(Transform obj,float duration, Vector3 strength, int vibrato, float randomness){
+		obj.DOShakeRotation(duration, strength, vibrato,randomness, true);
+	}
+
+	public static void TweenDoPunchRotation(Transform obj,float duration, Vector3 strength, int vibrato, float elasticity){
+		obj.DOPunchRotation(strength, duration,vibrato, elasticity).SetLoops(-1).SetEase(Ease.Linear);
+	}
+	public static void StopTweens(){
+		DOTween.Clear ();
+	}
 	public static void TweenJumpTo(Transform obj, Vector3 endValue, float jumpPower,int numJumps,float duration){
 		obj.transform.DOLocalJump (endValue,jumpPower,numJumps,1,true);
 	}

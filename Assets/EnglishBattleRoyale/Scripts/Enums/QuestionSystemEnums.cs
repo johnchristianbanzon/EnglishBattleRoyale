@@ -7,13 +7,15 @@
 	}
 	public enum AnswerType{
 		FillLetter,
-		WordChoice
+		NoAnswerType,
+		ShowAnswer
 	}
 	public enum SelectionType{
 		SelectLetter,
 		Typing,
 		ChangeOrder,
 		WordChoice,
-		SlotMachine
+		SlotMachine,
+		LetterLink
 	}
 }
