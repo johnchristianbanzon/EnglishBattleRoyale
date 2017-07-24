@@ -16,7 +16,6 @@ public class PartSelectionController : MonoBehaviour
 
 	public void DeploySelectionType(ISelection selectionType, string questionAnswer){
 		selectionType.DeploySelectionType (questionAnswer);
-		selectionType.ShuffleSelection ();
 	}
 
 

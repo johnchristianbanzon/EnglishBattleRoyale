@@ -3,13 +3,13 @@ using UnityEngine.UI;
 
 public class CharCardController : MonoBehaviour
 {
-	public Text gpCost;
-	public Image skillImage;
+	private Text gpCost;
+	private Image skillImage;
 	private SkillModel charCard;
-	public GameObject charCardSettings;
-	public bool isEquipped = false;
-	public GameObject infoButton;
-	public GameObject useButton;
+	private GameObject charCardSettings;
+	private bool isEquipped = false;
+	private GameObject infoButton;
+	private GameObject useButton;
 	private bool isInsideCard = false;
 
 	public void SetCardParameter (SkillModel charCard, bool isEquipped)
@@ -51,13 +51,11 @@ public class CharCardController : MonoBehaviour
 		if (equipped) {
 			useButton.SetActive (false);
 		}
-		 else {
-		}
 	}
 
 	public void ReplaceEquippedCharacter(GameObject selectedCharacter){
 		selectedCharacter.transform.parent = this.transform.parent;
-		this.isEquipped = false;
+		isEquipped = false;
 		selectedCharacter.GetComponent<CharCardController> ().isEquipped = true;
 		useButton.SetActive (true);
 		this.transform.parent = PartDeckController.Instance.unlockedSkillController.currentSelectedCardSlot.transform;

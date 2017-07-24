@@ -36,12 +36,10 @@ public class PhaseManager
 
 	private static void PhaseActivate (bool answer, bool skill, bool attack)
 	{
-
-
 		if (answer) {
-			//ScreenBattleController.Instance.partQuestion.OnStartPhase ();
+			ScreenBattleController.Instance.partQuestion.OnStartPhase ();
 		} else {
-			//ScreenBattleController.Instance.partQuestion.OnEndPhase ();
+			ScreenBattleController.Instance.partQuestion.OnEndPhase ();
 		}
 
 		if (skill) {

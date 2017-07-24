@@ -66,10 +66,13 @@ public class WordChoice : MonoBehaviour, ISelection
 			}
 			randomList.Add (randomnum);
 			string wrongChoiceGot = QuestionBuilder.GetRandomChoices ();
-			selectionButtons [randomnum].transform.GetChild (0).GetComponent<Text> ().text = 
-				i < numberOfAnswers ? temp [i].ToString ().ToUpper () : wrongChoiceGot;
+		
 			if (i < numberOfAnswers) {
-			 answerButtons.Add (selectionButtons [randomnum]);
+				selectionButtons [randomnum].GetComponentInChildren<Text> ().text = temp [i].ToString ().ToUpper ();
+				answerButtons.Add (selectionButtons [randomnum]);
+
+			} else {
+				selectionButtons [randomnum].GetComponentInChildren<Text> ().text = wrongChoiceGot;
 			}
 			selectionButtons[randomnum].GetComponent<Image> ().color = new Color(94f/255,255f/255f,148f/255f);
 		}

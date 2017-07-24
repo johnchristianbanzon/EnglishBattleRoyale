@@ -12,14 +12,20 @@ public class SelectLetter : MonoBehaviour, ISelection
 	public GameObject[] selectionButtons = new GameObject[12];
 	private string questionAnswer;
 	public void OnSelect(){
-		QuestionSystemController.Instance.partAnswerController.SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
+		QuestionSystemController.Instance.partAnswer.SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
 		EventSystem.current.currentSelectedGameObject.GetComponentInChildren<Text> ().text = "";
 	}
 
 	public void DeploySelectionType(string questionAnswer){
 		gameObject.SetActive (true);
+		ShuffleSelection ();
 		this.questionAnswer = questionAnswer;
 	}
+
+	/// <summary>
+	/// Shuffles the Selection by placing each letters in questionAnswer to random selection location 
+	/// then populates the others with random letters inside alphabet
+	/// </summary>
 	public void ShuffleSelection ()
 	{
 		int numberOfLetters = questionAnswer.Length;

@@ -14,10 +14,9 @@ public class Association : MonoBehaviour,ITarget {
 	public void DeployTargetType(string targetString){
 		clueList.SetActive (true);
 		clues = ClueArrayToList (targetString);
-		GameObject clueObject = Instantiate (cluePrefab) as GameObject; 
+		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("Input-UI",clueList);
 		clueObject.GetComponentInChildren<Text>().text = clues[clueNumber-1];
 		clueNumber += 1;
-		clueObject.transform.SetParent (clueList.transform, false);
 		clueObject.GetComponent<Button> ().onClick.AddListener (() => {
 			OnClueClick ();
 		});

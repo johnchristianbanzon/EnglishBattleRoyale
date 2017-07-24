@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class UnlockedSkillController : MonoBehaviour
 {
 	private List<SkillModel> charCardList = new List<SkillModel> ();
-	public Text charCardCount;
+	private Text charCardCount;
 	public GameObject unlockedSkillTitle;
 	public GameObject currentSelectedCardSlot;
 	public GameObject currectSelectedCharacterCard;

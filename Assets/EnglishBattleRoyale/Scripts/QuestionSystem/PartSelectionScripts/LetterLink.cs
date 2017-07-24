@@ -10,17 +10,18 @@ public class LetterLink : MonoBehaviour ,ISelection{
 	private bool startSelection = false;
 	private string writtenAnswer;
 	private string questionAnswer;
-
+	private Color selectedColor = new Color (36f / 255, 189f / 255f, 88f / 255f);
+	private Color defaultColor = new Color (94f / 255, 255f / 255f, 148f / 255f);
 	public void OnbeginDrag(GameObject currentSelectedLetter){
 		startSelection = true;
 		OnDragSelection (currentSelectedLetter);
 	}
 
 	public void OnDragSelection(GameObject currentSelectedLetter){
-		if (startSelection && (currentSelectedLetter.GetComponent<Image> ().color != new Color (36f / 255, 189f / 255f, 88f / 255f))) {
-			currentSelectedLetter.GetComponent<Image> ().color = new Color (36f / 255, 189f / 255f, 88f / 255f);
+		if (startSelection && (currentSelectedLetter.GetComponent<Image> ().color != selectedColor)) {
+			currentSelectedLetter.GetComponent<Image> ().color = selectedColor;
 			writtenAnswer += currentSelectedLetter.GetComponentInChildren<Text> ().text;
-			QuestionSystemController.Instance.partAnswerController.showAnswer.ShowLetterInView (currentSelectedLetter);
+			QuestionSystemController.Instance.partAnswer.showAnswer.ShowLetterInView (currentSelectedLetter);
 		}
 	}
 	public void OnEndDrag(){
@@ -36,18 +37,23 @@ public class LetterLink : MonoBehaviour ,ISelection{
 	public void clearSelection(){
 		writtenAnswer = "";
 		startSelection = false;
-		QuestionSystemController.Instance.partAnswerController.showAnswer.ClearLettersInView ();
+		QuestionSystemController.Instance.partAnswer.showAnswer.ClearLettersInView ();
 		foreach (GameObject selection in connectLetterButtons) {
-			selection.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+			selection.GetComponent<Image> ().color = defaultColor;
 		}
 	}
 
 	public void DeploySelectionType(string questionAnswer){
 		this.questionAnswer = questionAnswer;
+		ShuffleSelection ();
 		gameObject.SetActive (true);
 
 	}
-
+	/// <summary>
+	/// Shuffles The Selection in the Letter Link, Randomizes Starting point first and then goes to the next viable 
+	/// letter index in the selectableIndex List depending on the number. 
+	/// While loop is used to ensure to repeating index is selected. 
+	/// </summary>
 	public void ShuffleSelection(){
 		clearSelection ();
 		correctAnswerButtons.Clear ();

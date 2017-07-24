@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuestionList{
+public class QuestionListModel{
 	public string definition;
 	public string answer;
 	public string synonym;
@@ -12,7 +12,7 @@ public class QuestionList{
 	public bool hasSynonym;
 	public bool hasAntonym;
 	public bool hasClues;
-	public QuestionList(string definition, string answer ,string synonym ,string antonym,string clues,bool hasDefinition,
+	public QuestionListModel(string definition, string answer ,string synonym ,string antonym,string clues,bool hasDefinition,
 		bool hasSynonym, bool hasAntonym, bool hasClues){
 		this.definition = definition;
 		this.synonym = synonym;

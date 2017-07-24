@@ -31,24 +31,24 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public List<GameObject> correctAnswerButtons{ get; set; }
 	//
 	public Text targetTypeUI;
-	public PartSelectionController partSelectionController;
-	public PartAnswerController partAnswerController;
-	public PartTargetController partTargetController;
+	public PartSelectionController partSelection;
+	public PartAnswerController partAnswer;
+	public PartTargetController partTarget;
 
-	public void StartQuestionRound (int timeLeft, Action<List<QuestionResultModel>> onRoundResult)
+	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult)
 	{
-		questionType = QuestionSystemEnums.QuestionType.Definition;
-		targetType = partTargetController.singleQuestionController;
-		answerType = partAnswerController.fillAnswerController;
-		selectionType = partSelectionController.selectLetterController;
+		questionType = questionTypeModel.questionCategory;
+		targetType = questionTypeModel.targetType;
+		answerType = questionTypeModel.answerType;
+		selectionType = questionTypeModel.selectionType;
 		this.onRoundResult = onRoundResult;
 		NextQuestion ();
 	}
 
-	public Question LoadQuestion ()
+	public QuestionModel LoadQuestion ()
 	{
-		Question questionLoaded = QuestionBuilder.GetQuestion (questionType);
-		questionAnswer = (questionLoaded.answers.Length == 2 && selectionType.Equals(partSelectionController.wordChoiceController)) ? 
+		QuestionModel questionLoaded = QuestionBuilder.GetQuestion (questionType);
+		questionAnswer = (questionLoaded.answers.Length == 2 && selectionType.Equals(partSelection.wordChoiceController)) ? 
 			(questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ()) :
 				questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
 		questionTarget = questionLoaded.question;
@@ -58,9 +58,8 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	void Start ()
 	{
 		QuestionBuilder.PopulateQuestion ("QuestionSystemCsv");
-		StartQuestionRound (600, delegate(List<QuestionResultModel> onRoundResult) {
-			
-		});
+//		StartQuestionRound (600, delegate(List<QuestionResultModel> onRoundResult) {
+//		});
 	}
 
 	public void OnSkipQuestion ()
@@ -73,7 +72,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public void CheckAnswer (bool isCorrect)
 	{
-		currentQuestionNumber += 1;
+		currentQuestionNumber ++;
 		correctAnswers = isCorrect ? correctAnswers + 1 : correctAnswers;
 		QuestionSpecialEffects spe = new QuestionSpecialEffects ();
 		spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
@@ -95,9 +94,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		LoadQuestion ();
 		targetTypeUI.GetComponentInChildren<Text> ().text = questionType.ToString ();
-		partTargetController.DeployPartTarget (targetType, questionTarget);
-		partAnswerController.DeployAnswerType (answerType);
-		partSelectionController.DeploySelectionType (selectionType, questionAnswer);
+		partTarget.DeployPartTarget (targetType, questionTarget);
+		partAnswer.DeployAnswerType (answerType);
+		partSelection.DeploySelectionType (selectionType, questionAnswer);
 		this.onQuestionResult = onQuestionResult;
 	}
 		

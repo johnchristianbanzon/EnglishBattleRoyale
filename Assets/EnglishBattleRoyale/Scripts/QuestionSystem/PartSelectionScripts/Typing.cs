@@ -12,12 +12,8 @@ public class Typing : MonoBehaviour, ISelection
 		gameObject.SetActive (true);
 	}
 
-	public void ShuffleSelection(){
-	
-	}
-
 	public void OnSelect(){
-		//gameObject.transform.parent.GetComponent<getSelectedObject> ().GetSelectedObject (selectedButton.gameObject);
-		QuestionSystemController.Instance.partAnswerController.SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
+		QuestionSystemController.Instance.partAnswer.
+		SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
 	}
 }

@@ -5,7 +5,6 @@ public class GameTimeManager
 	private static int preBattleTimer = 3;
 	private static int skillTimer = 5;
 	private static int selectQuestionTimer = 5;
-	//private static int questionTimer = 25;
 
 	static IGameTimeObserver observer;
 

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Question{
+public class QuestionModel{
 	public string question;
 	public string[] answers;
 
-	public Question(string question, string[] answers){
+	public QuestionModel(string question, string[] answers){
 		this.answers = answers;
 		this.question = question;
 	

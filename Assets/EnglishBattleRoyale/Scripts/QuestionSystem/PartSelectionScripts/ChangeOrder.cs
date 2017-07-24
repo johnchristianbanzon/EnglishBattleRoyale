@@ -26,7 +26,7 @@ public class ChangeOrder : MonoBehaviour,ISelection
 		selectedButton.transform.SetParent (inputContent.transform);
 		selectedButton.GetComponent<Image> ().raycastTarget = true;
 		selectedButton.transform.SetSiblingIndex (selectedIndex);
-		QuestionSystemController.Instance.partAnswerController.noAnswerController.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
+		QuestionSystemController.Instance.partAnswer.noAnswerController.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
 		isDragging = false;
 	}
 
@@ -77,12 +77,19 @@ public class ChangeOrder : MonoBehaviour,ISelection
 			letter.SetActive (true);
 		}
 	}
-
+	/// <summary>
+	/// Deploies the type of the selection.
+	/// Resets the selections first,
+	/// Couples letters to the button if questionAnswer is greater than 5
+	/// Places couples inside the list and then replacin the buttons text with the list, respectably
+	/// </summary>
+	/// <param name="answer">Answer.</param>
 	public void DeploySelectionType (string answer)
 	{
 		gameObject.SetActive (true);
 		ResetLetterSelection ();
-		QuestionSystemController.Instance.partAnswerController.noAnswerController.correctAnswerContainer.SetActive (false);
+		QuestionSystemController.Instance.partAnswer
+			.noAnswerController.correctAnswerContainer.SetActive (false);
 		QuestionSystemController.Instance.correctAnswerButtons = new List<GameObject> (selectionContainers);
 		questionAnswer = answer;
 		if (answer.Length <= slotLimit) {

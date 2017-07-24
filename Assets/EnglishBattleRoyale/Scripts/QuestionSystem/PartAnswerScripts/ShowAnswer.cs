@@ -13,8 +13,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer {
 	}
 
 	public void ShowLetterInView(GameObject selectedLetter){
-		GameObject letterPrefab = Instantiate (showLetterPrefab) as GameObject; 
-		letterPrefab.transform.SetParent (showLetterView.transform, false);
+		GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI",showLetterView);
 		letterPrefab.GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text> ().text;
 		TweenFacade.TweenScaleToLarge (letterPrefab.transform,Vector3.one,0.3f);
 	}
