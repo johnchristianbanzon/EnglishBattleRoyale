@@ -8,12 +8,12 @@ public class QuestionListModel{
 	public string synonym;
 	public string antonym;
 	public string clues;
-	public bool hasDefinition;
-	public bool hasSynonym;
-	public bool hasAntonym;
-	public bool hasClues;
-	public QuestionListModel(string definition, string answer ,string synonym ,string antonym,string clues,bool hasDefinition,
-		bool hasSynonym, bool hasAntonym, bool hasClues){
+	public object hasDefinition;
+	public object hasSynonym;
+	public object hasAntonym;
+	public object hasClues;
+	public QuestionListModel(string definition, string answer ,string synonym ,string antonym,string clues,
+		object hasDefinition, object hasSynonym, object hasAntonym, object hasClues){
 		this.definition = definition;
 		this.synonym = synonym;
 		this.antonym = antonym;

@@ -12,6 +12,12 @@ public class Typing : MonoBehaviour, ISelection
 		gameObject.SetActive (true);
 	}
 
+
+	public void RemoveSelection(){
+
+	}
+
+
 	public void OnSelect(){
 		QuestionSystemController.Instance.partAnswer.
 		SelectionLetterGot(EventSystem.current.currentSelectedGameObject);

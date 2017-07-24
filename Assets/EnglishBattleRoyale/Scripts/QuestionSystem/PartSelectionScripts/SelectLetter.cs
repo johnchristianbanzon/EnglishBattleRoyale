@@ -22,6 +22,12 @@ public class SelectLetter : MonoBehaviour, ISelection
 		this.questionAnswer = questionAnswer;
 	}
 
+
+	public void RemoveSelection(){
+
+	}
+
+
 	/// <summary>
 	/// Shuffles the Selection by placing each letters in questionAnswer to random selection location 
 	/// then populates the others with random letters inside alphabet
@@ -42,9 +48,11 @@ public class SelectLetter : MonoBehaviour, ISelection
 				}
 			}
 			randomList.Add (randomnum);
-			gameObject.transform.GetChild (randomnum).transform.GetComponentInChildren<Text> ().text =
-				i < questionAnswer.Length ?
-				"" + questionAnswer [i].ToString().ToUpper() : "" + alphabet [UnityEngine.Random.Range (1, 26)];
+			if(i<questionAnswer.Length){
+				selectionButtons [randomnum].GetComponentInChildren<Text> ().text = questionAnswer [i].ToString ().ToUpper ();}
+			else{
+				selectionButtons [randomnum].GetComponentInChildren<Text> ().text = alphabet [UnityEngine.Random.Range (1, 26)].ToString();
+			}
 		}
 	}
 

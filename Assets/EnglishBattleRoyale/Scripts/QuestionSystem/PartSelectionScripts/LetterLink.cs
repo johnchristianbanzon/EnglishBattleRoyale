@@ -30,17 +30,22 @@ public class LetterLink : MonoBehaviour ,ISelection{
 			QuestionSystemController.Instance.CheckAnswer (true);
 
 		} else {
-			clearSelection ();
+			ClearSelection ();
 		}
 
 	}
-	public void clearSelection(){
+	public void ClearSelection(){
 		writtenAnswer = "";
 		startSelection = false;
 		QuestionSystemController.Instance.partAnswer.showAnswer.ClearLettersInView ();
 		foreach (GameObject selection in connectLetterButtons) {
 			selection.GetComponent<Image> ().color = defaultColor;
 		}
+	}
+
+	public void RemoveSelection(){
+		correctAnswerButtons [0].GetComponent<Image> ().color = new Color (255f / 255, 249f / 255f, 149f / 255f);
+		TweenFacade.TweenScaleToLarge (correctAnswerButtons [0].transform, Vector3.one, 0.4f);
 	}
 
 	public void DeploySelectionType(string questionAnswer){
@@ -55,7 +60,7 @@ public class LetterLink : MonoBehaviour ,ISelection{
 	/// While loop is used to ensure to repeating index is selected. 
 	/// </summary>
 	public void ShuffleSelection(){
-		clearSelection ();
+		ClearSelection ();
 		correctAnswerButtons.Clear ();
 		string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		List<List<int>> selectableIndex = new List<List<int>> {

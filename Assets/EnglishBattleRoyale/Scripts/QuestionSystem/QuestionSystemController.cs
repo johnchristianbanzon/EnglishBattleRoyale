@@ -19,6 +19,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	private bool hasSkippedQuestion = false;
 	public string questionAnswer = "";
 	public string questionTarget = "";
+	public int HintNumber = 10;
 	public QuestionSystemEnums.QuestionType questionType;
 
 	public ITarget targetType;
@@ -48,9 +49,11 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public QuestionModel LoadQuestion ()
 	{
 		QuestionModel questionLoaded = QuestionBuilder.GetQuestion (questionType);
-		questionAnswer = (questionLoaded.answers.Length == 2 && selectionType.Equals(partSelection.wordChoiceController)) ? 
-			(questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ()) :
-				questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
+		if (questionLoaded.answers.Length == 2 && selectionType.Equals (partSelection.wordChoiceController)) {
+			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ());
+		} else {
+			questionAnswer = questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
+		}
 		questionTarget = questionLoaded.question;
 		return questionLoaded;
 	}
@@ -58,8 +61,14 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	void Start ()
 	{
 		QuestionBuilder.PopulateQuestion ("QuestionSystemCsv");
-//		StartQuestionRound (600, delegate(List<QuestionResultModel> onRoundResult) {
-//		});
+		StartQuestionRound (new QuestionTypeModel (
+			QuestionSystemEnums.QuestionType.Association,
+			partTarget.associationController,
+			partAnswer.showAnswer,
+			partSelection.letterLink
+		), delegate(List<QuestionResultModel> obj) {
+			
+		});
 	}
 
 	public void OnSkipQuestion ()
@@ -73,7 +82,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void CheckAnswer (bool isCorrect)
 	{
 		currentQuestionNumber ++;
-		correctAnswers = isCorrect ? correctAnswers + 1 : correctAnswers;
+		if (isCorrect) {correctAnswers++;} 
 		QuestionSpecialEffects spe = new QuestionSpecialEffects ();
 		spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
 		onQuestionResult.Invoke (new QuestionResultModel (00000,13,3,isCorrect,false));
@@ -103,7 +112,12 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void UpdateFirebaseAnswerModel (bool isCorrect)
 	{
 		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-		string isCorrectParam = isCorrect ? ParamNames.AnswerCorrect.ToString () : ParamNames.AnswerWrong.ToString ();
+		string isCorrectParam;
+		if (isCorrect) {
+			isCorrectParam = ParamNames.AnswerCorrect.ToString ();
+		} else {
+			isCorrectParam = ParamNames.AnswerWrong.ToString ();
+		}
 		param [isCorrectParam] = currentQuestionNumber;
 		//	FDController.Instance.SetAnswerParam (new AnswerModel(JsonConverter.DicToJsonStr (param).ToString()));
 	}

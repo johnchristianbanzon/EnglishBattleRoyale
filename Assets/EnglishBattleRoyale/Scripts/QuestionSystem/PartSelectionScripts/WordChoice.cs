@@ -34,8 +34,13 @@ public class WordChoice : MonoBehaviour, ISelection
 					CheckIfCorrect (answerClicked1,answerClicked2);
 				}
 			}
+		}
 	}
+
+	public void RemoveSelection(){
+
 	}
+
 	private void CheckIfCorrect(string answerClicked1, string answerClicked2){
 		answerClicked.Clear ();
 

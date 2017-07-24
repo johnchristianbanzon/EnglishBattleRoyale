@@ -22,10 +22,6 @@ public static class QuestionBuilder
 		questionList.Clear ();
 		parsedData = CSVParser.ParseCSV (questionName);
 		for (int listIndex = 0; listIndex < parsedData.Count - 1; listIndex++) {
-			bool hasSynonym = parsedData [listIndex] ["sy"].ToString () == "1" ? true : false;
-			bool hasAntonym = parsedData [listIndex] ["an"].ToString () == "1" ? true : false;
-			bool hasDefinition = parsedData [listIndex] ["de"].ToString () == "1" ? true : false;
-			bool hasClues = parsedData [listIndex] ["cl"].ToString () == "1" ? true : false;
 			questionList.Add (new QuestionListModel (
 				parsedData [listIndex] ["definition"].ToString (),
 				parsedData [listIndex] ["answer"].ToString (),
@@ -33,7 +29,7 @@ public static class QuestionBuilder
 				(parsedData [listIndex] ["antonym1"].ToString () + "/" + parsedData [listIndex] ["antonym2"]),
 				(parsedData [listIndex] ["clue1"].ToString () + "/" + parsedData [listIndex] ["clue2"].ToString () + "/" +
 				parsedData [listIndex] ["clue3"].ToString () + "/" + parsedData [listIndex] ["clue4"].ToString ()),
-				hasDefinition, hasSynonym, hasAntonym, hasClues
+				parsedData [listIndex] ["de"],  parsedData [listIndex] ["sy"], parsedData [listIndex] ["an"], parsedData [listIndex] ["cl"]
 			));
 			wrongChoices.Add (parsedData [listIndex] ["answer"].ToString ());
 
@@ -54,7 +50,7 @@ public static class QuestionBuilder
 			answersList.Clear ();
 			switch (questionType) {
 			case QuestionSystemEnums.QuestionType.Antonym:
-				if (questionList [randomize].hasAntonym) {
+				if (questionList [randomize].hasAntonym.ToString()=="1") {
 					string[] antonym = questionList [randomize].antonym.Split ('/');
 					answersList.Add (antonym [0]);
 					answersList.Add (antonym [1]);
@@ -63,7 +59,7 @@ public static class QuestionBuilder
 				}
 				break;
 			case QuestionSystemEnums.QuestionType.Synonym:
-				if (questionList [randomize].hasSynonym) {
+				if (questionList [randomize].hasSynonym.ToString()=="1") {
 					string[] synonym = questionList [randomize].synonym.Split ('/');
 					answersList.Add (synonym [0]);
 					answersList.Add (synonym [1]);
@@ -72,14 +68,14 @@ public static class QuestionBuilder
 				}
 				break;
 			case QuestionSystemEnums.QuestionType.Definition:
-				if (questionList [randomize].hasDefinition) {
+				if (questionList [randomize].hasDefinition.ToString()=="1") {
 					answersList.Add (questionList [randomize].answer);
 					question = questionList [randomize].definition;
 					questionViable = true;
 				}
 				break;
 			case QuestionSystemEnums.QuestionType.Association:
-				if (questionList [randomize].hasClues) {
+				if (questionList [randomize].hasClues.ToString()=="1") {
 					answersList.Add (questionList [randomize].answer);
 					question = questionList [randomize].clues;
 					questionViable = true;

@@ -69,7 +69,9 @@ public class ChangeOrder : MonoBehaviour,ISelection
 			ShuffleSelection ();
 		}
 	}
+	public void RemoveSelection(){
 
+	}
 	public void ResetLetterSelection ()
 	{
 		foreach (GameObject letter in selectionContainers) {

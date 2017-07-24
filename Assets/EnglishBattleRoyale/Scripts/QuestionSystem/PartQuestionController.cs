@@ -19,7 +19,7 @@ public class PartQuestionController: MonoBehaviour
 	{
 		HideUI ();
 		QuestionSystemController.Instance.StartQuestionRound(GetQuestionType(selectionTypes[0]), delegate(List<QuestionResultModel> onRoundResult) {
-					
+			// RETURNS LIST OF QUESTIONRESULTS
 		});
 	}
 

@@ -54,7 +54,7 @@ public class SlotMachineOnChange : MonoBehaviour {
 		return selectedObject;
 	}
 
-	public void getAnswer(GameObject g){
+	public void GetAnswer(GameObject g){
 		itemGot = g;
 		Debug.Log (g.transform.GetChild (0).GetComponent<Text> ().text);
 
@@ -70,7 +70,7 @@ public class SlotMachineOnChange : MonoBehaviour {
 			_scrollRect.content.GetChild(0).transform.SetAsLastSibling();
 			break;
 		}
-		getAnswer (myScrollRect.transform.GetChild (0).GetChild (0).GetChild (1).gameObject);
+		GetAnswer (myScrollRect.transform.GetChild (0).GetChild (0).GetChild (1).gameObject);
 
 	}
 		

@@ -12,11 +12,11 @@ public class Association : MonoBehaviour,ITarget {
 	private int clueNumber = 1;
 
 	public void DeployTargetType(string targetString){
-		clueList.SetActive (true);
+		gameObject.SetActive (true);
 		clues = ClueArrayToList (targetString);
 		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("Input-UI",clueList);
 		clueObject.GetComponentInChildren<Text>().text = clues[clueNumber-1];
-		clueNumber += 1;
+		clueNumber ++;
 		clueObject.GetComponent<Button> ().onClick.AddListener (() => {
 			OnClueClick ();
 		});
@@ -28,7 +28,7 @@ public class Association : MonoBehaviour,ITarget {
 		if (clueSelected.GetComponentInChildren<Text> ().text == "?" && clueNumber <= clueNumberLimit) {
 			currenctClueSelected = clueSelected;
 			clueSelected.GetComponentInChildren<Text>().text = clues[clueNumber-1];
-			clueNumber += 1;
+			clueNumber ++;
 			if (clueNumber <= clueNumberLimit) {
 				TweenFacade.TweenTextScale (clueSelected.transform, new Vector3 (0.03f, clueSelected.transform.localScale.y, clueSelected.transform.localScale.z), 0.02f);
 				Invoke ("AfterScalingTween", 0.02f);
@@ -56,8 +56,7 @@ public class Association : MonoBehaviour,ITarget {
 	}
 
 	public void InstantiateCluePrefab(){
-		GameObject clueObject = Instantiate (cluePrefab) as GameObject; 
-		clueObject.transform.SetParent (clueList.transform, false);
+		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("Input-UI",clueList);
 		clueObject.GetComponent<Button> ().onClick.AddListener (() => {
 			OnClueClick ();
 		});
