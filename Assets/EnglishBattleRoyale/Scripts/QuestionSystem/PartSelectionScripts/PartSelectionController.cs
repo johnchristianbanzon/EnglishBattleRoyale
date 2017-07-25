@@ -5,7 +5,7 @@ public class PartSelectionController : MonoBehaviour
 	public GameObject[] inputSelections = new GameObject[4];
 	public SelectLetter selectLetter;
 	public Typing typing;
-	public ChangeOrder changeOrder;
+	public ChangeOrderController changeOrder;
 	public WordChoice wordChoice;
 	public SlotMachine slotMachine;
 	public LetterLink letterLink;

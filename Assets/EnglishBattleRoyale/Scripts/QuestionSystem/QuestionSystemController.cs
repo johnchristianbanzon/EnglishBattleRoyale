@@ -59,10 +59,10 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		QuestionBuilder.PopulateQuestion ("QuestionSystemCsv");
 		StartQuestionRound (new QuestionTypeModel (
-			QuestionSystemEnums.QuestionType.Definition,
-			partTarget.singleQuestion,
-			partAnswer.noAnswer,
-			partSelection.changeOrder
+			QuestionSystemEnums.QuestionType.Association,
+			partTarget.association,
+			partAnswer.showAnswer,
+			partSelection.letterLink
 		)
 		);
 	}

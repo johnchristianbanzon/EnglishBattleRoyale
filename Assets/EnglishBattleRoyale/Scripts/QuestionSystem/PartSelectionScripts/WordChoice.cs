@@ -59,12 +59,11 @@ public class WordChoice : MonoBehaviour, ISelection
 		int numberOfAnswers = 2;
 		List <int> randomList = new List<int> ();
 		string[] temp = questionAnswer.Split ('/');
-		int whileIndex = 0;
+
 		for (int i = 0; i < selectionButtons.Length; i++) {
 			int randomNum = UnityEngine.Random.Range (0, 4); 
 			while (randomList.Contains (randomNum)) {
 				randomNum = UnityEngine.Random.Range (0, selectionButtons.Length);
-				whileIndex++;
 			}
 			randomList.Add (randomNum);
 			string wrongChoiceGot = QuestionBuilder.GetRandomChoices ();

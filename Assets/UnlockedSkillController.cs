@@ -9,6 +9,7 @@ public class UnlockedSkillController : MonoBehaviour
 	public GameObject unlockedSkillTitle;
 	public GameObject currentSelectedCardSlot;
 	public GameObject currectSelectedCharacterCard;
+
 	public bool aboutToSwapCard = false;
 	// Show unlocked cards, if cards already in equip, do not show
 	public void ShowCharacterCards (List<SkillModel> equipCardList)
