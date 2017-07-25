@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class QuestionListModel{
+﻿public class QuestionListModel{
 	public string definition;
 	public string answer;
 	public string synonym;

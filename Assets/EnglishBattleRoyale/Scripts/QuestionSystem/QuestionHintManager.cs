@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class QuestionHintManager :MonoBehaviour{
 	int hintLimit = 10;
@@ -10,9 +8,9 @@ public class QuestionHintManager :MonoBehaviour{
 	public void OnClick(){
 		int questionAnswerLength = QuestionSystemController.Instance.questionAnswer.Length;
 		if (hintUsed < hintLimit && questionAnswerLength > hintIndex) {
-			QuestionSystemController.Instance.selectionType.RemoveSelection (hintIndex);
-			hintIndex += 1;
-			hintUsed +=1;
+			QuestionSystemController.Instance.selectionType.RemoveSelectionHint (hintIndex);
+			hintIndex ++;
+			hintUsed ++;
 		}
 	}
 

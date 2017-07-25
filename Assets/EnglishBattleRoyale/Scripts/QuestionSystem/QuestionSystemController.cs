@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -48,7 +46,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public QuestionModel LoadQuestion ()
 	{
 		QuestionModel questionLoaded = QuestionBuilder.GetQuestion (questionType,selectionType);
-		if (questionLoaded.answers.Length == 2 && selectionType.Equals (partSelection.wordChoiceController)) {
+		if (questionLoaded.answers.Length == 2 && selectionType.Equals (partSelection.wordChoice)) {
 			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ());
 		} else {
 			questionAnswer = questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
@@ -61,10 +59,10 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		QuestionBuilder.PopulateQuestion ("QuestionSystemCsv");
 		StartQuestionRound (new QuestionTypeModel (
-			QuestionSystemEnums.QuestionType.Synonym,
-			partTarget.singleQuestionController,
-			partAnswer.noAnswerController,
-			partSelection.slotMachineController
+			QuestionSystemEnums.QuestionType.Definition,
+			partTarget.singleQuestion,
+			partAnswer.noAnswer,
+			partSelection.changeOrder
 		)
 		);
 	}
@@ -80,7 +78,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void CheckAnswer (bool isCorrect)
 	{
 		currentQuestionNumber ++;
-		if (isCorrect) {correctAnswers++;} 
+		if (isCorrect) {
+			correctAnswers++;
+		} 
 		QuestionSpecialEffects spe = new QuestionSpecialEffects ();
 		spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
 		onQuestionResult.Invoke (new QuestionResultModel (00000,13,3,isCorrect,false));

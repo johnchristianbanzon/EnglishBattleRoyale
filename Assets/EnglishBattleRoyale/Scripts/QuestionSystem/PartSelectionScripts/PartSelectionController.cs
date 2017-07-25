@@ -1,17 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using System;
+﻿using UnityEngine;
 
 public class PartSelectionController : MonoBehaviour
 {
 	public GameObject[] inputSelections = new GameObject[4];
-	public SelectLetter selectLetterController;
-	public Typing typingController;
-	public ChangeOrder changeOrderController;
-	public WordChoice wordChoiceController;
-	public SlotMachine slotMachineController;
+	public SelectLetter selectLetter;
+	public Typing typing;
+	public ChangeOrder changeOrder;
+	public WordChoice wordChoice;
+	public SlotMachine slotMachine;
 	public LetterLink letterLink;
 
 	public void DeploySelectionType(ISelection selectionType, string questionAnswer){

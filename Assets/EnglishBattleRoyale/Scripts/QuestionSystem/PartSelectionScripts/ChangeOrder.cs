@@ -1,39 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using DG.Tweening;
 
 public class ChangeOrder : MonoBehaviour,ISelection
 {
 	public GameObject[] selectionContainers = new GameObject[5];
-	public GameObject inputContent;
-	private int slotLimit = 5;
-	private GameObject currentSelectedLetter;
+	public GameObject selectionContent;
 	private bool isDragging = false;
 	private int selectedIndex;
 	public string questionAnswer;
+	private GameObject selectedButton;
 
 	public void OnBeginDrag (GameObject selectedButton)
 	{
-		selectedButton.transform.SetParent (selectedButton.transform.parent.parent);
+		this.selectedButton = selectedButton;
+		selectedButton.transform.SetParent (this.transform);
+
 	}
 
-	public void OnEndDrag (GameObject selectedButton)
+	public void OnEndDrag ()
 	{
-		selectedButton.transform.SetParent (inputContent.transform);
+		selectedButton.transform.SetParent (selectionContent.transform);
 		selectedButton.GetComponent<Image> ().raycastTarget = true;
 		selectedButton.transform.SetSiblingIndex (selectedIndex);
-		QuestionSystemController.Instance.partAnswer.noAnswerController.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
+		QuestionSystemController.Instance.partAnswer.noAnswer.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
 		isDragging = false;
 	}
 
 	public string GetSelectedAnswer ()
 	{
 		string selectedAnswer = "";
-		foreach (Transform child in inputContent.transform) {
+		foreach (Transform child in selectionContent.transform) {
 			if (child.gameObject.activeInHierarchy) {
 				selectedAnswer += child.GetComponentInChildren<Text> ().text;
 			}
@@ -41,7 +38,7 @@ public class ChangeOrder : MonoBehaviour,ISelection
 		return selectedAnswer;
 	}
 
-	public void OnSelectionDrag (Button selectedButton)
+	public void OnSelectionDrag ()
 	{
 		isDragging = true;
 		Vector2 pos = new Vector2 (0, 0);
@@ -49,14 +46,12 @@ public class ChangeOrder : MonoBehaviour,ISelection
 		selectedButton.GetComponent<Image> ().raycastTarget = false;
 		RectTransformUtility.ScreenPointToLocalPointInRectangle (myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
 		selectedButton.transform.position = myCanvas.transform.TransformPoint (pos);
-		//selectedButton.transform.position = Input.mousePosition;
 	}
 
 	public void OnDetectDraggedLetter (GameObject touchedObject)
 	{
 		if (isDragging) {
 			selectedIndex = touchedObject.transform.GetSiblingIndex ();
-			currentSelectedLetter = touchedObject.gameObject;
 		}
 	}
 
@@ -68,17 +63,22 @@ public class ChangeOrder : MonoBehaviour,ISelection
 		if (GetSelectedAnswer ().Equals (questionAnswer)) {
 			ShuffleSelection ();
 		}
+		QuestionSystemController.Instance.correctAnswerButtons = new List<GameObject> (selectionContainers);
 	}
-	public void RemoveSelection(int hintIndex){
 
+	public void RemoveSelectionHint (int hintIndex)
+	{
+		//Change order hint 
 	}
-	public void ResetLetterSelection ()
+
+	public void ClearLetterSelection ()
 	{
 		foreach (GameObject letter in selectionContainers) {
 			letter.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 			letter.SetActive (true);
 		}
 	}
+
 	/// <summary>
 	/// Deploies the type of the selection.
 	/// Resets the selections first,
@@ -89,12 +89,9 @@ public class ChangeOrder : MonoBehaviour,ISelection
 	public void DeploySelectionType (string answer)
 	{
 		gameObject.SetActive (true);
-		ResetLetterSelection ();
-		QuestionSystemController.Instance.partAnswer
-			.noAnswerController.correctAnswerContainer.SetActive (false);
-		QuestionSystemController.Instance.correctAnswerButtons = new List<GameObject> (selectionContainers);
+		ClearLetterSelection ();
 		questionAnswer = answer;
-		if (answer.Length <= slotLimit) {
+		if (answer.Length <= selectionContainers.Length) {
 			for (int i = 0; i < selectionContainers.Length; i++) {
 				if (i < answer.Length) {
 					selectionContainers [i].GetComponentInChildren<Text> ().text = answer [i].ToString ();
@@ -104,23 +101,35 @@ public class ChangeOrder : MonoBehaviour,ISelection
 			}
 		} else {
 			List<string> questioningList = new List<string> ();
-
-			int orderCoupling = questionAnswer.Length % 5;
 			for (int j = 0; j < questionAnswer.Length; j++) {
 				questioningList.Add (questionAnswer [j].ToString ());
 			}
-			for (int j = 0; j < orderCoupling; j++) {
-				int randomizedIndex = UnityEngine.Random.Range (0, questionAnswer.Length - 1);
-				questioningList [randomizedIndex] += questioningList [randomizedIndex + 1];
-				questioningList.Remove (questioningList [randomizedIndex + 1].ToString ());
-				Debug.Log (questioningList [randomizedIndex]);
-			}
-			for (int j = 0; j < selectionContainers.Length; j++) {
-				selectionContainers [j].GetComponentInChildren<Text> ().text = questioningList [j];
-			}
-
+			OrderCoupling (questioningList);
 		}
 		ShuffleSelection ();
 	}
+
+	/// <summary>
+	/// Couples letters if greater than 5
+	/// </summary>
+	/// <param name="questioningList">Questioning list.</param>
+	public void OrderCoupling (List<string> questioningList)
+	{
+		int orderCouplingCount = questionAnswer.Length % 5;
+		List<int> couplingRandomizeList = new List<int> ();
+		while (orderCouplingCount > 0) {
+			int randomizedIndex = UnityEngine.Random.Range (0, questionAnswer.Length - 1);
+			if (!couplingRandomizeList.Contains (randomizedIndex)) {
+				questioningList [randomizedIndex] += questioningList [randomizedIndex + 1];
+				questioningList.Remove (questioningList [randomizedIndex + 1].ToString ());
+				orderCouplingCount--;
+			}
+		}
+		for (int j = 0; j < selectionContainers.Length; j++) {
+			selectionContainers [j].GetComponentInChildren<Text> ().text = questioningList [j];
+		}
+
+	}
+
 
 }

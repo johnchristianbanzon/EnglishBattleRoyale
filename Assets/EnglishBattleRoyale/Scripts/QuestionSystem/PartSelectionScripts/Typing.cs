@@ -1,11 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using DG.Tweening;
-
 public class Typing : MonoBehaviour, ISelection
 {
 	public void DeploySelectionType(string questionAnswer){
@@ -13,7 +8,7 @@ public class Typing : MonoBehaviour, ISelection
 	}
 
 
-	public void RemoveSelection(int hintIndex){
+	public void RemoveSelectionHint(int hintIndex){
 
 	}
 

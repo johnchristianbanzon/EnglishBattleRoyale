@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class QuestionResultModel {
+﻿public class QuestionResultModel {
 
 	public int questionId;
 	public int timePassed;

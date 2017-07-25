@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ShowAnswer : MonoBehaviour,IAnswer {
 
 	public GameObject showLetterView;
-	public GameObject showLetterPrefab;
-
 	public void DeployAnswerType(){
 		this.gameObject.SetActive (true);
 	}

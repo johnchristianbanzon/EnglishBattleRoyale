@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class QuestionModel{
+﻿public class QuestionModel{
 	public string question;
 	public string[] answers;
 

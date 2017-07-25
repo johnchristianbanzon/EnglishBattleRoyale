@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +8,8 @@ public class PartAnswerController : MonoBehaviour {
 	private QuestionSystemEnums.AnswerType answerType;
 	private int answerIndex = 0;
 	private string questionAnswer = "";
-	public FillAnswerType fillAnswerController;
-	public NoAnswerType noAnswerController;
+	public FillAnswerType fillAnswer;
+	public NoAnswerType noAnswer;
 	public ShowAnswer showAnswer;
 
 	public void SelectionLetterGot(GameObject selectedObject){

@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -28,8 +26,8 @@ public class PartQuestionController: MonoBehaviour
 		QuestionTypeModel questionType = null;
 
 		questionType.questionCategory = QuestionSystemEnums.QuestionType.Definition;
-		questionType.targetType = QuestionSystemController.Instance.partTarget.singleQuestionController;
-		questionType.answerType = QuestionSystemController.Instance.partAnswer.fillAnswerController;
+		questionType.targetType = QuestionSystemController.Instance.partTarget.singleQuestion;
+		questionType.answerType = QuestionSystemController.Instance.partAnswer.fillAnswer;
 		questionType.selectionType = partSelection;
 
 		return questionType;

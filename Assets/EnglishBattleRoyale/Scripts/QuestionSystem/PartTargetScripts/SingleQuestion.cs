@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+
 public class SingleQuestion : MonoBehaviour,ITarget {
 	public Text targetText;
 

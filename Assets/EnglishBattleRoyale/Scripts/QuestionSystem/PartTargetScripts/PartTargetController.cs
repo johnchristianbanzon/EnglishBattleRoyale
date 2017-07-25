@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PartTargetController : MonoBehaviour {
-	public SingleQuestion singleQuestionController;
-	public Association associationController;
+	public SingleQuestion singleQuestion;
+	public Association association;
 
 	public void DeployPartTarget(ITarget targetType, string targetString){
 		targetType.DeployTargetType (targetString);

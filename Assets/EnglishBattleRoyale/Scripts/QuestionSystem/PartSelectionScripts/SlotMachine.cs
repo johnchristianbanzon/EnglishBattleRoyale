@@ -1,11 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Net;
-using System.IO;
 
 public class SlotMachine : MonoBehaviour,ISelection
 {
@@ -39,7 +34,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 		ShuffleAlgo (questionAnswer);
 	}
 
-	public void RemoveSelection (int hintIndex)
+	public void RemoveSelectionHint (int hintIndex)
 	{
 		
 	}
