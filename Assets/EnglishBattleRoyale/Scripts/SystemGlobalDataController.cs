@@ -10,7 +10,7 @@ public class SystemGlobalDataController: SingletonMonoBehaviour<SystemGlobalData
 
 	public bool isHost{ get; set; }
 
-	public bool attackerBool{ get; set; }
+	public bool isSender{ get; set; }
 
 	public ModeEnum modePrototype { get; set; }
 	 
