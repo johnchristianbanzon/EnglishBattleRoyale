@@ -24,7 +24,7 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 		if (rpcReceive.ContainsKey ("param")) {
 			bool userHome = (bool)rpcReceive ["userHome"];
-			SystemGlobalDataController.Instance.attackerBool = userHome;
+			SystemGlobalDataController.Instance.isSender = userHome;
 
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 			if (param.ContainsKey ("AnswerIndicator")) {
@@ -42,7 +42,7 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 		foreach (KeyValuePair<string, System.Object> answer in answerResult) {
 
 			if (answer.Key == ParamNames.AnswerCorrect.ToString ()) {
-				if (SystemGlobalDataController.Instance.attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
+				if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
 					playerAnswerCounter++;
 					playerAnswerText.text = "" +playerAnswerCounter;
 

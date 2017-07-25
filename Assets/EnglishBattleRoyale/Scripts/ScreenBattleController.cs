@@ -6,7 +6,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 {
 	public PartStateController partState;
 	public PartSkillController partSkill;
-	public PartQuestionController partQuestion;	
+	public PartQuestionController partQuestion;
 	public PartGestureController partGesture;
 	public PartCameraWorksController partCameraWorks;
 	public PartAvatarsController partAvatars;
@@ -112,13 +112,13 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 		if (rpcReceive.ContainsKey ("param")) {
 			bool userHome = (bool)rpcReceive ["userHome"];
-			SystemGlobalDataController.Instance.attackerBool = userHome;
+			SystemGlobalDataController.Instance.isSender = userHome;
 
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 			string stringParam = param ["Attack"].ToString ();
 
 			Dictionary<string, System.Object> attackerParam = JsonConverter.JsonStrToDic (stringParam);
-			thisCurrentParameter.Add (SystemGlobalDataController.Instance.attackerBool, attackerParam);
+			thisCurrentParameter.Add (SystemGlobalDataController.Instance.isSender, attackerParam);
 			if (thisCurrentParameter.Count == 2) {
 				Attack (thisCurrentParameter);
 				thisCurrentParameter.Clear ();
@@ -128,41 +128,22 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 	public void Attack (Dictionary<bool, Dictionary<string, object>> currentParam)
 	{
-		foreach (KeyValuePair<bool, Dictionary<string, System.Object>> newParam in currentParam) {
-			userHome.Add (newParam.Key);
-			param.Add (newParam.Value);
-		}
+
+		KeyValuePair<bool, Dictionary<string, System.Object>> getParam = BattleLogic.GetAttackParam (currentParam);
+		userHome.Add (getParam.Key);
+		param.Add (getParam.Value);
 
 		//change order of list if host or visitor
-		if (SystemGlobalDataController.Instance.isHost) {
-			if (userHome [0] != SystemGlobalDataController.Instance.isHost) {
-				ChangeUserOrder (0, 1);
-			}
-		} else {
-			if (userHome [1] != SystemGlobalDataController.Instance.isHost) {
-				ChangeUserOrder (1, 0);
-			}
+		BattleLogic.ChangeOrder (delegate(List<bool> userHome, List<Dictionary<string, object>> param) {
+			this.userHome = userHome;
+			this.param = param;
+		}, userHome, param);
 
-		}
 
 		Debug.Log ("HOST IS" + userHome [0]);
 
 		//set attack order between opponents
-		int attackOrder = 0;
-
-		if (SystemGlobalDataController.Instance.hAnswer > SystemGlobalDataController.Instance.vAnswer) {
-			attackOrder = 0;
-		} else if (SystemGlobalDataController.Instance.hAnswer < SystemGlobalDataController.Instance.vAnswer) {
-			attackOrder = 1;
-		} else {
-			if (SystemGlobalDataController.Instance.hTime > SystemGlobalDataController.Instance.vTime) {
-				attackOrder = 0;
-			} else if (SystemGlobalDataController.Instance.hTime < SystemGlobalDataController.Instance.vTime) {
-				attackOrder = 1;
-			} else {
-				attackOrder = 2;
-			}
-		}
+		int attackOrder = BattleLogic.GetAttackOrder ();
 
 		switch (attackOrder) {
 		case 0:
@@ -184,135 +165,56 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 	}
 
-	private void ChangeUserOrder (int index0, int index1)
-	{
-		bool tempName = userHome [index0];
-		Dictionary<string, System.Object> tempParam = param [index0];
-
-		userHome.Insert (index0, userHome [index1]);
-		userHome.Insert (index1, tempName);
-		param.Insert (index0, param [index1]);
-		param.Insert (index1, tempParam);
-	}
-
-
-
 	IEnumerator SetAttack (int firstIndex, int secondIndex, int yieldTime, bool isSameAttack = false)
 	{
-		AttackParameter (userHome [firstIndex], param [firstIndex], isSameAttack);
+		AttackCalculate (userHome [firstIndex], param [firstIndex], isSameAttack);
 		yield return new WaitForSeconds (yieldTime);
-		AttackParameter (userHome [secondIndex], param [secondIndex], isSameAttack);
+		AttackCalculate (userHome [secondIndex], param [secondIndex], isSameAttack);
 		userHome.Clear ();
 	}
 
-	public void CheckBattleStatus (bool secondCheck)
+
+	private void AttackCalculate (bool attackerBool, Dictionary<string, System.Object> attackerParam, bool sameAttack = false)
 	{
-		StartCoroutine (CheckBattleDelay (secondCheck));
-	}
+		int attackSequence = BattleLogic.AttackLogic (delegate(float enemyHP, float playerHP) {
+			this.enemyHP = enemyHP;
+			this.playerHP = playerHP;
+		}, enemyHP, playerHP, attackerBool, attackerParam, sameAttack);
 
-	public void ShowWinLose (string winLoseText, AudioEnum winLoseAudio)
-	{
-		AudioController.Instance.PlayAudio (winLoseAudio);
-		GameObject battleResult = SystemPopupController.Instance.ShowPopUp ("PopUpBattleResult");
-		battleResult.GetComponent<PopUpBattleResultController> ().SetBattleResultText (winLoseText);
-	}
-
-
-	IEnumerator CheckBattleDelay (bool secondCheck)
-	{
-		if (enemyHP <= 0 || playerHP <= 0) {
-			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
-			partCameraWorks.StartWinLoseCamera ();
-
-			if (enemyHP > 0 && playerHP <= 0) {
-				ShowWinLose ("LOSE", AudioEnum.Lose);
-
-			} else if (playerHP > 0 && enemyHP <= 0) {
-				ShowWinLose ("WIN", AudioEnum.Win);
-
-			} else {
-				ShowWinLose ("DRAW", AudioEnum.Lose);
-
-			}
-
-			StopAllCoroutines ();
-
-		} else {
-			if (secondCheck) {
-				if (SystemGlobalDataController.Instance.isHost) {
-					if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
-						SystemFirebaseDBController.Instance.UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
-					} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_SKILL, 0);
-
-					}
-				}
-				yield return new WaitForSeconds (3);
-				PhaseManager.StartPhase1 ();
-				//reset effects done by skill and battle data
-				SystemGlobalDataController.Instance.ResetPlayer ();
-
-
-				param.Clear ();
-				Debug.Log ("player damage reset! now damage is: " + SystemGlobalDataController.Instance.player.playerBaseDamage);
-			}
+		if (attackSequence != 0) {
+			StartCoroutine (StartAttackSequence (attackSequence));
 		}
 	}
 
-
-	private void AttackParameter (bool attackerBool, Dictionary<string, System.Object> attackerParam, bool sameAttack = false)
-	{
-		if (attackerParam [ParamNames.Attack.ToString ()] != null) {
-			int damage = int.Parse (attackerParam [ParamNames.Attack.ToString ()].ToString ());
-
-			if (attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
-				Debug.Log ("PLAYER DAMAGE: " + damage);
-				enemyHP -= damage;
-				if (sameAttack == false) {
-					StartCoroutine (StartAttackSequence (1));
-				}
-
-			} else {
-				Debug.Log ("ENEMY DAMAGE: " + damage);
-				playerHP -= damage;
-				if (sameAttack == false) {
-					StartCoroutine (StartAttackSequence (2));
-				}
-			}
-		}
-
-	}
-
+	//Animation and sound when attacking
 	IEnumerator StartAttackSequence (int sequenceType)
 	{
 
 		switch (sequenceType) {
 		case 1:
-
-			StartAttackSequenceReduce (AudioEnum.Attack, true, "attack");
+			//animate and sound here
 			yield return new WaitForSeconds (0.5f);
-			StartAttackSequenceReduce (AudioEnum.Hit, false, "hit");
+			//animate and sound here
 			CheckAttackCount ();
 			break;
 		case 2:
-			StartAttackSequenceReduce (AudioEnum.Hit, true, "hit");
+			//animate and sound here
 			yield return new WaitForSeconds (0.5f);
-			StartAttackSequenceReduce (AudioEnum.Attack, false, "attack");
+			//animate and sound here
 			CheckAttackCount ();
 			break;
 		case 3:
-			StartAttackSequenceReduce (AudioEnum.Attack, true, "attack");
-			StartAttackSequenceReduce (AudioEnum.Attack, false, "attack");
+			//animate and sound here
 			yield return new WaitForSeconds (0.5f);
-			StartAttackSequenceReduce (AudioEnum.Hit, true, "hit");
-			StartAttackSequenceReduce (AudioEnum.Hit, false, "hit");
-
+			//animate and sound here
 			CheckBattleStatus (true);
 			break;
 
 		}
 
 	}
+
+
 
 	private void CheckAttackCount ()
 	{
@@ -325,10 +227,48 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		}
 	}
 
-	private void StartAttackSequenceReduce (AudioEnum audioType, bool isPlayer, string animParam)
+
+	public void CheckBattleStatus (bool secondCheck)
 	{
-		AudioController.Instance.PlayAudio (audioType);
+		StartCoroutine (CheckBattleDelay (secondCheck));
 	}
+
+	IEnumerator CheckBattleDelay (bool secondCheck)
+	{
+		bool battleOver = false;
+		BattleLogic.CheckBattle (secondCheck, enemyHP, playerHP, delegate(string battleResult, bool isBattleOver) {
+
+			ShowWinLose (battleResult);
+			StopAllCoroutines ();
+			battleOver = isBattleOver;
+		});
+
+		if (!battleOver) {
+			if (secondCheck) {
+				if (SystemGlobalDataController.Instance.isHost) {
+					if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
+						SystemFirebaseDBController.Instance.UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
+					} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
+						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_SKILL, 0);
+
+					}
+				}
+				yield return new WaitForSeconds (3);	
+				PhaseManager.StartPhase1 ();
+				//reset effects done by skill and battle data
+				SystemGlobalDataController.Instance.ResetPlayer ();
+				param.Clear ();
+				Debug.Log ("player damage reset! now damage is: " + SystemGlobalDataController.Instance.player.playerBaseDamage);
+			}
+		}
+	}
+
+	public void ShowWinLose (string winLoseText)
+	{
+		GameObject battleResult = SystemPopupController.Instance.ShowPopUp ("PopUpBattleResult");
+		battleResult.GetComponent<PopUpBattleResultController> ().SetBattleResultText (winLoseText);
+	}
+
 
 
 

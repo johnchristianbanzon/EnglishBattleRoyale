@@ -18,12 +18,12 @@ public class SkillActivator: IRPCDicObserver
 			if (rpcReceive.ContainsKey ("param")) {
 
 				bool userHome = (bool)rpcReceive ["userHome"];
-				SystemGlobalDataController.Instance.attackerBool = userHome;
+				SystemGlobalDataController.Instance.isSender = userHome;
 
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 				if (param.ContainsKey ("SkillParam")) {
 					string stringParam = param ["SkillParam"].ToString ();
-					if (SystemGlobalDataController.Instance.attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
+					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
 						SetPlayerSkillParameter (stringParam);
 					} else {
 						SetEnemySkillParameter (stringParam);
@@ -76,7 +76,7 @@ public class SkillActivator: IRPCDicObserver
 	/// <param name="newParam">New parameter.</param>
 	public void SetSkillAnimation (string skillName)
 	{
-		if (SystemGlobalDataController.Instance.attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
+		if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
 			partAvatar.SetTriggerAnim (true, skillName);
 		} else {
 			partAvatar.SetTriggerAnim (false, skillName);

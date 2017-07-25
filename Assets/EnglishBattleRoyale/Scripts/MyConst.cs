@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/* Handles Constants */
+﻿/* Handles Constants */
 public static class MyConst
 {
 

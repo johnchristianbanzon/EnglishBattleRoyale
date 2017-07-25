@@ -25,7 +25,7 @@ public class PartSkillController : MonoBehaviour
 
 	public void SetSkillUI (int skillNumber, SkillModel charCard)
 	{
-		skillGpCost [skillNumber].text = "" + charCard.skillGpCost + "GP";
+		skillGpCost [skillNumber].text = charCard.skillGpCost.ToString() + "GP";
 		skillButton [skillNumber].GetComponent<Image> ().sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.skillName);
 	}
 
@@ -104,7 +104,7 @@ public class PartSkillController : MonoBehaviour
 			ActivateSkillIndicator (skillNumber - 1);
 		} else {
 			if (skillButton [skillNumber - 1].interactable) {
-				SelectSkillReduce (skillNumber);
+				SelectedSkill (skillNumber);
 			}
 		}
 
@@ -112,14 +112,15 @@ public class PartSkillController : MonoBehaviour
 
 	private void ActivateSkillIndicator (int skillNumber)
 	{
+		Outline skillButtonOutline = skillButton [skillNumber].GetComponent<Outline> ();
 		if (skillButtonToggleOn [skillNumber]) {
 			//if clicked
-			skillButton [skillNumber].GetComponent<Outline> ().enabled = true;
-			skillButton [skillNumber].GetComponent<Outline> ().effectColor = new Color32 (255, 96, 26, 255);
+			skillButtonOutline.enabled = true;
+			skillButtonOutline.effectColor = new Color32 (255, 96, 26, 255);
 
 		} else {
 			//if not
-			skillButton [skillNumber].GetComponent<Outline> ().enabled = false;
+			skillButtonOutline.enabled = false;
 		}
 	}
 
@@ -128,7 +129,7 @@ public class PartSkillController : MonoBehaviour
 		if (activateAutoSkill) {
 			for (int i = 0; i < skillButtonToggleOn.Length; i++) {
 				if (skillButtonToggleOn [i]) {
-					SelectSkillReduce (i);
+					SelectedSkill (i);
 				}
 			}
 		}
@@ -137,17 +138,13 @@ public class PartSkillController : MonoBehaviour
 
 	public void ShowSkillDescription (int skillNumber)
 	{
-		SkillDescriptionReduce (SkillManager.GetSkill (skillNumber).skillDescription, true);
-
-	}
-
-	private void SkillDescriptionReduce (string description, bool isShow)
-	{
 		GameObject skillDescription = SystemPopupController.Instance.ShowPopUp ("PopUpSkillDescription");
-		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (description);
+		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (SkillManager.GetSkill (skillNumber).skillDescription);
 	}
 
-	private void SelectSkillReduce (int skillNumber)
+
+
+	private void SelectedSkill (int skillNumber)
 	{
 		SelectSkillActivate (delegate() {
 			SkillManager.ActivateSkill (skillNumber);

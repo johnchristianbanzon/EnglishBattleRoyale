@@ -12,7 +12,8 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	public GameObject gestureButton;
 	private Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
 
-	void Start(){
+	void Start ()
+	{
 		RPCDicObserver.AddObserver (this);
 	}
 
@@ -20,7 +21,7 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	{
 		if (!gestureButtonContainer.activeInHierarchy) {
 			gestureButtonContainer.SetActive (true);
-			TweenFacade.TweenScaleToLarge (gestureButtonContainer.transform, new Vector3(1,1,1), 0.4f);
+			TweenFacade.TweenScaleToLarge (gestureButtonContainer.transform, new Vector3 (1, 1, 1), 0.4f);
 
 			button.gameObject.GetComponent<Image> ().sprite = closeImage;
 		} else {
@@ -31,10 +32,12 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 		}
 	}
 
-	public void ScaleToSmall(){
-		TweenFacade.TweenScaleToSmall (gestureButtonContainer.transform, new Vector3(0.7f,0.7f,0.7f), 0.1f);
+	public void ScaleToSmall ()
+	{
+		TweenFacade.TweenScaleToSmall (gestureButtonContainer.transform, new Vector3 (0.7f, 0.7f, 0.7f), 0.1f);
 		Invoke ("HideGestureButton", 0.05f);
 	}
+
 	public void HideGestureButton ()
 	{
 		gestureButtonContainer.SetActive (false);
@@ -47,25 +50,24 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 
 		SendGesture (gestureNum);
 	}
-		
+
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
-		try{
-		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
-		if (rpcReceive.ContainsKey ("param")) {
-			bool userHome = (bool)rpcReceive ["userHome"];
-				SystemGlobalDataController.Instance.attackerBool = userHome;
+		try {
+			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
+			if (rpcReceive.ContainsKey ("param")) {
+				bool userHome = (bool)rpcReceive ["userHome"];
+				SystemGlobalDataController.Instance.isSender = userHome;
 
-			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
-			if (param.ContainsKey ("Gesture")) {
-				string stringParam = param ["Gesture"].ToString ();
-					if (SystemGlobalDataController.Instance.attackerBool.Equals (!SystemGlobalDataController.Instance.isHost))
-					SetEnemyGesture (stringParam);
+				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
+				if (param.ContainsKey ("Gesture")) {
+					string stringParam = param ["Gesture"].ToString ();
+					if (SystemGlobalDataController.Instance.isSender.Equals (!SystemGlobalDataController.Instance.isHost))
+						SetEnemyGesture (stringParam);
+				}
 			}
-		}
-		}
-		catch(System.Exception e){
+		} catch (System.Exception e) {
 			//do something with exception in future
 		}
 
@@ -75,22 +77,7 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	{
 		Dictionary<string, System.Object> gestureParam = JsonConverter.JsonStrToDic (enemyGesture);
 		foreach (KeyValuePair<string, System.Object> gesture in gestureParam) {
-
-			switch (int.Parse (gesture.Value.ToString ())) {
-			case 1:
-				ShowGesture (false, "Gesture1");
-				break;
-			case 2:
-				ShowGesture (false, "Gesture2");
-				break;
-			case 3:
-				ShowGesture (false, "Gesture3");
-				break;
-			case 4:
-				ShowGesture (false, "Gesture4");
-				break;
-			}
-
+			ShowGesture (false, "Gesture" + int.Parse (gesture.Value.ToString ()));
 		}
 	}
 

@@ -64,13 +64,29 @@ public static class SkillManager
 		ScreenBattleController.Instance.partSkill.SetSkillUI (skillIndex, skillmodel);
 	}
 
-	//receive skill list from prepare phase and put in queue
+	//receive skill list from prepare phase and shuffle for random skill in start and put in queue
 	public static void SetSkillEnqueue (List<SkillModel> skillList)
 	{
+		skillList.Shuffle ();
 		for (int i = 0; i < skillList.Count; i++) {
 			skillQueue.Enqueue (skillList [i]);
 		}
 	}
+
+	//Fisher-Yates shuffle
+	private static System.Random rng = new System.Random();  
+	public static void Shuffle<T>(this IList<T> list)  
+	{  
+		int n = list.Count;  
+		while (n > 1) {  
+			n--;  
+			int k = rng.Next(n + 1);  
+			T value = list[k];  
+			list[k] = list[n];  
+			list[n] = value;  
+		}  
+	}
+
 
 	//Default 3 starting skills when starting the game
 	public static void SetStartSkills ()
@@ -83,7 +99,9 @@ public static class SkillManager
 	//When skill is used, remove previous skill and enqueue replace with new skill in queue
 	public static void UseSkillUI (int skillIndex)
 	{
+		//remove this if you want skill will be gone after use
 		skillQueue.Enqueue (skill [skillIndex]);
+
 		SetSkillUI (skillIndex, skillQueue.Dequeue ());
 	}
 
