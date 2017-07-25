@@ -5,15 +5,17 @@ using System.Collections.Generic;
 public class UnlockedSkillController : MonoBehaviour
 {
 	private List<SkillModel> charCardList = new List<SkillModel> ();
-	public Text charCardCount;
+	private Text charCardCount;
+	public GameObject unlockedSkillTitle;
+	public GameObject currentSelectedCardSlot;
+	public GameObject currectSelectedCharacterCard;
 
+	public bool aboutToSwapCard = false;
 	// Show unlocked cards, if cards already in equip, do not show
 	public void ShowCharacterCards (List<SkillModel> equipCardList)
 	{
 		charCardList = SkillManager.GetCSVSkillList ();
 		charCardCount.text = charCardList.Count.ToString () + "/20";
-
-
 		for (int i = 0; i < charCardList.Count; i++) {
 			bool hasCardInEquip = false;
 
@@ -28,7 +30,7 @@ public class UnlockedSkillController : MonoBehaviour
 				for (int k = 0; k < this.transform.childCount; k++) {
 					if (this.transform.GetChild (k).childCount == 0) {
 						GameObject charCard = SystemResourceController.Instance.LoadPrefab ("CharCard", this.transform.GetChild (k).gameObject);
-						charCard.GetComponent<CharCardController> ().SetCardParameter (charCardList[i]);
+						charCard.GetComponent<CharCardController> ().SetCardParameter (charCardList[i],false);
 						break;
 					}
 				}
@@ -37,4 +39,7 @@ public class UnlockedSkillController : MonoBehaviour
 		}
 			
 	}
+
+
+
 }

@@ -1,90 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PartQuestionController: MonoBehaviour
 {
-
-	// JOCHRIS START HERE   ---------------------------------------------------------------------------------------------
 	public GameObject questionSelect;
+	public ISelection[] selectionTypes = new ISelection[6];
 
-	public GameObject[] questionTypeModals;
-
-	public void QuestionHide ()
+	private void OnEndQuestion (int gp, int qtimeLeft)
 	{
-		for (int i = 0; i < questionTypeModals.Length; i++) {
-			//Debug.Log (questionTypeModals[i].name);
-			questionTypeModals [i].SetActive (false);
-		}
-	}
-
-	void Start ()
-	{
-		QuestionBuilder.PopulateQuestion ("QuestionSystemCsv");
-		SelectLetterIcon typingicon = FindObjectOfType<SelectLetterIcon> ();
-		QuestionController.Instance.SetQuestion (typingicon, null);
-	}
-
-	public void SetQuestionEntry (int questionType, Action<int, int> onResult)
-	{
-		questionTypeModals [questionType].SetActive (true);
-
-
-		switch (questionType) {
-		case 0:
-			SelectLetterIcon selectletterIcon = questionTypeModals [0].GetComponent<SelectLetterIcon> ();
-			//questionTypeModals[0].SetActive (true);
-			QuestionController.Instance.SetQuestion (selectletterIcon, onResult);
-
-
-			break;
-		case 1:
-			TypingIcon typingicon = FindObjectOfType<TypingIcon> ();
-			//questionTypeModals[1].SetActive (true);
-			QuestionController.Instance.SetQuestion (typingicon, onResult);
-		
-			break;
-		case 2:
-			//questionTypeModals[2].SetActive (true);
-			ChangeOrderIcon changeOrderIcon = FindObjectOfType<ChangeOrderIcon> ();
-			QuestionController.Instance.SetQuestion (changeOrderIcon, onResult);
-		
-			break;
-		case 3:
-			//questionTypeModals[2].SetActive (true);
-			WordChoiceIcon wordchoiceIcon = FindObjectOfType<WordChoiceIcon> ();
-			QuestionController.Instance.SetQuestion (wordchoiceIcon, onResult);
-
-			break;
-		case 4:
-			//questionTypeModals[2].SetActive (true);
-			SlotMachineIcon slotMachineIcon = questionTypeModals [4].GetComponent<SlotMachineIcon> ();
-			QuestionController.Instance.SetQuestion (slotMachineIcon, onResult);
-			break;
-		}
-	}
-	// JOCHRIS END HERE   ---------------------------------------------------------------------------------------------
-
-	private void OnEndQuestion(int gp, int qtimeLeft){
 		QuestionStart (gp, qtimeLeft);
 	}
 
-	private void OnEndSelectQuestionTime(){
+	private void OnEndSelectQuestionTime ()
+	{
 		HideUI ();
-		SetQuestionEntry (UnityEngine.Random.Range (0, 2), OnEndQuestion);
+		QuestionSystemController.Instance.StartQuestionRound(GetQuestionType(selectionTypes[0]), delegate(List<QuestionResultModel> onRoundResult) {
+			// RETURNS LIST OF QUESTIONRESULTS
+		});
 	}
 
+	public QuestionTypeModel GetQuestionType (ISelection partSelection)
+	{
+		QuestionTypeModel questionType = null;
 
+		questionType.questionCategory = QuestionSystemEnums.QuestionType.Definition;
+		questionType.targetType = QuestionSystemController.Instance.partTarget.singleQuestion;
+		questionType.answerType = QuestionSystemController.Instance.partAnswer.fillAnswer;
+		questionType.selectionType = partSelection;
+
+		return questionType;
+
+	}
 
 	public void OnStartPhase ()
 	{
 		ScreenBattleController.Instance.partSkill.ShowAutoActivateButtons (true);
 		Debug.Log ("Starting Answer Phase");
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-		GameTimeManager.HasAnswered(false);
+		GameTimeManager.HasAnswered (false);
 
 		GameTimeManager.StartSelectQuestionTimer (OnEndSelectQuestionTime);
 		questionSelect.SetActive (true);
@@ -107,7 +62,7 @@ public class PartQuestionController: MonoBehaviour
 		GameTimeManager.HasAnswered (true);
 		questionSelect.SetActive (false);
 		//call question callback here
-		SetQuestionEntry (questionNumber, OnEndQuestion);
+//		QuestionSystemController.Instance.StartQuestionRound(questionNumber,OnEndQuestion);
 
 	}
 

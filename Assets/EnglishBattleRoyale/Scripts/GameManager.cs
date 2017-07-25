@@ -16,7 +16,7 @@ public static class GameManager
 
 	public static void SetSettings ()
 	{
-		gameSettingList = CSVParser.ParseCSV ("GameSettings");
+		gameSettingList = CSVToDic.ConvertCSV ("GameSettings");
 		player = new PlayerModel (playerName, GetFloatList ());
 
 		SystemGlobalDataController.Instance.player = player;
