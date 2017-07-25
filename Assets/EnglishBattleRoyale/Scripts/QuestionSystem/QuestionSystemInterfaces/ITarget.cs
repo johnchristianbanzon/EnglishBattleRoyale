@@ -1,5 +1,4 @@
-﻿using System;
-public interface ITarget {
+﻿public interface ITarget {
 	void DeployTargetType (string questionAnswer);
 
 }

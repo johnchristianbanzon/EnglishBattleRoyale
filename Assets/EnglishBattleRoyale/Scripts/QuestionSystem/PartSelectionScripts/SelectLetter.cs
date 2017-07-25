@@ -23,7 +23,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 	}
 
 
-	public void RemoveSelection(){
+	public void RemoveSelection(int hintIndex){
 
 	}
 

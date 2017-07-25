@@ -13,7 +13,7 @@ public static class SkillManager
 	/// <returns>The skill list.</returns>
 	public static List<SkillModel>  GetCSVSkillList ()
 	{
-		List<Dictionary<string,System.Object>> csvSkillList = CSVParser.ParseCSV ("Skills");
+		List<Dictionary<string,System.Object>> csvSkillList = CSVToDic.ConvertCSV ("Skills");
 		List<SkillModel> skillList = new List<SkillModel> ();
 		//count -1 because it counts also the header, we need not to count it
 		for (int i = 0; i < csvSkillList.Count - 1; i++) {

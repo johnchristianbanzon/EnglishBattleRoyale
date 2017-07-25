@@ -7,65 +7,72 @@ using UnityEngine.UI;
 using System.Net;
 using System.IO;
 
-public class SlotMachine : MonoBehaviour{
+public class SlotMachine : MonoBehaviour,ISelection
+{
 
-	public GameObject gpText;
-	public GameObject[] roulletes = new GameObject[12];
-	public Text questionText;
-	private List<GameObject> roulleteText = new List<GameObject> ();
-	private bool gotAnswer = false;
-	private List<Color> previousSlotColor = new List<Color>();
-	private List<GameObject> correctButtons = new List<GameObject> ();
-	public SlotMachineOnChange[]  slotController = new SlotMachineOnChange[6];
-	public string correctAnswer;
+	public GameObject[] slots = new GameObject[6];
+	private List<Color> previousSlotColor = new List<Color> ();
+	private string questionAnswer = "";
 
-	public void findSlotMachines(string questionAnswer){
-		gotAnswer = false;
-		roulleteText.Clear ();
-		GameObject content;
-		for (int i = 0; i < questionAnswer.Length; i++) {
-			content = roulletes [i];
-			for (int j = 0; j < 3; j++) {
-				roulleteText.Add (content.transform.GetChild(j).gameObject);
-		 	}
-		}
-		for (int i = 0; i < questionAnswer.Length; i++) {
-			roulletes [i].transform.parent.parent.parent.parent.gameObject.SetActive (true);
-		}
-		for(int i = 6 ; i > questionAnswer.Length ;i--){
-			roulletes[i-1].transform.parent.parent.parent.parent.gameObject.SetActive(false);
-		}
-		correctAnswer = questionAnswer;
-	}
+	public List<GameObject> GetSlots ()
+	{
+		List<GameObject> slotsItems = new List<GameObject> ();
+		for (int i = 0; i < slots.Length; i++) {
+			if (i > questionAnswer.Length) {
+				Debug.Log (i + "/" + questionAnswer.Length);
+				slots [i].SetActive (false);
+			} else {
+				for (int j = 0; j < slots [i].transform.childCount; j++) {
+					slots [j].transform.GetChild (j).name = "slot" + j;
+					slotsItems.Add (slots [i].transform.GetChild (j).gameObject);
 
-	void Update(){
-		GetSlotAnswers ();
-	}
-
-	public void GetSlotAnswers(){
-		string writtenAnswer = "";
-		for (int i = 0; i < slotController.Length - (slotController.Length - correctAnswer.Length); i++) {
-			writtenAnswer += slotController [i].GetSlots ().GetComponentInChildren<Text> ().text;
-		}
-		if (writtenAnswer.Equals(correctAnswer)) {
-			if (!gotAnswer) {
-				gotAnswer = true;
-				QuestionSystemController.Instance.CheckAnswer (true);
+				}
 			}
 		}
+		return slotsItems;
+	}
+
+	public void DeploySelectionType (string questionAnswer)
+	{
+		gameObject.SetActive (true);
+		this.questionAnswer = questionAnswer;
+		ShuffleAlgo (questionAnswer);
+	}
+
+	public void RemoveSelection (int hintIndex)
+	{
+		
+	}
+
+	public void OnDrag(GameObject scrollContent){
+		
+	}
+
+	private int scrollIndex = 120;
+	public void OnClickDownButton(GameObject scrollContent){
+		TweenFacade.TweenMoveTo (scrollContent.transform,new Vector2(scrollContent.transform.position.x,scrollContent
+			.transform.position.y - scrollIndex),0.3f);
+		scrollIndex += 120;
+	}
+
+	public void OnClickUpButton(GameObject scrollContent){
+		Debug.Log (scrollIndex);
+		TweenFacade.TweenMoveTo (scrollContent.transform,new Vector2(scrollContent.transform.position.x,scrollContent
+			.transform.position.y + scrollIndex),0.3f);
+		scrollIndex += 120;
 	}
 
 	public void ShuffleAlgo (string questionAnswer)
 	{
-		correctButtons.Clear ();
-		findSlotMachines (questionAnswer);
+		List<GameObject> roulleteItem = GetSlots ();
+		List<GameObject> correctItems = new List<GameObject> ();
 		string Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		int letterIndex = 0;
 		int letterStartIndex = 0;
 		int letterEndIndex = 3;
 		int randomnum = UnityEngine.Random.Range (letterStartIndex+1, letterEndIndex);
-		for (int i = 0; i < roulleteText.Count; i++) {
-			roulleteText [i].transform.GetChild (0).GetComponent<Text> ().text = (i%randomnum)==0 ?
+		for (int i = 0; i < roulleteItem.Count; i++) {
+			roulleteItem [i].GetComponentInChildren<Text>().text = (i%randomnum)==0 ?
 				questionAnswer [letterIndex].ToString ().ToUpper ():
 				Letters [UnityEngine.Random.Range (0, Letters.Length)].ToString ().ToUpper ();
 			if ((i % randomnum) == 0) {
@@ -73,11 +80,12 @@ public class SlotMachine : MonoBehaviour{
 				letterStartIndex = letterEndIndex;
 				letterEndIndex = letterEndIndex + 3;
 				randomnum = UnityEngine.Random.Range (letterStartIndex, letterEndIndex);
-				correctButtons.Add (roulleteText [i]);
-				previousSlotColor.Add (roulleteText [i].GetComponent<Image> ().color);
+				correctItems.Add (roulleteItem [i]);
+				previousSlotColor.Add (roulleteItem [i].GetComponent<Image> ().color);
 			}
 		}
-		QuestionSystemController.Instance.correctAnswerButtons = correctButtons;
+		QuestionSystemController.Instance.correctAnswerButtons = correctItems;
+
 	}
 
 }

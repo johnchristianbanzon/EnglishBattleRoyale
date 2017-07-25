@@ -20,7 +20,7 @@ public static class QuestionBuilder
 	public static void PopulateQuestion (string questionName)
 	{
 		questionList.Clear ();
-		parsedData = CSVParser.ParseCSV (questionName);
+		parsedData = CSVToDic.ConvertCSV (questionName);
 		for (int listIndex = 0; listIndex < parsedData.Count - 1; listIndex++) {
 			questionList.Add (new QuestionListModel (
 				parsedData [listIndex] ["definition"].ToString (),
@@ -36,18 +36,20 @@ public static class QuestionBuilder
 		}
 	}
 
-	public static QuestionModel GetQuestion (QuestionSystemEnums.QuestionType qType)
+	public static QuestionModel GetQuestion (QuestionSystemEnums.QuestionType questiontype, ISelection selectionType)
 	{
+		
 		int randomize = 0;
 		bool questionViable = false;
 		string question = "";
 		List<string> answersList = new List<string> ();
-		questionType = qType;
+		questionType = questiontype;
 		int numOfQuestions = questionList.Count;
 		int whileIndex = 0;
 		while (!questionViable) {
 			randomize = UnityEngine.Random.Range (0, questionList.Count);
 			answersList.Clear ();
+
 			switch (questionType) {
 			case QuestionSystemEnums.QuestionType.Antonym:
 				if (questionList [randomize].hasAntonym.ToString()=="1") {
@@ -88,12 +90,13 @@ public static class QuestionBuilder
 					questionsDone.Clear ();
 				}
 			}
-			whileIndex += 1;
+			whileIndex ++;
 		}
 		QuestionModel questionGot = new QuestionModel (question, answersList.ToArray ());
 		questionsDone.Add (question);
 
 		//Debug.Log (questionGot.answers[0] + "/" + questionGot.question);
+
 		return questionGot;
 	}
 
@@ -109,38 +112,6 @@ public static class QuestionBuilder
 		}
 		string wrongChoice = wrongChoices [randomnum];
 		return wrongChoice;
-	}
-
-	/// <summary>
-	/// Converts CSV to Dictionary with <Header> as key, and <Content> as value
-	/// </summary>
-	/// <returns>List of Dictionary<HEADER NAME, CONTENT </returns>
-	/// <param name="csv">string CSVNAME</param>
-	public static List<Dictionary<string,System.Object>> getParsedCSV (string csv)
-	{
-		int csvHeaderLines = 1;
-		TextAsset csvData = Resources.Load (csv) as TextAsset;
-		Result parsed = Papa.parse (csvData.ToString ());
-		List<List<string>> rows = parsed.data;
-		List<string> csvHeader = new List<string> ();
-		List<Dictionary<string,System.Object>> csvParsedData = new List<Dictionary<string,System.Object>> ();
-		int csvLineIndex = 0;
-
-		for (int listIndex = 0; listIndex < rows.Count; listIndex++) {
-			csvParsedData.Add (new Dictionary<string,object> ());
-			for (int subListIndex = 0; subListIndex < rows [listIndex].Count; subListIndex++) {
-				if (listIndex < csvHeaderLines) {
-					csvHeader.Add (rows [listIndex] [subListIndex]);
-				} else {
-					//NON HEADER BELOW 
-					csvParsedData [csvLineIndex].Add (csvHeader [subListIndex], rows [listIndex] [subListIndex]);
-					if (subListIndex.Equals (rows [listIndex].Count - 1)) {
-						csvLineIndex += 1;
-					}
-				}
-			}
-		}
-		return csvParsedData;
 	}
 }
 

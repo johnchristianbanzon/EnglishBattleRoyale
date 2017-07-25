@@ -13,7 +13,7 @@ public class Typing : MonoBehaviour, ISelection
 	}
 
 
-	public void RemoveSelection(){
+	public void RemoveSelection(int hintIndex){
 
 	}
 

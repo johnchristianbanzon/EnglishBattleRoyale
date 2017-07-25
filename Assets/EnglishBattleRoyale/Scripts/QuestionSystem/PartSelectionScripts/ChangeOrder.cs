@@ -69,7 +69,7 @@ public class ChangeOrder : MonoBehaviour,ISelection
 			ShuffleSelection ();
 		}
 	}
-	public void RemoveSelection(){
+	public void RemoveSelection(int hintIndex){
 
 	}
 	public void ResetLetterSelection ()

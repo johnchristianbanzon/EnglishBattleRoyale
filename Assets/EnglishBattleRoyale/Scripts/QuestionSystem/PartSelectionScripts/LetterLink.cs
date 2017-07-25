@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using System;
 public class LetterLink : MonoBehaviour ,ISelection{
 	public GameObject[] connectLetterButtons = new GameObject[9];
 	public List<GameObject> correctAnswerButtons = new List<GameObject>();
@@ -28,7 +28,6 @@ public class LetterLink : MonoBehaviour ,ISelection{
 		if (questionAnswer == writtenAnswer) {
 			startSelection = false;
 			QuestionSystemController.Instance.CheckAnswer (true);
-
 		} else {
 			ClearSelection ();
 		}
@@ -43,9 +42,9 @@ public class LetterLink : MonoBehaviour ,ISelection{
 		}
 	}
 
-	public void RemoveSelection(){
-		correctAnswerButtons [0].GetComponent<Image> ().color = new Color (255f / 255, 249f / 255f, 149f / 255f);
-		TweenFacade.TweenScaleToLarge (correctAnswerButtons [0].transform, Vector3.one, 0.4f);
+	public void RemoveSelection(int hintIndex){
+		correctAnswerButtons [hintIndex].GetComponent<Image> ().color = new Color (255f / 255, 249f / 255f, 149f / 255f);
+		TweenFacade.TweenScaleToLarge (correctAnswerButtons [hintIndex].transform, Vector3.one, 0.4f);
 	}
 
 	public void DeploySelectionType(string questionAnswer){

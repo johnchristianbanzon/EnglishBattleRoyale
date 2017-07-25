@@ -19,7 +19,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	private bool hasSkippedQuestion = false;
 	public string questionAnswer = "";
 	public string questionTarget = "";
-	public int HintNumber = 10;
 	public QuestionSystemEnums.QuestionType questionType;
 
 	public ITarget targetType;
@@ -36,7 +35,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public PartAnswerController partAnswer;
 	public PartTargetController partTarget;
 
-	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult)
+	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult = null)
 	{
 		questionType = questionTypeModel.questionCategory;
 		targetType = questionTypeModel.targetType;
@@ -48,7 +47,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public QuestionModel LoadQuestion ()
 	{
-		QuestionModel questionLoaded = QuestionBuilder.GetQuestion (questionType);
+		QuestionModel questionLoaded = QuestionBuilder.GetQuestion (questionType,selectionType);
 		if (questionLoaded.answers.Length == 2 && selectionType.Equals (partSelection.wordChoiceController)) {
 			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ());
 		} else {
@@ -62,13 +61,12 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		QuestionBuilder.PopulateQuestion ("QuestionSystemCsv");
 		StartQuestionRound (new QuestionTypeModel (
-			QuestionSystemEnums.QuestionType.Association,
-			partTarget.associationController,
-			partAnswer.showAnswer,
-			partSelection.letterLink
-		), delegate(List<QuestionResultModel> obj) {
-			
-		});
+			QuestionSystemEnums.QuestionType.Synonym,
+			partTarget.singleQuestionController,
+			partAnswer.noAnswerController,
+			partSelection.slotMachineController
+		)
+		);
 	}
 
 	public void OnSkipQuestion ()
@@ -93,9 +91,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		hasSkippedQuestion = false;
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
-			roundResultList.Add(onQuestionResult);
-			Debug.Log(onQuestionResult.isCorrect);
-			onRoundResult.Invoke(roundResultList);			
+			
+			//roundResultList.Add(onQuestionResult);
+			//onRoundResult.Invoke(roundResultList);			
 		});
 	}
 
@@ -115,10 +113,11 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		string isCorrectParam;
 		if (isCorrect) {
 			isCorrectParam = ParamNames.AnswerCorrect.ToString ();
+			param [isCorrectParam] = currentQuestionNumber;
 		} else {
 			isCorrectParam = ParamNames.AnswerWrong.ToString ();
 		}
-		param [isCorrectParam] = currentQuestionNumber;
+
 		//	FDController.Instance.SetAnswerParam (new AnswerModel(JsonConverter.DicToJsonStr (param).ToString()));
 	}
 

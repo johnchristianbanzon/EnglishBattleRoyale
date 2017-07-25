@@ -20,7 +20,7 @@ public class WordChoice : MonoBehaviour, ISelection
 		if (!justAnswered) {
 			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 			GameObject wordClicked = EventSystem.current.currentSelectedGameObject;
-			string wordClickedString = wordClicked.transform.GetChild (0).GetComponent<Text> ().text;
+			string wordClickedString = wordClicked.GetComponentInChildren<Text>().text;
 			if (wordClicked.GetComponent<Image> ().color == Color.gray) {
 				wordClicked.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 				answerClicked.Remove (wordClicked);
@@ -29,15 +29,15 @@ public class WordChoice : MonoBehaviour, ISelection
 				wordClicked.GetComponent<Image> ().color = Color.gray;
 				answerClicked.Add (wordClicked);
 				if (answerClicked.Count == 2){
-					string answerClicked1 = answerClicked [0].transform.GetChild(0).GetComponent<Text>().text.ToUpper();
-					string answerClicked2 = answerClicked [1].transform.GetChild(0).GetComponent<Text>().text.ToUpper();
+					string answerClicked1 = answerClicked [0].GetComponentInChildren<Text>().text.ToUpper();
+					string answerClicked2 = answerClicked [1].GetComponentInChildren<Text>().text.ToUpper();
 					CheckIfCorrect (answerClicked1,answerClicked2);
 				}
 			}
 		}
 	}
 
-	public void RemoveSelection(){
+	public void RemoveSelection(int hintIndex){
 
 	}
 
@@ -62,24 +62,24 @@ public class WordChoice : MonoBehaviour, ISelection
 		int numberOfAnswers = 2;
 		List <int> randomList = new List<int> ();
 		string[] temp = questionAnswer.Split ('/');
-		int whileindex = 0;
+		int whileIndex = 0;
 		for (int i = 0; i < selectionButtons.Length; i++) {
-			int randomnum = UnityEngine.Random.Range (0, 4); 
-			while (randomList.Contains (randomnum)) {
-				randomnum = UnityEngine.Random.Range (0, selectionButtons.Length);
-				whileindex++;
+			int randomNum = UnityEngine.Random.Range (0, 4); 
+			while (randomList.Contains (randomNum)) {
+				randomNum = UnityEngine.Random.Range (0, selectionButtons.Length);
+				whileIndex++;
 			}
-			randomList.Add (randomnum);
+			randomList.Add (randomNum);
 			string wrongChoiceGot = QuestionBuilder.GetRandomChoices ();
 		
 			if (i < numberOfAnswers) {
-				selectionButtons [randomnum].GetComponentInChildren<Text> ().text = temp [i].ToString ().ToUpper ();
-				answerButtons.Add (selectionButtons [randomnum]);
+				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp [i].ToString ().ToUpper ();
+				answerButtons.Add (selectionButtons [randomNum]);
 
 			} else {
-				selectionButtons [randomnum].GetComponentInChildren<Text> ().text = wrongChoiceGot;
+				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = wrongChoiceGot;
 			}
-			selectionButtons[randomnum].GetComponent<Image> ().color = new Color(94f/255,255f/255f,148f/255f);
+			selectionButtons[randomNum].GetComponent<Image> ().color = new Color(94f/255,255f/255f,148f/255f);
 		}
 		QuestionSystemController.Instance.correctAnswerButtons = answerButtons;
 		answerString.Add (answerButtons [0].GetComponentInChildren<Text> ().text.ToUpper ());

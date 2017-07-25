@@ -14,7 +14,7 @@ public class Association : MonoBehaviour,ITarget {
 	public void DeployTargetType(string targetString){
 		gameObject.SetActive (true);
 		clues = ClueArrayToList (targetString);
-		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("Input-UI",clueList);
+		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("CluePrefab",clueList);
 		clueObject.GetComponentInChildren<Text>().text = clues[clueNumber-1];
 		clueNumber ++;
 		clueObject.GetComponent<Button> ().onClick.AddListener (() => {
@@ -25,7 +25,7 @@ public class Association : MonoBehaviour,ITarget {
 
 	public void OnClueClick(){
 		GameObject clueSelected = EventSystem.current.currentSelectedGameObject;
-		if (clueSelected.GetComponentInChildren<Text> ().text == "?" && clueNumber <= clueNumberLimit) {
+		if (clueSelected.GetComponentInChildren<Text> ().text.Equals("?") && clueNumber <= clueNumberLimit) {
 			currenctClueSelected = clueSelected;
 			clueSelected.GetComponentInChildren<Text>().text = clues[clueNumber-1];
 			clueNumber ++;
@@ -56,7 +56,7 @@ public class Association : MonoBehaviour,ITarget {
 	}
 
 	public void InstantiateCluePrefab(){
-		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("Input-UI",clueList);
+		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("CluePrefab",clueList);
 		clueObject.GetComponent<Button> ().onClick.AddListener (() => {
 			OnClueClick ();
 		});
