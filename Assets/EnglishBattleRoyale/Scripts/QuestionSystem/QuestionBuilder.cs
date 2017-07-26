@@ -8,26 +8,36 @@ public static class QuestionBuilder
 {
 	public static QuestionSystemEnums.QuestionType questionType;
 	private static List<string> questionsDone = new List<string> ();
-	private static List<QuestionListModel> questionList = new List<QuestionListModel> ();
+	private static List<QuestionRowModel> questionList = new List<QuestionRowModel> ();
 	private static List<string> wrongChoices = new List<string> ();
 	private static List<int> wrongChoicesDone = new List<int> ();
 	public static List<Dictionary<string,System.Object>> parsedData = new List<Dictionary<string,System.Object>> ();
 	public static int questionIndex = 1;
 
-	public static void PopulateQuestion (string questionName)
+	public static void PopulateQuestion ()
 	{
 		questionList.Clear ();
-		parsedData = CSVToDic.ConvertCSV (questionName);
+		parsedData = CSVToDic.ConvertCSV ("QuestionSystemCsv");
 		for (int listIndex = 0; listIndex < parsedData.Count - 1; listIndex++) {
-			questionList.Add (new QuestionListModel (
-				parsedData [listIndex] ["definition"].ToString (),
+			questionList.Add (new QuestionRowModel (
+				
+				int.Parse(parsedData [listIndex] ["typeId"].ToString()),
 				parsedData [listIndex] ["answer"].ToString (),
-				(parsedData [listIndex] ["synonym1"].ToString () + "/" + parsedData [listIndex] ["synonym2"]),
-				(parsedData [listIndex] ["antonym1"].ToString () + "/" + parsedData [listIndex] ["antonym2"]),
-				(parsedData [listIndex] ["clue1"].ToString () + "/" + parsedData [listIndex] ["clue2"].ToString () + "/" +
-				parsedData [listIndex] ["clue3"].ToString () + "/" + parsedData [listIndex] ["clue4"].ToString ()),
-				parsedData [listIndex] ["de"],  parsedData [listIndex] ["sy"], parsedData [listIndex] ["an"], parsedData [listIndex] ["cl"]
-			));
+				int.Parse(parsedData [listIndex] ["levelId"].ToString()),
+				parsedData [listIndex] ["definition"].ToString (),
+				parsedData [listIndex] ["synonym1"].ToString(),
+				parsedData [listIndex] ["synonym2"].ToString(),
+				parsedData [listIndex] ["antonym1"].ToString(),
+				parsedData [listIndex] ["antonym2"].ToString(),
+				parsedData [listIndex] ["clue1"].ToString(),
+				parsedData [listIndex] ["clue2"].ToString(),
+				parsedData [listIndex] ["clue3"].ToString(),
+				parsedData [listIndex] ["clue4"].ToString(),
+				int.Parse(parsedData [listIndex] ["de"].ToString()),
+				int.Parse(parsedData [listIndex] ["sy"].ToString()),
+				int.Parse(parsedData [listIndex] ["an"].ToString()),
+				int.Parse(parsedData [listIndex] ["cl"].ToString())
+						));
 			wrongChoices.Add (parsedData [listIndex] ["answer"].ToString ());
 
 		}
@@ -35,7 +45,7 @@ public static class QuestionBuilder
 
 	public static QuestionModel GetQuestion (QuestionSystemEnums.QuestionType questiontype, ISelection selectionType)
 	{
-		
+		/*
 		int randomize = 0;
 		bool questionViable = false;
 		string question = "";
@@ -93,8 +103,8 @@ public static class QuestionBuilder
 		questionsDone.Add (question);
 
 		//Debug.Log (questionGot.answers[0] + "/" + questionGot.question);
-
-		return questionGot;
+*/
+		return null;
 	}
 
 	/// <summary>
