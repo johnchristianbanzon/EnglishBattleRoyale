@@ -67,8 +67,11 @@ public static class SkillManager
 	//receive skill list from prepare phase and shuffle for random skill in start and put in queue
 	public static void SetSkillEnqueue (List<SkillModel> skillList)
 	{
+		skillQueue.Clear ();
 		skillList.Shuffle ();
+
 		for (int i = 0; i < skillList.Count; i++) {
+			Debug.Log (skillList [i].skillName);
 			skillQueue.Enqueue (skillList [i]);
 		}
 	}

@@ -5,12 +5,8 @@ using System.Collections.Generic;
 public class UnlockedSkillController : MonoBehaviour
 {
 	private List<SkillModel> charCardList = new List<SkillModel> ();
-	private Text charCardCount;
-	public GameObject unlockedSkillTitle;
-	public GameObject currentSelectedCardSlot;
-	public GameObject currectSelectedCharacterCard;
+	public Text charCardCount;
 
-	public bool aboutToSwapCard = false;
 	// Show unlocked cards, if cards already in equip, do not show
 	public void ShowCharacterCards (List<SkillModel> equipCardList)
 	{
@@ -39,7 +35,5 @@ public class UnlockedSkillController : MonoBehaviour
 		}
 			
 	}
-
-
 
 }
