@@ -17,5 +17,6 @@ public class PopUpSkillOverviewController : MonoBehaviour {
 
 	public void Close(){
 		Destroy (this.gameObject);
+		SystemPopupController.Instance.BackUnclickable (false);
 	}
 }

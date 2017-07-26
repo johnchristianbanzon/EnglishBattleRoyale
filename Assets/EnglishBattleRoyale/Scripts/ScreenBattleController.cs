@@ -11,7 +11,6 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	public PartCameraWorksController partCameraWorks;
 	public PartAvatarsController partAvatars;
 
-
 	private string playerName;
 	private float playerHP;
 	private float playerGP;

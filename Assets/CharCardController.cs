@@ -3,14 +3,22 @@ using UnityEngine.UI;
 
 public class CharCardController : MonoBehaviour
 {
-	private Text gpCost;
-	private Image skillImage;
+	public Text gpCost;
+	public Image skillImage;
 	private SkillModel charCard;
-	private GameObject charCardSettings;
+	public GameObject charCardSettings;
 	private bool isEquipped = false;
-	private GameObject infoButton;
-	private GameObject useButton;
+	public GameObject infoButton;
+	public GameObject useButton;
 	private bool isInsideCard = false;
+
+	public static GameObject currentSelectedCardSlot;
+	public static GameObject currectSelectedCharacterCard;
+	public static bool isSwappable = false;
+
+	public SkillModel GetCardParameter(){
+		return charCard;
+	}
 
 	public void SetCardParameter (SkillModel charCard, bool isEquipped)
 	{
@@ -27,21 +35,20 @@ public class CharCardController : MonoBehaviour
 
 	public void UseButton(){
 		HideCardSettings ();
-		this.transform.parent = PartDeckController.Instance.unlockedSkillController.unlockedSkillTitle.transform;
 		TweenFacade.TweenMoveTo (this.transform,Vector3.zero,0.6f);
-		PartDeckController.Instance.equippedSkillController.InitiateSwapping ();
-		PartDeckController.Instance.unlockedSkillController.aboutToSwapCard = true;
+		PartDeckController.Instance.equippedSkillController.ShakeSkillCards ();
+		isSwappable = true;
 	}
+
 	public void OnClickCharacterCard(GameObject clickedCard){
 		ShowCardSettings (isEquipped);
-		if (!PartDeckController.Instance.unlockedSkillController.aboutToSwapCard) {
-			PartDeckController.Instance.unlockedSkillController.aboutToSwapCard = false;
-			PartDeckController.Instance.unlockedSkillController.currectSelectedCharacterCard = this.gameObject;
-			PartDeckController.Instance.unlockedSkillController.currentSelectedCardSlot = this.gameObject.transform.parent.gameObject;
+		if (!isSwappable) {
+			currectSelectedCharacterCard = this.gameObject;
+			currentSelectedCardSlot = this.gameObject.transform.parent.gameObject;
 		} else {
 			charCardSettings.SetActive (false);
-			ReplaceEquippedCharacter (PartDeckController.Instance.unlockedSkillController.currectSelectedCharacterCard.gameObject);
-			PartDeckController.Instance.unlockedSkillController.aboutToSwapCard = false;
+			ReplaceEquippedCharacter (currectSelectedCharacterCard.gameObject);
+			isSwappable = false;
 			TweenFacade.StopTweens ();
 		}
 	}
@@ -54,14 +61,15 @@ public class CharCardController : MonoBehaviour
 	}
 
 	public void ReplaceEquippedCharacter(GameObject selectedCharacter){
-		selectedCharacter.transform.parent = this.transform.parent;
-		isEquipped = false;
-		selectedCharacter.GetComponent<CharCardController> ().isEquipped = true;
-		useButton.SetActive (true);
-		this.transform.parent = PartDeckController.Instance.unlockedSkillController.currentSelectedCardSlot.transform;
-
+		if (isEquipped) {
+			selectedCharacter.transform.parent = this.transform.parent;
+			isEquipped = false;
+			selectedCharacter.GetComponent<CharCardController> ().isEquipped = true;
+			useButton.SetActive (true);
+			this.transform.parent = currentSelectedCardSlot.transform;
+			PartDeckController.Instance.equippedSkillController.UpdateSkillList ();
+		}
 	}
-
 
 	public void OnPointerEnter(){
 		isInsideCard = true;

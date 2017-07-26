@@ -20,12 +20,12 @@ public class SystemPopupController : SingletonMonoBehaviour<SystemPopupControlle
 
 	public void ClearAllPopUp(){
 		BackUnclickable (false);
-		for (int i = 0; i < popUp.transform.childCount; i++) {
+		for (int i = 1; i < popUp.transform.childCount; i++) {
 			Destroy (popUp.transform.GetChild(i).gameObject);
 		}
 	}
 
-	private void BackUnclickable(bool isUnClickable){
+	public void BackUnclickable(bool isUnClickable){
 		backUnclickable.SetActive (isUnClickable);
 	}
 
