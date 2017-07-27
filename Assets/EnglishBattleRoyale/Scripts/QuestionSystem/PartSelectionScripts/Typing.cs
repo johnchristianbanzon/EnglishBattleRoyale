@@ -1,20 +1,29 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
+
 public class Typing : MonoBehaviour, ISelection
 {
-	public void DeploySelectionType(string questionAnswer){
+	public void ShowSelectionType (string questionAnswer,Action<List<GameObject>> onSelectCallBack){
 		gameObject.SetActive (true);
 	}
 
+	public void ShowCorrectAnswer(){
+		
+	}
 
-	public void RemoveSelectionHint(int hintIndex){
+	public void HideSelectionType(){
+		gameObject.SetActive (false);
+	}
+
+	public void ShowSelectionHint(int hintIndex){
 
 	}
 
 
 	public void OnSelect(){
-		QuestionSystemController.Instance.partAnswer.
+		QuestionSystemController.Instance.partAnswer.fillAnswer.
 		SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
 	}
 }

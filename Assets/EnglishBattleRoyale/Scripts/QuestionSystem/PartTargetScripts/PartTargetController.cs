@@ -7,6 +7,4 @@ public class PartTargetController : MonoBehaviour {
 	public void DeployPartTarget(ITarget targetType, string targetString){
 		targetType.DeployTargetType (targetString);
 	}
-
-
 }

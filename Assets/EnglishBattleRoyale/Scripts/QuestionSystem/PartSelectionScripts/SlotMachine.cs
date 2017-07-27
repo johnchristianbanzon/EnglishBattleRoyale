@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System;
 public class SlotMachine : MonoBehaviour,ISelection
 {
-
 	public GameObject[] slots = new GameObject[6];
 	private List<Color> previousSlotColor = new List<Color> ();
 	private string questionAnswer = "";
@@ -27,14 +26,22 @@ public class SlotMachine : MonoBehaviour,ISelection
 		return slotsItems;
 	}
 
-	public void DeploySelectionType (string questionAnswer)
+	public void ShowCorrectAnswer(){
+		
+	}
+
+	public void HideSelectionType(){
+		gameObject.SetActive (false);
+	}
+
+	public void ShowSelectionType (string questionAnswer,Action<List<GameObject>> onSelectCallBack)
 	{
 		gameObject.SetActive (true);
 		this.questionAnswer = questionAnswer;
 		ShuffleAlgo (questionAnswer);
 	}
 
-	public void RemoveSelectionHint (int hintIndex)
+	public void ShowSelectionHint (int hintIndex)
 	{
 		
 	}

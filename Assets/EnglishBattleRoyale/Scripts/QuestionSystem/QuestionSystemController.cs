@@ -33,12 +33,19 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public PartAnswerController partAnswer;
 	public PartTargetController partTarget;
 
+	//DEBUG FIELDS
+	public InputField timerInput; 
+	public GameObject debugUI;
+	//DEBUG FIELDS ENDS HERE
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult = null)
 	{
 		questionType = questionTypeModel.questionCategory;
 		targetType = questionTypeModel.targetType;
 		answerType = questionTypeModel.answerType;
 		selectionType = questionTypeModel.selectionType;
+		GameTimeManager.StartQuestionTimer (delegate() {
+			debugUI.SetActive(true);
+		}, int.Parse(timerInput.text));
 		this.onRoundResult = onRoundResult;
 		NextQuestion ();
 	}
@@ -86,16 +93,19 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
 		onQuestionResult.Invoke (new QuestionResultModel (00000,13,3,isCorrect,false));
 		Invoke ("NextQuestion", 1f);
+
 	}
 
 	public void NextQuestion ()
 	{
 		hasSkippedQuestion = false;
+		partSelection.HideSelectionType(selectionType);
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 			
 			//roundResultList.Add(onQuestionResult);
-			//onRoundResult.Invoke(roundResultList);			
+			//onRoundResult.Invoke(roundResultList);
 		});
+
 	}
 
 	public void GetNewQuestion (QuestionSystemEnums.QuestionType questionType, Action<QuestionResultModel> onQuestionResult)
@@ -104,10 +114,22 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		targetTypeUI.GetComponentInChildren<Text> ().text = questionType.ToString ();
 		partTarget.DeployPartTarget (targetType, questionTarget);
 		partAnswer.DeployAnswerType (answerType);
-		partSelection.DeploySelectionType (selectionType, questionAnswer);
+		partSelection.DeploySelectionType (selectionType, questionAnswer,delegate(List<GameObject> selectionList) {
+			CheckAnswerSent(null);
+		});
 		this.onQuestionResult = onQuestionResult;
 	}
 		
+	public void CheckAnswerSent(List<GameObject> correctAnswerButtons){
+		this.correctAnswerButtons = correctAnswerButtons;
+	}
+
+	public void OnDebugClick(Button button){
+		StartQuestionRound (QuestionBuilder.getQuestionType (button.name));
+		debugUI.SetActive(false);
+		button.transform.parent.gameObject.SetActive (false);
+	}
+
 	public void UpdateFirebaseAnswerModel (bool isCorrect)
 	{
 		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();

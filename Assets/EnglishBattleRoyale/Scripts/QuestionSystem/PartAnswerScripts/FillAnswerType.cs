@@ -3,14 +3,26 @@ using UnityEngine;
 using UnityEngine.UI;
 public class FillAnswerType : MonoBehaviour,IAnswer {
 	
-	private List<GameObject> answerContainers = new List<GameObject>();
+	public List<GameObject> answerContainers = new List<GameObject>();
+	private GameObject[] selectionIdentifier = new GameObject[12];
 	public GameObject outviewContent;
 	private string questionAnswer;
+	private int answerIndex = 0;
 
 	public void DeployAnswerType(){
 		gameObject.SetActive (true);
 		this.questionAnswer = QuestionSystemController.Instance.questionAnswer;
 		PopulateContainer ();
+	}
+
+	public void OnClickHint (int hintCounter){
+		GameObject letterHint = answerContainers [hintCounter];
+		letterHint.GetComponentInChildren<Text> ().text = questionAnswer [hintCounter].ToString ();
+		letterHint.GetComponent<Button> ().enabled = false;
+		TweenFacade.TweenScaleToLarge (letterHint.transform, Vector3.one, 0.3f);
+		letterHint.GetComponent<Image> ().color = new Color (255 / 255, 102 / 255f, 51 / 255f);
+		CheckAnswer ();
+		answerIndex++;
 	}
 
 	public void PopulateContainer(){
@@ -42,13 +54,57 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 				if (answerButton.name.Equals ("output" + (i+1))) {
 					answerclicked = answerContainers [i].transform.GetChild (0).GetComponent<Text> ().text;
 					answerContainers [i].GetComponentInChildren<Text>().text = "";
-					QuestionSystemController.Instance.partAnswer.GetSelectionIdentifier (i)
-						.GetComponentInChildren<Text>().text = answerclicked;
+					GetSelectionIdentifier (i).GetComponentInChildren<Text>().text = answerclicked;
+//					GetSelectionIdentifier (i).SetActive(true);
 //					answerIdentifier [i]
 
 				}
 			}
-			//CheckAnswerHolder ();
+			CheckAnswerHolder ();
 		}
+	}
+
+	public void SelectionLetterGot(GameObject selectedObject){
+		CheckAnswerHolder ();
+		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
+		if (string.IsNullOrEmpty (selectedObject.GetComponentInChildren<Text>().text)) {
+			TweenFacade.TweenShakePosition (selectedObject.transform, 1.0f, 30.0f, 50, 90f);
+		} else {
+			selectionIdentifier[answerIndex] = selectedObject.gameObject;
+			answerContainers [answerIndex].GetComponentInChildren<Text>().text 
+			= selectedObject.GetComponentInChildren<Text>().text;
+			CheckAnswer ();
+		}
+	}
+
+	public void CheckAnswer(){
+		string answerWrote = "";
+		for (int j = 0; j < questionAnswer.Length; j++) {
+			answerWrote += answerContainers [j].transform.GetChild (0).GetComponent<Text> ().text;
+		}
+		if (answerWrote.Length.Equals (questionAnswer.Length)) {
+			if (answerWrote.ToUpper ().Equals (questionAnswer.ToUpper ())) {
+				QuestionSystemController.Instance.CheckAnswer(true);
+			} else {
+				QuestionSystemController.Instance.CheckAnswer(false);
+			}
+		}
+	}
+
+	public GameObject GetSelectionIdentifier(int index){
+		GameObject objectIdentifier = selectionIdentifier[index];
+		return objectIdentifier;
+	}
+
+	public void CheckAnswerHolder ()
+	{
+		for (int j = 0; j < answerContainers.Count; j++) {
+			GameObject findEmpty = answerContainers [j].transform.GetChild (0).gameObject;
+			if (string.IsNullOrEmpty (findEmpty.GetComponent<Text> ().text)) {
+				answerIndex = j;
+				break;
+			}
+		}
+
 	}
 }

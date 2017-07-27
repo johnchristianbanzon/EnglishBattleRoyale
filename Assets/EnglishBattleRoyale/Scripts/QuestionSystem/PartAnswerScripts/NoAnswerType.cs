@@ -9,6 +9,10 @@ public class NoAnswerType : MonoBehaviour,IAnswer {
 		}
 	}
 
+	public void OnClickHint (int hintCounter){
+			
+	}
+
 	public void DeployAnswerType(){
 		gameObject.SetActive (true);
 	}

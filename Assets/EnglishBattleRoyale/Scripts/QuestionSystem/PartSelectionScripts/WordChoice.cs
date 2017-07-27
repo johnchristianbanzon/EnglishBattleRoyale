@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using System;
 public class WordChoice : MonoBehaviour, ISelection
 {
 	public bool justAnswered = false;
@@ -34,8 +34,15 @@ public class WordChoice : MonoBehaviour, ISelection
 		}
 	}
 
-	public void RemoveSelectionHint(int hintIndex){
+	public void ShowCorrectAnswer(){
+	
+	}
 
+	public void ShowSelectionHint(int hintIndex){
+
+	}
+	public void HideSelectionType(){
+		gameObject.SetActive (false);
 	}
 
 	private void CheckIfCorrect(string answerClicked1, string answerClicked2){
@@ -47,10 +54,12 @@ public class WordChoice : MonoBehaviour, ISelection
 			QuestionSystemController.Instance.CheckAnswer(false);
 		}
 	}
-	public void DeploySelectionType(string questionAnswer){
+	public void ShowSelectionType (string questionAnswer,Action<List<GameObject>> onSelectCallBack){
 		this.gameObject.SetActive (true);
 		this.questionAnswer = questionAnswer;
+		ShuffleSelection ();
 	}
+
 	public void ShuffleSelection ()
 	{
 		
@@ -73,7 +82,7 @@ public class WordChoice : MonoBehaviour, ISelection
 				answerButtons.Add (selectionButtons [randomNum]);
 
 			} else {
-				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = wrongChoiceGot;
+				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = wrongChoiceGot.ToUpper();
 			}
 			selectionButtons[randomNum].GetComponent<Image> ().color = new Color(94f/255,255f/255f,148f/255f);
 		}

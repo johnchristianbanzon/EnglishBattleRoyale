@@ -8,7 +8,7 @@ public class QuestionHintManager :MonoBehaviour{
 	public void OnClick(){
 		int questionAnswerLength = QuestionSystemController.Instance.questionAnswer.Length;
 		if (hintUsed < hintLimit && questionAnswerLength > hintIndex) {
-			QuestionSystemController.Instance.selectionType.RemoveSelectionHint (hintIndex);
+			QuestionSystemController.Instance.answerType.OnClickHint (hintIndex);
 			hintIndex ++;
 			hintUsed ++;
 		}
