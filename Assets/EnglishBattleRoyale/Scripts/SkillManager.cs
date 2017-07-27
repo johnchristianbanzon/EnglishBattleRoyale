@@ -13,17 +13,19 @@ public static class SkillManager
 	/// <returns>The skill list.</returns>
 	public static List<SkillModel>  GetCSVSkillList ()
 	{
-		List<Dictionary<string,System.Object>> csvSkillList = CSVToDic.ConvertCSV ("Skills");
-		List<SkillModel> skillList = new List<SkillModel> ();
-		//count -1 because it counts also the header, we need not to count it
-		for (int i = 0; i < csvSkillList.Count - 1; i++) {
-			string skillName = csvSkillList [i] ["SkillName"].ToString ();
-			string skillDescription = csvSkillList [i] ["SkillDescription"].ToString ();
-			int skillGpCost = int.Parse (csvSkillList [i] ["SkillGPCost"].ToString ());
-			string skillParam = csvSkillList [i] ["SkillParam"].ToString ();
 
-			skillList.Add (new SkillModel (skillName, skillGpCost, skillDescription, skillParam));
+		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("Skills");
+		List<List<string>> csvSkillList = CSVParser.Parse (csvData.ToString ());
+
+		List<SkillModel> skillList = new List<SkillModel> ();
+		for (int i = 1; i < csvSkillList.Count; i++) {
+			string skillName = CSVParser.GetValueArrayFromKey(csvSkillList, "SkillName")[i].ToString ();
+			string skillDescription = CSVParser.GetValueArrayFromKey(csvSkillList, "SkillDescription")[i].ToString ();
+			int skillGpCost = int.Parse(CSVParser.GetValueArrayFromKey(csvSkillList, "SkillGPCost")[i].ToString ());
+			string skillParam = CSVParser.GetValueArrayFromKey(csvSkillList, "SkillParam")[i].ToString ();
+			skillList.Add (new SkillModel(skillName,skillGpCost,skillDescription,skillParam));
 		}
+
 		return skillList;
 	}
 
@@ -50,7 +52,7 @@ public static class SkillManager
 
 	public static void StartSkill (SkillModel skillmodel)
 	{
-		ScreenBattleController.Instance.PlayerGP -= skillmodel.skillGpCost;
+		ScreenBattleController.Instance.partState.PlayerGP -= skillmodel.skillGpCost;
 		SystemFirebaseDBController.Instance.SetSkillParam (skillmodel);
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
 			SystemFirebaseDBController.Instance.SkillPhase ();

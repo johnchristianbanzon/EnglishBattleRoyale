@@ -72,14 +72,14 @@ public class PartQuestionController: MonoBehaviour
 		Debug.Log (SystemGlobalDataController.Instance.gpEarned);
 
 		SystemGlobalDataController.Instance.gpEarned = gp;
-		ScreenBattleController.Instance.PlayerGP += gp;
+		ScreenBattleController.Instance.partState.PlayerGP += gp;
 		SystemFirebaseDBController.Instance.AnswerPhase (qtimeLeft, gp);
 
 		//for mode 3
 		ScreenBattleController.Instance.partSkill.CheckSkillActivate ();
 
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			if (SystemGlobalDataController.Instance.skillChosenCost <= ScreenBattleController.Instance.PlayerGP) {
+			if (SystemGlobalDataController.Instance.skillChosenCost <= ScreenBattleController.Instance.partState.PlayerGP) {
 				if (SystemGlobalDataController.Instance.playerSkillChosen != null) {
 					SystemGlobalDataController.Instance.playerSkillChosen ();
 				}

@@ -52,7 +52,7 @@ public class SkillActivator: IRPCDicObserver
 			}
 
 			if (skill.skillKey == ParamNames.Recover.ToString ()) {
-				ScreenBattleController.Instance.PlayerHP += skill.skillValue;
+				ScreenBattleController.Instance.partState.PlayerHP += skill.skillValue;
 				Debug.Log ("skill player " + skill.skillKey + " value " + skill.skillValue);
 			}
 		}
@@ -64,7 +64,7 @@ public class SkillActivator: IRPCDicObserver
 
 		foreach (SkillParameter skill in skillResult.skillList) {
 			if (skill.skillKey == ParamNames.Recover.ToString ()) {
-				ScreenBattleController.Instance.EnemyHP += skill.skillValue;
+				ScreenBattleController.Instance.partState.EnemyHP += skill.skillValue;
 				Debug.Log ("skill enemy " + skill.skillKey + " value " + skill.skillValue);
 			}
 		}
