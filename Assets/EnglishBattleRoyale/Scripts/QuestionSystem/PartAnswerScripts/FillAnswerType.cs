@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 public class FillAnswerType : MonoBehaviour,IAnswer {
 	
 	public List<GameObject> answerContainers = new List<GameObject>();
@@ -8,16 +9,20 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 	public GameObject outviewContent;
 	private string questionAnswer;
 	private int answerIndex = 0;
-
+	Action<bool> onHintResult;
 	public void DeployAnswerType(){
 		gameObject.SetActive (true);
 		this.questionAnswer = QuestionSystemController.Instance.questionAnswer;
 		PopulateContainer ();
 	}
 
-	public void OnClickHint (int hintCounter){
-		GameObject letterHint = answerContainers [hintCounter];
-		letterHint.GetComponentInChildren<Text> ().text = questionAnswer [hintCounter].ToString ();
+	public void OnClickHint (int hintCounter, Action<bool> onHintResult){
+		CheckAnswerHolder ();
+		this.onHintResult = onHintResult;
+		int RandomizeHintIndex = UnityEngine.Random.Range (0,questionAnswer.Length);
+		GameObject letterHint = null;
+		//letterHint.GetComponentInChildren<Text> ().text = questionAnswer [RandomizeHintIndex].ToString ();
+
 		letterHint.GetComponent<Button> ().enabled = false;
 		TweenFacade.TweenScaleToLarge (letterHint.transform, Vector3.one, 0.3f);
 		letterHint.GetComponent<Image> ().color = new Color (255 / 255, 102 / 255f, 51 / 255f);
@@ -83,6 +88,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 			answerWrote += answerContainers [j].transform.GetChild (0).GetComponent<Text> ().text;
 		}
 		if (answerWrote.Length.Equals (questionAnswer.Length)) {
+			onHintResult.Invoke (true);
 			if (answerWrote.ToUpper ().Equals (questionAnswer.ToUpper ())) {
 				QuestionSystemController.Instance.CheckAnswer(true);
 			} else {
