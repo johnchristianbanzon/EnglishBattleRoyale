@@ -23,18 +23,18 @@ public class BattleStatusManager: IRPCDicObserver
 	private void OnAnswerCountFull ()
 	{
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			PhaseManager.StartPhase3 ();
+			ScreenBattleController.Instance.StartPhase3 ();
 		} else {
-			PhaseManager.StartPhase2 ();
+			ScreenBattleController.Instance.StartPhase2 ();
 		}
 	}
 
 	private void OnSkillCountFull ()
 	{
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			PhaseManager.StartPhase2 ();
+			ScreenBattleController.Instance.StartPhase2 ();
 		} else {
-			PhaseManager.StartPhase3 ();
+			ScreenBattleController.Instance.StartPhase3 ();
 		}
 	}
 
