@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 public class NoAnswerType : MonoBehaviour,IAnswer {
 	public GameObject correctAnswerContainer;
 
@@ -9,7 +10,7 @@ public class NoAnswerType : MonoBehaviour,IAnswer {
 		}
 	}
 
-	public void OnClickHint (int hintCounter){
+	public void OnClickHint (int hintCounter, Action<bool> onHintResult){
 			
 	}
 

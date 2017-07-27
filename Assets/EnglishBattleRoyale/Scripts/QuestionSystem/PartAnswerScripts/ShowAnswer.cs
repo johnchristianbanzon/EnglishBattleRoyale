@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
+using System;
 public class ShowAnswer : MonoBehaviour,IAnswer {
 
 	public GameObject showLetterView;
@@ -9,7 +9,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer {
 		this.gameObject.SetActive (true);
 	}
 
-	public void OnClickHint (int hintCounter){
+	public void OnClickHint (int hintCounter, Action<bool> onHintResult){
 	
 	}
 
