@@ -58,6 +58,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	void Start ()
 	{
 		QuestionBuilder.PopulateQuestion ();
+
 		StartQuestionRound (new QuestionTypeModel (
 			QuestionSystemEnums.QuestionType.Association,
 			partTarget.association,

@@ -1,0 +1,17 @@
+Key,Value,Detail
+WeightDefinition,1,Weight of Target Way for ratio
+WeightSynonym,2,
+WeightAntonym,1,
+WeightWordAssociation,1,
+WeightSelectLetter,2,Weight of Select Way for ratio
+WeightWordChoice,1,
+WeightChangeOrder,1,
+WeighTyping,1,
+WeightLetterLink,1,
+WeightSlotMachine,1,
+FilterSelectLetter,"[1,1,1,1]","Filter Values for Select way, this is to make sure no target type"
+FilterWordChoice,"[0,1,1,0]",
+FilterChangeOrder,"[1,1,1,1]",
+FilterTyping,"[1,1,1,1]",
+FilterLetterLink,"[1,1,1,1]",
+FilterSlotMachine,"[1,1,1,1]",

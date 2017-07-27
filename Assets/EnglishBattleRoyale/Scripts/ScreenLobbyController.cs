@@ -6,6 +6,10 @@ public class ScreenLobbyController : MonoBehaviour {
 	public GameObject partProfile;
 	public GameObject partMatch;
 
+	//set questionconst during start
+	void Start(){
+		MyConst.SetQuestionConst ();
+	}
 
 	public void NavigateProfile(){
 		//activate gameObject / Tween here

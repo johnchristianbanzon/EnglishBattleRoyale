@@ -7,8 +7,7 @@ public static class GameManager
 {
 	private static PlayerModel player;
 	private static string playerName;
-	private static List<Dictionary<string,System.Object>> gameSettingList;
-
+	public static List<List<string>> gameSettingList;
 	public static void SetPLayerName (string name)
 	{
 		playerName = name;
@@ -16,18 +15,20 @@ public static class GameManager
 
 	public static void SetSettings ()
 	{
-		gameSettingList = CSVToDic.ConvertCSV ("GameSettings");
 		player = new PlayerModel (playerName, GetFloatList ());
-
 		SystemGlobalDataController.Instance.player = player;
 	}
 
+	//GET ALL VALUES FROM KEY VALUE CSV
 	private static float[] GetFloatList ()
 	{
+		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionConst");
+		gameSettingList = CSVParser.Parse (csvData.ToString ());
+
 		float[] floatList = new float[6];
 
-		for (int i = 0; i < 5; i++) {
-			floatList [i] = float.Parse (gameSettingList [i] ["Value"].ToString ());
+		for (int i = 1; i < gameSettingList.Count; i++) {
+			floatList [i] = float.Parse (gameSettingList [i] [1].ToString ());
 		}
 
 		return floatList;

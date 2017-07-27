@@ -1,6 +1,22 @@
-﻿/* Handles Constants */
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+/* Handles Constants */
 public static class MyConst
 {
+	public static List<List<string>> questionConst;
+
+	public static void SetQuestionConst ()
+	{
+		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionConst");
+		questionConst = CSVParser.Parse (csvData.ToString ());
+	}
+
+	public static object GetQuestionConst (string constName)
+	{
+		object questionConstValue = CSVParser.GetValueFromKey(questionConst,constName);
+		return questionConstValue;
+	}
 
 	public const string URL_FIREBASE_DATABASE = "https://chatprototype-39807.firebaseio.com";
 	public const string URL_FIREBASE_DATABASE_CONNECTION = "https://chatprototype-39807.firebaseio.com/.info/connected";
@@ -25,7 +41,7 @@ public static class MyConst
 
 	public const string BATTLE_STATUS_HANSWER = "HAnswer";
 	public const string BATTLE_STATUS_HTIME = "HTime";
-	public const string BATTLE_STATUS_VANSWER= "VAnswer";
+	public const string BATTLE_STATUS_VANSWER = "VAnswer";
 	public const string BATTLE_STATUS_VTIME = "VTime";
 
 }
