@@ -8,6 +8,13 @@ public class ChangeOrderEvent : MonoBehaviour
 	public GameObject selectionContent;
 	public static int selectedIndex;
 	public static bool isDragging;
+	public Text letterText;
+
+	public void Init(string letter){
+		letterText.text = letter;
+		gameObject.SetActive (true);
+		gameObject.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+	}
 
 	/// <summary>
 	/// Sets the parent of this container withiout a gridlayout for it to freely move on the canvas
@@ -42,9 +49,8 @@ public class ChangeOrderEvent : MonoBehaviour
 	{
 		this.transform.SetParent (selectionContent.transform);
 		this.GetComponent<Image> ().raycastTarget = true;
-		Debug.Log (selectedIndex);
 		transform.SetSiblingIndex (selectedIndex);
-		QuestionSystemController.Instance.partSelection.changeOrder.CheckAnswer ();
+		QuestionSystemController.Instance.partSelection.changeOrder.OnChangeOrder ();
 		isDragging = false;
 	}
 
@@ -54,9 +60,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	public void OnDetectDraggedSelection ()
 	{
 		if (isDragging) {
-
 			selectedIndex = this.transform.GetSiblingIndex ();
-			Debug.Log (selectedIndex);
 		}	
 	}
 }

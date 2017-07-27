@@ -2,24 +2,36 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using System;
 public class SelectLetter : MonoBehaviour, ISelection
 {
 	public GameObject[] selectionButtons = new GameObject[12];
 	private string questionAnswer;
+
 	public void OnSelect(){
-		QuestionSystemController.Instance.partAnswer.SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
+		QuestionSystemController.Instance.partAnswer.fillAnswer.SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
 		EventSystem.current.currentSelectedGameObject.GetComponentInChildren<Text> ().text = "";
+//		EventSystem.current.currentSelectedGameObject.SetActive (false);
 	}
 
-	public void DeploySelectionType(string questionAnswer){
+	public void HideSelectionType(){
+		gameObject.SetActive (false);
+	}
+
+	public void ShowCorrectAnswer(){
+		
+	}
+
+	public void ShowSelectionType (string questionAnswer,Action<List<GameObject>> onSelectCallBack){
 		gameObject.SetActive (true);
-		ShuffleSelection ();
 		this.questionAnswer = questionAnswer;
+		ShuffleSelection ();
+
 	}
 
 
-	public void RemoveSelectionHint(int hintIndex){
+
+	public void ShowSelectionHint(int hintIndex){
 
 	}
 
