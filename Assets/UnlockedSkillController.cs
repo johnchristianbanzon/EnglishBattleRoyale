@@ -4,19 +4,19 @@ using System.Collections.Generic;
 
 public class UnlockedSkillController : MonoBehaviour
 {
-	private List<SkillModel> charCardList = new List<SkillModel> ();
+	private List<CharacterModel> charCardList = new List<CharacterModel> ();
 	public Text charCardCount;
 
 	// Show unlocked cards, if cards already in equip, do not show
-	public void ShowCharacterCards (List<SkillModel> equipCardList)
+	public void ShowCharacterCards (List<CharacterModel> equipCardList)
 	{
-		charCardList = SkillManager.GetCSVSkillList ();
+//		charCardList = SkillManager.GetCSVSkillList ();
 		charCardCount.text = charCardList.Count.ToString () + "/20";
 		for (int i = 0; i < charCardList.Count; i++) {
 			bool hasCardInEquip = false;
 
 			for (int j = 0; j < equipCardList.Count; j++) {
-				if (equipCardList [j].skillName.Equals (charCardList [i].skillName)) {
+				if (equipCardList [j].characterName.Equals (charCardList [i].characterName)) {
 					hasCardInEquip = true;
 					break;
 				} 

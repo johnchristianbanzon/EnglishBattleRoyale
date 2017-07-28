@@ -9,10 +9,10 @@ public class PopUpSkillOverviewController : MonoBehaviour {
 	public Text charDescription;
 	public Image charImage;
 
-	public void SetCharCard(SkillModel charCard){
-		charName.text = charCard.skillName;
-		charDescription.text = charCard.skillDescription;
-		charImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.skillName);
+	public void SetCharCard(CharacterModel charCard){
+		charName.text = charCard.characterName;
+		charDescription.text = charCard.characterDescription;
+		charImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterName);
 	}
 
 	public void Close(){

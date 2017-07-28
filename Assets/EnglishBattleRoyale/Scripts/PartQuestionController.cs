@@ -76,7 +76,7 @@ public class PartQuestionController: MonoBehaviour
 		SystemFirebaseDBController.Instance.AnswerPhase (qtimeLeft, gp);
 
 		//for mode 3
-		ScreenBattleController.Instance.partSkill.CheckSkillActivate ();
+		ScreenBattleController.Instance.partSkill.CheckCharacterActivate ();
 
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 			if (SystemGlobalDataController.Instance.skillChosenCost <= ScreenBattleController.Instance.partState.PlayerGP) {
