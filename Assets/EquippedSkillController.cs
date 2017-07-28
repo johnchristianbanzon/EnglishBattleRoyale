@@ -4,13 +4,13 @@ using UnityEngine.UI;
 
 public class EquippedSkillController : MonoBehaviour
 {
-	private List<SkillModel> equipCardList = new List<SkillModel> ();
+	private List<CharacterModel> equipCardList = new List<CharacterModel> ();
 	private List<GameObject> cardsObject = new List<GameObject> ();
 	public UnlockedSkillController unlockedSkill;
 
 	void Start ()
 	{
-		equipCardList = SkillManager.GetEquipSkillList ();
+//		equipCardList = SkillManager.GetEquipSkillList ();
 
 		for (int i = 0; i < equipCardList.Count; i++) {
 			if (this.transform.GetChild (i).childCount == 0) {
@@ -20,7 +20,7 @@ public class EquippedSkillController : MonoBehaviour
 			}
 		}
 		unlockedSkill.ShowCharacterCards (equipCardList);
-		SkillManager.SetSkillEnqueue (equipCardList);
+		SkillManager.SetCharacterEnqueue (equipCardList);
 	}
 
 	public void ShakeSkillCards ()
@@ -42,7 +42,7 @@ public class EquippedSkillController : MonoBehaviour
 	public void UpdateSkillList ()
 	{
 		UpdateEquipCardList ();
-		SkillManager.SetSkillEnqueue (equipCardList);
+		SkillManager.SetCharacterEnqueue (equipCardList);
 	}
 
 }

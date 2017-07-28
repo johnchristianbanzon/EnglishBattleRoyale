@@ -6,32 +6,32 @@ using System;
 
 public class PartSkillController : MonoBehaviour
 {
-	public bool activateAutoSkill;
-	public Button[] skillButton;
+	public bool activateAutoCharacter;
+	public Button[] characterButton;
 	public Button attackButton;
-	private bool[] skillButtonToggleOn = new bool[3];
+	private bool[] characterButtonToggleOn = new bool[3];
 
 	public Text[] skillGpCost;
 
 	void Start ()
 	{
-		skillButtonToggleOn [0] = false;
-		skillButtonToggleOn [1] = false;
-		skillButtonToggleOn [2] = false;
+		characterButtonToggleOn [0] = false;
+		characterButtonToggleOn [1] = false;
+		characterButtonToggleOn [2] = false;
 
 		//Set starting skills during start of battle
-		SkillManager.SetStartSkills ();
+		SkillManager.SetStartCharacters ();
 	}
 
-	public void SetSkillUI (int skillNumber, SkillModel charCard)
+	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
 	{
-		skillGpCost [skillNumber].text = charCard.skillGpCost.ToString() + "GP";
-		skillButton [skillNumber].GetComponent<Image> ().sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.skillName);
+		skillGpCost [characterNumber].text = charCard.characterGPCost.ToString() + "GP";
+		characterButton [characterNumber].GetComponent<Image> ().sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterName);
 	}
 
-	private void SkillButtonInteractable (int skillNumber, Button button)
+	private void CharacterButtonInteractable (int characterNumber, Button button)
 	{
-		if (SkillManager.GetSkill (skillNumber).skillGpCost > ScreenBattleController.Instance.partState.PlayerGP) {
+		if (SkillManager.GetCharacter (characterNumber).characterGPCost > ScreenBattleController.Instance.partState.PlayerGP) {
 			button.interactable = false;
 		} else {
 			button.interactable = true;
@@ -45,14 +45,14 @@ public class PartSkillController : MonoBehaviour
 
 	public void OnStartPhase ()
 	{
-		if (!activateAutoSkill) {
+		if (!activateAutoCharacter) {
 			Debug.Log ("Starting Skill Phase");
 			if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 				ButtonEnable (true);
 			} else {
-				SkillButtonInteractable (1, skillButton [0]);
-				SkillButtonInteractable (2, skillButton [1]);
-				SkillButtonInteractable (3, skillButton [2]);
+				CharacterButtonInteractable (1, characterButton [0]);
+				CharacterButtonInteractable (2, characterButton [1]);
+				CharacterButtonInteractable (3, characterButton [2]);
 			}
 
 			attackButton.interactable = true;
@@ -67,7 +67,7 @@ public class PartSkillController : MonoBehaviour
 
 	public void OnEndPhase ()
 	{
-		if (!activateAutoSkill) {
+		if (!activateAutoCharacter) {
 			attackButton.gameObject.SetActive (false);
 			ButtonEnable (false);
 		}
@@ -75,7 +75,7 @@ public class PartSkillController : MonoBehaviour
 
 	public void ShowAutoActivateButtons (bool isShow)
 	{
-		if (activateAutoSkill) {
+		if (activateAutoCharacter) {
 			ButtonEnable (isShow);
 		}
 	}
@@ -91,44 +91,44 @@ public class PartSkillController : MonoBehaviour
 
 	public void ButtonEnable (bool buttonEnable)
 	{
-		skillButton [0].interactable = buttonEnable;
-		skillButton [1].interactable = buttonEnable;
-		skillButton [2].interactable = buttonEnable;
+		characterButton [0].interactable = buttonEnable;
+		characterButton [1].interactable = buttonEnable;
+		characterButton [2].interactable = buttonEnable;
 		attackButton.interactable = buttonEnable;
 	}
 
-	public void SelectSkill (int skillNumber)
+	public void SelectCharacter (int characterNumber)
 	{
-		if (activateAutoSkill) {
-			skillButtonToggleOn [skillNumber - 1] = !skillButtonToggleOn [skillNumber - 1];
-			ActivateSkillIndicator (skillNumber - 1);
+		if (activateAutoCharacter) {
+			characterButtonToggleOn [characterNumber - 1] = !characterButtonToggleOn [characterNumber - 1];
+			ActivateCharacterIndicator (characterNumber - 1);
 		} else {
-			if (skillButton [skillNumber - 1].interactable) {
-				SelectedSkill (skillNumber);
+			if (characterButton [characterNumber - 1].interactable) {
+				SelectedSkill (characterNumber);
 			}
 		}
 
 	}
 
-	private void ActivateSkillIndicator (int skillNumber)
+	private void ActivateCharacterIndicator (int skillNumber)
 	{
-		Outline skillButtonOutline = skillButton [skillNumber].GetComponent<Outline> ();
-		if (skillButtonToggleOn [skillNumber]) {
+		Outline characterButtonOutline = characterButton [skillNumber].GetComponent<Outline> ();
+		if (characterButtonToggleOn [skillNumber]) {
 			//if clicked
-			skillButtonOutline.enabled = true;
-			skillButtonOutline.effectColor = new Color32 (255, 96, 26, 255);
+			characterButtonOutline.enabled = true;
+			characterButtonOutline.effectColor = new Color32 (255, 96, 26, 255);
 
 		} else {
 			//if not
-			skillButtonOutline.enabled = false;
+			characterButtonOutline.enabled = false;
 		}
 	}
 
-	public void CheckSkillActivate ()
+	public void CheckCharacterActivate ()
 	{
-		if (activateAutoSkill) {
-			for (int i = 0; i < skillButtonToggleOn.Length; i++) {
-				if (skillButtonToggleOn [i]) {
+		if (activateAutoCharacter) {
+			for (int i = 0; i < characterButtonToggleOn.Length; i++) {
+				if (characterButtonToggleOn [i]) {
 					SelectedSkill (i);
 				}
 			}
@@ -139,7 +139,7 @@ public class PartSkillController : MonoBehaviour
 	public void ShowSkillDescription (int skillNumber)
 	{
 		GameObject skillDescription = SystemPopupController.Instance.ShowPopUp ("PopUpSkillDescription");
-		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (SkillManager.GetSkill (skillNumber).skillDescription);
+		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (SkillManager.GetCharacter (skillNumber).characterDescription);
 	}
 
 
@@ -147,15 +147,15 @@ public class PartSkillController : MonoBehaviour
 	private void SelectedSkill (int skillNumber)
 	{
 		SelectSkillActivate (delegate() {
-			SkillManager.ActivateSkill (skillNumber);
+			SkillManager.ActivateCharacter (skillNumber);
 		}, delegate() {
-			SystemGlobalDataController.Instance.skillChosenCost = SkillManager.GetSkill (skillNumber).skillGpCost;
+			SystemGlobalDataController.Instance.skillChosenCost = SkillManager.GetCharacter (skillNumber).characterGPCost;
 		});
 	}
 
 	private void SelectSkillActivate (Action activateSkill, Action skillCost)
 	{
-		if (activateAutoSkill) {
+		if (activateAutoCharacter) {
 			activateSkill ();
 		} else {
 			//change to mode 2

@@ -4,8 +4,8 @@ using UnityEngine.UI;
 public class CharCardController : MonoBehaviour
 {
 	public Text gpCost;
-	public Image skillImage;
-	private SkillModel charCard;
+	public Image characterImage;
+	private CharacterModel charCard;
 	public GameObject charCardSettings;
 	private bool isEquipped = false;
 	public GameObject infoButton;
@@ -16,15 +16,15 @@ public class CharCardController : MonoBehaviour
 	public static GameObject currectSelectedCharacterCard;
 	public static bool isSwappable = false;
 
-	public SkillModel GetCardParameter(){
+	public CharacterModel GetCardParameter(){
 		return charCard;
 	}
 
-	public void SetCardParameter (SkillModel charCard, bool isEquipped)
+	public void SetCardParameter (CharacterModel charCard, bool isEquipped)
 	{
 		this.charCard = charCard;
-		this.gpCost.text = charCard.skillGpCost.ToString();
-		skillImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.skillName);
+		this.gpCost.text = charCard.characterGPCost.ToString();
+		characterImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterName);
 		this.isEquipped = isEquipped;
 	}
 

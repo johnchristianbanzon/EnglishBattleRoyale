@@ -304,9 +304,9 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		SetParam (gesture.ToDictionary ());
 	}
 
-	public void SetSkillParam (SkillModel skill)
+	public void SetCharacterParam (CharacterModel character)
 	{
-		SetParam (skill.ToDictionary ());
+//		SetParam (character.ToDictionary ());
 	}
 
 	private void SetParam (Dictionary<string, System.Object> toDictionary)
