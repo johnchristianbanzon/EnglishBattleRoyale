@@ -447,10 +447,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 		while (timeLeft > 0) {
 			gameTimerText.text = "" + timeLeft;
 			timeLeft--;
+			action ();
 			yield return new WaitForSeconds (1);
 		}
-
-		action ();
 		OnToggleTimer (false);
 	}
 

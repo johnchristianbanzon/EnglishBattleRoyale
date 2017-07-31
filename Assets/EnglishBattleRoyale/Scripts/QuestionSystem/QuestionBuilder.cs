@@ -15,7 +15,7 @@ public static class QuestionBuilder
 
 	public static void PopulateQuestion ()
 	{
-		
+
 		questionList.Clear ();
 		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionSystemCsv");
 		List<List<string>> csvQuestionList = CSVParser.Parse (csvData.ToString());
@@ -43,13 +43,13 @@ public static class QuestionBuilder
 			wrongChoices.Add (CSVParser.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString ()
 			);
 
-		
+
 		}
 	}
 
 	public static QuestionModel GetQuestion (QuestionSystemEnums.QuestionType questiontype, ISelection selectionType)
 	{
-		
+
 		int randomize = 0;
 		bool questionViable = false;
 		string question = "";
@@ -78,13 +78,24 @@ public static class QuestionBuilder
 					questionViable = true;
 				}
 				break;
+
 			case QuestionSystemEnums.QuestionType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
-					answersList.Add (questionList [randomize].answer);
-					question = questionList [randomize].definition;
-					questionViable = true;
+					if (selectionType.ToString ().Equals("SlotMachine (SlotMachine)")) {
+						if (questionList [randomize].answer.Length < 6) {
+							answersList.Add (questionList [randomize].answer);
+							question = questionList [randomize].definition;
+							questionViable = true;
+						} 
+
+					} else {
+						answersList.Add (questionList [randomize].answer);
+						question = questionList [randomize].definition;
+						questionViable = true;
+					}
 				}
 				break;
+
 			case QuestionSystemEnums.QuestionType.Association:
 				if (questionList [randomize].hasClues.ToString()=="1") {
 					answersList.Add (questionList [randomize].answer);
@@ -125,7 +136,7 @@ public static class QuestionBuilder
 	}
 
 	public static QuestionTypeModel getQuestionType(string selection){
-//		
+		//		
 		float[] selectionTypePercentage = new float[6];
 		float randomizedPercentage = Random.Range(0.00f,1.0f);
 		float percentageLeastDifference = 1.0f / selectionTypePercentage.Length;
@@ -138,7 +149,7 @@ public static class QuestionBuilder
 		QuestionTypeModel typeModel = null;
 		switch(selection){
 		case "sellect":
-			 typeModel = new QuestionTypeModel (
+			typeModel = new QuestionTypeModel (
 				QuestionSystemEnums.QuestionType.Definition,
 				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
@@ -157,7 +168,7 @@ public static class QuestionBuilder
 			typeModel = new QuestionTypeModel (
 				QuestionSystemEnums.QuestionType.Synonym,
 				QuestionSystemController.Instance.partTarget.singleQuestion,
-				QuestionSystemController.Instance.partAnswer.noAnswer,
+				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.changeOrder
 			);
 			break;
@@ -190,7 +201,7 @@ public static class QuestionBuilder
 
 
 
-			
+
 		return typeModel;
 	}
 }
