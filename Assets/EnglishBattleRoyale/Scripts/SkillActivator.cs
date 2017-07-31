@@ -7,10 +7,11 @@ public class SkillActivator: IRPCDicObserver
 
 	public PartAvatarsController partAvatar;
 
-	void Start(){
+	void Start ()
+	{
 		RPCDicObserver.AddObserver (this);
 	}
-	
+
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
 		try {
@@ -21,65 +22,15 @@ public class SkillActivator: IRPCDicObserver
 				SystemGlobalDataController.Instance.isSender = userHome;
 
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
-				if (param.ContainsKey ("SkillParam")) {
-					string stringParam = param ["SkillParam"].ToString ();
-					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
-						SetPlayerSkillParameter (stringParam);
-					} else {
-						SetEnemySkillParameter (stringParam);
-					}
-
+				if (param.ContainsKey ("CharacterRPC")) {
+					
+					CharacterModel character = (CharacterModel) JsonConverter.StringToObject (param ["CharacterRPC"].ToString());
 				}
-				if (param.ContainsKey ("SkillName")) {
-					string stringParam = param ["SkillName"].ToString ();
-					SetSkillAnimation (stringParam);
-				}
+				
 			}
 		} catch (System.Exception e) {
 			//do something with exception in future
 		}
 	}
-		
-	private void SetPlayerSkillParameter (string skillParameter)
-	{
-		SkillParameterList skillResult = JsonUtility.FromJson<SkillParameterList> (skillParameter);
-
-		foreach (SkillParameter skill in skillResult.skillList) {
-
-			if (skill.skillKey == ParamNames.Damage.ToString ()) {
-				SystemGlobalDataController.Instance.player.playerBaseDamage += skill.skillValue;
-				Debug.Log ("skill player " + skill.skillKey + " value " + skill.skillValue);
-			}
-
-			if (skill.skillKey == ParamNames.Recover.ToString ()) {
-				ScreenBattleController.Instance.partState.PlayerHP += skill.skillValue;
-				Debug.Log ("skill player " + skill.skillKey + " value " + skill.skillValue);
-			}
-		}
-	}
-
-	private void SetEnemySkillParameter (string skillParameter)
-	{
-		SkillParameterList skillResult = JsonUtility.FromJson<SkillParameterList> (skillParameter);
-
-		foreach (SkillParameter skill in skillResult.skillList) {
-			if (skill.skillKey == ParamNames.Recover.ToString ()) {
-				ScreenBattleController.Instance.partState.EnemyHP += skill.skillValue;
-				Debug.Log ("skill enemy " + skill.skillKey + " value " + skill.skillValue);
-			}
-		}
-	}
-
-	/// <summary>
-	/// Checks the name of the skill and set animation
-	/// </summary>
-	/// <param name="newParam">New parameter.</param>
-	public void SetSkillAnimation (string skillName)
-	{
-		if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
-			partAvatar.SetTriggerAnim (true, skillName);
-		} else {
-			partAvatar.SetTriggerAnim (false, skillName);
-		}
-	}
+	
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using PapaParse.Net;
 
-public static class CSVParser
+public static class CSVParserUtility
 {
 	public static List<List<string>> Parse (string csvName)
 	{

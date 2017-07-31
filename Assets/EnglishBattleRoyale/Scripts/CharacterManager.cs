@@ -8,76 +8,37 @@ public static class CharacterManager
 
 	public static void  SetCharacter (int charID)
 	{
-		character = MyConst.GetCharacter (charID);
+		character = MyConst.GetCharacterByCharID (charID);
 	}
 
+	//calculate the skill effect of character from csv
 	private static void Calculate ()
 	{
-		//sample
-
-	}
-
-	private static void SetCharacterCalculation ()
-	{
-		switch (character.characterID) {
-		case 1:
-			calculateValue = float.Parse (character.characterAmount);
+		float variable = 0;
+		switch (character.characterAmountVariable) {
+		case "none":
+			variable = 0;
 			break;
-		case 2:
-			calculateValue = float.Parse (character.characterAmount);
+		case "enemyHP":
+			variable = ScreenBattleController.Instance.partState.enemy.playerHP;
 			break;
-		case 3:
-			calculateValue = float.Parse (character.characterAmount);
+		case "playerHP":
+			variable = ScreenBattleController.Instance.partState.player.playerHP;
 			break;
-		case 4:
-			calculateValue = float.Parse(character.characterAmount);
+		case "enemyDamage":
+			variable = ScreenBattleController.Instance.partState.enemy.playerBaseDamage;
 			break;
-		case 5:
-			calculateValue = float.Parse(character.characterAmount);
+		case "playerDamage":
+			variable = ScreenBattleController.Instance.partState.player.playerBaseDamage;
 			break;
-		case 6:
-			calculateValue =float.Parse(character.characterAmount);
-			break;
-		case 7:
-			calculateValue =float.Parse(character.characterAmount);
-			break;
-		case 8:
-			int EnemyHP = 10;
-			Expression e8 = new Expression (character.characterAmount);
-			e8.Parameters ["EnemyHP"] = EnemyHP;  
-			calculateValue = float.Parse(e8.Evaluate ().ToString());
-			break;
-		case 9:
-			calculateValue = float.Parse(character.characterAmount);
-			break;
-		case 10:
-			int N = 2;
-			Expression e10 = new Expression (character.characterAmount);
-			e10.Parameters ["N"] = N;  
-			calculateValue = float.Parse(e10.Evaluate ().ToString());
-			break;
-		case 11:
-			calculateValue = float.Parse(character.characterAmount);
-			break;
-		case 12:
-			calculateValue = float.Parse(character.characterAmount);
-			break;
-		case 13:
-			calculateValue = float.Parse(character.characterAmount);
-			break;
-		case 14:
-			calculateValue = float.Parse(character.characterAmount);
-			break;
-		case 15:
-			calculateValue = float.Parse(character.characterAmount);
-			break;
-		case 16:
-			calculateValue = float.Parse(character.characterAmount);
-			break;
-		case 17:
-			calculateValue = float.Parse(character.characterAmount);
+		case "correctAnswer":
 			break;
 		}
+
+		//parses the string formula from csv
+		Expression e = new Expression (character.characterAmount);
+		e.Parameters ["N"] = variable;  
+		calculateValue = float.Parse (e.Evaluate ().ToString ());
 	}
 
 

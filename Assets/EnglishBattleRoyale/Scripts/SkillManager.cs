@@ -41,8 +41,8 @@ public static class SkillManager
 
 	public static void StartCharacter (CharacterModel characterModel)
 	{
-		ScreenBattleController.Instance.partState.PlayerGP -= characterModel.characterGPCost;
-		SystemFirebaseDBController.Instance.SetCharacterParam (characterModel);
+		ScreenBattleController.Instance.partState.player.playerGP -= characterModel.characterGPCost;
+		SystemFirebaseDBController.Instance.SetParam("CharacterRPC", (characterModel));
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
 			SystemFirebaseDBController.Instance.SkillPhase ();
 		} 

@@ -31,7 +31,7 @@ public class PartSkillController : MonoBehaviour
 
 	private void CharacterButtonInteractable (int characterNumber, Button button)
 	{
-		if (SkillManager.GetCharacter (characterNumber).characterGPCost > ScreenBattleController.Instance.partState.PlayerGP) {
+		if (SkillManager.GetCharacter (characterNumber).characterGPCost > ScreenBattleController.Instance.partState.player.playerGP) {
 			button.interactable = false;
 		} else {
 			button.interactable = true;

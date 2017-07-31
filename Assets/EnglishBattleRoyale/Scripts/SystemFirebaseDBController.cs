@@ -207,7 +207,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		SystemGlobalDataController.Instance.isHost = isHost;
 		RPCListener ();
 
-		Dictionary<string, System.Object> entryValues = SystemGlobalDataController.Instance.player.ToDictionary ();
+		Dictionary<string, System.Object> entryValues = JsonConverter.ObjToDic ("PlayerRPC", SystemGlobalDataController.Instance.player);
 
 		string directory = MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_INITITAL_STATE + "/" + userPlace + "/param/";
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
@@ -239,7 +239,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 				if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
 					UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
 				} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-					UpdateBattleStatus (MyConst.BATTLE_STATUS_SKILL, 0);
+					UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
 				}
 			} else {
 				Dictionary<string, System.Object> battleStatus = (Dictionary<string, System.Object>)dataSnapshot.Value;
@@ -289,33 +289,13 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
 	}
 
-	public void SetAttackParam (AttackModel attack)
-	{
-		SetParam (attack.ToDictionary ());
-	}
-
-	public void SetAnswerParam (AnswerModel answer)
-	{
-		SetParam (answer.ToDictionary ());
-	}
-
-	public void SetGestureParam (GestureModel gesture)
-	{
-		SetParam (gesture.ToDictionary ());
-	}
-
-	public void SetCharacterParam (CharacterModel character)
-	{
-//		SetParam (character.ToDictionary ());
-	}
-
-	private void SetParam (Dictionary<string, System.Object> toDictionary)
+	public void SetParam (string objectName, System.Object myObject)
 	{
 		string	rpcKey = reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_RPC).Push ().Key;
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
 		result ["userHome"] = SystemGlobalDataController.Instance.isHost;
-		result ["param"] = toDictionary;
+		result ["param"] = JsonConverter.ObjToDic (objectName, myObject);
 
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_RPC + "/" + rpcKey;
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, result);
@@ -345,7 +325,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 							UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
 						} else {
-							UpdateBattleStatus (MyConst.BATTLE_STATUS_SKILL, 0);
+							UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
 						}
 					}
 				});
@@ -365,7 +345,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		}
 		GetLatestKey (modulusNum, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
-				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_SKILL, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
+				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_CHARACTER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					if (battleCount == 2) {
 						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 							UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
@@ -385,7 +365,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		GetLatestKey (3, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
-					SetAttackParam (param);
+					SetParam ("AttackRPC", (param));
 				});
 			});
 		});
