@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
+
 public class WordChoice : MonoBehaviour, ISelection
 {
 	public bool justAnswered = false;
@@ -10,14 +11,14 @@ public class WordChoice : MonoBehaviour, ISelection
 	public GameObject[] selectionButtons = new GameObject[4];
 	private List<GameObject> answerClicked = new List<GameObject> ();
 	private List<GameObject> answerButtons = new List<GameObject> ();
-	private List<string> answerString = new List<string>();
+	private List<string> answerString = new List<string> ();
 
 	public void OnClickSelection ()
 	{
 		if (!justAnswered) {
 			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 			GameObject wordClicked = EventSystem.current.currentSelectedGameObject;
-			string wordClickedString = wordClicked.GetComponentInChildren<Text>().text;
+			string wordClickedString = wordClicked.GetComponentInChildren<Text> ().text;
 			if (wordClicked.GetComponent<Image> ().color == Color.gray) {
 				wordClicked.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 				answerClicked.Remove (wordClicked);
@@ -25,36 +26,47 @@ public class WordChoice : MonoBehaviour, ISelection
 			} else {
 				wordClicked.GetComponent<Image> ().color = Color.gray;
 				answerClicked.Add (wordClicked);
-				if (answerClicked.Count == 2){
-					string answerClicked1 = answerClicked [0].GetComponentInChildren<Text>().text.ToUpper();
-					string answerClicked2 = answerClicked [1].GetComponentInChildren<Text>().text.ToUpper();
-					CheckIfCorrect (answerClicked1,answerClicked2);
+				if (answerClicked.Count == 2) {
+					string answerClicked1 = answerClicked [0].GetComponentInChildren<Text> ().text.ToUpper ();
+					string answerClicked2 = answerClicked [1].GetComponentInChildren<Text> ().text.ToUpper ();
+					CheckIfCorrect (answerClicked1, answerClicked2);
 				}
 			}
 		}
 	}
 
-	public void ShowCorrectAnswer(){
-	
-	}
-
-	public void ShowSelectionHint(int hintIndex){
+	public void ShowCorrectAnswer ()
+	{
 
 	}
-	public void HideSelectionType(){
+
+	public void HideSelectionHint(){
+
+	}
+
+	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
+	{ 
+		answerButtons [hintIndex].GetComponent<Image> ().color = new Color (255 / 255, 102 / 255f, 51 / 255f);
+	}
+
+	public void HideSelectionType ()
+	{
 		gameObject.SetActive (false);
 	}
 
-	private void CheckIfCorrect(string answerClicked1, string answerClicked2){
+	private void CheckIfCorrect (string answerClicked1, string answerClicked2)
+	{
 		answerClicked.Clear ();
 
 		if (answerString.Contains (answerClicked1) && answerString.Contains (answerClicked2)) {
-			QuestionSystemController.Instance.CheckAnswer(true);
+			QuestionSystemController.Instance.CheckAnswer (true);
 		} else {
-			QuestionSystemController.Instance.CheckAnswer(false);
+			QuestionSystemController.Instance.CheckAnswer (false);
 		}
 	}
-	public void ShowSelectionType (string questionAnswer,Action<List<GameObject>> onSelectCallBack){
+
+	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
+	{
 		this.gameObject.SetActive (true);
 		this.questionAnswer = questionAnswer;
 		ShuffleSelection ();
@@ -62,7 +74,7 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	public void ShuffleSelection ()
 	{
-		
+
 		answerButtons.Clear ();
 		answerString.Clear ();
 		int numberOfAnswers = 2;
@@ -76,15 +88,15 @@ public class WordChoice : MonoBehaviour, ISelection
 			}
 			randomList.Add (randomNum);
 			string wrongChoiceGot = QuestionBuilder.GetRandomChoices ();
-		
+
 			if (i < numberOfAnswers) {
 				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp [i].ToString ().ToUpper ();
 				answerButtons.Add (selectionButtons [randomNum]);
 
 			} else {
-				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = wrongChoiceGot.ToUpper();
+				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = wrongChoiceGot.ToUpper ();
 			}
-			selectionButtons[randomNum].GetComponent<Image> ().color = new Color(94f/255,255f/255f,148f/255f);
+			selectionButtons [randomNum].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 		}
 		QuestionSystemController.Instance.correctAnswerButtons = answerButtons;
 		answerString.Add (answerButtons [0].GetComponentInChildren<Text> ().text.ToUpper ());
