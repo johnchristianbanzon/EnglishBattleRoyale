@@ -12,7 +12,7 @@ public class Typing : MonoBehaviour, ISelection
 	}
 
 	public void ShowCorrectAnswer(){
-		
+
 	}
 
 	public void HideSelectionHint(){

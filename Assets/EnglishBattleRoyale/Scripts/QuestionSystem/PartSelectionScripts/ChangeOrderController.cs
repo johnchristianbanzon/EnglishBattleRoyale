@@ -99,9 +99,9 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		TweenFacade.TweenScaleToLarge (correctAnswerContainer.transform,Vector3.one,0.3f);
 		correctAnswerContainer.GetComponentInChildren<Text> ().enabled = true;
 	}
-		
+
 	public void HideSelectionHint(){
-		
+
 	}
 
 	public void InitSelectionContainers ()

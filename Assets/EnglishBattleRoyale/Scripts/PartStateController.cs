@@ -290,7 +290,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 					}
 				}
 				yield return new WaitForSeconds (3);	
-				PhaseManager.StartPhase1 ();
+				ScreenBattleController.Instance.StartPhase1 ();
 				//reset effects done by skill and battle data
 				SystemGlobalDataController.Instance.ResetPlayer ();
 				param.Clear ();
@@ -392,7 +392,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 		}
 
 		OnToggleTimer (false);
-		PhaseManager.StartPhase1 ();
+		ScreenBattleController.Instance.StartPhase1 ();
 	}
 
 	#endregion

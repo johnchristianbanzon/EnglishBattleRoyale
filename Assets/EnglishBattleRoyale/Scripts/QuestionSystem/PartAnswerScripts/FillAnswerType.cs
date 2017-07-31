@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System;
 
 public class FillAnswerType : MonoBehaviour,IAnswer {
-	
+
 	public List<GameObject> answerContainers = new List<GameObject>();
 	public GameObject[] selectionIdentifier = new GameObject[12];
 	public GameObject outviewContent;
@@ -40,7 +40,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 			}
 			whileCounter++;
 		}
-			
+
 		hintIndexRandomList.Add (randomizedHintIndex);
 		Debug.Log (randomizedHintIndex);
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (randomizedHintIndex,answerContainers[randomizedHintIndex]);
@@ -60,7 +60,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 		}
 		QuestionSystemController.Instance.correctAnswerButtons = answerContainers;
 	}
-		
+
 	public void OnAnswerClick (Button answerButton)
 	{
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
@@ -107,7 +107,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 		GetAnswerWritten ();
 		string answerWrote = GetAnswerWritten ();
 		if (answerWrote.Length.Equals (questionAnswer.Length)) {
-			
+
 			if (answerWrote.ToUpper ().Equals (questionAnswer.ToUpper ())) {
 				QuestionSystemController.Instance.CheckAnswer (true);
 				onHintResult.Invoke (true);

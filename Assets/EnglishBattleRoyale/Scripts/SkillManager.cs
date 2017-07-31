@@ -4,77 +4,66 @@ using System.Collections.Generic;
 public static class SkillManager
 {
 	
-	private static SkillModel[] skill = new SkillModel[3];
-	private static Queue<SkillModel> skillQueue = new Queue<SkillModel> (8);
+	private static CharacterModel[] character = new CharacterModel[3];
+	private static Queue<CharacterModel> characterQueue = new Queue<CharacterModel> (8);
 
 	/// <summary>
 	/// Load skill list from parsed CSV
 	/// </summary>
 	/// <returns>The skill list.</returns>
-	public static List<SkillModel>  GetCSVSkillList ()
+	public static List<CharacterModel>  GetCharacterList ()
 	{
+		List<CharacterModel> characterList = MyConst.GetCharacterList();
 
-		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("Skills");
-		List<List<string>> csvSkillList = CSVParser.Parse (csvData.ToString ());
-
-		List<SkillModel> skillList = new List<SkillModel> ();
-		for (int i = 1; i < csvSkillList.Count; i++) {
-			string skillName = CSVParser.GetValueArrayFromKey(csvSkillList, "SkillName")[i].ToString ();
-			string skillDescription = CSVParser.GetValueArrayFromKey(csvSkillList, "SkillDescription")[i].ToString ();
-			int skillGpCost = int.Parse(CSVParser.GetValueArrayFromKey(csvSkillList, "SkillGPCost")[i].ToString ());
-			string skillParam = CSVParser.GetValueArrayFromKey(csvSkillList, "SkillParam")[i].ToString ();
-			skillList.Add (new SkillModel(skillName,skillGpCost,skillDescription,skillParam));
-		}
-
-		return skillList;
+		return characterList;
 	}
 
 	//TEST ONLY FOR NOW!!!!!
-	public static List<SkillModel>  GetEquipSkillList ()
+	public static List<CharacterModel>  GetEquipSkillList ()
 	{
-		List<SkillModel> equipSkillList = new List<SkillModel> (8);
-		List<SkillModel> skillList = GetCSVSkillList ();
-		equipSkillList.Add (skillList [0]);
-		equipSkillList.Add (skillList [1]);
-		equipSkillList.Add (skillList [2]);
-		equipSkillList.Add (skillList [3]);
-		equipSkillList.Add (skillList [4]);
-		equipSkillList.Add (skillList [5]);
-		equipSkillList.Add (skillList [6]);
-		equipSkillList.Add (skillList [7]);
-		return equipSkillList;
+		List<CharacterModel> equipCharacterList = new List<CharacterModel> (8);
+		List<CharacterModel> characterList = GetCharacterList ();
+		equipCharacterList.Add (characterList [0]);
+		equipCharacterList.Add (characterList [1]);
+		equipCharacterList.Add (characterList [2]);
+		equipCharacterList.Add (characterList [3]);
+		equipCharacterList.Add (characterList [4]);
+		equipCharacterList.Add (characterList [5]);
+		equipCharacterList.Add (characterList [6]);
+		equipCharacterList.Add (characterList [7]);
+		return equipCharacterList;
 	}
 
-	public static void ActivateSkill (int skillNumber)
+	public static void ActivateCharacter (int characterNumber)
 	{
-		StartSkill (skill [skillNumber - 1]);
+		StartCharacter (character [characterNumber - 1]);
 	}
 
-	public static void StartSkill (SkillModel skillmodel)
+	public static void StartCharacter (CharacterModel characterModel)
 	{
-		ScreenBattleController.Instance.partState.PlayerGP -= skillmodel.skillGpCost;
-		SystemFirebaseDBController.Instance.SetSkillParam (skillmodel);
+		ScreenBattleController.Instance.partState.PlayerGP -= characterModel.characterGPCost;
+		SystemFirebaseDBController.Instance.SetCharacterParam (characterModel);
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
 			SystemFirebaseDBController.Instance.SkillPhase ();
 		} 
 	}
 		
 	//set the skill in the UI
-	public static void SetSkillUI (int skillIndex, SkillModel skillmodel)
+	public static void SetCharacterUI (int characterIndex, CharacterModel characterModel)
 	{
-		skill [skillIndex] = skillmodel;
-		ScreenBattleController.Instance.partSkill.SetSkillUI (skillIndex, skillmodel);
+		character [characterIndex] = characterModel;
+		ScreenBattleController.Instance.partSkill.SetCharacterUI (characterIndex, characterModel);
 	}
 
 	//receive skill list from prepare phase and shuffle for random skill in start and put in queue
-	public static void SetSkillEnqueue (List<SkillModel> skillList)
+	public static void SetCharacterEnqueue (List<CharacterModel> characterList)
 	{
-		skillQueue.Clear ();
-		skillList.Shuffle ();
+		characterQueue.Clear ();
+		characterList.Shuffle ();
 
-		for (int i = 0; i < skillList.Count; i++) {
-			Debug.Log (skillList [i].skillName);
-			skillQueue.Enqueue (skillList [i]);
+		for (int i = 0; i < characterList.Count; i++) {
+			Debug.Log (characterList [i].characterName);
+			characterQueue.Enqueue (characterList [i]);
 		}
 	}
 
@@ -94,24 +83,24 @@ public static class SkillManager
 
 
 	//Default 3 starting skills when starting the game
-	public static void SetStartSkills ()
+	public static void SetStartCharacters ()
 	{
 		for (int i = 0; i < 3; i++) {
-			SetSkillUI (i, skillQueue.Dequeue ());
+			SetCharacterUI (i, characterQueue.Dequeue ());
 		}
 	}
 
 	//When skill is used, remove previous skill and enqueue replace with new skill in queue
-	public static void UseSkillUI (int skillIndex)
+	public static void UseCharacterUI (int characterIndex)
 	{
 		//remove this if you want skill will be gone after use
-		skillQueue.Enqueue (skill [skillIndex]);
+		characterQueue.Enqueue (character [characterIndex]);
 
-		SetSkillUI (skillIndex, skillQueue.Dequeue ());
+		SetCharacterUI (characterIndex, characterQueue.Dequeue ());
 	}
 
-	public static SkillModel GetSkill (int skillNumber)
+	public static CharacterModel GetCharacter (int characterNumber)
 	{
-		return skill [skillNumber - 1];
+		return character [characterNumber - 1];
 	}
 }

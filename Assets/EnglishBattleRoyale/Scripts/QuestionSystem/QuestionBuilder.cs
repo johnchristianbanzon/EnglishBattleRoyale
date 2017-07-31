@@ -15,7 +15,7 @@ public static class QuestionBuilder
 
 	public static void PopulateQuestion ()
 	{
-		
+
 		questionList.Clear ();
 		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionSystemCsv");
 		List<List<string>> csvQuestionList = CSVParser.Parse (csvData.ToString());
@@ -43,13 +43,13 @@ public static class QuestionBuilder
 			wrongChoices.Add (CSVParser.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString ()
 			);
 
-		
+
 		}
 	}
 
 	public static QuestionModel GetQuestion (QuestionSystemEnums.QuestionType questiontype, ISelection selectionType)
 	{
-		
+
 		int randomize = 0;
 		bool questionViable = false;
 		string question = "";
@@ -87,7 +87,7 @@ public static class QuestionBuilder
 							question = questionList [randomize].definition;
 							questionViable = true;
 						} 
-						
+
 					} else {
 						answersList.Add (questionList [randomize].answer);
 						question = questionList [randomize].definition;
@@ -136,7 +136,7 @@ public static class QuestionBuilder
 	}
 
 	public static QuestionTypeModel getQuestionType(string selection){
-//		
+		//		
 		float[] selectionTypePercentage = new float[6];
 		float randomizedPercentage = Random.Range(0.00f,1.0f);
 		float percentageLeastDifference = 1.0f / selectionTypePercentage.Length;
@@ -149,7 +149,7 @@ public static class QuestionBuilder
 		QuestionTypeModel typeModel = null;
 		switch(selection){
 		case "sellect":
-			 typeModel = new QuestionTypeModel (
+			typeModel = new QuestionTypeModel (
 				QuestionSystemEnums.QuestionType.Definition,
 				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
@@ -201,7 +201,7 @@ public static class QuestionBuilder
 
 
 
-			
+
 		return typeModel;
 	}
 }

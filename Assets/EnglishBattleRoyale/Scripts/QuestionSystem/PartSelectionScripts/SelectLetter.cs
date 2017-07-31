@@ -26,7 +26,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public void ShowCorrectAnswer ()
 	{
-		
+
 	}
 
 	public void HideSelectionHint ()

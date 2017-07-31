@@ -1,15 +1,29 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 /* Handles Constants */
 public static class MyConst
 {
 	public static List<List<string>> questionConst;
+	public static List<List<string>> characterConst;
 
-	public static void SetQuestionConst ()
+
+	public static void Init(){
+		InitQuestionConst ();
+		InitCharacterConst ();
+	}
+
+	private static void InitQuestionConst ()
 	{
 		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionConst");
 		questionConst = CSVParser.Parse (csvData.ToString ());
+	}
+
+	private static void InitCharacterConst ()
+	{
+		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("Characters");
+		characterConst = CSVParser.Parse (csvData.ToString ());
 	}
 
 	public static object GetQuestionConst (string constName)
@@ -17,6 +31,41 @@ public static class MyConst
 		object questionConstValue = CSVParser.GetValueFromKey(questionConst,constName);
 		return questionConstValue;
 	}
+
+	public static List<CharacterModel> GetCharacterList(){
+
+		List<CharacterModel> characterList = new List<CharacterModel>();
+		for (int i = 1; i < characterConst.Count; i++) {
+			CharacterModel character = new CharacterModel (
+				int.Parse(characterConst[i][0].ToString()), //Character ID
+				characterConst[i][1].ToString(), // Character Name
+				characterConst[i][2].ToString(), //Character Description
+				int.Parse(characterConst[i][3].ToString()), //Character GP COST
+				int.Parse(characterConst[i][4].ToString()),  //Character SKill ID
+				int.Parse(characterConst[i][5].ToString()),  //Character Calculation Type
+				characterConst[i][6].ToString(),  //Character Amount
+				int.Parse(characterConst[i][7].ToString()),  //Character Condition Type
+				characterConst[i][8].ToString(), //Character Condition Ref
+				characterConst[i][9].ToString(), //Character Condition Amount
+				int.Parse(characterConst[i][10].ToString()),  //Character Sacrifice type
+				int.Parse(characterConst[i][11].ToString()),  //Character Sacrifice amount
+				int.Parse(characterConst[i][12].ToString()),  //Character Turn
+				int.Parse(characterConst[i][13].ToString()) //Character Type
+			);
+			characterList.Add(character);
+		}
+
+		return characterList;
+	}
+
+	public static CharacterModel GetCharacter (int skillID)
+	{
+		List<CharacterModel> characterList = GetCharacterList ();
+		CharacterModel character = characterList.Where(p => p.characterSkillID == skillID).FirstOrDefault();
+		return character;
+	}
+
+
 
 	public const string URL_FIREBASE_DATABASE = "https://chatprototype-39807.firebaseio.com";
 	public const string URL_FIREBASE_DATABASE_CONNECTION = "https://chatprototype-39807.firebaseio.com/.info/connected";

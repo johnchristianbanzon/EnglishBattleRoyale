@@ -107,7 +107,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		partSelection.HideSelectionType(selectionType);
 		answerType.ClearHint ();
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
-			
+
 			//roundResultList.Add(onQuestionResult);
 			//onRoundResult.Invoke(roundResultList);
 		});
@@ -125,7 +125,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		});
 		this.onQuestionResult = onQuestionResult;
 	}
-		
+
 	public void CheckAnswerSent(List<GameObject> correctAnswerButtons){
 		this.correctAnswerButtons = correctAnswerButtons;
 	}

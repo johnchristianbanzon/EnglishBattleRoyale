@@ -17,7 +17,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 
 	public void ShowCorrectAnswer ()
 	{
-		
+
 	}
 
 	public void OnBeginDrag (GameObject currentSelectedLetter)
@@ -68,7 +68,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 	}
 
 	public void HideSelectionHint(){
-	
+
 	}
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)

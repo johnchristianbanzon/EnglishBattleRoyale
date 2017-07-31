@@ -22,7 +22,7 @@ public static class GameManager
 	//GET ALL VALUES FROM KEY VALUE CSV
 	private static float[] GetFloatList ()
 	{
-		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionConst");
+		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("GameSettings");
 		gameSettingList = CSVParser.Parse (csvData.ToString ());
 
 		float[] floatList = new float[6];
@@ -40,5 +40,3 @@ public static class GameManager
 	}
 
 }
-
-

@@ -60,7 +60,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 
 	public void ClearLettersInView ()
 	{
-		
+
 		foreach (Transform letter in showLetterView.transform) {
 			GameObject.Destroy (letter.gameObject);
 		}

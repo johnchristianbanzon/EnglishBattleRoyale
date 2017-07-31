@@ -1,9 +1,7 @@
 fileFormatVersion: 2
-guid: dec2ac62c1e88440b9843920773566b8
-labels:
-- gpsr
-timeCreated: 1501473704
-licenseType: Free
+guid: cd338840c4a6c48a0b366b0d20a97558
+timeCreated: 1501214382
+licenseType: Pro
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
@@ -11,16 +9,17 @@ PluginImporter:
   isPreloaded: 0
   isOverridable: 0
   platformData:
-    Android:
-      enabled: 1
-      settings: {}
     Any:
-      enabled: 0
+      enabled: 1
       settings: {}
     Editor:
       enabled: 0
       settings:
         DefaultValueInitialized: true
+    WindowsStoreApps:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
   userData: 
   assetBundleName: 
   assetBundleVariant: 

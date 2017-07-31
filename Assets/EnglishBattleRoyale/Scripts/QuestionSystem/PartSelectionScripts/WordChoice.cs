@@ -37,7 +37,7 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	public void ShowCorrectAnswer ()
 	{
-		
+
 	}
 
 	public void HideSelectionHint(){
@@ -74,7 +74,7 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	public void ShuffleSelection ()
 	{
-		
+
 		answerButtons.Clear ();
 		answerString.Clear ();
 		int numberOfAnswers = 2;
@@ -88,7 +88,7 @@ public class WordChoice : MonoBehaviour, ISelection
 			}
 			randomList.Add (randomNum);
 			string wrongChoiceGot = QuestionBuilder.GetRandomChoices ();
-		
+
 			if (i < numberOfAnswers) {
 				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp [i].ToString ().ToUpper ();
 				answerButtons.Add (selectionButtons [randomNum]);

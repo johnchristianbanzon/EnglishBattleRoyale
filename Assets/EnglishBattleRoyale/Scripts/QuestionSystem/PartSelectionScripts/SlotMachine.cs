@@ -11,7 +11,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void ShowCorrectAnswer ()
 	{
-		
+
 	}
 
 	public void HideSelectionType ()
@@ -37,7 +37,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		
+
 	}
 
 	public void CheckAnswer(){
