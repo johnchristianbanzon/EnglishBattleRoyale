@@ -9,7 +9,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 	public ChangeOrderEvent[] selectionContainers = new ChangeOrderEvent[5];
 	public GameObject selectionViewContent;
 	public Action<List<GameObject>> onSelectCallBack;
-	private string[] letterArray = new string[5];
+	public string[] letterArray = new string[5];
 
 	//ShowSelecton(string answer)
 	/// <summary>
@@ -71,7 +71,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 	//	public void OnChangeOrder
 	public void OnChangeOrder ()
 	{
-		QuestionSystemController.Instance.partAnswer.noAnswer.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
+		QuestionSystemController.Instance.partAnswer.showAnswer.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
 	}
 
 	/// <summary>
@@ -93,12 +93,17 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 
 	}
 
-	public void ShowSelectionHint (int hintIndex)
+	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		// For future use
-		// Change order hint OnClick
+		TweenFacade.TweenMoveTo(transform,new Vector2(transform.parent.position.x,transform.parent.position.y - 80f),0.4f);
+		TweenFacade.TweenScaleToLarge (correctAnswerContainer.transform,Vector3.one,0.3f);
+		correctAnswerContainer.GetComponentInChildren<Text> ().enabled = true;
 	}
 		
+	public void HideSelectionHint(){
+		
+	}
+
 	public void InitSelectionContainers ()
 	{
 		for(int i =0;i<selectionContainers.Length;i++){
@@ -124,10 +129,10 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 			int randomizedIndex = UnityEngine.Random.Range (0, selectionContainers.Length);
 			if (!couplingRandomizeList.Contains (randomizedIndex)) {
 				if (orderCouplingCount > 0) {
-					letterArray [randomizedIndex] = questionAnswer [couplingCounter].ToString () + questionAnswer [couplingCounter+1].ToString ();
+					letterArray [letterIndex] = questionAnswer [couplingCounter].ToString () + questionAnswer [couplingCounter+1].ToString ();
 					couplingCounter += 2;
 				} else {
-					letterArray [randomizedIndex] = questionAnswer [couplingCounter].ToString ();
+					letterArray [letterIndex] = questionAnswer [couplingCounter].ToString ();
 					couplingCounter++;
 				}
 				couplingRandomizeList.Add (randomizedIndex);

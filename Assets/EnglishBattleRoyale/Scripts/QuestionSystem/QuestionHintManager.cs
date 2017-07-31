@@ -7,27 +7,33 @@ public class QuestionHintManager :MonoBehaviour{
 	private int hintLimit = 10;
 	private int hintIndex = 0;
 	private int hintUsed = 0;
+	private int hintRemovalRate = 3;
+	private int hintRemoveInterval = 3;
 	private int hintCooldown = 2;
 	private int hintCooldownCounter = 0;
 	private Action<int> onHintResult;
 
 	public void OnClick(){
-		hintButton.enabled = false;
+		hintButton.interactable = false;
 		int questionAnswerLength = QuestionSystemController.Instance.questionAnswer.Length;
-		if (hintUsed < hintLimit && questionAnswerLength > hintIndex) {
-			hintIndex ++;
-			QuestionSystemController.Instance.answerType.OnClickHint (hintIndex-1,delegate(bool onHintResult) {
+		if (hintUsed < hintLimit && questionAnswerLength >= hintIndex) {
+			QuestionSystemController.Instance.answerType.OnClickHint (hintIndex,delegate(bool onHintResult) {
 				if(onHintResult){
 					hintIndex = 0;
 				}
-				else{
-					
-				}
 			});
-			InitCooldown ();
+			hintIndex ++;
 			hintUsed ++;
 		}
+		InitCooldown ();
+	}
 
+	public void OnTimeInterval(){
+		if (hintRemoveInterval <= 0) {
+			QuestionSystemController.Instance.selectionType.HideSelectionHint ();
+			hintRemoveInterval = hintRemovalRate;
+		}
+		hintRemoveInterval--;
 	}
 
 	private void InitCooldown(){
@@ -42,7 +48,7 @@ public class QuestionHintManager :MonoBehaviour{
 		} else {
 			CancelInvoke ();
 			hintButton.GetComponentInChildren<Text> ().text = "HINT ("+(hintLimit-hintUsed)+")";
-			hintButton.enabled = true;
+			hintButton.interactable = true;
 		}
 	}
 }

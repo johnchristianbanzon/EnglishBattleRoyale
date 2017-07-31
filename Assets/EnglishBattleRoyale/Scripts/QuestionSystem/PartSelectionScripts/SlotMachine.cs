@@ -2,92 +2,62 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+
 public class SlotMachine : MonoBehaviour,ISelection
 {
-	public GameObject[] slots = new GameObject[6];
+	public SlotMachineEvent[] slots = new SlotMachineEvent[6];
 	private List<Color> previousSlotColor = new List<Color> ();
 	private string questionAnswer = "";
 
-	public List<GameObject> GetSlots ()
+	public void ShowCorrectAnswer ()
 	{
-		List<GameObject> slotsItems = new List<GameObject> ();
-		for (int i = 0; i < slots.Length; i++) {
-			if (i > questionAnswer.Length) {
-				Debug.Log (i + "/" + questionAnswer.Length);
-				slots [i].SetActive (false);
-			} else {
-				for (int j = 0; j < slots [i].transform.childCount; j++) {
-					slots [j].transform.GetChild (j).name = "slot" + j;
-					slotsItems.Add (slots [i].transform.GetChild (j).gameObject);
-
-				}
-			}
-		}
-		return slotsItems;
-	}
-
-	public void ShowCorrectAnswer(){
 		
 	}
 
-	public void HideSelectionType(){
+	public void HideSelectionType ()
+	{
 		gameObject.SetActive (false);
 	}
 
-	public void ShowSelectionType (string questionAnswer,Action<List<GameObject>> onSelectCallBack)
+	public void HideSelectionHint(){
+
+	}
+
+	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
 	{
 		gameObject.SetActive (true);
 		this.questionAnswer = questionAnswer;
-		ShuffleAlgo (questionAnswer);
-	}
-
-	public void ShowSelectionHint (int hintIndex)
-	{
-		
-	}
-
-	public void OnDrag(GameObject scrollContent){
-		
-	}
-
-	private int scrollIndex = 120;
-	public void OnClickDownButton(GameObject scrollContent){
-		TweenFacade.TweenMoveTo (scrollContent.transform,new Vector2(scrollContent.transform.position.x,scrollContent
-			.transform.position.y - scrollIndex),0.3f);
-		scrollIndex += 120;
-	}
-
-	public void OnClickUpButton(GameObject scrollContent){
-		Debug.Log (scrollIndex);
-		TweenFacade.TweenMoveTo (scrollContent.transform,new Vector2(scrollContent.transform.position.x,scrollContent
-			.transform.position.y + scrollIndex),0.3f);
-		scrollIndex += 120;
-	}
-
-	public void ShuffleAlgo (string questionAnswer)
-	{
-		List<GameObject> roulleteItem = GetSlots ();
-		List<GameObject> correctItems = new List<GameObject> ();
-		string Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		int letterIndex = 0;
-		int letterStartIndex = 0;
-		int letterEndIndex = 3;
-		int randomnum = UnityEngine.Random.Range (letterStartIndex+1, letterEndIndex);
-		for (int i = 0; i < roulleteItem.Count; i++) {
-			roulleteItem [i].GetComponentInChildren<Text>().text = (i%randomnum)==0 ?
-				questionAnswer [letterIndex].ToString ().ToUpper ():
-				Letters [UnityEngine.Random.Range (0, Letters.Length)].ToString ().ToUpper ();
-			if ((i % randomnum) == 0) {
-				letterIndex += 1;
-				letterStartIndex = letterEndIndex;
-				letterEndIndex = letterEndIndex + 3;
-				randomnum = UnityEngine.Random.Range (letterStartIndex, letterEndIndex);
-				correctItems.Add (roulleteItem [i]);
-				previousSlotColor.Add (roulleteItem [i].GetComponent<Image> ().color);
+		for (int i = 0; i < slots.Length; i++) {
+			if (i >= questionAnswer.Length) {
+				slots [i].gameObject.SetActive (false);
 			}
 		}
-		QuestionSystemController.Instance.correctAnswerButtons = correctItems;
+		InitSlots ();
+	}
 
+	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
+	{
+		
+	}
+
+	public void CheckAnswer(){
+		string answerWritten = "";
+		List<GameObject> correctAnswerSlots = new List<GameObject> ();
+		for (int i = 0; i < questionAnswer.Length; i++) {
+			answerWritten += slots[i].GetSelectedSlot ().GetComponentInChildren<Text>().text;
+			correctAnswerSlots.Add (slots [i].correctLetterAnswer);
+		}
+		QuestionSystemController.Instance.correctAnswerButtons = correctAnswerSlots;
+		if (answerWritten == questionAnswer) {
+			QuestionSystemController.Instance.CheckAnswer (true);
+		}
+	}
+
+	public void InitSlots ()
+	{
+		for (int i = 0; i < questionAnswer.Length; i++) {
+			slots [i].Init (questionAnswer[i]);
+		}
 	}
 
 }

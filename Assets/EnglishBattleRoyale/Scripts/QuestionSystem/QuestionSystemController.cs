@@ -33,10 +33,12 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public PartAnswerController partAnswer;
 	public PartTargetController partTarget;
 
+	public QuestionHintManager questionHint;
 	//DEBUG FIELDS
 	public InputField timerInput; 
 	public GameObject debugUI;
 	//DEBUG FIELDS ENDS HERE
+
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult = null)
 	{
 		questionType = questionTypeModel.questionCategory;
@@ -44,11 +46,12 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		answerType = questionTypeModel.answerType;
 		selectionType = questionTypeModel.selectionType;
 		GameTimeManager.StartQuestionTimer (delegate() {
-			debugUI.SetActive(true);
+			questionHint.OnTimeInterval();
 		}, int.Parse(timerInput.text));
 		this.onRoundResult = onRoundResult;
 		NextQuestion ();
 	}
+
 
 	public QuestionModel LoadQuestion ()
 	{
@@ -88,11 +91,13 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		currentQuestionNumber ++;
 		if (isCorrect) {
 			correctAnswers++;
-		} 
-		QuestionSpecialEffects spe = new QuestionSpecialEffects ();
-		spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
-		onQuestionResult.Invoke (new QuestionResultModel (00000,13,3,isCorrect,false));
-		Invoke ("NextQuestion", 1f);
+			QuestionSpecialEffects spe = new QuestionSpecialEffects ();
+			spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
+			onQuestionResult.Invoke (new QuestionResultModel (00000, 13, 3, isCorrect, false));
+			Invoke ("NextQuestion", 1f);
+		} else {
+			TweenFacade.TweenShakePosition (gameObject.transform, 1.0f, 30.0f, 50, 90f);
+		}
 
 	}
 
@@ -100,6 +105,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		hasSkippedQuestion = false;
 		partSelection.HideSelectionType(selectionType);
+		answerType.ClearHint ();
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 			
 			//roundResultList.Add(onQuestionResult);
