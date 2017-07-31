@@ -8,6 +8,8 @@ public static class GameManager
 	private static PlayerModel player;
 	private static string playerName;
 	public static List<List<string>> gameSettingList;
+
+
 	public static void SetPLayerName (string name)
 	{
 		playerName = name;
@@ -23,12 +25,12 @@ public static class GameManager
 	private static float[] GetFloatList ()
 	{
 		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("GameSettings");
-		gameSettingList = CSVParser.Parse (csvData.ToString ());
+		gameSettingList = CSVParserUtility.Parse (csvData.ToString ());
 
 		float[] floatList = new float[6];
 
-		for (int i = 1; i < gameSettingList.Count; i++) {
-			floatList [i] = float.Parse (gameSettingList [i] [1].ToString ());
+		for (int i = 1; i < gameSettingList.Count-1; i++) {
+			floatList [i-1] = float.Parse (gameSettingList [i] [1].ToString ());
 		}
 
 		return floatList;

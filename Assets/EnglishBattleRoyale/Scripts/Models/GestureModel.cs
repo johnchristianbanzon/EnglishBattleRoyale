@@ -15,13 +15,5 @@ public class GestureModel
 	{
 		this.param = param;
 	}
-
-	public Dictionary<string, System.Object> ToDictionary ()
-	{
-		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result ["Gesture"] = param;
-
-		return result;
-	}
-
+		
 }

@@ -16,12 +16,6 @@ public class AttackModel
 		this.param = param;
 	}
 
-	public Dictionary<string, System.Object> ToDictionary ()
-	{
-		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result ["Attack"] = param;
 
-		return result;
-	}
 
 }

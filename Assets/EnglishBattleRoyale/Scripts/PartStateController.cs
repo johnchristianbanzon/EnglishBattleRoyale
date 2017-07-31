@@ -13,7 +13,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	public Slider playerHPBar;
 	public Text playerHPText;
 	public Text playerGPText;
-
 	public Slider playerGPBar;
 
 
@@ -21,50 +20,26 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	public Text enemyNameText;
 	public Text enemyHPText;
 
-	private string playerName;
-	private float playerHP;
-	private float playerGP;
+	public PlayerModel player{ get; set; }
 
-	private string enemyName;
-	private float enemyHP;
+	public PlayerModel enemy{ get; set; }
 
 	private List<bool> userHome = new List<bool> ();
 	private List<Dictionary<string, System.Object>> param = new List<Dictionary<string, object>> ();
 	private Dictionary<bool, Dictionary<string, object>> thisCurrentParameter = new Dictionary<bool, Dictionary<string, object>> ();
 	private int attackCount = 0;
 
-	//get set player hp, everytime it is set, it updates the hp UI
-	public float PlayerHP { 
-		get {
-			return playerHP;
-		} 
-		set {
-			playerHP = value;
-			playerHPText.text = playerHP.ToString ();
-			TweenFacade.TweenPlayerHPSlider (playerHP, 2, true, playerHPBar);
-		} 
-	}
-	//get set player gp, everytime it is set, it updates the hp UI
-	public float PlayerGP { 
-		get {
-			return playerGP;
-		} 
-		set {
-			playerGP = value;
-			playerGPText.text = playerGP.ToString ();
-			TweenFacade.TweenPlayerHPSlider (playerHP, 2, true, playerGPBar);
-		} 
-	}
-	//get set enemy hp, everytime it is set, it updates the hp UI
-	public float EnemyHP { 
-		get {
-			return enemyHP;
-		} 
-		set {
-			enemyHP = value;
-			enemyHPText.text = enemyHP.ToString ();
-			TweenFacade.TweenPlayerHPSlider (playerHP, 2, true, enemyHPBar);
-		} 
+	void Update ()
+	{
+		playerHPText.text = player.playerHP.ToString ();
+		playerHPBar.value = player.playerHP;
+
+		playerGPText.text = player.playerGP.ToString ();
+		;
+		playerGPBar.value = player.playerGP;
+
+		enemyHPText.text = enemy.playerHP.ToString ();
+		enemyHPBar.value = enemy.playerHP;
 	}
 
 
@@ -91,54 +66,41 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 		if (rpcReceive.ContainsKey ("param")) {
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
+
 			ReceiveInitialState (param, isHome);
 		}
 	}
 
 	private void ReceiveInitialState (Dictionary<string, System.Object> initialState, bool isHome)
 	{
-		string playerName = (string)initialState ["playerName"];
-		int playerHP = int.Parse (initialState ["playerHP"].ToString ());
-		int playerGP = int.Parse (initialState ["playerGP"].ToString ());
+		PlayerModel player = (PlayerModel)JsonConverter.StringToObject(initialState ["PlayerRPC"].ToString());
 
 		if (isHome) {
-			SetInitialPlayerState (playerName, playerHP, playerGP);
+			SetInitialPlayerUI (player);
 		} else {
-			SetInitialEnemyState (playerName, playerHP);
+			SetInitialEnemyUI (player);
 		}
 	}
 
-	private void SetInitialPlayerState (string name, float hP, float gP)
+	public void SetInitialPlayerUI (PlayerModel player)
 	{
-		playerName = name;
-		playerHP = hP;
-		playerGP = gP;
-		SetInitialPlayerUI (playerName, playerHP, playerGP);
+		playerNameText.text = player.playerName;
+
+		playerHPText.text = player.playerHP.ToString ();
+		playerHPBar.value = player.playerHP;
+		playerHPBar.maxValue = player.playerHP;
+
+		playerGPText.text = player.playerGP.ToString ();
+		playerGPBar.value = player.playerGP;
+		playerGPBar.maxValue = player.playerGP;
 	}
 
-	private void SetInitialEnemyState (string name, float hP)
+	public void SetInitialEnemyUI (PlayerModel enemy)
 	{
-		enemyName = name;
-		enemyHP = hP;
-		SetInitialEnemyUI (enemyName, enemyHP);
-	}
-
-	public void SetInitialPlayerUI (string name, float hP, float gP)
-	{
-		playerHPBar.value = hP;
-		playerHPBar.maxValue = hP;
-		playerNameText.text = name;
-		playerGPText.text = gP.ToString ();
-		playerGPBar.value = gP;
-		playerGPBar.maxValue = SystemGlobalDataController.Instance.player.playerMaxGP;
-	}
-
-	public void SetInitialEnemyUI (string name, float hP)
-	{
-		enemyNameText.text = name;
-		enemyHPText.text = hP.ToString ();
-		enemyHPBar.value = hP;
-		enemyHPBar.maxValue = hP;
+		enemyNameText.text = enemy.playerName;
+		enemyHPText.text = enemy.playerHP.ToString ();
+		enemyHPBar.value = enemy.playerHP;
+		enemyHPBar.maxValue = enemy.playerHP;
 	}
 
 	#endregion
@@ -153,9 +115,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 			SystemGlobalDataController.Instance.isSender = userHome;
 
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
-			string stringParam = param ["Attack"].ToString ();
+			AttackModel attack = (AttackModel) JsonConverter.StringToObject(param ["AttackRPC"].ToString());
 
-			Dictionary<string, System.Object> attackerParam = JsonConverter.JsonStrToDic (stringParam);
+			Dictionary<string, System.Object> attackerParam = JsonConverter.JsonStrToDic (attack.param);
 			thisCurrentParameter.Add (SystemGlobalDataController.Instance.isSender, attackerParam);
 			if (thisCurrentParameter.Count == 2) {
 				Attack (thisCurrentParameter);
@@ -215,9 +177,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	private void AttackCalculate (bool attackerBool, Dictionary<string, System.Object> attackerParam, bool sameAttack = false)
 	{
 		int attackSequence = BattleLogic.AttackLogic (delegate(float enemyHP, float playerHP) {
-			this.enemyHP = enemyHP;
-			this.playerHP = playerHP;
-		}, enemyHP, playerHP, attackerBool, attackerParam, sameAttack);
+			enemy.playerHP = enemyHP;
+			player.playerHP = playerHP;
+		}, enemy.playerHP, player.playerHP, attackerBool, attackerParam, sameAttack);
 
 		if (attackSequence != 0) {
 			StartCoroutine (StartAttackSequence (attackSequence));
@@ -272,7 +234,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	IEnumerator CheckBattleStatusDelay (bool secondCheck)
 	{
 		bool battleOver = false;
-		BattleLogic.CheckBattle (secondCheck, enemyHP, playerHP, delegate(string battleResult, bool isBattleOver) {
+		BattleLogic.CheckBattle (secondCheck, enemy.playerHP, player.playerHP, delegate(string battleResult, bool isBattleOver) {
 
 			ShowWinLose (battleResult);
 			StopAllCoroutines ();
@@ -285,7 +247,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 					if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
 						SystemFirebaseDBController.Instance.UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
 					} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_SKILL, 0);
+						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
 
 					}
 				}

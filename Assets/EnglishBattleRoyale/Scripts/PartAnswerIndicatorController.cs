@@ -21,17 +21,7 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
-		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
-		if (rpcReceive.ContainsKey ("param")) {
-			bool userHome = (bool)rpcReceive ["userHome"];
-			SystemGlobalDataController.Instance.isSender = userHome;
-
-			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
-			if (param.ContainsKey ("AnswerIndicator")) {
-				string stringParam = param ["AnswerIndicator"].ToString ();
-				SetAnswerParameter (stringParam);
-			}
-		}
+		//do something here
 	}
 
 	public void SetAnswerParameter (string answerParameter)

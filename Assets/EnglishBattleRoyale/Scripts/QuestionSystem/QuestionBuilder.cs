@@ -18,29 +18,29 @@ public static class QuestionBuilder
 
 		questionList.Clear ();
 		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionSystemCsv");
-		List<List<string>> csvQuestionList = CSVParser.Parse (csvData.ToString());
+		List<List<string>> csvQuestionList = CSVParserUtility.Parse (csvData.ToString());
 
 		for (int i = 1; i < csvQuestionList.Count; i++) {
 			//0 FOR LEVELID, QUESTIONID FOR TESTING : LACKING VALUES
 			questionList.Add (new QuestionRowModel (
 				0,
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString (),
 				0,
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "definition")[i].ToString (),
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "synonym1")[i].ToString (),
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "synonym2")[i].ToString (),
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "antonym1")[i].ToString (),
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "antonym2")[i].ToString (),
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "clue1")[i].ToString (),
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "clue2")[i].ToString (),
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "clue3")[i].ToString (),
-				CSVParser.GetValueArrayFromKey(csvQuestionList, "clue4")[i].ToString (),
-				int.Parse(CSVParser.GetValueArrayFromKey(csvQuestionList, "de")[i].ToString()),
-				int.Parse(CSVParser.GetValueArrayFromKey(csvQuestionList, "sy")[i].ToString()),
-				int.Parse(CSVParser.GetValueArrayFromKey(csvQuestionList, "an")[i].ToString()),
-				int.Parse(CSVParser.GetValueArrayFromKey(csvQuestionList, "cl")[i].ToString())
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "definition")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "synonym1")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "synonym2")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "antonym1")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "antonym2")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "clue1")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "clue2")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "clue3")[i].ToString (),
+				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "clue4")[i].ToString (),
+				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "de")[i].ToString()),
+				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "sy")[i].ToString()),
+				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "an")[i].ToString()),
+				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "cl")[i].ToString())
 			));
-			wrongChoices.Add (CSVParser.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString ()
+			wrongChoices.Add (CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString ()
 			);
 
 

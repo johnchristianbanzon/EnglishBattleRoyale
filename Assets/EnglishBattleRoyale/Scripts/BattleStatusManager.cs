@@ -70,10 +70,9 @@ public class BattleStatusManager: IRPCDicObserver
 					SystemGlobalDataController.Instance.vTime = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VTIME].ToString ());
 
 					CheckBattleCount (battleCount, OnAnswerCountFull);
-
 					break;
 
-				case MyConst.BATTLE_STATUS_SKILL:
+				case MyConst.BATTLE_STATUS_CHARACTER:
 					CheckBattleCount (battleCount, OnSkillCountFull);
 					break;
 
