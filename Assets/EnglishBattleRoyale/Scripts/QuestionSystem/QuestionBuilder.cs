@@ -80,7 +80,7 @@ public static class QuestionBuilder
 				break;
 			case QuestionSystemEnums.QuestionType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
-					if (selectionType.ToString () == "SlotMachine (SlotMachine)") {
+					if (selectionType.ToString ().Equals("SlotMachine (SlotMachine)")) {
 						if (questionList [randomize].answer.Length < 6) {
 							answersList.Add (questionList [randomize].answer);
 							question = questionList [randomize].definition;
