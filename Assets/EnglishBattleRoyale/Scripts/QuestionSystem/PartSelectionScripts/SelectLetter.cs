@@ -8,16 +8,15 @@ public class SelectLetter : MonoBehaviour, ISelection
 {
 	public GameObject[] selectionButtons = new GameObject[12];
 	private string questionAnswer;
+	private List<int> randomizedSelectionList = new List<int> ();
 
 	public void OnSelect ()
 	{
 		QuestionSystemController.Instance.partAnswer.fillAnswer.GetAnswerWritten ();
-		if (questionAnswer.Length > QuestionSystemController.Instance.partAnswer.fillAnswer.answerWrote.Length) {
+		if (questionAnswer.Length > QuestionSystemController.Instance.partAnswer.fillAnswer.GetAnswerWritten().Length) {
 			QuestionSystemController.Instance.partAnswer.fillAnswer.SelectionLetterGot (EventSystem.current.currentSelectedGameObject);
 			EventSystem.current.currentSelectedGameObject.SetActive (false);
-		} else {
-		
-		}
+		} 
 	}
 
 	public void HideSelectionType ()
@@ -32,7 +31,26 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public void HideSelectionHint ()
 	{
-		
+		bool selectionHintViable = false;
+		if (randomizedSelectionList.Count < (selectionButtons.Length - questionAnswer.Length)) {
+			int randomizedSelection = 0;
+			while (!selectionHintViable) {
+				randomizedSelection = UnityEngine.Random.Range (0, selectionButtons.Length);
+				if (!randomizedSelectionList.Contains (randomizedSelection)) {
+					selectionHintViable = true;
+					for (int i = 0; i < selectionButtons.Length; i++) {
+						for (int j = 0; j < questionAnswer.Length; j++) {
+							if (questionAnswer [j].ToString ().Equals (selectionButtons [randomizedSelection].GetComponentInChildren<Text> ().text)) {
+								selectionHintViable = false;
+							}
+						}
+					}
+				}
+				randomizedSelectionList.Add (randomizedSelection);
+			}
+			selectionButtons [randomizedSelection].SetActive (false);
+
+		}
 	}
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
@@ -40,7 +58,6 @@ public class SelectLetter : MonoBehaviour, ISelection
 		gameObject.SetActive (true);
 		this.questionAnswer = questionAnswer;
 		ShuffleSelection ();
-
 	}
 
 
@@ -56,7 +73,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 			}
 		}
 
-		if (!correctAnswerContainer.GetComponentInChildren<Text> ().text.Equals ("")) {
+		if (!string.IsNullOrEmpty(correctAnswerContainer.GetComponentInChildren<Text> ().text)) {
 			QuestionSystemController.Instance.partAnswer.fillAnswer.OnAnswerClick (correctAnswerContainer.GetComponent<Button> ());
 		} 
 		correctAnswerContainer.GetComponent<Button> ().enabled = false;

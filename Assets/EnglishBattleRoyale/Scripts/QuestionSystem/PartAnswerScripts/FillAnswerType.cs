@@ -10,14 +10,13 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 	public GameObject outviewContent;
 	private string questionAnswer;
 	private int answerIndex = 0;
-	Action<bool> onHintResult;
+	private Action<bool> onHintResult;
 	List <int> hintIndexRandomList = new List<int> ();
-	public string answerWrote = "";
 
 	public void DeployAnswerType(){
 		gameObject.SetActive (true);
 		hintIndexRandomList.Clear ();
-		this.questionAnswer = QuestionSystemController.Instance.questionAnswer;
+		questionAnswer = QuestionSystemController.Instance.questionAnswer;
 		PopulateContainer ();
 	}
 
@@ -96,15 +95,17 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 		}
 	}
 
-	public void GetAnswerWritten(){
-		answerWrote = "";
+	public string GetAnswerWritten(){
+		string answerWrote = "";
 		for (int j = 0; j < questionAnswer.Length; j++) {
 			answerWrote += answerContainers [j].transform.GetChild (0).GetComponent<Text> ().text;
 		}
+		return answerWrote;
 	}
 
 	public void CheckAnswer(){
 		GetAnswerWritten ();
+		string answerWrote = GetAnswerWritten ();
 		if (answerWrote.Length.Equals (questionAnswer.Length)) {
 			
 			if (answerWrote.ToUpper ().Equals (questionAnswer.ToUpper ())) {

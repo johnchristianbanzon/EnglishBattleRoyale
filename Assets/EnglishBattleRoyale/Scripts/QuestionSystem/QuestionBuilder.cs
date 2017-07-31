@@ -78,6 +78,7 @@ public static class QuestionBuilder
 					questionViable = true;
 				}
 				break;
+
 			case QuestionSystemEnums.QuestionType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
 					if (selectionType.ToString ().Equals("SlotMachine (SlotMachine)")) {
@@ -94,6 +95,7 @@ public static class QuestionBuilder
 					}
 				}
 				break;
+
 			case QuestionSystemEnums.QuestionType.Association:
 				if (questionList [randomize].hasClues.ToString()=="1") {
 					answersList.Add (questionList [randomize].answer);

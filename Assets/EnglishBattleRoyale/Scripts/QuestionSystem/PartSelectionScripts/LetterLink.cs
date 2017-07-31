@@ -20,7 +20,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 		
 	}
 
-	public void OnbeginDrag (GameObject currentSelectedLetter)
+	public void OnBeginDrag (GameObject currentSelectedLetter)
 	{
 		startSelection = true;
 		noOfContainersSelected = noHintUsed;
