@@ -9,7 +9,6 @@ public class ScreenLobbyController : MonoBehaviour {
 	void Start(){
 		//initialize constants from csv
 		MyConst.Init ();
-		CharacterManager.SetCharacter (1);
 	}
 
 	public void NavigateProfile(){
