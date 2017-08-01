@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 public class QuestionHintManager :MonoBehaviour{
 	public Button hintButton;
-	private int hintLimit = 10;
+	private int hintLimit = QuestionSystemConst.HINT_SHOW_LIMIT;
 	private int hintIndex = 0;
 	private int hintUsed = 0;
-	private int hintRemovalRate = 3;
+	private int hintRemovalRate = QuestionSystemConst.HINT_REMOVE_TIME;
 	private int hintRemoveInterval = 3;
-	private int hintCooldown = 2;
+	private int hintCooldown = QuestionSystemConst.HINT_BUTTON_COOLDOWN;
 	private int hintCooldownCounter = 0;
 	private Action<int> onHintResult;
 
@@ -25,7 +25,10 @@ public class QuestionHintManager :MonoBehaviour{
 			hintIndex ++;
 			hintUsed ++;
 		}
-		InitCooldown ();
+
+			InitCooldown ();		
+
+
 	}
 
 	public void OnTimeInterval(){
@@ -50,5 +53,8 @@ public class QuestionHintManager :MonoBehaviour{
 			hintButton.GetComponentInChildren<Text> ().text = "HINT ("+(hintLimit-hintUsed)+")";
 			hintButton.interactable = true;
 		}
+		if (hintUsed >= hintLimit) {
+			hintButton.interactable = false;
+		} 
 	}
 }
