@@ -307,7 +307,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	#region TIMER Subscriber
 
 	public Text gameTimerText;
-	private bool hasAnswered = false;
 
 	public void OnStartPreBattleTimer (int timer)
 	{
@@ -320,16 +319,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 		StopTimer ();
 		StartCoroutine (StartSkillTimer (action, timer));
 	}
-
-	public void OnStartQuestionTimer (Action action, int timer)
+		
+	public void OnStartQuestionTimer (Action<int> action, int timer)
 	{
 		StopTimer ();
 		StartCoroutine (StartQuestionTimer (action, timer));
-	}
-
-	public void OnHasAnswered (bool hasAnswered)
-	{
-		this.hasAnswered = hasAnswered;
 	}
 
 	public void OnStopTimer ()
@@ -384,36 +378,18 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	#endregion
 
-	#region SelectQuestionTimer
-
-	IEnumerator StartSelectQuestionTimer (Action action, int timer)
-	{
-		OnToggleTimer (true);
-		int timeLeft = timer;
-
-		while (timeLeft > 0 && hasAnswered == false) {
-			gameTimerText.text = "" + timeLeft;
-			timeLeft--;
-			yield return new WaitForSeconds (1);
-		}
-
-		action ();
-		OnToggleTimer (false);
-	}
-
-	#endregion
-
 	#region QuestionTimer
 
-	IEnumerator StartQuestionTimer (Action action, int timer)
+	IEnumerator StartQuestionTimer (Action<int> action, int timer)
 	{
 		OnToggleTimer (true);
 		int timeLeft = timer;
 
 		while (timeLeft > 0) {
 			gameTimerText.text = "" + timeLeft;
+
 			timeLeft--;
-			action ();
+			action (timeLeft);
 			yield return new WaitForSeconds (1);
 		}
 		OnToggleTimer (false);

@@ -18,14 +18,10 @@ public class GameTimeManager
 		observer.OnStartSkillTimer (action, skillTimer);
 	}
 
-	public static void StartQuestionTimer (Action action, int questionTimer)
+	public static void StartQuestionTimer (Action<int> action, int questionTimer)
+
 	{
 		observer.OnStartQuestionTimer (action, questionTimer);
-	}
-
-	public static void HasAnswered (bool hasAnswered)
-	{
-		observer.OnHasAnswered (hasAnswered);
 	}
 
 	public static void ToggleTimer (bool toggleTimer)

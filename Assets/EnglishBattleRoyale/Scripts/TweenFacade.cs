@@ -81,4 +81,9 @@ public static class TweenFacade{
 		mySequence.Append (image.DOFade(1,1));
 	}
 
+	public static void SliderTimer(Slider slider, float value){
+		slider.DOValue (value, 1).SetEase (Ease.Linear);
+	}
+
+
 }

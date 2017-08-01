@@ -33,21 +33,31 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public PartAnswerController partAnswer;
 	public PartTargetController partTarget;
 
+	public Slider timerSlider;
+
 	public QuestionHintManager questionHint;
 	//DEBUG FIELDS
 	public InputField timerInput; 
 	public GameObject debugUI;
 	//DEBUG FIELDS ENDS HERE
 
-	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult = null)
+	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult)
 	{
 		questionType = questionTypeModel.questionCategory;
 		targetType = questionTypeModel.targetType;
 		answerType = questionTypeModel.answerType;
 		selectionType = questionTypeModel.selectionType;
-		GameTimeManager.StartQuestionTimer (delegate() {
+		timerSlider.maxValue = 25;
+		GameTimeManager.StartQuestionTimer (delegate(int timeLeft) {
+			TweenFacade.SliderTimer(timerSlider,timeLeft);
 			questionHint.OnTimeInterval();
-		}, int.Parse(timerInput.text));
+			if(timeLeft<=0){
+				CheckAnswer(false);
+				targetType.HideTargetType();
+				selectionType.HideSelectionType();
+				answerType.ClearHint();
+			}
+		}, 25);
 		this.onRoundResult = onRoundResult;
 		NextQuestion ();
 	}
@@ -67,15 +77,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	void Start ()
 	{
-		QuestionBuilder.PopulateQuestion ();
-
-		StartQuestionRound (new QuestionTypeModel (
-			QuestionSystemEnums.QuestionType.Association,
-			partTarget.association,
-			partAnswer.showAnswer,
-			partSelection.letterLink
-		)
-		);
+//		QuestionBuilder.PopulateQuestion ();
 	}
 
 	public void OnSkipQuestion ()
@@ -103,6 +105,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public void NextQuestion ()
 	{
+		questionHint.InitHints ();
 		hasSkippedQuestion = false;
 		partSelection.HideSelectionType(selectionType);
 		answerType.ClearHint ();
@@ -131,7 +134,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	}
 
 	public void OnDebugClick(Button button){
-		StartQuestionRound (QuestionBuilder.getQuestionType (button.name));
+		//StartQuestionRound (QuestionBuilder.getQuestionType (button.name));
 		debugUI.SetActive(false);
 		button.transform.parent.gameObject.SetActive (false);
 	}

@@ -12,6 +12,9 @@ public class Typing : MonoBehaviour, ISelection
 	public void ShowSelectionType (string questionAnswer,Action<List<GameObject>> onSelectCallBack){
 		this.questionAnswer = questionAnswer;
 		gameObject.SetActive (true);
+		for (int i = 0; i < selectionButtons.Length; i++) {
+			selectionButtons [i].SetActive (true);
+		}
 	}
 
 	public void ShowCorrectAnswer(){

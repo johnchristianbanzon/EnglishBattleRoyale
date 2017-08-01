@@ -18,7 +18,6 @@ public class SlotMachineEvent : MonoBehaviour
 	private float dragStartingPosition;
 	public void OnBeginDrag(){
 		dragStartingPosition = Input.mousePosition.y;
-		Debug.Log (dragStartingPosition);
 		isDragging = true;
 	}
 

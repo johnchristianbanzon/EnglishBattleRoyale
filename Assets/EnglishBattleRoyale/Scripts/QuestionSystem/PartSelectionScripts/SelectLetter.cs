@@ -77,6 +77,8 @@ public class SelectLetter : MonoBehaviour, ISelection
 				if (selectionArray [i].GetComponentInChildren<Text> ().text.Equals (questionAnswer [hintIndex].ToString ())
 				    && selectionArray [i].activeInHierarchy) {
 					letterHint = selectionArray [i];
+					QuestionSystemController.Instance.partAnswer.fillAnswer.selectionIdentifier [hintIndex] = letterHint;
+					letterHint.SetActive (false);
 					break;
 				}
 			}
@@ -87,8 +89,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 			correctAnswerContainer.GetComponentInChildren<Text> ().text = questionAnswer [hintIndex].ToString ();
 			TweenFacade.TweenScaleToLarge (correctAnswerContainer.transform, Vector3.one, 0.3f);
 			correctAnswerContainer.GetComponent<Image> ().color = new Color (255 / 255, 102 / 255f, 51 / 255f);
-			QuestionSystemController.Instance.partAnswer.fillAnswer.selectionIdentifier [hintIndex] = letterHint;
-			letterHint.SetActive (false);
+
 		}
 	}
 

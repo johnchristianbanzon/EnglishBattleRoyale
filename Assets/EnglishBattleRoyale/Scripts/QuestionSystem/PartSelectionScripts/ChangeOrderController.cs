@@ -63,6 +63,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		return selectedAnswer;
 	}
 
+	private GameObject showAnswerPrefab = null;
 	/// <summary>
 	/// This Method is to be activated by ChangeOrderEvent: OnSelectionEndDrag
 	/// Sends the written answer and correct answer to the NoAnswer-AnswerType for checking
@@ -73,14 +74,14 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 	{
 		if (GetSelectedAnswer ().Equals (questionAnswer)) {
 			selectionViewContent.GetComponent<HorizontalLayoutGroup> ().enabled = false;
-			GameObject showAnswerPrefab = SystemResourceController.Instance.LoadPrefab ("CluePrefab", selectionViewContent);
+		    showAnswerPrefab = SystemResourceController.Instance.LoadPrefab ("CluePrefab", selectionViewContent);
 			showAnswerPrefab.transform.position = Vector2.zero;
 			showAnswerPrefab.GetComponentInChildren<Text> ().text = questionAnswer;
 			TweenFacade.TweenScaleToLarge (showAnswerPrefab.transform, Vector3.one, 0.3f);
 			for (int i = 0; i < selectionContainers.Length; i++) {
 				TweenFacade.TweenMoveTo (selectionContainers [i].transform,  showAnswerPrefab.transform.localPosition, 1.0f);
 			}
-			QuestionSystemController.Instance.partAnswer.showAnswer.CheckAnswerFromSelection (GetSelectedAnswer (), questionAnswer);
+			QuestionSystemController.Instance.CheckAnswer (true);
 		}
 	}
 
@@ -116,6 +117,8 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 
 	public void InitSelectionContainers ()
 	{
+		Destroy (showAnswerPrefab);
+		selectionViewContent.GetComponent<HorizontalLayoutGroup> ().enabled = enabled;
 		for(int i =0;i<selectionContainers.Length;i++){
 			selectionContainers[i].Init ("");
 		}

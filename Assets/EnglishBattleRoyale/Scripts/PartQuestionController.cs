@@ -5,78 +5,35 @@ using UnityEngine.UI;
 
 public class PartQuestionController: MonoBehaviour
 {
-	public ISelection[] selectionTypes = new ISelection[6];
-
-	private void OnEndQuestion (int gp, int qtimeLeft)
-	{
-		QuestionStart (gp, qtimeLeft);
-	}
-
-	private void OnEndSelectQuestionTime ()
-	{
-		HideUI ();
-		QuestionSystemController.Instance.StartQuestionRound(GetQuestionType(selectionTypes[0]), delegate(List<QuestionResultModel> onRoundResult) {
-			// RETURNS LIST OF QUESTIONRESULTS
-		});
-	}
-
-	public QuestionTypeModel GetQuestionType (ISelection partSelection)
-	{
-		QuestionTypeModel questionType = null;
-
-		questionType.questionCategory = QuestionSystemEnums.QuestionType.Definition;
-		questionType.targetType = QuestionSystemController.Instance.partTarget.singleQuestion;
-		questionType.answerType = QuestionSystemController.Instance.partAnswer.fillAnswer;
-		questionType.selectionType = partSelection;
-
-		return questionType;
-
-	}
+	private List<QuestionResultModel> questionResultList;
+	private GameObject questionSystem;
+	string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };
 
 	public void OnStartPhase ()
 	{
-		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
+		QuestionBuilder.PopulateQuestion ();
 		Debug.Log ("Starting Answer Phase");
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-		GameTimeManager.HasAnswered (false);
-
-		//call question here
+		questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystemController", this.gameObject);
+		QuestionSystemController.Instance.StartQuestionRound (
+			QuestionBuilder.getQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
+		, delegate(List<QuestionResultModel> result) {
+			questionResultList = result;
+		}
+		);
 	}
 
 	public void OnEndPhase ()
 	{
+		Destroy (questionSystem);
 		RPCDicObserver.RemoveObserver (PartAnswerIndicatorController.Instance);
-	
 	}
 
-	private void QuestionStart (int gp, int qtimeLeft)
-	{
-		Debug.Log (gp);
-		Debug.Log (SystemGlobalDataController.Instance.gpEarned);
 
-		SystemGlobalDataController.Instance.gpEarned = gp;
-		ScreenBattleController.Instance.partState.player.playerGP += gp;
-		SystemFirebaseDBController.Instance.AnswerPhase (qtimeLeft, gp);
-
-		//for mode 3
-		ScreenBattleController.Instance.partCharacter.CheckCharacterActivate ();
-
-		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			if (SystemGlobalDataController.Instance.skillChosenCost <= ScreenBattleController.Instance.partState.player.playerGP) {
-				if (SystemGlobalDataController.Instance.playerSkillChosen != null) {
-					SystemGlobalDataController.Instance.playerSkillChosen ();
-				}
-			} else {
-				Debug.Log ("LESS GP CANNOT ACTIVATE SKILL");
-			}
-		} 
-		HideUI ();
-	}
 
 	private void HideUI ()
 	{
 		GameTimeManager.ToggleTimer (false);
-
 	}
 
 }
