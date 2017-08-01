@@ -72,9 +72,8 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 	public void OnChangeOrder ()
 	{
 		if (GetSelectedAnswer ().Equals (questionAnswer)) {
-			GameObject contentParent = gameObject.transform.GetChild (0).gameObject;
-			contentParent.GetComponent<HorizontalLayoutGroup> ().enabled = false;
-			GameObject showAnswerPrefab = SystemResourceController.Instance.LoadPrefab ("CluePrefab", contentParent);
+			selectionViewContent.GetComponent<HorizontalLayoutGroup> ().enabled = false;
+			GameObject showAnswerPrefab = SystemResourceController.Instance.LoadPrefab ("CluePrefab", selectionViewContent);
 			showAnswerPrefab.transform.position = Vector2.zero;
 			showAnswerPrefab.GetComponentInChildren<Text> ().text = questionAnswer;
 			TweenFacade.TweenScaleToLarge (showAnswerPrefab.transform, Vector3.one, 0.3f);
