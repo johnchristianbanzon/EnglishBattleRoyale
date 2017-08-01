@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleController>
 {
 	public PartStateController partState;
-	public PartSkillController partSkill;
+	public PartCharacterController partCharacter;
 	public PartQuestionController partQuestion;
 	public PartGestureController partGesture;
 	public PartCameraWorksController partCameraWorks;
@@ -47,9 +47,9 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		}
 
 		if (skill) {
-			partSkill.OnStartPhase ();
+			partCharacter.OnStartPhase ();
 		} else {
-			partSkill.OnEndPhase ();
+			partCharacter.OnEndPhase ();
 		}
 
 		if (attack) {

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class PartQuestionController: MonoBehaviour
 {
-	public GameObject questionSelect;
 	public ISelection[] selectionTypes = new ISelection[6];
 
 	private void OnEndQuestion (int gp, int qtimeLeft)
@@ -36,34 +35,18 @@ public class PartQuestionController: MonoBehaviour
 
 	public void OnStartPhase ()
 	{
-		ScreenBattleController.Instance.partSkill.ShowAutoActivateButtons (true);
+		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		Debug.Log ("Starting Answer Phase");
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
 		GameTimeManager.HasAnswered (false);
 
-		GameTimeManager.StartSelectQuestionTimer (OnEndSelectQuestionTime);
-		questionSelect.SetActive (true);
-
+		//call question here
 	}
 
 	public void OnEndPhase ()
 	{
 		RPCDicObserver.RemoveObserver (PartAnswerIndicatorController.Instance);
-		if (questionSelect.activeInHierarchy) {
-			questionSelect.SetActive (false);
-		}
-	}
-
-
-
-	public void OnQuestionSelect (int questionNumber)
-	{
-		GameTimeManager.StopTimer ();
-		GameTimeManager.HasAnswered (true);
-		questionSelect.SetActive (false);
-		//call question callback here
-//		QuestionSystemController.Instance.StartQuestionRound(questionNumber,OnEndQuestion);
-
+	
 	}
 
 	private void QuestionStart (int gp, int qtimeLeft)
@@ -76,7 +59,7 @@ public class PartQuestionController: MonoBehaviour
 		SystemFirebaseDBController.Instance.AnswerPhase (qtimeLeft, gp);
 
 		//for mode 3
-		ScreenBattleController.Instance.partSkill.CheckCharacterActivate ();
+		ScreenBattleController.Instance.partCharacter.CheckCharacterActivate ();
 
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 			if (SystemGlobalDataController.Instance.skillChosenCost <= ScreenBattleController.Instance.partState.player.playerGP) {
@@ -92,7 +75,6 @@ public class PartQuestionController: MonoBehaviour
 
 	private void HideUI ()
 	{
-		questionSelect.SetActive (false);
 		GameTimeManager.ToggleTimer (false);
 
 	}

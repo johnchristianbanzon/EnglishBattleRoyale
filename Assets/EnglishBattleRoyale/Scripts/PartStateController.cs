@@ -31,14 +31,16 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	void Update ()
 	{
-		playerHPText.text = player.playerHP.ToString ();
-		playerHPBar.value = player.playerHP;
+		if (player != null && enemy != null) {
+			playerHPText.text = player.playerHP.ToString ();
+			playerHPBar.value = player.playerHP;
 
-		playerGPText.text = player.playerGP.ToString ();
-		playerGPBar.value = player.playerGP;
+			playerGPText.text = player.playerGP.ToString ();
+			playerGPBar.value = player.playerGP;
 
-		enemyHPText.text = enemy.playerHP.ToString ();
-		enemyHPBar.value = enemy.playerHP;
+			enemyHPText.text = enemy.playerHP.ToString ();
+			enemyHPBar.value = enemy.playerHP;
+		}
 	}
 
 
@@ -72,7 +74,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	private void ReceiveInitialState (Dictionary<string, System.Object> initialState, bool isHome)
 	{
-		PlayerModel player = (PlayerModel)JsonConverter.StringToObject (initialState ["PlayerRPC"].ToString ());
+		PlayerModel player = JsonUtility.FromJson<PlayerModel> (initialState ["PlayerRPC"].ToString ());
+
+
 
 		if (isHome) {
 			SetInitialPlayerUI (player);
@@ -108,20 +112,27 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
-		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
-		if (rpcReceive.ContainsKey ("param")) {
-			bool userHome = (bool)rpcReceive ["userHome"];
-			SystemGlobalDataController.Instance.isSender = userHome;
+		try {
+			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
+			if (rpcReceive.ContainsKey ("param")) {
+				bool userHome = (bool)rpcReceive ["userHome"];
+				SystemGlobalDataController.Instance.isSender = userHome;
 
-			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
-			AttackModel attack = (AttackModel)JsonConverter.StringToObject (param ["AttackRPC"].ToString ());
+				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
+				AttackModel attack = JsonUtility.FromJson<AttackModel> (param ["AttackRPC"].ToString ());
 
-			Dictionary<string, System.Object> attackerParam = JsonConverter.JsonStrToDic (attack.param);
-			thisCurrentParameter.Add (SystemGlobalDataController.Instance.isSender, attackerParam);
-			if (thisCurrentParameter.Count == 2) {
-				Attack (thisCurrentParameter);
-				thisCurrentParameter.Clear ();
-			} 
+				Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
+				result ["AttackRPC"] = JsonUtility.ToJson (attack.param);
+				Dictionary<string, System.Object> attackerParam = result;
+
+				thisCurrentParameter.Add (SystemGlobalDataController.Instance.isSender, attackerParam);
+				if (thisCurrentParameter.Count == 2) {
+					Attack (thisCurrentParameter);
+					thisCurrentParameter.Clear ();
+				} 
+			}
+		} catch (System.Exception e) {
+			//do something later
 		}
 	}
 
@@ -273,7 +284,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	//attack when start phase
 	public void OnStartPhase ()
 	{
-		ScreenBattleController.Instance.partSkill.ShowAutoActivateButtons (false);
+		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (false);
 		Debug.Log ("Starting attack phase");
 		PartAnswerIndicatorController.Instance.ResetAnswer ();
 		Attack ();
@@ -283,12 +294,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	{
 		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
 		param [ParamNames.Attack.ToString ()] = SystemGlobalDataController.Instance.player.playerBaseDamage + SystemGlobalDataController.Instance.gpEarned;
-		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (JsonConverter.DicToJsonStr (param)));
+		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (JsonUtility.ToJson (param)));
 	}
 	//show skill buttons after attack phase is done
 	public void OnEndPhase ()
 	{
-		ScreenBattleController.Instance.partSkill.ShowAutoActivateButtons (true);
+		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 	}
 
 	#endregion
@@ -308,12 +319,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	{
 		StopTimer ();
 		StartCoroutine (StartSkillTimer (action, timer));
-	}
-
-	public void OnStartSelectQuestionTimer (Action action, int timer)
-	{
-		StopTimer ();
-		StartCoroutine (StartSelectQuestionTimer (action, timer));
 	}
 
 	public void OnStartQuestionTimer (Action action, int timer)

@@ -27,7 +27,9 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 	public void SetAnswerParameter (string answerParameter)
 	{
 
-		Dictionary<string, System.Object> answerResult = JsonConverter.JsonStrToDic (answerParameter);
+		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
+		result ["AnswerRPC"] = JsonUtility.ToJson (answerParameter);
+		Dictionary<string, System.Object> answerResult = result;
 
 		foreach (KeyValuePair<string, System.Object> answer in answerResult) {
 

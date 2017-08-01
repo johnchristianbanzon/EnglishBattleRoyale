@@ -24,7 +24,7 @@ public class CharCardController : MonoBehaviour
 	{
 		this.charCard = charCard;
 		this.gpCost.text = charCard.characterGPCost.ToString();
-		characterImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterName);
+		characterImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
 		this.isEquipped = isEquipped;
 	}
 

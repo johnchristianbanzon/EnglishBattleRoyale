@@ -12,7 +12,7 @@ public class PopUpSkillOverviewController : MonoBehaviour {
 	public void SetCharCard(CharacterModel charCard){
 		charName.text = charCard.characterName;
 		charDescription.text = charCard.characterDescription;
-		charImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterName);
+		charImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
 	}
 
 	public void Close(){
