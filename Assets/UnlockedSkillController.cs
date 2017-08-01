@@ -10,7 +10,7 @@ public class UnlockedSkillController : MonoBehaviour
 	// Show unlocked cards, if cards already in equip, do not show
 	public void ShowCharacterCards (List<CharacterModel> equipCardList)
 	{
-//		charCardList = SkillManager.GetCSVSkillList ();
+		charCardList = CharacterManager.GetCharacterList ();
 		charCardCount.text = charCardList.Count.ToString () + "/20";
 		for (int i = 0; i < charCardList.Count; i++) {
 			bool hasCardInEquip = false;
@@ -26,7 +26,7 @@ public class UnlockedSkillController : MonoBehaviour
 				for (int k = 0; k < this.transform.childCount; k++) {
 					if (this.transform.GetChild (k).childCount == 0) {
 						GameObject charCard = SystemResourceController.Instance.LoadPrefab ("CharCard", this.transform.GetChild (k).gameObject);
-						charCard.GetComponent<CharCardController> ().SetCardParameter (charCardList[i],false);
+						charCard.GetComponent<CharCardController> ().SetCardParameter (charCardList [i], false);
 						break;
 					}
 				}

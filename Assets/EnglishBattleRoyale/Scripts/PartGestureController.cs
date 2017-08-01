@@ -64,7 +64,7 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 
 			if (param.ContainsKey ("GestureRPC")) {
 				
-				GestureModel gesture = (GestureModel)JsonConverter.StringToObject (param ["GestureRPC"].ToString ());
+				GestureModel gesture =  JsonUtility.FromJson<GestureModel> (param ["GestureRPC"].ToString ());
 				if (SystemGlobalDataController.Instance.isSender.Equals (!SystemGlobalDataController.Instance.isHost)) {
 					SetEnemyGesture (gesture.param);
 				}
@@ -78,7 +78,10 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 
 	public void SetEnemyGesture (string enemyGesture)
 	{
-		Dictionary<string, System.Object> gestureParam = JsonConverter.JsonStrToDic (enemyGesture);
+		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
+		result ["GestureRPC"] = JsonUtility.ToJson (enemyGesture);
+
+		Dictionary<string, System.Object> gestureParam = result;
 		foreach (KeyValuePair<string, System.Object> gesture in gestureParam) {
 			ShowGesture (false, "Gesture" + int.Parse (gesture.Value.ToString ()));
 		}
@@ -88,7 +91,7 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	{
 		gestureButton.GetComponent<Image> ().sprite = gestureImage;
 		param [ParamNames.Gesture.ToString ()] = gestureNumber;
-		SystemFirebaseDBController.Instance.SetParam ("GestureRPC", (new GestureModel (JsonConverter.DicToJsonStr (param))));
+		SystemFirebaseDBController.Instance.SetParam ("GestureRPC", (new GestureModel (JsonUtility.ToJson(param))));
 	}
 
 	//Hide gesture camera after displaying

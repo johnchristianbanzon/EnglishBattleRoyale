@@ -207,7 +207,10 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		SystemGlobalDataController.Instance.isHost = isHost;
 		RPCListener ();
 
-		Dictionary<string, System.Object> entryValues = JsonConverter.ObjToDic ("PlayerRPC", SystemGlobalDataController.Instance.player);
+		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
+		result ["PlayerRPC"] = JsonUtility.ToJson (SystemGlobalDataController.Instance.player);
+		Dictionary<string, System.Object> entryValues = result;
+
 
 		string directory = MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_INITITAL_STATE + "/" + userPlace + "/param/";
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
@@ -296,7 +299,10 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
 		result ["userHome"] = SystemGlobalDataController.Instance.isHost;
-		result ["param"] = JsonConverter.ObjToDic (objectName, myObject);
+
+		Dictionary<string, System.Object> jsonResult = new Dictionary<string, System.Object> ();
+		jsonResult [objectName] = JsonUtility.ToJson (myObject);
+		result ["param"] = jsonResult;
 
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_RPC + "/" + rpcKey;
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, result);

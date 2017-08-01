@@ -10,7 +10,7 @@ public class EquippedSkillController : MonoBehaviour
 
 	void Start ()
 	{
-//		equipCardList = SkillManager.GetEquipSkillList ();
+		equipCardList = CharacterManager.GetEquipCharacterList ();
 
 		for (int i = 0; i < equipCardList.Count; i++) {
 			if (this.transform.GetChild (i).childCount == 0) {

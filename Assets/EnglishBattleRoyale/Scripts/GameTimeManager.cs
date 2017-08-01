@@ -18,11 +18,6 @@ public class GameTimeManager
 		observer.OnStartSkillTimer (action, skillTimer);
 	}
 
-	public static void StartSelectQuestionTimer (Action action)
-	{
-		observer.OnStartSelectQuestionTimer (action, selectQuestionTimer);
-	}
-
 	public static void StartQuestionTimer (Action action, int questionTimer)
 	{
 		observer.OnStartQuestionTimer (action, questionTimer);

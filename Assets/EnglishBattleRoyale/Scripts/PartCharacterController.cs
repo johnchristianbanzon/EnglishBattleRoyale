@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class PartSkillController : MonoBehaviour
+public class PartCharacterController : MonoBehaviour
 {
 	public bool activateAutoCharacter;
 	public Button[] characterButton;
@@ -26,7 +26,7 @@ public class PartSkillController : MonoBehaviour
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
 	{
 		skillGpCost [characterNumber].text = charCard.characterGPCost.ToString() + "GP";
-		characterButton [characterNumber].GetComponent<Image> ().sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterName);
+		characterButton [characterNumber].GetComponent<Image> ().sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
 	}
 
 	private void CharacterButtonInteractable (int characterNumber, Button button)

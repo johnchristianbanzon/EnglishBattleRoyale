@@ -15,8 +15,8 @@ public class SystemResourceController : SingletonMonoBehaviour<SystemResourceCon
 		return csvObject;
 	}
 
-	public Sprite LoadCharacterCardSprite (string spriteName){
-		Sprite charCardSprite = Resources.Load<Sprite>("CardSprites/" + spriteName);
+	public Sprite LoadCharacterCardSprite (int spriteID){
+		Sprite charCardSprite = Resources.Load<Sprite>("CardSprites/" + spriteID.ToString());
 		return charCardSprite;
 	}
 
