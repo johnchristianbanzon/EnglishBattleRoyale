@@ -40,6 +40,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 				letterPrefab.GetComponentInChildren<Text> ().text = QuestionSystemController.Instance.correctAnswerButtons [i].GetComponentInChildren<Text> ().text;	
 				hintContainers.Add (letterPrefab);
 				letterPrefab.GetComponentInChildren<Text> ().enabled = false;
+				
 			}
 		}
 	}

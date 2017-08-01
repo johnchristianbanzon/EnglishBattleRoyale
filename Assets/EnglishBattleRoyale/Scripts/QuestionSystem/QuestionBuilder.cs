@@ -60,22 +60,35 @@ public static class QuestionBuilder
 		while (!questionViable) {
 			randomize = UnityEngine.Random.Range (0, questionList.Count);
 			answersList.Clear ();
-
 			switch (questionType) {
 			case QuestionSystemEnums.QuestionType.Antonym:
 				if (questionList [randomize].hasAntonym.ToString()=="1") {
-					answersList.Add (questionList[randomize].antonym1);
-					answersList.Add (questionList[randomize].antonym2);
-					question = questionList [randomize].answer;
-					questionViable = true;
+					Debug.Log (selectionType);
+					if (selectionType.ToString().Equals("WordChoice (WordChoice)")) {
+						Debug.Log ("wordChoice");
+						answersList.Add (questionList [randomize].antonym1);
+						answersList.Add (questionList [randomize].antonym2);
+						question = questionList [randomize].answer;
+						questionViable = true;
+					} else {
+						answersList.Add (questionList [randomize].answer);
+						question = questionList [randomize].antonym1;
+						questionViable = true;
+					}
 				}
 				break;
 			case QuestionSystemEnums.QuestionType.Synonym:
 				if (questionList [randomize].hasSynonym.ToString()=="1") {
-					answersList.Add (questionList[randomize].synonym1);
-					answersList.Add (questionList[randomize].synonym2);
-					question = questionList [randomize].answer;
-					questionViable = true;
+					if (selectionType.ToString().Equals("WordChoice (WordChoice)")) {
+						answersList.Add (questionList [randomize].synonym1);
+						answersList.Add (questionList [randomize].synonym2);
+						question = questionList [randomize].answer;
+						questionViable = true;
+					} else {
+						answersList.Add (questionList [randomize].answer);
+						question = questionList [randomize].synonym1;
+						questionViable = true;
+					}
 				}
 				break;
 
