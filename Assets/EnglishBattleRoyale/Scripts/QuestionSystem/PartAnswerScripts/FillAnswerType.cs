@@ -42,7 +42,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 		}
 
 		hintIndexRandomList.Add (randomizedHintIndex);
-		Debug.Log (randomizedHintIndex);
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (randomizedHintIndex,answerContainers[randomizedHintIndex]);
 
 		CheckAnswer ();
