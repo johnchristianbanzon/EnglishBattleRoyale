@@ -25,13 +25,15 @@ public class QuestionHintManager :MonoBehaviour{
 			hintIndex ++;
 			hintUsed ++;
 		}
-
 			InitCooldown ();		
+	}
 
-
+	public void InitHints(){
+		hintRemoveInterval = hintRemovalRate;
 	}
 
 	public void OnTimeInterval(){
+		Debug.Log (hintRemoveInterval);
 		if (hintRemoveInterval <= 0) {
 			QuestionSystemController.Instance.selectionType.HideSelectionHint ();
 			hintRemoveInterval = hintRemovalRate;

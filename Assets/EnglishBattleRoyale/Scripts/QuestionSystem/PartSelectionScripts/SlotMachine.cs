@@ -20,7 +20,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 	}
 
 	public void HideSelectionHint(){
-
+		
 	}
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)

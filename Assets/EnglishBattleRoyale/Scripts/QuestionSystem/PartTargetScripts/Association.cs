@@ -11,7 +11,7 @@ public class Association : MonoBehaviour,ITarget {
 	private int clueNumberLimit = 4;
 	private int clueNumber = 1;
 
-	public void DeployTargetType(string targetString){
+	public void ShowTargetType(string targetString){
 		gameObject.SetActive (true);
 		clues = ClueArrayToList (targetString);
 		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("CluePrefab",clueList);
@@ -21,6 +21,10 @@ public class Association : MonoBehaviour,ITarget {
 			OnClueClick ();
 		});
 		InstantiateCluePrefab ();
+	}
+
+	public void HideTargetType(){
+		gameObject.SetActive (false);
 	}
 
 	public void OnClueClick(){

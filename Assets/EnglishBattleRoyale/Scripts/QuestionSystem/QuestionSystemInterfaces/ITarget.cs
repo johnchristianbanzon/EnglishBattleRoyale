@@ -1,4 +1,4 @@
 ﻿public interface ITarget {
-	void DeployTargetType (string questionAnswer);
-
+	void ShowTargetType (string questionAnswer);
+	void HideTargetType();
 }

@@ -29,7 +29,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 
 	public void HideSelectionType ()
 	{
-		//gameObject.SetActive (false);
+		gameObject.SetActive (false);
 	}
 
 	public void OnDragSelection (GameObject currentSelectedLetter)
@@ -68,7 +68,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 	}
 
 	public void HideSelectionHint(){
-
+		
 	}
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
