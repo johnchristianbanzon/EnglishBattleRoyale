@@ -20,7 +20,7 @@ public class PartSkillController : MonoBehaviour
 		characterButtonToggleOn [2] = false;
 
 		//Set starting skills during start of battle
-		SkillManager.SetStartCharacters ();
+		CharacterManager.SetStartCharacters ();
 	}
 
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
@@ -31,7 +31,7 @@ public class PartSkillController : MonoBehaviour
 
 	private void CharacterButtonInteractable (int characterNumber, Button button)
 	{
-		if (SkillManager.GetCharacter (characterNumber).characterGPCost > ScreenBattleController.Instance.partState.player.playerGP) {
+		if (CharacterManager.GetCharacter (characterNumber).characterGPCost > ScreenBattleController.Instance.partState.player.playerGP) {
 			button.interactable = false;
 		} else {
 			button.interactable = true;
@@ -139,7 +139,7 @@ public class PartSkillController : MonoBehaviour
 	public void ShowSkillDescription (int skillNumber)
 	{
 		GameObject skillDescription = SystemPopupController.Instance.ShowPopUp ("PopUpSkillDescription");
-		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (SkillManager.GetCharacter (skillNumber).characterDescription);
+		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (CharacterManager.GetCharacter (skillNumber).characterDescription);
 	}
 
 
@@ -147,9 +147,9 @@ public class PartSkillController : MonoBehaviour
 	private void SelectedSkill (int skillNumber)
 	{
 		SelectSkillActivate (delegate() {
-			SkillManager.ActivateCharacter (skillNumber);
+			CharacterManager.ActivateCharacter (skillNumber);
 		}, delegate() {
-			SystemGlobalDataController.Instance.skillChosenCost = SkillManager.GetCharacter (skillNumber).characterGPCost;
+			SystemGlobalDataController.Instance.skillChosenCost = CharacterManager.GetCharacter (skillNumber).characterGPCost;
 		});
 	}
 

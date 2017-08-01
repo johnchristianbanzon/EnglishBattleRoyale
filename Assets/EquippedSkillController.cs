@@ -20,7 +20,7 @@ public class EquippedSkillController : MonoBehaviour
 			}
 		}
 		unlockedSkill.ShowCharacterCards (equipCardList);
-		SkillManager.SetCharacterEnqueue (equipCardList);
+		CharacterManager.SetCharacterEnqueue (equipCardList);
 	}
 
 	public void ShakeSkillCards ()
@@ -42,7 +42,7 @@ public class EquippedSkillController : MonoBehaviour
 	public void UpdateSkillList ()
 	{
 		UpdateEquipCardList ();
-		SkillManager.SetCharacterEnqueue (equipCardList);
+		CharacterManager.SetCharacterEnqueue (equipCardList);
 	}
 
 }

@@ -35,7 +35,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 		playerHPBar.value = player.playerHP;
 
 		playerGPText.text = player.playerGP.ToString ();
-		;
 		playerGPBar.value = player.playerGP;
 
 		enemyHPText.text = enemy.playerHP.ToString ();
@@ -73,7 +72,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	private void ReceiveInitialState (Dictionary<string, System.Object> initialState, bool isHome)
 	{
-		PlayerModel player = (PlayerModel)JsonConverter.StringToObject(initialState ["PlayerRPC"].ToString());
+		PlayerModel player = (PlayerModel)JsonConverter.StringToObject (initialState ["PlayerRPC"].ToString ());
 
 		if (isHome) {
 			SetInitialPlayerUI (player);
@@ -115,7 +114,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 			SystemGlobalDataController.Instance.isSender = userHome;
 
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
-			AttackModel attack = (AttackModel) JsonConverter.StringToObject(param ["AttackRPC"].ToString());
+			AttackModel attack = (AttackModel)JsonConverter.StringToObject (param ["AttackRPC"].ToString ());
 
 			Dictionary<string, System.Object> attackerParam = JsonConverter.JsonStrToDic (attack.param);
 			thisCurrentParameter.Add (SystemGlobalDataController.Instance.isSender, attackerParam);
@@ -245,7 +244,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 			if (secondCheck) {
 				if (SystemGlobalDataController.Instance.isHost) {
 					if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
-						SystemFirebaseDBController.Instance.UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
+						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
 					} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
 

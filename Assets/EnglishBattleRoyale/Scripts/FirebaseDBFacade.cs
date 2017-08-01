@@ -11,8 +11,8 @@ using UnityEngine.Events;
 public static class FirebaseDBFacade
 {
 	
-	private static Dictionary<string, DatabaseReference> subscriberReference = new Dictionary<string, DatabaseReference>();
-	private static Dictionary<string, Query> subscriberQuery = new Dictionary<string, Query>();
+	private static Dictionary<string, DatabaseReference> subscriberReference = new Dictionary<string, DatabaseReference> ();
+	private static Dictionary<string, Query> subscriberQuery = new Dictionary<string, Query> ();
 
 
 
@@ -34,7 +34,7 @@ public static class FirebaseDBFacade
 	}
 
 	//Create table using childrenasync
-	public static void CreateTableChildrenAsync (string directory,DatabaseReference reference, Dictionary<string, System.Object> entryValues)
+	public static void CreateTableChildrenAsync (string directory, DatabaseReference reference, Dictionary<string, System.Object> entryValues)
 	{
 		Dictionary<string, System.Object> childUpdates = new Dictionary<string, System.Object> ();
 		childUpdates [directory] = entryValues;
@@ -50,7 +50,7 @@ public static class FirebaseDBFacade
 			return;
 		}
 		subscriberReference.Add (subscriberName, reference);
-		subscriberReference[subscriberName].ValueChanged+= HandleTableValueChanged;
+		subscriberReference [subscriberName].ValueChanged += HandleTableValueChanged;
 	}
 
 	public static void RemoveReference (string subscriberName)
@@ -73,7 +73,7 @@ public static class FirebaseDBFacade
 			return;
 		}
 		subscriberQuery.Add (subscriberName, query);
-		subscriberQuery[subscriberName].ValueChanged+= HandleQuery;
+		subscriberQuery [subscriberName].ValueChanged += HandleQuery;
 	}
 
 	public static void RemoveQuery (string subscriberName)
@@ -99,7 +99,7 @@ public static class FirebaseDBFacade
 			return;
 		}
 		subscriberReference.Add (subscriberName, reference);
-		subscriberReference[subscriberName].ChildAdded+= HandleTableChildAdded;
+		subscriberReference [subscriberName].ChildAdded += HandleTableChildAdded;
 	}
 
 	private static void HandleTableChildAdded (object sender, ChildChangedEventArgs args)
@@ -128,7 +128,7 @@ public static class FirebaseDBFacade
 
 			if (task.IsFaulted || task.IsCanceled) {
 			} else {
-				dataSnapshot(task.Result);
+				dataSnapshot (task.Result);
 			}
 		});
 

@@ -237,7 +237,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 			if (dataSnapshot.Value == null) {
 				if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
-					UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
+					UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
 				} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 					UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
 				}
@@ -264,19 +264,15 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	public void UpdateBattleStatus (string stateName, int stateCount)
 	{
-		battleStatusKey = reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Push ().Key;
 		Dictionary<string, System.Object> entryValues = new Dictionary<string, System.Object> ();
 		entryValues.Add (MyConst.BATTLE_STATUS_STATE, stateName);
 		entryValues.Add (MyConst.BATTLE_STATUS_COUNT, "" + stateCount);
-
-		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_BATTLE_STATUS + "/" + battleStatusKey + "/";
-		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
+		UpdateBattleStatusReduce (entryValues);
 	}
 
 	//for mode 2
-	public void UpdateAnswerBattleStatus (string stateName, int stateCount, int hTime, int hAnswer, int vTime, int vAnswer)
+	public void UpdateBattleStatus (string stateName, int stateCount, int hTime, int hAnswer, int vTime, int vAnswer)
 	{
-		battleStatusKey = FirebaseDBFacade.CreateKey (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS));
 		Dictionary<string, System.Object> entryValues = new Dictionary<string, System.Object> ();
 		entryValues.Add (MyConst.BATTLE_STATUS_STATE, stateName);
 		entryValues.Add (MyConst.BATTLE_STATUS_COUNT, "" + stateCount);
@@ -284,7 +280,12 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		entryValues.Add (MyConst.BATTLE_STATUS_HANSWER, "" + hAnswer);
 		entryValues.Add (MyConst.BATTLE_STATUS_VTIME, "" + vTime);
 		entryValues.Add (MyConst.BATTLE_STATUS_VANSWER, "" + vAnswer);
+		UpdateBattleStatusReduce (entryValues);
+	}
 
+	public void UpdateBattleStatusReduce (Dictionary<string, System.Object> entryValues)
+	{
+		battleStatusKey = reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Push ().Key;
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_BATTLE_STATUS + "/" + battleStatusKey + "/";
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
 	}
@@ -348,7 +349,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_CHARACTER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					if (battleCount == 2) {
 						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-							UpdateAnswerBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
+							UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
 						} else {
 							UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
 						}
