@@ -62,6 +62,9 @@ public class WordChoice : MonoBehaviour, ISelection
 			QuestionSystemController.Instance.CheckAnswer (true);
 		} else {
 			QuestionSystemController.Instance.CheckAnswer (false);
+			for (int i = 0; i < selectionButtons.Length; i++) {
+				selectionButtons [i].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+			}
 		}
 	}
 
@@ -74,7 +77,6 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	public void ShuffleSelection ()
 	{
-
 		answerButtons.Clear ();
 		answerString.Clear ();
 		int numberOfAnswers = 2;

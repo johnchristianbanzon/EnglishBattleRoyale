@@ -7,13 +7,14 @@ public class PartQuestionController: MonoBehaviour
 {
 	private List<QuestionResultModel> questionResultList;
 	private GameObject questionSystem;
-	string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };
+
 
 	public void OnStartPhase ()
 	{
-		QuestionBuilder.PopulateQuestion ();
-		Debug.Log ("Starting Answer Phase");
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
+		QuestionBuilder.PopulateQuestion ();
+
+		string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };
 		questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystemController", this.gameObject);
 		QuestionSystemController.Instance.StartQuestionRound (
 			QuestionBuilder.getQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])

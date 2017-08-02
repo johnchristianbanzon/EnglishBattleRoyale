@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-
+using System.Collections;
 /// <summary>
 /// - Starts The Question Round
 /// - Loads Question for the round
@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// - Goes to the next question
 /// 
 /// </summary>
-public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemController>
+public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemController>, IQuestionTimeObserver
 {
 	private int correctAnswers;
 	private int currentQuestionNumber = 1;
@@ -33,16 +33,19 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public PartAnswerController partAnswer;
 	public PartTargetController partTarget;
 
-	public Slider timerSlider;
-
 	public QuestionHintManager questionHint;
 	//DEBUG FIELDS
 	public InputField timerInput; 
 	public GameObject debugUI;
 	//DEBUG FIELDS ENDS HERE
 
+	//
+	public Slider timerSlider;
+
+	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult)
 	{
+		TimeManager.AddQuestionTimeObserver (this);
 		questionType = questionTypeModel.questionCategory;
 		targetType = questionTypeModel.targetType;
 		answerType = questionTypeModel.answerType;
@@ -60,8 +63,38 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		}, 25);
 		this.onRoundResult = onRoundResult;
 		NextQuestion ();
+	} 
+
+	public void OnStartQuestionTimer (Action<int> action, int timer)
+	{
+		StartCoroutine (StartQuestionTimer (action, timer));
+	}
+	private int timePassed = 0;
+	public IEnumerator StartQuestionTimer (Action<int> action, int timer)
+	{
+		int timeLeft = timer;
+		while (timeLeft > 0) {
+			timeLeft--;
+			timePassed++;
+
+			action (timeLeft);
+
+			yield return new WaitForSeconds (1);
+		}
 	}
 
+	public void OnStopQuestionTimer(){
+
+	}
+
+	private IEnumerator WaitAndPrint(float waitTime)
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(waitTime);
+			print("WaitAndPrint " + Time.time);
+		}
+	}
 
 	public QuestionModel LoadQuestion ()
 	{
@@ -77,7 +110,15 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	void Start ()
 	{
-//		QuestionBuilder.PopulateQuestion ();
+		QuestionBuilder.PopulateQuestion ();
+		/*
+		string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };
+		QuestionSystemController.Instance.StartQuestionRound (
+			QuestionBuilder.getQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
+			, delegate(List<QuestionResultModel> result) {
+				//questionResultList = result;
+			}
+		);*/
 	}
 
 	public void OnSkipQuestion ()
@@ -88,13 +129,22 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		}
 	}
 
+	private GameObject speedyEffect;
+	private double idealTime = QuestionSystemConst.ANSWER_SPEED_BASETIME;
 	public void CheckAnswer (bool isCorrect)
 	{
 		currentQuestionNumber ++;
+		Debug.Log (timePassed);
 		if (isCorrect) {
 			correctAnswers++;
 			QuestionSpecialEffects spe = new QuestionSpecialEffects ();
 			spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
+			if (timePassed < idealTime) {
+				speedyEffect = SystemResourceController.Instance.LoadPrefab ("SpeedyEffectText", SystemPopupController.Instance.popUp.gameObject);
+				speedyEffect.transform.position = Vector3.zero;
+				speedyEffect.GetComponent<Text> ().text = "Awesome";
+				TweenFacade.TweenScaleToLarge (speedyEffect.transform,Vector3.one, 0.3f);
+			}
 			onQuestionResult.Invoke (new QuestionResultModel (00000, 13, 3, isCorrect, false));
 			Invoke ("NextQuestion", 1f);
 		} else {
@@ -105,6 +155,8 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public void NextQuestion ()
 	{
+		timePassed = 0;
+		Destroy (speedyEffect);
 		questionHint.InitHints ();
 		hasSkippedQuestion = false;
 		partSelection.HideSelectionType(selectionType);
@@ -134,7 +186,10 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	}
 
 	public void OnDebugClick(Button button){
-		//StartQuestionRound (QuestionBuilder.getQuestionType (button.name));
+		StartQuestionRound (QuestionBuilder.getQuestionType (button.name),delegate(List<QuestionResultModel> result) {
+			//questionResultList = result;
+			debugUI.SetActive(true);
+		});
 		debugUI.SetActive(false);
 		button.transform.parent.gameObject.SetActive (false);
 	}
@@ -149,8 +204,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		} else {
 			isCorrectParam = ParamNames.AnswerWrong.ToString ();
 		}
-
-		//	FDController.Instance.SetAnswerParam (new AnswerModel(JsonConverter.DicToJsonStr (param).ToString()));
 	}
 
 }

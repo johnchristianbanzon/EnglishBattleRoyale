@@ -197,7 +197,7 @@ public static class QuestionBuilder
 			typeModel = new QuestionTypeModel (
 				QuestionSystemEnums.QuestionType.Definition,
 				QuestionSystemController.Instance.partTarget.singleQuestion,
-				QuestionSystemController.Instance.partAnswer.noAnswer,
+				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.slotMachine
 			);
 			break;
