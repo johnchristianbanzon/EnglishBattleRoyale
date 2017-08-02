@@ -8,6 +8,8 @@ public static class BattleLogic
 
 	public static KeyValuePair<bool, Dictionary<string, System.Object>> GetAttackParam (Dictionary<bool, Dictionary<string, object>> currentParam)
 	{
+
+
 		KeyValuePair<bool, Dictionary<string, System.Object>> param = new KeyValuePair<bool, Dictionary<string, object>>();
 		foreach (KeyValuePair<bool, Dictionary<string, System.Object>> newParam in currentParam) {
 			param = newParam;

@@ -293,7 +293,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
 	}
 
-	public void SetParam (string objectName, System.Object myObject)
+	public void SetParam<T> (string objectName, T myObject)
 	{
 		string	rpcKey = reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_RPC).Push ().Key;
 

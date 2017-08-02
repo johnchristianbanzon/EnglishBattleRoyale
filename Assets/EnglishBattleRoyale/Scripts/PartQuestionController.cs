@@ -29,12 +29,5 @@ public class PartQuestionController: MonoBehaviour
 		RPCDicObserver.RemoveObserver (PartAnswerIndicatorController.Instance);
 	}
 
-
-
-	private void HideUI ()
-	{
-		GameTimeManager.ToggleTimer (false);
-	}
-
 }
 
