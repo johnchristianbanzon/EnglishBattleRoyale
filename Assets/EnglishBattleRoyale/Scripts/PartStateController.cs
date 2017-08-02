@@ -45,13 +45,16 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	void Start ()
 	{
+		Init ();
+	}
+
+	private void Init(){
 		TimeManager.AddGameTimeObserver (this);
+		RPCDicObserver.AddObserver (this);
 		TimeManager.StartPreBattleTimer (3);
 		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
 
 		ScreenBattleController.Instance.partCameraWorks.StartIntroCamera ();
-
-		RPCDicObserver.AddObserver (this);
 
 		//get initial state for enemy and player stored in SystemGlobalDataController
 		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in SystemGlobalDataController.Instance.InitialState) {
@@ -105,6 +108,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	#endregion
 
+	//REFACCCTOOOOOOOR AAAAALLLLLLL
 	#region BATTLE LOGIC AND ANIMATION
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
@@ -247,7 +251,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 			if (secondCheck) {
 				if (SystemGlobalDataController.Instance.isHost) {
 					if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
-						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
+						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0,"0","0");
 					} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
 
@@ -319,7 +323,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	IEnumerator StartTimer (int timer, Action action = null)
 	{
-		StopTimer ();
 		int timeLeft = timer;
 
 		while (timeLeft > 0) {
@@ -332,11 +335,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 		action ();
 	}
 		
-	public void StopTimer ()
-	{
-		StopAllCoroutines ();
-	}
-
 	#endregion
 
 }

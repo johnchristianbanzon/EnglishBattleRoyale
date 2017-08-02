@@ -19,13 +19,10 @@ public class SystemGlobalDataController: SingletonMonoBehaviour<SystemGlobalData
 
 	public int skillChosenCost{ get; set; }
 
-	public int hAnswer{ get; set; }
+	public QuestionResultCountModel playerAnswerParam{ get; set; }
 
-	public int hTime{ get; set; }
+	public QuestionResultCountModel enemyAnswerParam{ get; set; }
 
-	public int vAnswer{ get; set; }
-
-	public int vTime{ get; set; }
 
 	public int gpEarned{ get; set; }
 

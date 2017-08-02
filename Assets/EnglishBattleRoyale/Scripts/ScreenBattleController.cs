@@ -11,7 +11,6 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	public PartCameraWorksController partCameraWorks;
 	public PartAvatarsController partAvatars;
 
-
 	public void StartPhase1 ()
 	{
 		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
