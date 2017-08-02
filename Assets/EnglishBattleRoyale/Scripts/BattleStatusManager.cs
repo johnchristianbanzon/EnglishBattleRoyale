@@ -5,7 +5,7 @@ using System;
 public class BattleStatusManager: IRPCDicObserver
 {
 
-	void Start ()
+	public void Init ()
 	{
 		RPCDicObserver.AddObserver (this);
 	}
@@ -38,15 +38,15 @@ public class BattleStatusManager: IRPCDicObserver
 		}
 	}
 
-	public void ReceiveBattleStatus (Dictionary<string, System.Object> battleStatusDetails)
+	private void ReceiveBattleStatus (Dictionary<string, System.Object> battleStatusDetails)
 	{
 		Dictionary<string, System.Object> newBattleStatus = new Dictionary<string, object> ();
 		List<Dictionary<string, System.Object>> newBattleStatusList = new List<Dictionary<string, object>> ();
 
+		//if each item is the same type of newbattlestatus, add to list
 		foreach (var item in battleStatusDetails) {
 			if (UnityEngine.Object.ReferenceEquals (item.Value.GetType (), newBattleStatus.GetType ())) {
 				newBattleStatusList.Add ((Dictionary<string, object>)item.Value);
-
 			}
 		}
 
@@ -64,10 +64,8 @@ public class BattleStatusManager: IRPCDicObserver
 				switch (battleState) {
 				case MyConst.BATTLE_STATUS_ANSWER:
 
-					SystemGlobalDataController.Instance.hAnswer = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_HANSWER].ToString ());
-					SystemGlobalDataController.Instance.hTime = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_HTIME].ToString ());
-					SystemGlobalDataController.Instance.vAnswer = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VANSWER].ToString ());
-					SystemGlobalDataController.Instance.vTime = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_VTIME].ToString ());
+					SystemGlobalDataController.Instance.playerAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus ["PlayerAnswerParam"].ToString ());
+					SystemGlobalDataController.Instance.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus ["EnemyAnswerParam"].ToString ());
 
 					CheckBattleCount (battleCount, OnAnswerCountFull);
 					break;
@@ -82,12 +80,7 @@ public class BattleStatusManager: IRPCDicObserver
 
 				}
 			}
-
-
 		}
-
-	
-
 	}
 
 	private void CheckBattleCount (int battleCount, Action action = null)
