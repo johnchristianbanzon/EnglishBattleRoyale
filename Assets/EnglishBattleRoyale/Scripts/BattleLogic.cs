@@ -5,11 +5,9 @@ using System;
 
 public static class BattleLogic
 {
-
+	//REFACCCTOOOOOOOR AAAAALLLLLLL
 	public static KeyValuePair<bool, Dictionary<string, System.Object>> GetAttackParam (Dictionary<bool, Dictionary<string, object>> currentParam)
 	{
-
-
 		KeyValuePair<bool, Dictionary<string, System.Object>> param = new KeyValuePair<bool, Dictionary<string, object>>();
 		foreach (KeyValuePair<bool, Dictionary<string, System.Object>> newParam in currentParam) {
 			param = newParam;
@@ -46,15 +44,17 @@ public static class BattleLogic
 
 	public static int GetAttackOrder(){
 		int attackOrder = 0;
+		QuestionResultCountModel playerAnswerParam = SystemGlobalDataController.Instance.playerAnswerParam;
+		QuestionResultCountModel enemyAnswerParam = SystemGlobalDataController.Instance.enemyAnswerParam;
 
-		if (SystemGlobalDataController.Instance.hAnswer > SystemGlobalDataController.Instance.vAnswer) {
+		if (playerAnswerParam.correctCount > enemyAnswerParam.correctCount) {
 			attackOrder = 0;
-		} else if (SystemGlobalDataController.Instance.hAnswer < SystemGlobalDataController.Instance.vAnswer) {
+		} else if (playerAnswerParam.correctCount < enemyAnswerParam.correctCount) {
 			attackOrder = 1;
 		} else {
-			if (SystemGlobalDataController.Instance.hTime > SystemGlobalDataController.Instance.vTime) {
+			if (playerAnswerParam.speedyCount > enemyAnswerParam.speedyCount) {
 				attackOrder = 0;
-			} else if (SystemGlobalDataController.Instance.hTime < SystemGlobalDataController.Instance.vTime) {
+			} else if (playerAnswerParam.speedyCount < enemyAnswerParam.speedyCount) {
 				attackOrder = 1;
 			} else {
 				attackOrder = 2;

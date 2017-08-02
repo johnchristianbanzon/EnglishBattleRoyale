@@ -16,6 +16,10 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 
 	void Start ()
 	{
+		Init ();
+	}
+
+	private void Init(){
 		ResetAnswer ();
 	}
 
@@ -28,7 +32,7 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 	{
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result ["AnswerRPC"] = JsonUtility.ToJson (answerParameter);
+		result ["AnswerIndicatorRPC"] = JsonUtility.ToJson (answerParameter);
 		Dictionary<string, System.Object> answerResult = result;
 
 		foreach (KeyValuePair<string, System.Object> answer in answerResult) {
@@ -36,11 +40,11 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 			if (answer.Key == ParamNames.AnswerCorrect.ToString ()) {
 				if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
 					playerAnswerCounter++;
-					playerAnswerText.text = "" +playerAnswerCounter;
+					playerAnswerText.text = playerAnswerCounter.ToString();
 
 				} else {
 					enemyAnswerCounter++;
-					enemyAnswerText.text = "" +enemyAnswerCounter;
+					enemyAnswerText.text = enemyAnswerCounter.ToString();
 				}
 			}
 		}

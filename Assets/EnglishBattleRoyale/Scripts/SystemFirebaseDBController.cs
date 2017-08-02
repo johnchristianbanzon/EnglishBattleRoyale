@@ -24,7 +24,10 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	void Start ()
 	{
+		Init ();
+	}
 
+	private void Init(){
 		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
 			dependencyStatus = FirebaseApp.CheckDependencies ();
 			if (dependencyStatus != DependencyStatus.Available) {
@@ -240,7 +243,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 			if (dataSnapshot.Value == null) {
 				if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
-					UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
+					UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0,"0","0");
 				} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
 					UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
 				}
@@ -265,29 +268,19 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		}
 	}
 
-	public void UpdateBattleStatus (string stateName, int stateCount)
+	public void UpdateBattleStatus (string stateName, int stateCount, string playerParam="", string enemyParam="")
 	{
 		Dictionary<string, System.Object> entryValues = new Dictionary<string, System.Object> ();
 		entryValues.Add (MyConst.BATTLE_STATUS_STATE, stateName);
-		entryValues.Add (MyConst.BATTLE_STATUS_COUNT, "" + stateCount);
-		UpdateBattleStatusReduce (entryValues);
-	}
+		entryValues.Add (MyConst.BATTLE_STATUS_COUNT, stateCount.ToString ());
+		if (!string.IsNullOrEmpty (playerParam)) {
+			entryValues.Add ("PlayerAnswerParam", playerParam);
+		}
 
-	//for mode 2
-	public void UpdateBattleStatus (string stateName, int stateCount, int hTime, int hAnswer, int vTime, int vAnswer)
-	{
-		Dictionary<string, System.Object> entryValues = new Dictionary<string, System.Object> ();
-		entryValues.Add (MyConst.BATTLE_STATUS_STATE, stateName);
-		entryValues.Add (MyConst.BATTLE_STATUS_COUNT, "" + stateCount);
-		entryValues.Add (MyConst.BATTLE_STATUS_HTIME, "" + hTime);
-		entryValues.Add (MyConst.BATTLE_STATUS_HANSWER, "" + hAnswer);
-		entryValues.Add (MyConst.BATTLE_STATUS_VTIME, "" + vTime);
-		entryValues.Add (MyConst.BATTLE_STATUS_VANSWER, "" + vAnswer);
-		UpdateBattleStatusReduce (entryValues);
-	}
+		if (!string.IsNullOrEmpty (enemyParam)) {
+			entryValues.Add ("EnemyAnswerParam", enemyParam);
+		}
 
-	public void UpdateBattleStatusReduce (Dictionary<string, System.Object> entryValues)
-	{
 		battleStatusKey = reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Push ().Key;
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_BATTLE_STATUS + "/" + battleStatusKey + "/";
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
@@ -298,17 +291,17 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		string	rpcKey = reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_RPC).Push ().Key;
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result ["userHome"] = SystemGlobalDataController.Instance.isHost;
+		result ["UserHome"] = SystemGlobalDataController.Instance.isHost;
 
 		Dictionary<string, System.Object> jsonResult = new Dictionary<string, System.Object> ();
 		jsonResult [objectName] = JsonUtility.ToJson (myObject);
-		result ["param"] = jsonResult;
+		result ["Param"] = jsonResult;
 
 		string directory = "/" + MyConst.GAMEROOM_NAME + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_RPC + "/" + rpcKey;
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, result);
 	}
 
-	public void AnswerPhase (int receiveTime, int receiveAnswer)
+	public void AnswerPhase (string param)
 	{
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
 		int modulusNum = 1;
@@ -322,11 +315,9 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ANSWER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					if (SystemGlobalDataController.Instance.isHost) {
-						battleStatus [MyConst.BATTLE_STATUS_HANSWER] = receiveAnswer.ToString ();
-						battleStatus [MyConst.BATTLE_STATUS_HTIME] = receiveTime.ToString ();
+						battleStatus ["PlayerAnswerParam"] = param;
 					} else {
-						battleStatus [MyConst.BATTLE_STATUS_VANSWER] = receiveAnswer.ToString ();
-						battleStatus [MyConst.BATTLE_STATUS_VTIME] = receiveTime.ToString ();
+						battleStatus ["EnemyAnswerParam"] = param;
 					}
 					if (battleCount == 2) {
 						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
@@ -355,7 +346,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_CHARACTER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					if (battleCount == 2) {
 						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-							UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, 0, 0, 0, 0);
+							UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0,"0","0");
 						} else {
 							UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
 						}
@@ -378,6 +369,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		});
 	}
 
+	//Phasemutate uses transaction to update values in the table and increments battlecount
 	private Dictionary<string, System.Object> PhaseMutate (MutableData mutableData, string battleStatusName, Action<Dictionary<string, System.Object>,int> action)
 	{
 		Dictionary<string, System.Object> battleStatus = (Dictionary<string, System.Object>)mutableData.Value;
@@ -394,7 +386,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		return battleStatus;
 	}
 
-
+	//gets the latest push key from the database
 	private void GetLatestKey (int numMod, Action<string> action)
 	{
 		FirebaseDBFacade.GetTableValueAsync (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS), delegate(DataSnapshot dataSnapshot) {
