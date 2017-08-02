@@ -5,8 +5,6 @@ using UnityEngine;
 public enum ParamNames {
 	AnswerCorrect,
 	AnswerWrong,
-	Gesture,
-	Attack,
 
 	//calculation
 	Damage,

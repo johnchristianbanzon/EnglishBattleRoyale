@@ -48,7 +48,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 		Init ();
 	}
 
-	private void Init(){
+	private void Init ()
+	{
 		TimeManager.AddGameTimeObserver (this);
 		RPCDicObserver.AddObserver (this);
 		TimeManager.StartPreBattleTimer (3);
@@ -61,6 +62,31 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 			SetStateParam (initialState.Key, initialState.Value);
 		}
 	}
+
+	#region Start and end battle phase
+
+	//attack when start phase
+	public void OnStartPhase ()
+	{
+		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (false);
+		Debug.Log ("Starting attack phase");
+		PartAnswerIndicatorController.Instance.ResetAnswer ();
+		Attack ();
+	}
+	//send attack to firebase
+	public void Attack ()
+	{
+		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
+		param ["AttackRPC"] = SystemGlobalDataController.Instance.player.playerBaseDamage + SystemGlobalDataController.Instance.gpEarned;
+		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (JsonUtility.ToJson (param)));
+	}
+	//show skill buttons after attack phase is done
+	public void OnEndPhase ()
+	{
+		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
+	}
+
+	#endregion
 
 	#region INITIAL STATE
 
@@ -109,6 +135,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	#endregion
 
 	//REFACCCTOOOOOOOR AAAAALLLLLLL
+
 	#region BATTLE LOGIC AND ANIMATION
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
@@ -250,12 +277,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 		if (!battleOver) {
 			if (secondCheck) {
 				if (SystemGlobalDataController.Instance.isHost) {
-					if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
-						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0,"0","0");
-					} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-						SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
-
-					}
+					SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, "0", "0");	
 				}
 				yield return new WaitForSeconds (3);	
 				ScreenBattleController.Instance.StartPhase1 ();
@@ -275,30 +297,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	#endregion
 
-	#region Start and end battle phase
 
-	//attack when start phase
-	public void OnStartPhase ()
-	{
-		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (false);
-		Debug.Log ("Starting attack phase");
-		PartAnswerIndicatorController.Instance.ResetAnswer ();
-		Attack ();
-	}
-	//send attack to firebase
-	public void Attack ()
-	{
-		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-		param [ParamNames.Attack.ToString ()] = SystemGlobalDataController.Instance.player.playerBaseDamage + SystemGlobalDataController.Instance.gpEarned;
-		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (JsonUtility.ToJson (param)));
-	}
-	//show skill buttons after attack phase is done
-	public void OnEndPhase ()
-	{
-		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
-	}
-
-	#endregion
 
 	#region TIMER Subscriber
 
@@ -307,26 +306,30 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	public void OnStartGameTimer (int timer)
 	{
-		StartCoroutine (StartTimer (timer));
+		StartCoroutine (StartTimer (timer, true));
 	}
 
 
 	public void OnStartPreBattleTimer (int timer)
 	{
-		StartCoroutine (StartTimer (timer, delegate() {
+		StartCoroutine (StartTimer (timer, false, delegate() {
 			preBattleTimerText.enabled = false;
-			TimeManager.StartGameTimer (180);
 			ScreenBattleController.Instance.StartPhase1 ();
+			TimeManager.StartGameTimer (180);
 		}));
 	}
 
 
-	IEnumerator StartTimer (int timer, Action action = null)
+	IEnumerator StartTimer (int timer, bool isGameTimer, Action action = null)
 	{
 		int timeLeft = timer;
 
 		while (timeLeft > 0) {
-			preBattleTimerText.text = "" + timeLeft;
+			if (isGameTimer) {
+				gameTimerText.text = "" + timeLeft;
+			} else {
+				preBattleTimerText.text = "" + timeLeft;
+			}
 			timeLeft--;
 			yield return new WaitForSeconds (1);
 
@@ -334,7 +337,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 		action ();
 	}
-		
+
 	#endregion
 
 }

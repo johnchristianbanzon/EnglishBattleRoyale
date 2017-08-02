@@ -94,7 +94,7 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	private void SendGesture (int gestureNumber)
 	{
 		gestureButton.GetComponent<Image> ().sprite = gestureImage;
-		param [ParamNames.Gesture.ToString ()] = gestureNumber;
+		param ["GestureRPC"] = gestureNumber;
 		SystemFirebaseDBController.Instance.SetParam ("GestureRPC", (new GestureModel (JsonUtility.ToJson(param))));
 	}
 

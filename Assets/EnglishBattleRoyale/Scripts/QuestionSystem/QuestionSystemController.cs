@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using System.Collections;
+
 /// <summary>
 /// - Starts The Question Round
 /// - Loads Question for the round
@@ -24,8 +25,11 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public IAnswer answerType;
 
 	public List<QuestionResultModel> roundResultList = new List<QuestionResultModel> ();
+
 	public Action<List<QuestionResultModel>> onRoundResult{ get; set; }
+
 	public Action<QuestionResultModel> onQuestionResult{ get; set; }
+
 	public List<GameObject> correctAnswerButtons{ get; set; }
 	//
 	public Text targetTypeUI;
@@ -35,7 +39,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public QuestionHintManager questionHint;
 	//DEBUG FIELDS
-	public InputField timerInput; 
+	public InputField timerInput;
 	public GameObject debugUI;
 	//DEBUG FIELDS ENDS HERE
 
@@ -43,7 +47,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public Slider timerSlider;
 
 	//
-	public void StartQuestionRound (QuestionTypeModel questionTypeModel,Action<List<QuestionResultModel>> onRoundResult)
+	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
 		TimeManager.AddQuestionTimeObserver (this);
 		questionType = questionTypeModel.questionCategory;
@@ -59,18 +63,22 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 				targetType.HideTargetType();
 				selectionType.HideSelectionType();
 				answerType.ClearHint();
+				onRoundResult(roundResultList);
 				Destroy(gameObject);
+
 			}
 		}, 25);
 		this.onRoundResult = onRoundResult;
 		NextQuestion ();
-	} 
+	}
 
 	public void OnStartQuestionTimer (Action<int> action, int timer)
 	{
 		StartCoroutine (StartQuestionTimer (action, timer));
 	}
+
 	private int timePassed = 0;
+
 	public IEnumerator StartQuestionTimer (Action<int> action, int timer)
 	{
 		int timeLeft = timer;
@@ -84,22 +92,22 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		}
 	}
 
-	public void OnStopQuestionTimer(){
+	public void OnStopQuestionTimer ()
+	{
 
 	}
 
-	private IEnumerator WaitAndPrint(float waitTime)
+	private IEnumerator WaitAndPrint (float waitTime)
 	{
-		while (true)
-		{
-			yield return new WaitForSeconds(waitTime);
-			print("WaitAndPrint " + Time.time);
+		while (true) {
+			yield return new WaitForSeconds (waitTime);
+			print ("WaitAndPrint " + Time.time);
 		}
 	}
 
 	public QuestionModel LoadQuestion ()
 	{
-		QuestionModel questionLoaded = QuestionBuilder.GetQuestion (questionType,selectionType);
+		QuestionModel questionLoaded = QuestionBuilder.GetQuestion (questionType, selectionType);
 		if (questionLoaded.answers.Length == 2 && selectionType.Equals (partSelection.wordChoice)) {
 			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ());
 		} else {
@@ -112,7 +120,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	void Start ()
 	{
 //		MyConst.Init ();
-		QuestionBuilder.PopulateQuestion ();
 		/*
 		string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };
 		QuestionSystemController.Instance.StartQuestionRound (
@@ -133,9 +140,10 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private GameObject speedyEffect;
 	private double idealTime = QuestionSystemConst.ANSWER_SPEED_BASETIME;
+
 	public void CheckAnswer (bool isCorrect)
 	{
-		currentQuestionNumber ++;
+		currentQuestionNumber++;
 		Debug.Log (timePassed);
 		if (isCorrect) {
 			correctAnswers++;
@@ -145,7 +153,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 				speedyEffect = SystemResourceController.Instance.LoadPrefab ("SpeedyEffectText", SystemPopupController.Instance.popUp.gameObject);
 				speedyEffect.transform.position = Vector3.zero;
 				speedyEffect.GetComponent<Text> ().text = "Awesome";
-				TweenFacade.TweenScaleToLarge (speedyEffect.transform,Vector3.one, 0.3f);
+				TweenFacade.TweenScaleToLarge (speedyEffect.transform, Vector3.one, 0.3f);
 			}
 			onQuestionResult.Invoke (new QuestionResultModel (00000, 13, 3, isCorrect, false));
 			Invoke ("NextQuestion", 1f);
@@ -161,12 +169,11 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		Destroy (speedyEffect);
 		questionHint.InitHints ();
 		hasSkippedQuestion = false;
-		partSelection.HideSelectionType(selectionType);
+		partSelection.HideSelectionType (selectionType);
 		answerType.ClearHint ();
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 
-			//roundResultList.Add(onQuestionResult);
-			//onRoundResult.Invoke(roundResultList);
+			roundResultList.Add(onQuestionResult);
 		});
 
 	}
@@ -177,22 +184,24 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		targetTypeUI.GetComponentInChildren<Text> ().text = questionType.ToString ();
 		partTarget.DeployPartTarget (targetType, questionTarget);
 		partAnswer.DeployAnswerType (answerType);
-		partSelection.DeploySelectionType (selectionType, questionAnswer,delegate(List<GameObject> selectionList) {
-			CheckAnswerSent(null);
+		partSelection.DeploySelectionType (selectionType, questionAnswer, delegate(List<GameObject> selectionList) {
+			CheckAnswerSent (null);
 		});
 		this.onQuestionResult = onQuestionResult;
 	}
 
-	public void CheckAnswerSent(List<GameObject> correctAnswerButtons){
+	public void CheckAnswerSent (List<GameObject> correctAnswerButtons)
+	{
 		this.correctAnswerButtons = correctAnswerButtons;
 	}
 
-	public void OnDebugClick(Button button){
-		StartQuestionRound (QuestionBuilder.getQuestionType (button.name),delegate(List<QuestionResultModel> result) {
+	public void OnDebugClick (Button button)
+	{
+		StartQuestionRound (QuestionBuilder.getQuestionType (button.name), delegate(List<QuestionResultModel> result) {
 			//questionResultList = result;
-			debugUI.SetActive(true);
+			debugUI.SetActive (true);
 		});
-		debugUI.SetActive(false);
+		debugUI.SetActive (false);
 		button.transform.parent.gameObject.SetActive (false);
 	}
 

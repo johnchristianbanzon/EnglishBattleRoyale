@@ -108,7 +108,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 		if (answerWrote.Length.Equals (questionAnswer.Length)) {
 			if (answerWrote.ToUpper ().Equals (questionAnswer.ToUpper ())) {
 				QuestionSystemController.Instance.CheckAnswer (true);
-				onHintResult.Invoke (true);
 			} else {
 				QuestionSystemController.Instance.CheckAnswer (false);
 			}

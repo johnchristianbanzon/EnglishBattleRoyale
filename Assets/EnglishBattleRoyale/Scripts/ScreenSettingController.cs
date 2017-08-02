@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class ScreenSettingController : MonoBehaviour {
 
 	public InputField playerName;
-	public ToggleGroup toggleGroup;
 
 	void Start(){
 		MyConst.Init ();
@@ -17,21 +16,5 @@ public class ScreenSettingController : MonoBehaviour {
 		SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
 	}
 
-	public void OnModeChange ()
-	{
-		foreach (Toggle tg in toggleGroup.ActiveToggles()) {
 
-			ModeEnum modeChosen = ModeEnum.Mode1;
-			switch (tg.name) {
-
-			case "Mode1":
-				modeChosen = ModeEnum.Mode1;
-				break;
-			case "Mode2":
-				modeChosen = ModeEnum.Mode2;
-				break;
-			}
-			SystemGlobalDataController.Instance.modePrototype = modeChosen;
-		}
-	}
 }

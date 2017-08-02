@@ -53,7 +53,6 @@ public static class MyConst
 			wrongChoices.Add (CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString ()
 			);
 
-			Debug.Log (csvQuestionList [i][0]);
 		}
 	}
 
@@ -132,16 +131,10 @@ public static class MyConst
 	public  const string GAMEROOM_PROTOTYPE_MODE = "Mode";
 
 	public  const string BATTLE_STATUS_ANSWER = "answer";
-	public  const string BATTLE_STATUS_CHARACTER = "character";
 	public  const string BATTLE_STATUS_ATTACK = "attack";
 	public  const string BATTLE_STATUS_STATE = "State";
 	public  const string BATTLE_STATUS_COUNT = "Count";
 
-
-	public const string BATTLE_STATUS_HANSWER = "HAnswer";
-	public const string BATTLE_STATUS_HTIME = "HTime";
-	public const string BATTLE_STATUS_VANSWER = "VAnswer";
-	public const string BATTLE_STATUS_VTIME = "VTime";
 
 }
 

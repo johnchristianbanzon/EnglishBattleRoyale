@@ -22,20 +22,7 @@ public class BattleStatusManager: IRPCDicObserver
 
 	private void OnAnswerCountFull ()
 	{
-		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			ScreenBattleController.Instance.StartPhase3 ();
-		} else {
-			ScreenBattleController.Instance.StartPhase2 ();
-		}
-	}
-
-	private void OnSkillCountFull ()
-	{
-		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			ScreenBattleController.Instance.StartPhase2 ();
-		} else {
-			ScreenBattleController.Instance.StartPhase3 ();
-		}
+		
 	}
 
 	private void ReceiveBattleStatus (Dictionary<string, System.Object> battleStatusDetails)
@@ -58,20 +45,15 @@ public class BattleStatusManager: IRPCDicObserver
 				string battleState = newBattleStatus [MyConst.BATTLE_STATUS_STATE].ToString ();
 				int battleCount = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_COUNT].ToString ());
 
-				Debug.Log ("Current Battle State: " + battleState);
-				Debug.Log ("Current Battle Count: " + battleCount);
-
 				switch (battleState) {
 				case MyConst.BATTLE_STATUS_ANSWER:
 
 					SystemGlobalDataController.Instance.playerAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus ["PlayerAnswerParam"].ToString ());
 					SystemGlobalDataController.Instance.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus ["EnemyAnswerParam"].ToString ());
 
-					CheckBattleCount (battleCount, OnAnswerCountFull);
-					break;
-
-				case MyConst.BATTLE_STATUS_CHARACTER:
-					CheckBattleCount (battleCount, OnSkillCountFull);
+					if (battleCount > 1) {
+						ScreenBattleController.Instance.StartPhase2 ();
+					}
 					break;
 
 				case MyConst.BATTLE_STATUS_ATTACK:
