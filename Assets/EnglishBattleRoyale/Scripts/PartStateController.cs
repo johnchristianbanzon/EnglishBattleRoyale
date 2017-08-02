@@ -26,7 +26,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	private List<bool> userHome = new List<bool> ();
 	private List<Dictionary<string, System.Object>> param = new List<Dictionary<string, object>> ();
-	private Dictionary<bool, Dictionary<string, object>> thisCurrentParameter = new Dictionary<bool, Dictionary<string, object>> ();
 	private int attackCount = 0;
 
 	void Update ()
@@ -46,8 +45,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	void Start ()
 	{
-		GameTimeManager.AddObserver (this);
-		GameTimeManager.StartPreBattleTimer ();
+		TimeManager.AddGameTimeObserver (this);
+		TimeManager.StartPreBattleTimer (3);
 		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
 
 		ScreenBattleController.Instance.partCameraWorks.StartIntroCamera ();
@@ -75,8 +74,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	private void ReceiveInitialState (Dictionary<string, System.Object> initialState, bool isHome)
 	{
 		PlayerModel player = JsonUtility.FromJson<PlayerModel> (initialState ["PlayerRPC"].ToString ());
-
-
 
 		if (isHome) {
 			SetInitialPlayerUI (player);
@@ -121,15 +118,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
 				AttackModel attack = JsonUtility.FromJson<AttackModel> (param ["AttackRPC"].ToString ());
 
-				Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-				result ["AttackRPC"] = JsonUtility.ToJson (attack.param);
-				Dictionary<string, System.Object> attackerParam = result;
 
-				thisCurrentParameter.Add (SystemGlobalDataController.Instance.isSender, attackerParam);
-				if (thisCurrentParameter.Count == 2) {
-					Attack (thisCurrentParameter);
-					thisCurrentParameter.Clear ();
-				} 
+//				if (thisCurrentParameter.Count == 2) {
+//					Attack (thisCurrentParameter);
+//					thisCurrentParameter.Clear ();
+//				} 
 			}
 		} catch (System.Exception e) {
 			//do something later
@@ -138,7 +131,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	public void Attack (Dictionary<bool, Dictionary<string, object>> currentParam)
 	{
-
 		KeyValuePair<bool, Dictionary<string, System.Object>> getParam = BattleLogic.GetAttackParam (currentParam);
 		userHome.Add (getParam.Key);
 		param.Add (getParam.Value);
@@ -307,96 +299,39 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	#region TIMER Subscriber
 
 	public Text gameTimerText;
+	public Text preBattleTimerText;
+
+	public void OnStartGameTimer (int timer)
+	{
+		StartCoroutine (StartTimer (timer));
+	}
+
 
 	public void OnStartPreBattleTimer (int timer)
 	{
-		StopTimer ();
-		StartCoroutine (PreBattleStartTimer (timer));
+		StartCoroutine (StartTimer (timer, delegate() {
+			preBattleTimerText.enabled = false;
+			TimeManager.StartGameTimer (180);
+			ScreenBattleController.Instance.StartPhase1 ();
+		}));
 	}
 
-	public void OnStartSkillTimer (Action action, int timer)
+
+	IEnumerator StartTimer (int timer, Action action = null)
 	{
 		StopTimer ();
-		StartCoroutine (StartSkillTimer (action, timer));
-	}
-		
-	public void OnStartQuestionTimer (Action<int> action, int timer)
-	{
-		StopTimer ();
-		StartCoroutine (StartQuestionTimer (action, timer));
-	}
-
-	public void OnStopTimer ()
-	{
-		StopTimer ();
-	}
-
-	public void OnToggleTimer (bool toggleTimer)
-	{
-		gameTimerText.enabled = toggleTimer;
-	}
-
-	#region PrebattleTimer
-
-
-	IEnumerator PreBattleStartTimer (int timer)
-	{
-		OnToggleTimer (true);
 		int timeLeft = timer;
 
 		while (timeLeft > 0) {
-			gameTimerText.text = "" + timeLeft;
+			preBattleTimerText.text = "" + timeLeft;
 			timeLeft--;
 			yield return new WaitForSeconds (1);
 
-		}
-
-		OnToggleTimer (false);
-		ScreenBattleController.Instance.StartPhase1 ();
-	}
-
-	#endregion
-
-	#region SkillTimer
-
-
-	IEnumerator StartSkillTimer (Action action, int timer)
-	{
-		OnToggleTimer (true);
-		int timeLeft = timer;
-
-		while (timeLeft > 0) {
-			gameTimerText.text = "" + timeLeft;
-			timeLeft--;
-			yield return new WaitForSeconds (1);
 		}
 
 		action ();
-		OnToggleTimer (false);
-		SystemFirebaseDBController.Instance.SkillPhase ();
 	}
-
-	#endregion
-
-	#region QuestionTimer
-
-	IEnumerator StartQuestionTimer (Action<int> action, int timer)
-	{
-		OnToggleTimer (true);
-		int timeLeft = timer;
-
-		while (timeLeft > 0) {
-			gameTimerText.text = "" + timeLeft;
-
-			timeLeft--;
-			action (timeLeft);
-			yield return new WaitForSeconds (1);
-		}
-		OnToggleTimer (false);
-	}
-
-	#endregion
-
+		
 	public void StopTimer ()
 	{
 		StopAllCoroutines ();

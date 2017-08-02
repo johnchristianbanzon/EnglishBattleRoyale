@@ -48,7 +48,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		answerType = questionTypeModel.answerType;
 		selectionType = questionTypeModel.selectionType;
 		timerSlider.maxValue = 25;
-		GameTimeManager.StartQuestionTimer (delegate(int timeLeft) {
+		TimeManager.StartQuestionTimer (delegate(int timeLeft) {
 			TweenFacade.SliderTimer(timerSlider,timeLeft);
 			questionHint.OnTimeInterval();
 			if(timeLeft<=0){
