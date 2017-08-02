@@ -184,9 +184,6 @@ public class CharacterManager: IRPCDicObserver
 	{
 		ScreenBattleController.Instance.partState.player.playerGP -= characterModel.characterGPCost;
 		SystemFirebaseDBController.Instance.SetParam ("CharacterRPC", (characterModel));
-		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
-			SystemFirebaseDBController.Instance.SkillPhase ();
-		} 
 	}
 
 	//set the skill in the UI

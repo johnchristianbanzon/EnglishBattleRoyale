@@ -27,7 +27,8 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		Init ();
 	}
 
-	private void Init(){
+	private void Init ()
+	{
 		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
 			dependencyStatus = FirebaseApp.CheckDependencies ();
 			if (dependencyStatus != DependencyStatus.Available) {
@@ -242,11 +243,8 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 
 			if (dataSnapshot.Value == null) {
-				if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode1) {
-					UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0,"0","0");
-				} else if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-					UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
-				}
+				UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, "0", "0");
+				
 			} else {
 				Dictionary<string, System.Object> battleStatus = (Dictionary<string, System.Object>)dataSnapshot.Value;
 
@@ -268,7 +266,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		}
 	}
 
-	public void UpdateBattleStatus (string stateName, int stateCount, string playerParam="", string enemyParam="")
+	public void UpdateBattleStatus (string stateName, int stateCount, string playerParam = "", string enemyParam = "")
 	{
 		Dictionary<string, System.Object> entryValues = new Dictionary<string, System.Object> ();
 		entryValues.Add (MyConst.BATTLE_STATUS_STATE, stateName);
@@ -304,13 +302,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	public void AnswerPhase (string param)
 	{
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
-		int modulusNum = 1;
-		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			modulusNum = 2;
-		} else {
-			modulusNum = 1;
-		}
-		GetLatestKey (modulusNum, delegate(string resultString) {
+		GetLatestKey (1, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ANSWER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
@@ -320,36 +312,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 						battleStatus ["EnemyAnswerParam"] = param;
 					}
 					if (battleCount == 2) {
-						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-							UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
-						} else {
-							UpdateBattleStatus (MyConst.BATTLE_STATUS_CHARACTER, 0);
-						}
-					}
-				});
-			});
-		});
-	}
-
-
-	public void SkillPhase ()
-	{
-		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
-		int modulusNum = 2;
-		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			modulusNum = 1;
-		} else {
-			modulusNum = 2;
-		}
-		GetLatestKey (modulusNum, delegate(string resultString) {
-			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
-				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_CHARACTER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
-					if (battleCount == 2) {
-						if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-							UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0,"0","0");
-						} else {
-							UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
-						}
+						UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
 					}
 				});
 			});
@@ -360,7 +323,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	public void AttackPhase (AttackModel param)
 	{
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
-		GetLatestKey (3, delegate(string resultString) {
+		GetLatestKey (2, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_NAME).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					SetParam ("AttackRPC", (param));
@@ -399,10 +362,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 					LatestKeyCompute (battleStatus, 1, 1, action);
 					break;
 				case 2:
-					LatestKeyCompute (battleStatus, 2, 2, action);
-					break;
-				case 3:
-					LatestKeyCompute (battleStatus, 3, 0, action);
+					LatestKeyCompute (battleStatus, 2, 0, action);
 					break;
 				}
 			}
@@ -415,7 +375,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	{
 		string latestKey = "";
 
-		if ((float)battleStatus.Count % 3 == numCompare) {
+		if ((float)battleStatus.Count % 2 == numCompare) {
 			foreach (KeyValuePair<string , System.Object> battleKey in battleStatus) {
 				latestKey = battleKey.Key;
 			}

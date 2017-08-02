@@ -6,7 +6,6 @@ using System;
 
 public class PartCharacterController : MonoBehaviour
 {
-	public bool activateAutoCharacter;
 	public Button[] characterButton;
 	public Button attackButton;
 	private bool[] characterButtonToggleOn = new bool[3];
@@ -25,7 +24,7 @@ public class PartCharacterController : MonoBehaviour
 
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
 	{
-		skillGpCost [characterNumber].text = charCard.characterGPCost.ToString() + "GP";
+		skillGpCost [characterNumber].text = charCard.characterGPCost.ToString () + "GP";
 		characterButton [characterNumber].GetComponent<Image> ().sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
 	}
 
@@ -43,47 +42,10 @@ public class PartCharacterController : MonoBehaviour
 		ButtonEnable (false);
 	}
 
-	public void OnStartPhase ()
-	{
-		if (!activateAutoCharacter) {
-			Debug.Log ("Starting Skill Phase");
-			if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-				ButtonEnable (true);
-			} else {
-				CharacterButtonInteractable (1, characterButton [0]);
-				CharacterButtonInteractable (2, characterButton [1]);
-				CharacterButtonInteractable (3, characterButton [2]);
-			}
-
-			attackButton.interactable = true;
-			attackButton.gameObject.SetActive (true);
-
-
-		} else {
-			SystemFirebaseDBController.Instance.SkillPhase ();
-		}
-	}
-
-	public void OnEndPhase ()
-	{
-		if (!activateAutoCharacter) {
-			attackButton.gameObject.SetActive (false);
-			ButtonEnable (false);
-		}
-	}
-
 	public void ShowAutoActivateButtons (bool isShow)
 	{
-		if (activateAutoCharacter) {
-			ButtonEnable (isShow);
-		}
-	}
+		ButtonEnable (isShow);
 
-
-	public void AttackButton ()
-	{
-		ButtonEnable (false);
-		SystemFirebaseDBController.Instance.SkillPhase ();
 	}
 
 	public void ButtonEnable (bool buttonEnable)
@@ -96,14 +58,9 @@ public class PartCharacterController : MonoBehaviour
 
 	public void SelectCharacter (int characterNumber)
 	{
-		if (activateAutoCharacter) {
-			characterButtonToggleOn [characterNumber - 1] = !characterButtonToggleOn [characterNumber - 1];
-			ActivateCharacterIndicator (characterNumber - 1);
-		} else {
-			if (characterButton [characterNumber - 1].interactable) {
-				SelectedSkill (characterNumber);
-			}
-		}
+		characterButtonToggleOn [characterNumber - 1] = !characterButtonToggleOn [characterNumber - 1];
+		ActivateCharacterIndicator (characterNumber - 1);
+		
 
 	}
 
@@ -123,13 +80,13 @@ public class PartCharacterController : MonoBehaviour
 
 	public void CheckCharacterActivate ()
 	{
-		if (activateAutoCharacter) {
-			for (int i = 0; i < characterButtonToggleOn.Length; i++) {
-				if (characterButtonToggleOn [i]) {
-					SelectedSkill (i);
-				}
+		
+		for (int i = 0; i < characterButtonToggleOn.Length; i++) {
+			if (characterButtonToggleOn [i]) {
+				SelectedSkill (i);
 			}
 		}
+		
 	}
 
 
@@ -152,22 +109,7 @@ public class PartCharacterController : MonoBehaviour
 
 	private void SelectSkillActivate (Action activateSkill, Action skillCost)
 	{
-		if (activateAutoCharacter) {
-			activateSkill ();
-		} else {
-			//change to mode 2
-			if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-				SystemGlobalDataController.Instance.playerSkillChosen = delegate() {
-					activateSkill ();
-				};
-				skillCost ();
-				SystemFirebaseDBController.Instance.SkillPhase ();
-				Debug.Log ("skilled!");
-			} else {
-				activateSkill ();
-			}
-			ButtonEnable (false);
-		}
+		activateSkill ();
 	}
 
 

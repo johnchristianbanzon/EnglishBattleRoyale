@@ -13,42 +13,20 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 
 	public void StartPhase1 ()
 	{
-		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			PhaseActivate (false, true, false);
-		} else {
-
-			PhaseActivate (true, false, false);
-		}
+		PhaseActivate (true, false);
 	}
 
 	public void StartPhase2 ()
 	{
-
-		if (SystemGlobalDataController.Instance.modePrototype == ModeEnum.Mode2) {
-			PhaseActivate (true, false, false);
-		} else {
-			PhaseActivate (false, true, false);
-		}
+		PhaseActivate (false, true);
 	}
 
-	public void StartPhase3 ()
-	{
-
-		PhaseActivate (false, false, true);
-	}
-
-	private void PhaseActivate (bool answer, bool skill, bool attack)
+	private void PhaseActivate (bool answer, bool attack)
 	{
 		if (answer) {
 			partQuestion.OnStartPhase ();
 		} else {
 			partQuestion.OnEndPhase ();
-		}
-
-		if (skill) {
-			partCharacter.OnStartPhase ();
-		} else {
-			partCharacter.OnEndPhase ();
 		}
 
 		if (attack) {
