@@ -4,6 +4,7 @@ using UnityEngine;
 /* Global variables*/
 public class SystemGlobalDataController: SingletonMonoBehaviour<SystemGlobalDataController>
 {
+
 	public Canvas gameCanvas;
 
 	public PlayerModel player{ get; set; }

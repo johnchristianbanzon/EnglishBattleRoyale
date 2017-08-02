@@ -15,7 +15,10 @@ public static class QuestionBuilder
 
 	public static void PopulateQuestion ()
 	{
-
+		questionList.Clear ();
+		questionList = MyConst.GetQuestionList();
+		wrongChoices = MyConst.GetWrongChoices ();
+		/*
 		questionList.Clear ();
 		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionSystemCsv");
 		List<List<string>> csvQuestionList = CSVParserUtility.Parse (csvData.ToString());
@@ -44,7 +47,7 @@ public static class QuestionBuilder
 			);
 
 
-		}
+		}*/
 	}
 
 	public static QuestionModel GetQuestion (QuestionSystemEnums.QuestionType questiontype, ISelection selectionType)
