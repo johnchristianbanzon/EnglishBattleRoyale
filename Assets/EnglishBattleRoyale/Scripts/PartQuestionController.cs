@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
 
 public class PartQuestionController: MonoBehaviour
 {
@@ -11,15 +12,25 @@ public class PartQuestionController: MonoBehaviour
 
 	public void OnStartPhase ()
 	{
+    Debug.Log ("Starting Answer Phase");
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
 		QuestionBuilder.PopulateQuestion ();
 
 		string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };
+
 		questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystemController", this.gameObject);
 		QuestionSystemController.Instance.StartQuestionRound (
 			QuestionBuilder.getQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
-		, delegate(List<QuestionResultModel> result) {
-			questionResultList = result;
+			, delegate(List<QuestionResultModel> resultList) {
+
+			//callback here
+			questionResultList = resultList;
+
+			int correctCount = questionResultList.Count (p => p.isCorrect == true);
+			int speedyCount = questionResultList.Count (p => p.isSpeedy == true);
+			QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, speedyCount);
+			string param = JsonUtility.ToJson (questionResultCount);
+			SystemFirebaseDBController.Instance.AnswerPhase (param);
 		}
 		);
 	}

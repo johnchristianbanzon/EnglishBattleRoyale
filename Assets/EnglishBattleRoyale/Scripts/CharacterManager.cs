@@ -11,7 +11,7 @@ public class CharacterManager: IRPCDicObserver
 
 	#region Receive character from firebase and activate
 
-	void Start ()
+	public void Init ()
 	{
 		RPCDicObserver.AddObserver (this);
 	}
@@ -204,7 +204,6 @@ public class CharacterManager: IRPCDicObserver
 
 
 		for (int i = 0; i < characterList.Count; i++) {
-			Debug.Log (characterList [i].characterName);
 			characterQueue.Enqueue (characterList [i]);
 		}
 	}

@@ -14,6 +14,10 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 
 	void Start ()
 	{
+		Init ();
+	}
+
+	private void Init(){
 		RPCDicObserver.AddObserver (this);
 	}
 

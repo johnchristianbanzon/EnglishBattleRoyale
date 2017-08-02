@@ -44,6 +44,12 @@ public class PartMatchController : MonoBehaviour
 
 	private void GoToGameRoom ()
 	{
+		BattleStatusManager battleStatusManager = new BattleStatusManager ();
+		CharacterManager characterManager = new CharacterManager ();
+		characterManager.Init ();
+		battleStatusManager.Init ();
+
+
 		SystemScreenController.Instance.ShowScreen ("ScreenBattle");
 	}
 
