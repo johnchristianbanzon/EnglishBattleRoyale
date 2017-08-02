@@ -59,6 +59,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 				targetType.HideTargetType();
 				selectionType.HideSelectionType();
 				answerType.ClearHint();
+				Destroy(gameObject);
 			}
 		}, 25);
 		this.onRoundResult = onRoundResult;
@@ -110,6 +111,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	void Start ()
 	{
+//		MyConst.Init ();
 		QuestionBuilder.PopulateQuestion ();
 		/*
 		string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 
 public class SlotMachine : MonoBehaviour,ISelection
 {
@@ -19,8 +20,9 @@ public class SlotMachine : MonoBehaviour,ISelection
 	{
 		gameObject.SetActive (false);
 	}
-
-	public void HideSelectionHint(){
+		
+	public void HideSelectionHint ()
+	{
 		
 	}
 
@@ -61,7 +63,6 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void InitSlots ()
 	{
-		
 		for (int i = 0; i < questionAnswer.Length; i++) {
 			slots [i].Init (questionAnswer[i]);
 		}

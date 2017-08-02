@@ -7,6 +7,7 @@ public class ScreenSettingController : MonoBehaviour {
 	public ToggleGroup toggleGroup;
 
 	void Start(){
+		MyConst.Init ();
 		playerName.text = PlayerPrefs.GetString ("PlayerInputName", "");
 	}
 
