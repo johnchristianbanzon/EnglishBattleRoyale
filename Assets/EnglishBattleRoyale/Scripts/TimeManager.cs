@@ -20,7 +20,7 @@ public class TimeManager
 
 	//JOCHRIS HERE
 	public static void StartQuestionTimer (Action<int> action, int timer)
-	{
+	{	
 		questionTimeObserver.OnStartQuestionTimer (action, timer);
 	}
 

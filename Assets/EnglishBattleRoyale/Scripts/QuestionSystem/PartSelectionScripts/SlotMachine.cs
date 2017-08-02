@@ -8,6 +8,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 	public SlotMachineEvent[] slots = new SlotMachineEvent[6];
 	private List<Color> previousSlotColor = new List<Color> ();
 	private string questionAnswer = "";
+	List<GameObject> correctAnswerSlots = new List<GameObject>();
 
 	public void ShowCorrectAnswer ()
 	{
@@ -37,27 +38,34 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-
+		correctAnswerContainer.GetComponentInChildren<Text> ().enabled = true;
+		TweenFacade.TweenMoveTo (gameObject.transform, new Vector2 (gameObject.transform.position.x, gameObject.transform.position.y - 40f), 0.3f);
 	}
 
-	public void CheckAnswer(){
+	private string GetAnswer(){
 		string answerWritten = "";
-		List<GameObject> correctAnswerSlots = new List<GameObject> ();
+		correctAnswerSlots.Clear ();
 		for (int i = 0; i < questionAnswer.Length; i++) {
 			answerWritten += slots[i].GetSelectedSlot ().GetComponentInChildren<Text>().text;
 			correctAnswerSlots.Add (slots [i].correctLetterAnswer);
 		}
 		QuestionSystemController.Instance.correctAnswerButtons = correctAnswerSlots;
-		if (answerWritten == questionAnswer) {
+		return answerWritten;
+	}
+
+	public void CheckAnswer(){
+		if (GetAnswer () == questionAnswer) {
 			QuestionSystemController.Instance.CheckAnswer (true);
 		}
 	}
 
 	public void InitSlots ()
 	{
+		
 		for (int i = 0; i < questionAnswer.Length; i++) {
 			slots [i].Init (questionAnswer[i]);
 		}
+		GetAnswer ();
 	}
 
 }

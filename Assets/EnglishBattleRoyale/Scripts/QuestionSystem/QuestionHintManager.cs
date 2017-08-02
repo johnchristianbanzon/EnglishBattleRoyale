@@ -33,7 +33,6 @@ public class QuestionHintManager :MonoBehaviour{
 	}
 
 	public void OnTimeInterval(){
-		Debug.Log (hintRemoveInterval);
 		if (hintRemoveInterval <= 0) {
 			QuestionSystemController.Instance.selectionType.HideSelectionHint ();
 			hintRemoveInterval = hintRemovalRate;
