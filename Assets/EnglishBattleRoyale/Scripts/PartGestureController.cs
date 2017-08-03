@@ -10,14 +10,15 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	public Sprite closeImage;
 	public Sprite gestureImage;
 	public GameObject gestureButton;
-	private Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
+
 
 	void Start ()
 	{
 		Init ();
 	}
 
-	private void Init(){
+	private void Init ()
+	{
 		RPCDicObserver.AddObserver (this);
 	}
 
@@ -61,16 +62,16 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 		try {
 			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 
-			bool userHome = (bool)rpcReceive ["userHome"];
+			bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
 			SystemGlobalDataController.Instance.isSender = userHome;
 
-			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
+			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 
-			if (param.ContainsKey ("GestureRPC")) {
+			if (param.ContainsKey (MyConst.RPC_DATA_GESTURE)) {
 				
-				GestureModel gesture =  JsonUtility.FromJson<GestureModel> (param ["GestureRPC"].ToString ());
+				GestureModel gesture = JsonUtility.FromJson<GestureModel> (param [MyConst.RPC_DATA_GESTURE].ToString ());
 				if (SystemGlobalDataController.Instance.isSender.Equals (!SystemGlobalDataController.Instance.isHost)) {
-					SetEnemyGesture (gesture.param);
+					SetEnemyGesture (gesture.gestureNumber);
 				}
 			}
 
@@ -80,22 +81,16 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 
 	}
 
-	public void SetEnemyGesture (string enemyGesture)
+	public void SetEnemyGesture (int gestureNumber)
 	{
-		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result ["GestureRPC"] = JsonUtility.ToJson (enemyGesture);
-
-		Dictionary<string, System.Object> gestureParam = result;
-		foreach (KeyValuePair<string, System.Object> gesture in gestureParam) {
-			ShowGesture (false, "Gesture" + int.Parse (gesture.Value.ToString ()));
-		}
+		ShowGesture (false, "Gesture" + gestureNumber);
 	}
 
 	private void SendGesture (int gestureNumber)
 	{
 		gestureButton.GetComponent<Image> ().sprite = gestureImage;
-		param ["GestureRPC"] = gestureNumber;
-		SystemFirebaseDBController.Instance.SetParam ("GestureRPC", (new GestureModel (JsonUtility.ToJson(param))));
+		GestureModel gesture = new GestureModel (gestureNumber);
+		SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_GESTURE, gesture);
 	}
 
 	//Hide gesture camera after displaying

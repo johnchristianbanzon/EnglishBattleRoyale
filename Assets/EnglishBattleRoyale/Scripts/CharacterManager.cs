@@ -20,15 +20,15 @@ public class CharacterManager: IRPCDicObserver
 	{
 		try {
 			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
-			if (rpcReceive.ContainsKey ("param")) {
+			if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
 
-				bool userHome = (bool)rpcReceive ["userHome"];
+				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
 				SystemGlobalDataController.Instance.isSender = userHome;
 
-				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
-				if (param.ContainsKey ("CharacterRPC")) {
+				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
+				if (param.ContainsKey (MyConst.RPC_DATA_CHARACTER)) {
 
-					character = JsonUtility.FromJson<CharacterModel> (param ["CharacterRPC"].ToString ());
+					character = JsonUtility.FromJson<CharacterModel> (param [MyConst.RPC_DATA_CHARACTER].ToString ());
 					CalculateCharAmount ();
 				}
 
@@ -183,7 +183,7 @@ public class CharacterManager: IRPCDicObserver
 	public static void StartCharacter (CharacterModel characterModel)
 	{
 		ScreenBattleController.Instance.partState.player.playerGP -= characterModel.characterGPCost;
-		SystemFirebaseDBController.Instance.SetParam ("CharacterRPC", (characterModel));
+		SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_CHARACTER, (characterModel));
 	}
 
 	//set the skill in the UI

@@ -77,7 +77,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	public void Attack ()
 	{
 		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-		param ["AttackRPC"] = SystemGlobalDataController.Instance.player.playerBaseDamage + SystemGlobalDataController.Instance.gpEarned;
+		param [MyConst.RPC_DATA_ATTACK] = SystemGlobalDataController.Instance.player.playerBaseDamage + SystemGlobalDataController.Instance.gpEarned;
 		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (JsonUtility.ToJson (param)));
 	}
 	//show skill buttons after attack phase is done
@@ -93,8 +93,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	private void SetStateParam (Firebase.Database.DataSnapshot dataSnapShot, bool isHome)
 	{
 		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
-		if (rpcReceive.ContainsKey ("param")) {
-			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
+		if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
+			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 
 			ReceiveInitialState (param, isHome);
 		}
@@ -102,7 +102,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 
 	private void ReceiveInitialState (Dictionary<string, System.Object> initialState, bool isHome)
 	{
-		PlayerModel player = JsonUtility.FromJson<PlayerModel> (initialState ["PlayerRPC"].ToString ());
+		PlayerModel player = JsonUtility.FromJson<PlayerModel> (initialState [MyConst.RPC_DATA_PLAYER].ToString ());
 
 		if (isHome) {
 			SetInitialPlayerUI (player);
@@ -142,12 +142,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	{
 		try {
 			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
-			if (rpcReceive.ContainsKey ("param")) {
-				bool userHome = (bool)rpcReceive ["userHome"];
+			if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
+				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
 				SystemGlobalDataController.Instance.isSender = userHome;
 
-				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive ["param"];
-				AttackModel attack = JsonUtility.FromJson<AttackModel> (param ["AttackRPC"].ToString ());
+				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
+				AttackModel attack = JsonUtility.FromJson<AttackModel> (param [MyConst.RPC_DATA_ATTACK].ToString ());
 
 
 //				if (thisCurrentParameter.Count == 2) {

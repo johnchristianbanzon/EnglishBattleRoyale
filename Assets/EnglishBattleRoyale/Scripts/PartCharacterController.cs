@@ -7,7 +7,6 @@ using System;
 public class PartCharacterController : MonoBehaviour
 {
 	public Button[] characterButton;
-	public Button attackButton;
 	private bool[] characterButtonToggleOn = new bool[3];
 
 	public Text[] skillGpCost;
@@ -53,7 +52,6 @@ public class PartCharacterController : MonoBehaviour
 		characterButton [0].interactable = buttonEnable;
 		characterButton [1].interactable = buttonEnable;
 		characterButton [2].interactable = buttonEnable;
-		attackButton.interactable = buttonEnable;
 	}
 
 	public void SelectCharacter (int characterNumber)

@@ -48,8 +48,8 @@ public class BattleStatusManager: IRPCDicObserver
 				switch (battleState) {
 				case MyConst.BATTLE_STATUS_ANSWER:
 
-					SystemGlobalDataController.Instance.playerAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus ["PlayerAnswerParam"].ToString ());
-					SystemGlobalDataController.Instance.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus ["EnemyAnswerParam"].ToString ());
+					SystemGlobalDataController.Instance.playerAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString ());
+					SystemGlobalDataController.Instance.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString ());
 
 					if (battleCount > 1) {
 						ScreenBattleController.Instance.StartPhase2 ();
