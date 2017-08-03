@@ -90,8 +90,8 @@ public static class BattleLogic
 	{
 		int attackSequence = 0;
 
-		if (attackerParam ["AttackRPC"] != null) {
-			int damage = int.Parse (attackerParam ["AttackRPC"].ToString ());
+		if (attackerParam [MyConst.RPC_DATA_ATTACK] != null) {
+			int damage = int.Parse (attackerParam [MyConst.RPC_DATA_ATTACK].ToString ());
 
 			if (attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
 				Debug.Log ("PLAYER DAMAGE: " + damage);

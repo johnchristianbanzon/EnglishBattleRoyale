@@ -33,7 +33,6 @@ public class PartQuestionController: MonoBehaviour
 			string param = JsonUtility.ToJson (questionResultCount);
 			SystemFirebaseDBController.Instance.AnswerPhase (param);
 
-			Debug.Log("hello " +param);
 		}
 		);
 	}

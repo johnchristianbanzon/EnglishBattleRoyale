@@ -5,15 +5,15 @@ using UnityEngine;
 /* Battle Status Model */
 public class GestureModel
 {
-	public string param;
+	public int gestureNumber;
 
 	public GestureModel ()
 	{
 	}
 
-	public GestureModel (string param)
+	public GestureModel (int gestureNumber)
 	{
-		this.param = param;
+		this.gestureNumber = gestureNumber;
 	}
 		
 }
