@@ -13,6 +13,7 @@ public class BattleManager: IRPCDicObserver
 	//set first player actions which is activating characters
 	public static void SetPlayerActionQueue (Queue<Action> action)
 	{
+		Debug.Log("RECEIVE PLAYER QUEUE");
 		playerActionsQueue = action;
 		CheckActionList ();
 	}
@@ -20,6 +21,7 @@ public class BattleManager: IRPCDicObserver
 	//set first enemy actions which is activating characters
 	public static void SetEnemyActionQueue (Queue<Action> action)
 	{
+		Debug.Log("RECEIVE ENEMY QUEUE");
 		enemyActionsQueue = action;
 		CheckActionList ();
 	}
@@ -28,10 +30,11 @@ public class BattleManager: IRPCDicObserver
 	private static void CheckActionList ()
 	{
 		characterActionCounter++;
+		Debug.Log("CHARACTER COUNT " + characterActionCounter);
+
 		//Reminders: Change to 2 if not testing
 		if (characterActionCounter == 2) {
 			SendAttack ();
-			characterActionCounter = 0;
 		}
 	}
 
@@ -63,6 +66,7 @@ public class BattleManager: IRPCDicObserver
 	private static void SendAttack ()
 	{
 		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (SystemGlobalDataController.Instance.player.playerBaseDamage));
+		Debug.Log ("SENDING ATTACK");
 	}
 
 
@@ -72,6 +76,8 @@ public class BattleManager: IRPCDicObserver
 		ClearQueues ();
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		RPCDicObserver.RemoveObserver (this);
+		characterActionCounter = 0;
+		characterAttackCounter = 0;
 	}
 
 	#endregion
@@ -127,7 +133,6 @@ public class BattleManager: IRPCDicObserver
 		Debug.Log ("CHARACTER ATTACK COUNTER " + characterAttackCounter);
 		if (characterAttackCounter == 2) {
 			SetBattle ();
-			characterAttackCounter = 0;
 			Debug.Log ("Starting battle logic");
 		}
 	}
