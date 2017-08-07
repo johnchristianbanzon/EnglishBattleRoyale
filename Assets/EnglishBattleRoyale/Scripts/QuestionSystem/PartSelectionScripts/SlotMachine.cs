@@ -7,7 +7,6 @@ using System.Linq;
 public class SlotMachine : MonoBehaviour,ISelection
 {
 	public SlotMachineEvent[] slots = new SlotMachineEvent[6];
-	private List<Color> previousSlotColor = new List<Color> ();
 	private string questionAnswer = "";
 	List<GameObject> correctAnswerSlots = new List<GameObject>();
 
@@ -23,7 +22,13 @@ public class SlotMachine : MonoBehaviour,ISelection
 		
 	public void HideSelectionHint ()
 	{
-		
+		if (slots [0].getOverAllHintLeft() > 0) {
+			int randomSlot = UnityEngine.Random.Range (0, slots.Length-(slots.Length-correctAnswerSlots.Count));
+			while (slots [randomSlot].hintContainersLeft <= 0) {
+				randomSlot = UnityEngine.Random.Range (0, slots.Length-(slots.Length-correctAnswerSlots.Count));
+			}
+			slots [randomSlot].HideHintContainer ();
+		}
 	}
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)

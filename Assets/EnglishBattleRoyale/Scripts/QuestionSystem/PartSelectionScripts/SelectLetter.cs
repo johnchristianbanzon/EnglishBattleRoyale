@@ -7,10 +7,10 @@ using System.Linq;
 
 public class SelectLetter : MonoBehaviour, ISelection
 {
-	public GameObject[] selectionButtons = new GameObject[12];
-	private string questionAnswer;
-
-
+	public SelectLetterEvent[] selectionButtons = new SelectLetterEvent[12];
+	public FillAnswerType fillAnswer;
+	public string questionAnswer;
+	List<SelectLetterEvent> correctContainers = new List<SelectLetterEvent> ();
 	public void OnSelect ()
 	{
 		QuestionSystemController.Instance.partAnswer.fillAnswer.GetAnswerWritten ();
@@ -47,18 +47,17 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public void HideSelectionHint ()
 	{
-		if (QuestionSystemConst.ALLOW_REMOVE_SELECTLETTER.Equals (1)) {
-			if (!initHideHint) {
-				InitHideHint ();
-				initHideHint = true;
-			}
-
-			if (hideSelectionIndex.Count > 0) {
-				int randomHintIndex = UnityEngine.Random.Range (0, hideSelectionIndex.Count);
-				selectionButtons [hideSelectionIndex [randomHintIndex]].SetActive (false);
-				hideSelectionIndex.RemoveAt (randomHintIndex);
-			}
-		}
+//		if (QuestionSystemConst.ALLOW_REMOVE_SELECTLETTER.Equals (1)) {
+//			if (!initHideHint) {
+//				InitHideHint ();
+//				initHideHint = true;
+//			}
+//			if (hideSelectionIndex.Count > 0) {
+//				int randomHintIndex = UnityEngine.Random.Range (0, hideSelectionIndex.Count);
+//				selectionButtons [hideSelectionIndex [randomHintIndex]].gameObject.SetActive (false);
+//				hideSelectionIndex.RemoveAt (randomHintIndex);
+//			}
+//		}
 	}
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
@@ -70,26 +69,11 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		if (QuestionSystemConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
-			GameObject letterHint = null;
-			GameObject[] selectionArray = QuestionSystemController.Instance.partSelection.selectLetter.selectionButtons;
-			for (int i = 0; i < selectionArray.Length; i++) {
-				if (selectionArray [i].GetComponentInChildren<Text> ().text.Equals (questionAnswer [hintIndex].ToString ())
-				    && selectionArray [i].activeInHierarchy) {
-					letterHint = selectionArray [i];
-					QuestionSystemController.Instance.partAnswer.fillAnswer.selectionIdentifier [hintIndex] = letterHint;
-					letterHint.SetActive (false);
-					break;
-				}
-			}
-			if (!string.IsNullOrEmpty (correctAnswerContainer.GetComponentInChildren<Text> ().text)) {
-				QuestionSystemController.Instance.partAnswer.fillAnswer.OnAnswerClick (correctAnswerContainer.GetComponent<Button> ());
-			} 
-			correctAnswerContainer.GetComponent<Button> ().enabled = false;
-			correctAnswerContainer.GetComponentInChildren<Text> ().text = questionAnswer [hintIndex].ToString ();
-			TweenFacade.TweenScaleToLarge (correctAnswerContainer.transform, Vector3.one, 0.3f);
-			correctAnswerContainer.GetComponent<Image> ().color = new Color (255 / 255, 102 / 255f, 51 / 255f);
-
+		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
+			correctContainers [0].OnSelectLetter (correctContainers [0].gameObject);
+			correctContainers [0].GetComponent<Button> ().interactable = false;
+			correctContainers [0].GetComponent<Image> ().raycastTarget = false;
+			correctContainers.RemoveAt (0);
 		}
 	}
 
@@ -99,28 +83,20 @@ public class SelectLetter : MonoBehaviour, ISelection
 	/// </summary>
 	public void ShuffleSelection ()
 	{
-		initHideHint = false;
-		int numberOfLetters = questionAnswer.Length;
-		string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		List <int> randomList = new List<int> ();
-		int whileindex = 0;
+		List<int> randomizedIndexList = new List<int> ();
+
+		randomizedIndexList.AddRange (Enumerable.Range (0, selectionButtons.Length));
+		ListShuffleUtility.Shuffle (randomizedIndexList);
 		for (int i = 0; i < selectionButtons.Length; i++) {
-			selectionButtons [i].SetActive (true);
-			selectionButtons [i].GetComponent<Button> ().enabled = true;
-			int randomnum = UnityEngine.Random.Range (0, selectionButtons.Length); 
-			while (randomList.Contains (randomnum)) {
-				randomnum = UnityEngine.Random.Range (0, selectionButtons.Length);
-				whileindex++;
-				if (whileindex > 100) {
-					break;
-				}
-			}
-			randomList.Add (randomnum);
+			bool isCorrect = false;
 			if (i < questionAnswer.Length) {
-				selectionButtons [randomnum].GetComponentInChildren<Text> ().text = questionAnswer [i].ToString ().ToUpper ();
-			} else {
-				selectionButtons [randomnum].GetComponentInChildren<Text> ().text = alphabet [UnityEngine.Random.Range (1, 26)].ToString ();
+				isCorrect = true;
 			}
+			selectionButtons [randomizedIndexList[0]].Init (isCorrect,i);
+			if (isCorrect) {
+				correctContainers.Add (selectionButtons [randomizedIndexList [0]]);
+			}
+			randomizedIndexList.RemoveAt (0);
 		}
 	}
 

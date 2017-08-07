@@ -11,10 +11,10 @@ public class QuestionSpecialEffects : MonoBehaviour  {
 		if (result) {
 			AudioEffect (AudioEnum.Correct);
 		} else {
-			
+			TweenFacade.TweenShakePosition (QuestionSystemController.Instance.transform, 1.0f, 30.0f, 50, 90f);
 			AudioEffect (AudioEnum.Mistake);
 		}
-		TweenFacade.TweenShakePosition (QuestionSystemController.Instance.transform, 1.0f, 30.0f, 50, 90f);
+
 	}
 
 	private void AudioEffect(AudioEnum audioNum){

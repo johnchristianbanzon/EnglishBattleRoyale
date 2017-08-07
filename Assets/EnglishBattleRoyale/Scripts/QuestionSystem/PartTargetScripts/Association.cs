@@ -12,32 +12,23 @@ public class Association : MonoBehaviour,ITarget {
 	private int clueNumber = 1;
 
 	public void ShowTargetType(string targetString){
-		gameObject.SetActive (true);
 		clues = ClueArrayToList (targetString);
+		gameObject.SetActive (true);
+		InvokeRepeating ("ShowClue",0,2f);
+	}
+
+	public void ShowClue(){
 		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("CluePrefab",clueList);
+		TweenFacade.TweenScaleToLarge (clueObject.transform, Vector3.one, 0.3f);
 		clueObject.GetComponentInChildren<Text>().text = clues[clueNumber-1];
 		clueNumber ++;
-		clueObject.GetComponent<Button> ().onClick.AddListener (() => {
-			OnClueClick ();
-		});
-		InstantiateCluePrefab ();
+		if (clueNumber > clueNumberLimit) {
+			CancelInvoke ();
+		}
 	}
 
 	public void HideTargetType(){
 		gameObject.SetActive (false);
-	}
-
-	public void OnClueClick(){
-		GameObject clueSelected = EventSystem.current.currentSelectedGameObject;
-		if (clueSelected.GetComponentInChildren<Text> ().text.Equals("?") && clueNumber <= clueNumberLimit) {
-			currenctClueSelected = clueSelected;
-			clueSelected.GetComponentInChildren<Text>().text = clues[clueNumber-1];
-			clueNumber ++;
-			if (clueNumber <= clueNumberLimit) {
-				TweenFacade.TweenTextScale (clueSelected.transform, new Vector3 (0.03f, clueSelected.transform.localScale.y, clueSelected.transform.localScale.z), 0.02f);
-				Invoke ("AfterScalingTween", 0.02f);
-			}
-		}
 	}
 
 	public List<string> ClueArrayToList(string targetString){
@@ -54,15 +45,4 @@ public class Association : MonoBehaviour,ITarget {
 		}
 	}
 
-	public void AfterScalingTween(){
-		TweenFacade.TweenScaleToSmall (currenctClueSelected.transform,Vector3.one,0.5f);
-		InstantiateCluePrefab ();
-	}
-
-	public void InstantiateCluePrefab(){
-		GameObject clueObject = SystemResourceController.Instance.LoadPrefab ("CluePrefab",clueList);
-		clueObject.GetComponent<Button> ().onClick.AddListener (() => {
-			OnClueClick ();
-		});
-	}
 }

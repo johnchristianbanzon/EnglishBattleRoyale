@@ -11,64 +11,45 @@ public static class QuestionBuilder
 	private static List<QuestionRowModel> questionList = new List<QuestionRowModel> ();
 	private static List<string> wrongChoices = new List<string> ();
 	private static List<int> wrongChoicesDone = new List<int> ();
+
 	public static int questionIndex = 1;
 
 	public static void PopulateQuestion ()
 	{
 		questionList.Clear ();
+		wrongChoices.Clear ();
 		questionList = MyConst.GetQuestionList();
 		wrongChoices = MyConst.GetWrongChoices ();
-		/*
-		questionList.Clear ();
-		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionSystemCsv");
-		List<List<string>> csvQuestionList = CSVParserUtility.Parse (csvData.ToString());
-
-		for (int i = 1; i < csvQuestionList.Count; i++) {
-			//0 FOR LEVELID, QUESTIONID FOR TESTING : LACKING VALUES
-			questionList.Add (new QuestionRowModel (
-				0,
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString (),
-				0,
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "definition")[i].ToString (),
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "synonym1")[i].ToString (),
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "synonym2")[i].ToString (),
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "antonym1")[i].ToString (),
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "antonym2")[i].ToString (),
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "clue1")[i].ToString (),
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "clue2")[i].ToString (),
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "clue3")[i].ToString (),
-				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "clue4")[i].ToString (),
-				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "de")[i].ToString()),
-				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "sy")[i].ToString()),
-				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "an")[i].ToString()),
-				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "cl")[i].ToString())
-			));
-			wrongChoices.Add (CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString ()
-			);
-
-
-		}*/
 	}
 
-	public static QuestionModel GetQuestion (QuestionSystemEnums.QuestionType questiontype, ISelection selectionType)
-	{
+	public static List<QuestionModel> GetQuestionList(int numberOfQuestions,QuestionTypeModel questionTypeModel){
+		List<QuestionModel> questions =  new List<QuestionModel>();
+		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
+		for (int i = 0; i < numberOfQuestions; i++) {
+//			questions.Add (GetQuestion (getQuestionType(questionTypes[UnityEngine.Random.Range(0,questionTypes.Length)])));
+			questions.Add(GetQuestion(questionTypeModel));
+		}
+		return questions;
+	}
 
+	public static QuestionModel GetQuestion (QuestionTypeModel questionType)
+	{
 		int randomize = 0;
 		bool questionViable = false;
 		string question = "";
 		List<string> answersList = new List<string> ();
-		questionType = questiontype;
 		int numOfQuestions = questionList.Count;
 		int whileIndex = 0;
+
+		double idealTime = 2.5;
+
 		while (!questionViable) {
 			randomize = UnityEngine.Random.Range (0, questionList.Count);
 			answersList.Clear ();
-			switch (questionType) {
+			switch (questionType.questionCategory) {
 			case QuestionSystemEnums.QuestionType.Antonym:
 				if (questionList [randomize].hasAntonym.ToString()=="1") {
-					Debug.Log (selectionType);
-					if (selectionType.ToString().Equals("WordChoice (WordChoice)")) {
-						Debug.Log ("wordChoice");
+					if (questionType.selectionType.ToString().Equals("WordChoice (WordChoice)")) {
 						answersList.Add (questionList [randomize].antonym1);
 						answersList.Add (questionList [randomize].antonym2);
 						question = questionList [randomize].answer;
@@ -82,7 +63,7 @@ public static class QuestionBuilder
 				break;
 			case QuestionSystemEnums.QuestionType.Synonym:
 				if (questionList [randomize].hasSynonym.ToString()=="1") {
-					if (selectionType.ToString().Equals("WordChoice (WordChoice)")) {
+					if (questionType.selectionType.ToString().Equals("WordChoice (WordChoice)")) {
 						answersList.Add (questionList [randomize].synonym1);
 						answersList.Add (questionList [randomize].synonym2);
 						question = questionList [randomize].answer;
@@ -97,7 +78,7 @@ public static class QuestionBuilder
 
 			case QuestionSystemEnums.QuestionType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
-					if (selectionType.ToString ().Equals("SlotMachine (SlotMachine)")) {
+					if (questionType.selectionType.ToString ().Equals("SlotMachine (SlotMachine)")) {
 						if (questionList [randomize].answer.Length < 6) {
 							answersList.Add (questionList [randomize].answer);
 							question = questionList [randomize].definition;
@@ -129,7 +110,29 @@ public static class QuestionBuilder
 			}
 			whileIndex ++;
 		}
-		QuestionModel questionGot = new QuestionModel (question, answersList.ToArray ());
+
+		switch (questionType.questionCategory) {
+		case QuestionSystemEnums.QuestionType.Definition:
+			idealTime += 0.5;
+			break;
+		case QuestionSystemEnums.QuestionType.Association:
+			idealTime += 1;
+			break;
+		}
+
+		switch (questionType.selectionType.GetType ().Name) {
+		case "Typing":
+			idealTime += 1.5;
+			break;
+		case "SelectLetter":
+			idealTime += 1;
+			break;
+		case "SlotMachine":
+			idealTime += 1;
+			break;
+		}
+
+		QuestionModel questionGot = new QuestionModel (questionType,question, answersList.ToArray (),idealTime);
 		questionsDone.Add (question);
 
 		//Debug.Log (questionGot.answers[0] + "/" + questionGot.question);
@@ -152,19 +155,10 @@ public static class QuestionBuilder
 	}
 
 	public static QuestionTypeModel getQuestionType(string selection){
-		//		
-		float[] selectionTypePercentage = new float[6];
-		float randomizedPercentage = Random.Range(0.00f,1.0f);
-		float percentageLeastDifference = 1.0f / selectionTypePercentage.Length;
-		for (int i = 0; i < selectionTypePercentage.Length; i++) {
-			selectionTypePercentage [i] = (1.0f / selectionTypePercentage.Length)* (i + 1) ;
-			if ((randomizedPercentage - selectionTypePercentage [i] < percentageLeastDifference)) {
-				percentageLeastDifference = randomizedPercentage - selectionTypePercentage [i];
-			}
-		}
+
 		QuestionTypeModel typeModel = null;
 		switch(selection){
-		case "sellect":
+		case "select":
 			typeModel = new QuestionTypeModel (
 				QuestionSystemEnums.QuestionType.Definition,
 				QuestionSystemController.Instance.partTarget.singleQuestion,
