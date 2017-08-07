@@ -62,10 +62,13 @@ public class CharacterManager: IRPCDicObserver
 					}
 
 					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
+						Debug.Log("RECEIVE PLAYER");
 						BattleManager.SetPlayerActionQueue (characterActionList);
 
 					} else {
+						Debug.Log("RECEIVE ENEMY");
 						BattleManager.SetEnemyActionQueue (characterActionList);
+
 					}
 
 				}
