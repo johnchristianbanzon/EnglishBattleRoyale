@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using UnityEngine;
+
 /* Global variables*/
 public class SystemGlobalDataController: SingletonMonoBehaviour<SystemGlobalDataController>
 {

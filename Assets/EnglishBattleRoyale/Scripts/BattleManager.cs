@@ -84,20 +84,24 @@ public class BattleManager: IRPCDicObserver
 				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
 				SystemGlobalDataController.Instance.isSender = userHome;
 
-				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
-				AttackModel attack = JsonUtility.FromJson<AttackModel> (param [MyConst.RPC_DATA_ATTACK].ToString ());
 
-				if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
-					playerActionsQueue.Enqueue (delegate() {
-						AttackCompute (true, attack);
-					});
-					CheckAttackList ();
-				} else {
-					enemyActionsQueue.Enqueue (delegate() {
-						AttackCompute (false, attack);
-					});
+				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
+				if (param.ContainsKey (MyConst.RPC_DATA_ATTACK)) {
+					AttackModel attack = JsonUtility.FromJson<AttackModel> (param [MyConst.RPC_DATA_ATTACK].ToString ());
+
+					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
+						playerActionsQueue.Enqueue (delegate() {
+							AttackCompute (true, attack);
+						});
+					} else {
+						enemyActionsQueue.Enqueue (delegate() {
+							AttackCompute (false, attack);
+						});
+					}
 					CheckAttackList ();
 				}
+
+			
 			}
 		} catch (System.Exception e) {
 			//do something later
@@ -120,6 +124,7 @@ public class BattleManager: IRPCDicObserver
 	private static void CheckAttackList ()
 	{
 		characterAttackCounter++;
+		Debug.Log ("CHARACTER ATTACK COUNTER " + characterAttackCounter);
 		if (characterAttackCounter == 2) {
 			SetBattle ();
 			characterAttackCounter = 0;
@@ -127,10 +132,9 @@ public class BattleManager: IRPCDicObserver
 		}
 	}
 
-	//Set Battle...
 	public static void SetBattle ()
 	{
-		Queue<Queue<Action>> actionsQueue = new Queue<Queue<Action>>();
+		Queue<Queue<Action>> actionsQueue = new Queue<Queue<Action>> ();
 
 		int attackOrder = GetBattleOrder ();
 		switch (attackOrder) {
@@ -174,6 +178,7 @@ public class BattleManager: IRPCDicObserver
 		}
 		return battleOrder;
 	}
-	
+
+
 
 }

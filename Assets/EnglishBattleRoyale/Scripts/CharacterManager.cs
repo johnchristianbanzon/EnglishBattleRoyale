@@ -207,8 +207,8 @@ public class CharacterManager: IRPCDicObserver
 	//When characters is used, remove previous characters and enqueue replace with new characters in queue
 	public static void UseCharacterUI (int characterIndex)
 	{
-		//remove this if you want characters will be gone after use
-		characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
+		//Reminders: Remove this if you want characters will be gone after use
+//		characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
 
 		SetCharacterUI (characterIndex, characterQueue.Dequeue ());
 	}
