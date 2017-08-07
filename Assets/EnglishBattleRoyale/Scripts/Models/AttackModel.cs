@@ -5,17 +5,14 @@ using UnityEngine;
 /* Battle Status Model */
 public class AttackModel
 {
-	public string param;
+	public float attackDamage;
 
 	public AttackModel ()
 	{
 	}
 
-	public AttackModel (string param)
+	public AttackModel (float attackDamage)
 	{
-		this.param = param;
+		this.attackDamage = attackDamage;
 	}
-
-
-
 }

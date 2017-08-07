@@ -303,6 +303,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 					} else {
 						battleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM] = param;
 					}
+					//Reminders: change to 2 if not testing
 					if (battleCount == 2) {
 						UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
 					}

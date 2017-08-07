@@ -5,8 +5,8 @@ using System;
 
 public class BattleManager: IRPCDicObserver
 {
-	private static Queue<Action> playerActionsQueue = new Queue<Action>();
-	private static  Queue<Action> enemyActionsQueue = new Queue<Action>();
+	private static Queue<Action> playerActionsQueue = new Queue<Action> ();
+	private static  Queue<Action> enemyActionsQueue = new Queue<Action> ();
 	private static int characterActionCounter = 0;
 	private static int characterAttackCounter = 0;
 
@@ -28,6 +28,7 @@ public class BattleManager: IRPCDicObserver
 	private static void CheckActionList ()
 	{
 		characterActionCounter++;
+		//Reminders: Change to 2 if not testing
 		if (characterActionCounter == 2) {
 			SendAttack ();
 			characterActionCounter = 0;
@@ -61,11 +62,7 @@ public class BattleManager: IRPCDicObserver
 	//send attack to firebase
 	private static void SendAttack ()
 	{
-		Debug.Log ("Sending Attack to Firebase");
-		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-		param [MyConst.RPC_DATA_ATTACK] = SystemGlobalDataController.Instance.player.playerBaseDamage;
-		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (JsonUtility.ToJson (param)));
-		Debug.Log ("Sending Attack Complete");
+		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (SystemGlobalDataController.Instance.player.playerBaseDamage));
 	}
 
 
@@ -89,14 +86,15 @@ public class BattleManager: IRPCDicObserver
 
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 				AttackModel attack = JsonUtility.FromJson<AttackModel> (param [MyConst.RPC_DATA_ATTACK].ToString ());
+
 				if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
 					playerActionsQueue.Enqueue (delegate() {
-						AttackLogic (true, attack);
+						AttackCompute (true, attack);
 					});
 					CheckAttackList ();
 				} else {
 					enemyActionsQueue.Enqueue (delegate() {
-						AttackLogic (false, attack);
+						AttackCompute (false, attack);
 					});
 					CheckAttackList ();
 				}
@@ -106,124 +104,76 @@ public class BattleManager: IRPCDicObserver
 		}
 	}
 
-
-
-	public static void AttackLogic (bool isPLayer, AttackModel attack)
+	public static void AttackCompute (bool isPLayer, AttackModel attack)
 	{
-		
-//		int attackSequence = 0;
-//
-//		if (attackerParam [MyConst.RPC_DATA_ATTACK] != null) {
-//			int damage = int.Parse (attackerParam [MyConst.RPC_DATA_ATTACK].ToString ());
-//
-//			if (attackerBool.Equals (SystemGlobalDataController.Instance.isHost)) {
-//				Debug.Log ("PLAYER DAMAGE: " + damage);
-//				enemyHP -= damage;
-//				if (sameAttack == false) {
-//					attackSequence = 1;
-//				}
-//
-//			} else {
-//				Debug.Log ("ENEMY DAMAGE: " + damage);
-//				playerHP -= damage;
-//				if (sameAttack == false) {
-//					attackSequence = 2;
-//				}
-//			}
-//
-//			hp (enemyHP, playerHP);
-//		}
-//
-//		return attackSequence;
+		if (isPLayer) {
+			Debug.Log ("PLAYER DAMAGE: " + attack.attackDamage);
+			ScreenBattleController.Instance.partState.enemy.playerHP -= attack.attackDamage;
+
+		} else {
+			Debug.Log ("ENEMY DAMAGE: " + attack.attackDamage);
+			ScreenBattleController.Instance.partState.player.playerHP -= attack.attackDamage;
+		}
 	}
+
 
 	private static void CheckAttackList ()
 	{
 		characterAttackCounter++;
 		if (characterAttackCounter == 2) {
-			CheckOrder ();
+			SetBattle ();
 			characterAttackCounter = 0;
 			Debug.Log ("Starting battle logic");
 		}
-
-
 	}
 
-
-	public static void CheckOrder ()
+	//Set Battle...
+	public static void SetBattle ()
 	{
-//		//change order of list if host or visitor
-//		if (SystemGlobalDataController.Instance.isHost) {
-//			if (userHome [0] != SystemGlobalDataController.Instance.isHost) {
-//				ChangeOrderReduce (0, 1, attackparam, userHome, param);
-//			}
-//		} else {
-//			if (userHome [1] != SystemGlobalDataController.Instance.isHost) {
-//				ChangeOrderReduce (1, 0, attackparam, userHome, param);
-//			}
-//	
-//		}
+		Queue<Queue<Action>> actionsQueue = new Queue<Queue<Action>>();
+
+		int attackOrder = GetBattleOrder ();
+		switch (attackOrder) {
+		case 0:
+			actionsQueue.Enqueue (playerActionsQueue);
+			actionsQueue.Enqueue (enemyActionsQueue);
+			ScreenBattleController.Instance.partState.SetActionsWithDelay (actionsQueue);
+			break;
+		case 1:
+			actionsQueue.Enqueue (enemyActionsQueue);
+			actionsQueue.Enqueue (playerActionsQueue);
+			ScreenBattleController.Instance.partState.SetActionsWithDelay (actionsQueue);
+			break;
+		case 2:
+			actionsQueue.Enqueue (playerActionsQueue);
+			actionsQueue.Enqueue (enemyActionsQueue);
+			ScreenBattleController.Instance.partState.SetActionsWithOutDelay (actionsQueue);
+			break;
+		}
+
 	}
 
+	public static int GetBattleOrder ()
+	{
+		int battleOrder = 0;
+		QuestionResultCountModel playerAnswerParam = SystemGlobalDataController.Instance.playerAnswerParam;
+		QuestionResultCountModel enemyAnswerParam = SystemGlobalDataController.Instance.enemyAnswerParam;
 
-
-	//
-	//	private void ChangeOrderReduce (int index0, int index1,Action <List<bool> , List<Dictionary<string, System.Object>>> attackparam, List<bool> userHome, List<Dictionary<string, System.Object>> param)
-	//	{
-	//		bool tempName = userHome [index0];
-	//		Dictionary<string, System.Object> tempParam = param [index0];
-	//
-	//		userHome.Insert (index0, userHome [index1]);
-	//		userHome.Insert (index1, tempName);
-	//		param.Insert (index0, param [index1]);
-	//		param.Insert (index1, tempParam);
-	//
-	//		attackparam (userHome, param);
-	//	}
-	//
-	//	public int GetAttackOrder(){
-	//		int attackOrder = 0;
-	//		QuestionResultCountModel playerAnswerParam = SystemGlobalDataController.Instance.playerAnswerParam;
-	//		QuestionResultCountModel enemyAnswerParam = SystemGlobalDataController.Instance.enemyAnswerParam;
-	//
-	//		if (playerAnswerParam.correctCount > enemyAnswerParam.correctCount) {
-	//			attackOrder = 0;
-	//		} else if (playerAnswerParam.correctCount < enemyAnswerParam.correctCount) {
-	//			attackOrder = 1;
-	//		} else {
-	//			if (playerAnswerParam.speedyCount > enemyAnswerParam.speedyCount) {
-	//				attackOrder = 0;
-	//			} else if (playerAnswerParam.speedyCount < enemyAnswerParam.speedyCount) {
-	//				attackOrder = 1;
-	//			} else {
-	//				attackOrder = 2;
-	//			}
-	//		}
-	//		return attackOrder;
-	//	}
-	//
-	//	public void CheckBattle(bool secondCheck,float enemyHP, float playerHP, Action<string, bool> battleResult){
-	//
-	//		if (enemyHP <= 0 || playerHP <= 0) {
-	//			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
-	//
-	//			if (enemyHP > 0 && playerHP <= 0) {
-	//				battleResult ("lose", true);
-	//
-	//			} else if (playerHP > 0 && enemyHP <= 0) {
-	//				battleResult ("win", true);
-	//
-	//			} else {
-	//				battleResult ("draw", true);
-	//
-	//			}
-	//
-	//		} else {
-	//			battleResult ("", false);
-	//		}
-	//
-	//	}
-	//
-	//
+		if (playerAnswerParam.correctCount > enemyAnswerParam.correctCount) {
+			battleOrder = 0;
+		} else if (playerAnswerParam.correctCount < enemyAnswerParam.correctCount) {
+			battleOrder = 1;
+		} else {
+			if (playerAnswerParam.speedyCount > enemyAnswerParam.speedyCount) {
+				battleOrder = 0;
+			} else if (playerAnswerParam.speedyCount < enemyAnswerParam.speedyCount) {
+				battleOrder = 1;
+			} else {
+				battleOrder = 2;
+			}
+		}
+		return battleOrder;
+	}
+	
 
 }
