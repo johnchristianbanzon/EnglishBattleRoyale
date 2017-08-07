@@ -27,15 +27,6 @@ public class PartCharacterController : MonoBehaviour
 		characterButton [characterNumber].GetComponent<Image> ().sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
 	}
 
-	private void CharacterButtonInteractable (int characterNumber, Button button)
-	{
-		if (CharacterManager.GetCharacter (characterNumber).characterGPCost > ScreenBattleController.Instance.partState.player.playerGP) {
-			button.interactable = false;
-		} else {
-			button.interactable = true;
-		}
-	}
-
 	private void OnEndQuestionTime ()
 	{
 		ButtonEnable (false);
@@ -54,12 +45,11 @@ public class PartCharacterController : MonoBehaviour
 		characterButton [2].interactable = buttonEnable;
 	}
 
+	//toggle on/off activate characters
 	public void SelectCharacter (int characterNumber)
 	{
-		characterButtonToggleOn [characterNumber - 1] = !characterButtonToggleOn [characterNumber - 1];
-		ActivateCharacterIndicator (characterNumber - 1);
-		
-
+		characterButtonToggleOn [characterNumber] = !characterButtonToggleOn [characterNumber];
+		ActivateCharacterIndicator (characterNumber);
 	}
 
 	private void ActivateCharacterIndicator (int skillNumber)
@@ -69,47 +59,23 @@ public class PartCharacterController : MonoBehaviour
 			//if clicked
 			characterButtonOutline.enabled = true;
 			characterButtonOutline.effectColor = new Color32 (255, 96, 26, 255);
-
 		} else {
 			//if not
 			characterButtonOutline.enabled = false;
 		}
 	}
 
-	public void CheckCharacterActivate ()
+	//call this to activate toggled characters
+	public void ActivateToggledCharacters ()
 	{
-		
-		for (int i = 0; i < characterButtonToggleOn.Length; i++) {
-			if (characterButtonToggleOn [i]) {
-				SelectedSkill (i);
-			}
-		}
-		
+		CharacterManager.StartCharacter (characterButtonToggleOn);
 	}
-
 
 	public void ShowSkillDescription (int skillNumber)
 	{
 		GameObject skillDescription = SystemPopupController.Instance.ShowPopUp ("PopUpSkillDescription");
 		skillDescription.GetComponent<PopUpSkillDescriptionController> ().SkillDescription (CharacterManager.GetCharacter (skillNumber).characterDescription);
 	}
-
-
-
-	private void SelectedSkill (int skillNumber)
-	{
-		SelectSkillActivate (delegate() {
-			CharacterManager.ActivateCharacter (skillNumber);
-		}, delegate() {
-			SystemGlobalDataController.Instance.skillChosenCost = CharacterManager.GetCharacter (skillNumber).characterGPCost;
-		});
-	}
-
-	private void SelectSkillActivate (Action activateSkill, Action skillCost)
-	{
-		activateSkill ();
-	}
-
 
 
 

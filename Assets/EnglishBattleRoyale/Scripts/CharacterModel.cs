@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-
+using System;
+[Serializable]
 public class CharacterModel {
 	public int characterID;
 	public string characterName;
@@ -52,4 +53,10 @@ public class CharacterModel {
 	
 	}
 
+}
+//make list class for charactermodel and serializable so that it can be wrapped and send to firebase
+[Serializable]
+public class CharacterModelList
+{
+	public List<CharacterModel> list;
 }

@@ -20,11 +20,6 @@ public class BattleStatusManager: IRPCDicObserver
 		}
 	}
 
-	private void OnAnswerCountFull ()
-	{
-		
-	}
-
 	private void ReceiveBattleStatus (Dictionary<string, System.Object> battleStatusDetails)
 	{
 		Dictionary<string, System.Object> newBattleStatus = new Dictionary<string, object> ();
@@ -44,19 +39,27 @@ public class BattleStatusManager: IRPCDicObserver
 			if (newBattleStatus.ContainsKey (MyConst.BATTLE_STATUS_STATE)) {
 				string battleState = newBattleStatus [MyConst.BATTLE_STATUS_STATE].ToString ();
 				int battleCount = int.Parse (newBattleStatus [MyConst.BATTLE_STATUS_COUNT].ToString ());
-
 				switch (battleState) {
+
+
 				case MyConst.BATTLE_STATUS_ANSWER:
 
-					SystemGlobalDataController.Instance.playerAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString ());
-					SystemGlobalDataController.Instance.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString ());
-
-					if (battleCount > 1) {
-						ScreenBattleController.Instance.StartPhase2 ();
+					if (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString () != "0") {
+						SystemGlobalDataController.Instance.playerAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString ());
 					}
+
+					if (newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString () != "0") {
+						SystemGlobalDataController.Instance.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString ());
+					}
+
+					CheckBattleCount (battleCount, delegate() {
+						ScreenBattleController.Instance.StartPhase2 ();
+					});
 					break;
 
 				case MyConst.BATTLE_STATUS_ATTACK:
+
+					Debug.Log ("battlecount: " +battleCount);
 					CheckBattleCount (battleCount);
 					break;
 
@@ -67,6 +70,7 @@ public class BattleStatusManager: IRPCDicObserver
 
 	private void CheckBattleCount (int battleCount, Action action = null)
 	{
+		Debug.Log ("battlecount: " +battleCount);
 		if (battleCount > 1) {
 			action ();
 			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();

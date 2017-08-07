@@ -54,7 +54,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		targetType = questionTypeModel.targetType;
 		answerType = questionTypeModel.answerType;
 		selectionType = questionTypeModel.selectionType;
-		timerSlider.maxValue = 25;
+		timerSlider.maxValue = 5;
 		TimeManager.StartQuestionTimer (delegate(int timeLeft) {
 			TweenFacade.SliderTimer(timerSlider,timeLeft);
 			questionHint.OnTimeInterval();
@@ -67,7 +67,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 				Destroy(gameObject);
 
 			}
-		}, 25);
+		}, 5);
 		this.onRoundResult = onRoundResult;
 		NextQuestion ();
 	}

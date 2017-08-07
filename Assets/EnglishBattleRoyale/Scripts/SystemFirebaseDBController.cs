@@ -8,7 +8,6 @@ using System;
 #if UNITY_EDITOR
 using Firebase.Unity.Editor;
 #endif
-
 public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseDBController>,IRPCDicObserver, IRPCQueryObserver
 {
 	DatabaseReference reference;
@@ -72,7 +71,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		
 		try {
 			//TEMPORARY SOLUTION FOR PLAYER DETAILS
-			if (dataSnapShot.Key.ToString ().Equals ("Home")) {
+			if (dataSnapShot.Key.ToString ().Equals (MyConst.GAMEROOM_HOME)) {
 				if (SystemGlobalDataController.Instance.isHost) {
 					InitialState.Add (dataSnapShot, true);
 				} else {
@@ -82,7 +81,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 			}
 			//TEMPORARY SOLUTION FOR PLAYER DETAILS
-			if (dataSnapShot.Key.ToString ().Equals ("Visitor")) {
+			if (dataSnapShot.Key.ToString ().Equals (MyConst.GAMEROOM_VISITOR)) {
 				isMatchMakeSuccess = true;
 				onSuccessMatchMake (true);
 				if (SystemGlobalDataController.Instance.isHost) {
@@ -107,9 +106,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			if (dataSnapshot.HasChildren) {
 				Debug.Log ("has game rooms");
 				foreach (DataSnapshot snapshot in dataSnapshot.Children) {
-				
-					//get prototype mode type from host
-					SystemGlobalDataController.Instance.modePrototype = (ModeEnum)int.Parse (snapshot.Child (MyConst.GAMEROOM_PROTOTYPE_MODE).Value.ToString ());
+
 
 					GameManager.SetSettings ();
 
@@ -147,9 +144,6 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		GameManager.SetSettings ();
 		gameRoomKey = FirebaseDBFacade.CreateKey (reference.Child (MyConst.GAMEROOM_ROOM));
 		RoomCreateJoin (true, MyConst.GAMEROOM_HOME);
-
-		//set prototype mode type
-		FirebaseDBFacade.SetTableValueAsync (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_PROTOTYPE_MODE), "" + (int)SystemGlobalDataController.Instance.modePrototype);
 	}
 
 	public void CancelRoomSearch ()
@@ -195,7 +189,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	IEnumerator StartJoinDelay ()
 	{
-		yield return new WaitForSeconds (5);
+		yield return new WaitForSeconds (2);
 		Debug.Log ("JoinCounter " + joinCounter);
 		if (joinCounter < 2) {
 			RoomCreateJoin (false, MyConst.GAMEROOM_VISITOR);
@@ -215,10 +209,8 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		result [MyConst.RPC_DATA_PLAYER] = JsonUtility.ToJson (SystemGlobalDataController.Instance.player);
 		Dictionary<string, System.Object> entryValues = result;
 
-
 		string directory = MyConst.GAMEROOM_ROOM + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_INITITAL_STATE + "/" + userPlace + "/" + MyConst.RPC_DATA_PARAM + "/";
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, entryValues);
-
 
 		//set room status to open when create room
 		if (isHost) {
@@ -318,8 +310,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			});
 		});
 	}
-
-
+		
 	public void AttackPhase (AttackModel param)
 	{
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
@@ -345,7 +336,6 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			battleStatus [MyConst.BATTLE_STATUS_COUNT] = battleCount.ToString ();
 			action (battleStatus, battleCount);
 		} 
-		Debug.Log ("NEW BATTLE COUNT" + battleCount);
 		return battleStatus;
 	}
 

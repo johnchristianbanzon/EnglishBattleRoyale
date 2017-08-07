@@ -1,20 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using NCalc;
+using System;
+
+
 
 public class CharacterManager: IRPCDicObserver
 {
-	private static CharacterModel character;
-	private static float calculateCharAmount;
 	private static CharacterModel[] currentCharacterInEquip = new CharacterModel[3];
 	private static Queue<CharacterModel> characterQueue = new Queue<CharacterModel> (8);
-
-	#region Receive character from firebase and activate
+	private static int characterReceiveCount = 0;
 
 	public void Init ()
 	{
 		RPCDicObserver.AddObserver (this);
 	}
+
+	#region send character to firebase
+
+	//send characters used to firebase
+	public static void StartCharacter (bool[] characterButtonToggleOn)
+	{
+		List<CharacterModel> charactersToSend = new List<CharacterModel> ();
+		for (int i = 0; i < characterButtonToggleOn.Length; i++) {
+			if (characterButtonToggleOn [i] == true) {
+				charactersToSend.Add (currentCharacterInEquip [i]);
+			} else {
+				charactersToSend.Add (null);
+			}
+		}
+
+		CharacterModelList characterList = new CharacterModelList ();
+		characterList.list = charactersToSend;
+
+		SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_CHARACTER, (characterList));
+	}
+
+	#endregion
+
+	#region Receive character from firebase and also get characters to activate
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
@@ -28,8 +52,22 @@ public class CharacterManager: IRPCDicObserver
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 				if (param.ContainsKey (MyConst.RPC_DATA_CHARACTER)) {
 
-					character = JsonUtility.FromJson<CharacterModel> (param [MyConst.RPC_DATA_CHARACTER].ToString ());
-					CalculateCharAmount ();
+					CharacterModelList characterList = JsonUtility.FromJson<CharacterModelList> (param [MyConst.RPC_DATA_CHARACTER].ToString ());
+					Queue<Action> characterActionList = new Queue<Action> ();
+
+					for (int i = 0; i < characterList.list.Count; i++) {
+						characterActionList.Enqueue (delegate() {
+							CharacterActivate (characterList.list [i]);
+						});
+					}
+
+					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
+						BattleManager.SetPlayerActionQueue (characterActionList);
+
+					} else {
+						BattleManager.SetEnemyActionQueue (characterActionList);
+					}
+
 				}
 
 			}
@@ -37,10 +75,14 @@ public class CharacterManager: IRPCDicObserver
 			//do something with exception in future
 		}
 	}
-		
 
-	//calculate the skill effect of character from csv
-	private static void CalculateCharAmount ()
+
+	#endregion
+
+
+	#region activate a character
+
+	public static void CharacterActivate (CharacterModel character)
 	{
 		float variable = 0;
 		switch (character.characterAmountVariable) {
@@ -66,63 +108,30 @@ public class CharacterManager: IRPCDicObserver
 		//parses the string formula from csv
 		Expression e = new Expression (character.characterAmount);
 		e.Parameters ["N"] = variable;  
-		calculateCharAmount = float.Parse (e.Evaluate ().ToString ());
+
+		CharacterCompute (character, float.Parse (e.Evaluate ().ToString ()));
 	}
-
-
-	private static void SetCalculateOperator ()
-	{
-		SkillCalcEnum skillCalc = (SkillCalcEnum)character.characterCalculationType;
-		string skillOperator = "";
-
-		switch (skillCalc) {
-		case SkillCalcEnum.Add:
-			skillOperator = "+=";
-			break;
-		case SkillCalcEnum.Multiply:
-			skillOperator = "*=";
-			break;
-		case SkillCalcEnum.DiffAdd:
-			//not yet
-			break;
-		case SkillCalcEnum.DiffMultiply:
-			//not yet
-			break;
-		default:
-			skillOperator = "";
-			break;
-		}
-
-		if (!string.IsNullOrEmpty (skillOperator)) {
-			CharacterActivate (skillOperator);
-		}
-	}
-
+		
 	//activates the character and calculate the respective skills
-	private static void CharacterActivate(string skillOperator){
-		string skillExpression = "";
+	private static void CharacterCompute (CharacterModel character, float calculateCharAmount)
+	{
 		switch ((SkillEnum)character.characterSkillID) {
 
 
 		case SkillEnum.DecreaseEnemyBaseDamage:
-			skillExpression = ScreenBattleController.Instance.partState.enemy.playerBaseDamage.ToString () + skillOperator + calculateCharAmount.ToString ();
-			ScreenBattleController.Instance.partState.enemy.playerBaseDamage = CalculateExpression (skillExpression);
+			ScreenBattleController.Instance.partState.enemy.playerBaseDamage -= calculateCharAmount;
 			break;
 		case SkillEnum.DereaseEnemyHP:
-			skillExpression = ScreenBattleController.Instance.partState.enemy.playerHP.ToString () + skillOperator + calculateCharAmount.ToString ();
-			ScreenBattleController.Instance.partState.enemy.playerHP = CalculateExpression (skillExpression);
+			ScreenBattleController.Instance.partState.enemy.playerHP -= calculateCharAmount;
 			break;
 		case SkillEnum.IncreasePlayerBaseDamage:
-			skillExpression = ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString () + skillOperator + calculateCharAmount.ToString ();
-			ScreenBattleController.Instance.partState.player.playerBaseDamage = CalculateExpression (skillExpression);
+			ScreenBattleController.Instance.partState.player.playerBaseDamage += calculateCharAmount;
 			break;
 		case SkillEnum.IncreasePlayerGP:
-			skillExpression = ScreenBattleController.Instance.partState.player.playerGP.ToString () + skillOperator + calculateCharAmount.ToString ();
-			ScreenBattleController.Instance.partState.player.playerGP = CalculateExpression (skillExpression);
+			ScreenBattleController.Instance.partState.player.playerGP += calculateCharAmount;
 			break;
 		case SkillEnum.IncreasePlayerHP:
-			skillExpression = ScreenBattleController.Instance.partState.enemy.playerHP.ToString () + skillOperator + calculateCharAmount.ToString ();
-			ScreenBattleController.Instance.partState.enemy.playerHP = CalculateExpression (skillExpression);
+			ScreenBattleController.Instance.partState.enemy.playerHP += calculateCharAmount;
 			break;
 		case SkillEnum.LimitEnemySkill:
 			//not yet
@@ -133,14 +142,6 @@ public class CharacterManager: IRPCDicObserver
 		default:
 			break;
 		}
-	}
-
-
-	private static float CalculateExpression (string expression)
-	{
-		Expression e = new Expression (expression);
-		return float.Parse (e.Evaluate ().ToString ());
-		;
 	}
 
 	#endregion
@@ -175,22 +176,12 @@ public class CharacterManager: IRPCDicObserver
 		return equipCharacterList;
 	}
 
-	public static void ActivateCharacter (int characterNumber)
-	{
-		StartCharacter (currentCharacterInEquip [characterNumber - 1]);
-	}
-
-	public static void StartCharacter (CharacterModel characterModel)
-	{
-		ScreenBattleController.Instance.partState.player.playerGP -= characterModel.characterGPCost;
-		SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_CHARACTER, (characterModel));
-	}
 
 	//set the skill in the UI
-	private static void SetCharacterUI (int characterIndex, CharacterModel characterModel)
+	private static void SetCharacterUI (int characterIndex, CharacterModel character)
 	{
-		currentCharacterInEquip [characterIndex] = characterModel;
-		ScreenBattleController.Instance.partCharacter.SetCharacterUI (characterIndex, characterModel);
+		currentCharacterInEquip [characterIndex] = character;
+		ScreenBattleController.Instance.partCharacter.SetCharacterUI (characterIndex, character);
 	}
 
 	//receive skill list from prepare phase and shuffle for random skill in start and put in queue
@@ -228,4 +219,10 @@ public class CharacterManager: IRPCDicObserver
 	}
 
 	#endregion
+
+
+
 }
+	
+
+
