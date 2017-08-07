@@ -46,6 +46,7 @@ public class PartMatchController : MonoBehaviour
 	{
 		BattleStatusManager battleStatusManager = new BattleStatusManager ();
 		CharacterManager characterManager = new CharacterManager ();
+
 		characterManager.Init ();
 		battleStatusManager.Init ();
 

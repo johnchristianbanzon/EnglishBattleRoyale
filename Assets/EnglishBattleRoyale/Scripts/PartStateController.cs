@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System;
 
 /* Controls the battle */
-public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObserver
+public class PartStateController : MonoBehaviour, IGameTimeObserver
 {
 	public Text playerNameText;
 
@@ -51,7 +51,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	private void Init ()
 	{
 		TimeManager.AddGameTimeObserver (this);
-		RPCDicObserver.AddObserver (this);
 		TimeManager.StartPreBattleTimer (3);
 		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
 
@@ -62,31 +61,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 			SetStateParam (initialState.Key, initialState.Value);
 		}
 	}
-
-	#region Start and end battle phase
-
-	//attack when start phase
-	public void OnStartPhase ()
-	{
-		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (false);
-		Debug.Log ("Starting attack phase");
-		PartAnswerIndicatorController.Instance.ResetAnswer ();
-		Attack ();
-	}
-	//send attack to firebase
-	public void Attack ()
-	{
-		Dictionary<string, System.Object> param = new Dictionary<string, System.Object> ();
-		param [MyConst.RPC_DATA_ATTACK] = SystemGlobalDataController.Instance.player.playerBaseDamage + SystemGlobalDataController.Instance.gpEarned;
-		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (JsonUtility.ToJson (param)));
-	}
-	//show skill buttons after attack phase is done
-	public void OnEndPhase ()
-	{
-		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
-	}
-
-	#endregion
 
 	#region INITIAL STATE
 
@@ -133,170 +107,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver,IRPCDicObser
 	}
 
 	#endregion
-
-	//REFACCCTOOOOOOOR AAAAALLLLLLL
-
-	#region BATTLE LOGIC AND ANIMATION
-
-	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
-	{
-		try {
-			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
-			if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
-				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
-				SystemGlobalDataController.Instance.isSender = userHome;
-
-				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
-				AttackModel attack = JsonUtility.FromJson<AttackModel> (param [MyConst.RPC_DATA_ATTACK].ToString ());
-
-
-//				if (thisCurrentParameter.Count == 2) {
-//					Attack (thisCurrentParameter);
-//					thisCurrentParameter.Clear ();
-//				} 
-			}
-		} catch (System.Exception e) {
-			//do something later
-		}
-	}
-
-	public void Attack (Dictionary<bool, Dictionary<string, object>> currentParam)
-	{
-		KeyValuePair<bool, Dictionary<string, System.Object>> getParam = BattleLogic.GetAttackParam (currentParam);
-		userHome.Add (getParam.Key);
-		param.Add (getParam.Value);
-
-		//change order of list if host or visitor
-		BattleLogic.ChangeOrder (delegate(List<bool> userHome, List<Dictionary<string, object>> param) {
-			this.userHome = userHome;
-			this.param = param;
-		}, userHome, param);
-
-
-		Debug.Log ("HOST IS" + userHome [0]);
-
-		//set attack order between opponents
-		int attackOrder = BattleLogic.GetAttackOrder ();
-
-		switch (attackOrder) {
-		case 0:
-			Debug.Log ("player first attack");
-			StartCoroutine (SetAttack (0, 1, 2));
-
-			break;
-		case 1:
-			Debug.Log ("enemy first attack");
-			StartCoroutine (SetAttack (1, 0, 2));
-
-			break;
-		case 2:
-			Debug.Log ("same attack");
-			StartCoroutine (SetAttack (0, 1, 0, true));
-			StartCoroutine (StartAttackSequence (3));
-			break;
-		}
-
-	}
-
-	IEnumerator SetAttack (int firstIndex, int secondIndex, int yieldTime, bool isSameAttack = false)
-	{
-		AttackCalculate (userHome [firstIndex], param [firstIndex], isSameAttack);
-		yield return new WaitForSeconds (yieldTime);
-		AttackCalculate (userHome [secondIndex], param [secondIndex], isSameAttack);
-		userHome.Clear ();
-	}
-
-
-	private void AttackCalculate (bool attackerBool, Dictionary<string, System.Object> attackerParam, bool sameAttack = false)
-	{
-		int attackSequence = BattleLogic.AttackLogic (delegate(float enemyHP, float playerHP) {
-			enemy.playerHP = enemyHP;
-			player.playerHP = playerHP;
-		}, enemy.playerHP, player.playerHP, attackerBool, attackerParam, sameAttack);
-
-		if (attackSequence != 0) {
-			StartCoroutine (StartAttackSequence (attackSequence));
-		}
-	}
-
-	//Animation and sound when attacking
-	IEnumerator StartAttackSequence (int sequenceType)
-	{
-
-		switch (sequenceType) {
-		case 1:
-			//animate and sound here
-			yield return new WaitForSeconds (0.5f);
-			//animate and sound here
-			CheckAttackCount ();
-			break;
-		case 2:
-			//animate and sound here
-			yield return new WaitForSeconds (0.5f);
-			//animate and sound here
-			CheckAttackCount ();
-			break;
-		case 3:
-			//animate and sound here
-			yield return new WaitForSeconds (0.5f);
-			//animate and sound here
-			CheckBattleStatus (true);
-			break;
-
-		}
-
-	}
-
-	private void CheckAttackCount ()
-	{
-		attackCount++;
-		if (attackCount == 2) {
-			CheckBattleStatus (true);
-			attackCount = 0;
-		} else {
-			CheckBattleStatus (false);
-		}
-	}
-
-
-	public void CheckBattleStatus (bool secondCheck)
-	{
-		StartCoroutine (CheckBattleStatusDelay (secondCheck));
-	}
-
-	IEnumerator CheckBattleStatusDelay (bool secondCheck)
-	{
-		bool battleOver = false;
-		BattleLogic.CheckBattle (secondCheck, enemy.playerHP, player.playerHP, delegate(string battleResult, bool isBattleOver) {
-
-			ShowWinLose (battleResult);
-			StopAllCoroutines ();
-			battleOver = isBattleOver;
-		});
-
-		if (!battleOver) {
-			if (secondCheck) {
-				if (SystemGlobalDataController.Instance.isHost) {
-					SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, "0", "0");	
-				}
-				yield return new WaitForSeconds (3);	
-				ScreenBattleController.Instance.StartPhase1 ();
-				//reset effects done by skill and battle data
-				SystemGlobalDataController.Instance.ResetPlayer ();
-				param.Clear ();
-				Debug.Log ("player damage reset! now damage is: " + SystemGlobalDataController.Instance.player.playerBaseDamage);
-			}
-		}
-	}
-
-	public void ShowWinLose (string winLoseText)
-	{
-		GameObject battleResult = SystemPopupController.Instance.ShowPopUp ("PopUpBattleResult");
-		battleResult.GetComponent<PopUpBattleResultController> ().SetBattleResultText (winLoseText);
-	}
-
-	#endregion
-
 
 
 	#region TIMER Subscriber
