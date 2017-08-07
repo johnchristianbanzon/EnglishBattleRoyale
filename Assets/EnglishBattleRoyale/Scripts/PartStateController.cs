@@ -79,6 +79,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		PlayerModel player = JsonUtility.FromJson<PlayerModel> (initialState [MyConst.RPC_DATA_PLAYER].ToString ());
 
 		if (isHome) {
+			
 			SetInitialPlayerUI (player);
 		} else {
 			SetInitialEnemyUI (player);
@@ -87,23 +88,28 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public void SetInitialPlayerUI (PlayerModel player)
 	{
+		this.player = player;
 		playerNameText.text = player.playerName;
 
 		playerHPText.text = player.playerHP.ToString ();
-		playerHPBar.value = player.playerHP;
 		playerHPBar.maxValue = player.playerHP;
+		playerHPBar.value = player.playerHP;
+
 
 		playerGPText.text = player.playerGP.ToString ();
-		playerGPBar.value = player.playerGP;
 		playerGPBar.maxValue = player.playerGP;
+		playerGPBar.value = player.playerGP;
+	
 	}
 
 	public void SetInitialEnemyUI (PlayerModel enemy)
 	{
+		this.enemy = enemy;
 		enemyNameText.text = enemy.playerName;
 		enemyHPText.text = enemy.playerHP.ToString ();
-		enemyHPBar.value = enemy.playerHP;
 		enemyHPBar.maxValue = enemy.playerHP;
+		enemyHPBar.value = enemy.playerHP;
+
 	}
 
 	#endregion
@@ -145,12 +151,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 
 		//if no winner, start phase 1 again
-		if (CheckBattle ()) {
+		if (CheckHP ()) {
 			ScreenBattleController.Instance.StartPhase1 ();
 		}	
 	}
 
-	private bool CheckBattle(){
+	private bool CheckHP(){
 		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
 			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 
@@ -167,7 +173,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		} 
 
 		return true;
-
 	}
 
 	#endregion
