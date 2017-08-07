@@ -17,7 +17,7 @@ public class PartQuestionController: MonoBehaviour
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
 		QuestionBuilder.PopulateQuestion ();
 
-		string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };
+		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
 
 		questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
 		QuestionSystemController.Instance.StartQuestionRound (

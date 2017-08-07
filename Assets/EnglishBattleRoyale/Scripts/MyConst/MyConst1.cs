@@ -29,7 +29,6 @@ public static partial class MyConst {
 		questionList.Clear ();
 		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("QuestionSystemCsv");
 		List<List<string>> csvQuestionList = CSVParserUtility.Parse (csvData.ToString());
-
 		for (int i = 1; i < csvQuestionList.Count; i++) {
 			//0 FOR LEVELID, QUESTIONID FOR TESTING : LACKING VALUES
 			questionList.Add (new QuestionRowModel (
@@ -52,7 +51,6 @@ public static partial class MyConst {
 			));
 			wrongChoices.Add (CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString ()
 			);
-
 		}
 	}
 

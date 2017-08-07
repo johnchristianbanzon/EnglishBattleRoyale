@@ -3,55 +3,68 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class FillAnswerType : MonoBehaviour,IAnswer {
+public class FillAnswerType : MonoBehaviour,IAnswer
+{
 
-	public List<GameObject> answerContainers = new List<GameObject>();
+	public List<GameObject> answerContainers = new List<GameObject> ();
 	public GameObject[] selectionIdentifier = new GameObject[12];
 	public GameObject outviewContent;
 	private string questionAnswer;
 	private int answerIndex = 0;
 	private Action<bool> onHintResult;
 	List <int> hintIndexRandomList = new List<int> ();
+	public GameObject clearButton;
+	public bool isFull = false;
 
-	public void DeployAnswerType(){
+	public void DeployAnswerType ()
+	{
 		gameObject.SetActive (true);
 		hintIndexRandomList.Clear ();
 		questionAnswer = QuestionSystemController.Instance.questionAnswer;
 		PopulateContainer ();
 	}
 
-	public void ClearHint (){
-		foreach (Transform hint in outviewContent.transform) {
-			GameObject.Destroy(hint.gameObject);
+	public void ClearHint ()
+	{
+		for (int i = 0; i < answerContainers.Count; i++) {
+//			if (answerContainers [i].GetComponent<SelectLetterEvent> () != null) {
+////				answerContainers [i].GetComponent<SelectLetterEvent> ().ReturnSelectedLetter ();
+//			} else {
+				Destroy (answerContainers [i]);
+//			}
 		}
 	}
 
-	public void OnClickHint (int hintIndex,Action<bool> onHintResult){
+	public void OnClickHint (int hintIndex, Action<bool> onHintResult)
+	{
 		this.onHintResult = onHintResult;
 		CheckAnswerHolder ();
+		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, answerContainers [answerIndex]);
+		/*
 		int randomizedHintIndex = 0;
 		int whileCounter = 0;
 		randomizedHintIndex = UnityEngine.Random.Range (0, questionAnswer.Length);
 		while (hintIndexRandomList.Contains (randomizedHintIndex) &&
-			questionAnswer[randomizedHintIndex].ToString().Equals(answerContainers[randomizedHintIndex].GetComponentInChildren<Text>().text)) {
+		       questionAnswer [randomizedHintIndex].ToString ().Equals (
+			       answerContainers [randomizedHintIndex].GetComponentInChildren<Text> ().text)) {
 			randomizedHintIndex = UnityEngine.Random.Range (0, questionAnswer.Length);
 			if (whileCounter > 100) {
 				break;
 			}
 			whileCounter++;
 		}
-
 		hintIndexRandomList.Add (randomizedHintIndex);
-		QuestionSystemController.Instance.selectionType.ShowSelectionHint (randomizedHintIndex,answerContainers[randomizedHintIndex]);
-
+		QuestionSystemController.Instance.selectionType.ShowSelectionHint (randomizedHintIndex, answerContainers [randomizedHintIndex]);
+*/
 		CheckAnswer ();
 	}
 
-	public void PopulateContainer(){
+	public void PopulateContainer ()
+	{
 		answerContainers.Clear ();
 		for (int i = 0; i < questionAnswer.Length; i++) {
-			GameObject answerPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI",outviewContent);
-			answerPrefab.name = "output" + (i+1);
+			GameObject answerPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", outviewContent);
+			answerPrefab.name = "output" + (i + 1);
 			answerContainers.Add (answerPrefab);
 			answerPrefab.GetComponent<Button> ().onClick.AddListener (() => {
 				OnAnswerClick (answerPrefab.GetComponent<Button> ());
@@ -64,37 +77,54 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 	{
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 		string answerclicked = "";
-		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text>().text)) {
+		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
 		} else {
 			for (int i = 0; i < answerContainers.Count; i++) {
-				if (answerButton.name.Equals ("output" + (i+1))) {
+				if (answerButton.name.Equals ("output" + (i + 1))) {
 					answerclicked = answerContainers [i].transform.GetChild (0).GetComponent<Text> ().text;
 					hintIndexRandomList.Remove (i);
-					answerContainers [i].GetComponentInChildren<Text>().text = "";
-					GetSelectionIdentifier (i).SetActive(true);
-
+					answerContainers [i].GetComponentInChildren<Text> ().text = "";
+					GetSelectionIdentifier (i).SetActive (true);
 				}
 			}
 			CheckAnswerHolder ();
 		}
 	}
 
-	public void SelectionLetterGot(GameObject selectedObject){
+	public void SelectionLetterGot (GameObject selectedObject)
+	{
 		CheckAnswerHolder ();
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
-		if (string.IsNullOrEmpty (selectedObject.GetComponentInChildren<Text>().text)) {
+		if (string.IsNullOrEmpty (selectedObject.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (selectedObject.transform, 1.0f, 30.0f, 50, 90f);
 		} else {
-			selectionIdentifier[answerIndex] = selectedObject.gameObject;
+			selectionIdentifier [answerIndex] = selectedObject.gameObject;
 			hintIndexRandomList.Add (answerIndex);
-			answerContainers [answerIndex].GetComponentInChildren<Text>().text 
-			= selectedObject.GetComponentInChildren<Text>().text;
+			answerContainers [answerIndex].GetComponentInChildren<Text> ().text 
+			= selectedObject.GetComponentInChildren<Text> ().text;
 			CheckAnswer ();
 		}
 	}
 
-	public string GetAnswerWritten(){
+	public void ClearAnswerContainers ()
+	{
+		
+	}
+
+	public void ShowSelectedLetter (GameObject selectedObject)
+	{
+		CheckAnswerHolder ();
+		if (!isFull) {
+			if (questionAnswer.Length > answerIndex) {
+				selectedObject.transform.parent = answerContainers [answerIndex].transform;
+				CheckAnswer ();
+			}
+		}
+	}
+
+	public string GetAnswerWritten ()
+	{
 		string answerWrote = "";
 		for (int j = 0; j < questionAnswer.Length; j++) {
 			answerWrote += answerContainers [j].transform.GetChild (0).GetComponent<Text> ().text;
@@ -102,7 +132,8 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 		return answerWrote;
 	}
 
-	public void CheckAnswer(){
+	public void CheckAnswer ()
+	{
 		GetAnswerWritten ();
 		string answerWrote = GetAnswerWritten ();
 		if (answerWrote.Length.Equals (questionAnswer.Length)) {
@@ -114,20 +145,28 @@ public class FillAnswerType : MonoBehaviour,IAnswer {
 		}
 	}
 
-	public GameObject GetSelectionIdentifier(int index){
-		GameObject objectIdentifier = selectionIdentifier[index];
+	public void InitContainer (int positionIndex)
+	{
+		GameObject emptyContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI", outviewContent);
+		emptyContainer.transform.SetSiblingIndex (positionIndex);
+		answerContainers [positionIndex] = emptyContainer;
+	}
+
+	public GameObject GetSelectionIdentifier (int index)
+	{
+		GameObject objectIdentifier = selectionIdentifier [index];
 		return objectIdentifier;
 	}
 
 	public void CheckAnswerHolder ()
 	{
-		for (int j = 0; j < answerContainers.Count; j++) {
-			GameObject findEmpty = answerContainers [j].transform.GetChild (0).gameObject;
-			if (string.IsNullOrEmpty (findEmpty.GetComponent<Text> ().text)) {
-				answerIndex = j;
+		isFull = true;
+		foreach (Transform answerContainer in outviewContent.transform) {
+			if (string.IsNullOrEmpty (answerContainer.GetComponentInChildren<Text> ().text)) {
+				answerIndex = answerContainer.GetSiblingIndex ();
+				isFull = false;
 				break;
 			}
 		}
-
 	}
 }

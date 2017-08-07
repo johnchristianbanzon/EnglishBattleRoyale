@@ -39,7 +39,7 @@ public class Typing : MonoBehaviour, ISelection
 
 	public void HideSelectionHint ()
 	{
-		if (QuestionSystemConst.ALLOW_REMOVE_SELECTLETTER.Equals (1)) {
+		if (MyConst.ALLOW_REMOVE_SELECTLETTER.Equals (1)) {
 			if (!initHideHint) {
 				InitHideHint ();
 				initHideHint = true;

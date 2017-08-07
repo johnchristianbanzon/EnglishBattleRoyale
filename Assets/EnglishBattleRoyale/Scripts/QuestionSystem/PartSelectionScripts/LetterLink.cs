@@ -10,10 +10,8 @@ public class LetterLink : MonoBehaviour ,ISelection
 	private bool startSelection = false;
 	private string writtenAnswer;
 	private string questionAnswer;
-	private int noHintUsed;
 	private Color selectedColor = new Color (36f / 255, 189f / 255f, 88f / 255f);
 	private Color defaultColor = new Color (94f / 255, 255f / 255f, 148f / 255f);
-	private int noOfContainersSelected = 0;
 
 	public void ShowCorrectAnswer ()
 	{
@@ -23,7 +21,6 @@ public class LetterLink : MonoBehaviour ,ISelection
 	public void OnBeginDrag (GameObject currentSelectedLetter)
 	{
 		startSelection = true;
-		noOfContainersSelected = noHintUsed;
 		OnDragSelection (currentSelectedLetter);
 	}
 
@@ -43,7 +40,6 @@ public class LetterLink : MonoBehaviour ,ISelection
 
 	public void OnEndDrag ()
 	{
-		noOfContainersSelected = 0;
 		if (questionAnswer == writtenAnswer) {
 			startSelection = false;
 			QuestionSystemController.Instance.CheckAnswer (true);

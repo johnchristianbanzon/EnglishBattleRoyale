@@ -8,25 +8,30 @@ public class WordChoice : MonoBehaviour, ISelection
 {
 	public bool justAnswered = false;
 	private string questionAnswer = "";
+	private int numberOfCorrectAnswer = 2;
 	public GameObject[] selectionButtons = new GameObject[4];
 	private List<GameObject> answerClicked = new List<GameObject> ();
 	private List<GameObject> answerButtons = new List<GameObject> ();
 	private List<string> answerString = new List<string> ();
+	private int answerIndex = 0;
+	private GameObject selectedObject;
+	private int hintIndex = 0;
 
-	public void OnClickSelection ()
+	public void OnClickSelection (GameObject clickedButton)
 	{
+		selectedObject = clickedButton;
+
 		if (!justAnswered) {
 			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
-			GameObject wordClicked = EventSystem.current.currentSelectedGameObject;
+			GameObject wordClicked = clickedButton;
 			string wordClickedString = wordClicked.GetComponentInChildren<Text> ().text;
 			if (wordClicked.GetComponent<Image> ().color == Color.gray) {
 				wordClicked.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 				answerClicked.Remove (wordClicked);
-
 			} else {
 				wordClicked.GetComponent<Image> ().color = Color.gray;
 				answerClicked.Add (wordClicked);
-				if (answerClicked.Count == 2) {
+				if (answerClicked.Count >= 2) {
 					string answerClicked1 = answerClicked [0].GetComponentInChildren<Text> ().text.ToUpper ();
 					string answerClicked2 = answerClicked [1].GetComponentInChildren<Text> ().text.ToUpper ();
 					CheckIfCorrect (answerClicked1, answerClicked2);
@@ -46,7 +51,11 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{ 
-		answerButtons [hintIndex].GetComponent<Image> ().color = new Color (255 / 255, 102 / 255f, 51 / 255f);
+		if (hintIndex < numberOfCorrectAnswer) {
+			answerButtons [answerClicked.Count].GetComponent<Button> ().interactable = false;
+			OnClickSelection (answerButtons [answerClicked.Count].gameObject);
+			this.hintIndex++;
+		}
 	}
 
 	public void HideSelectionType ()
@@ -56,14 +65,20 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	private void CheckIfCorrect (string answerClicked1, string answerClicked2)
 	{
-		answerClicked.Clear ();
-
 		if (answerString.Contains (answerClicked1) && answerString.Contains (answerClicked2)) {
 			QuestionSystemController.Instance.CheckAnswer (true);
+			answerClicked.Clear ();
 		} else {
 			QuestionSystemController.Instance.CheckAnswer (false);
+			if (hintIndex > 0) {
+				answerClicked.Remove (selectedObject);
+			} else {
+				answerClicked.Clear ();
+			}
 			for (int i = 0; i < selectionButtons.Length; i++) {
-				selectionButtons [i].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+				if (selectionButtons [i].GetComponent<Button> ().interactable) {
+					selectionButtons [i].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+				}
 			}
 		}
 	}
@@ -79,6 +94,7 @@ public class WordChoice : MonoBehaviour, ISelection
 	{
 		answerButtons.Clear ();
 		answerString.Clear ();
+		answerClicked.Clear ();
 		int numberOfAnswers = 2;
 		List <int> randomList = new List<int> ();
 		string[] temp = questionAnswer.Split ('/');
@@ -94,11 +110,11 @@ public class WordChoice : MonoBehaviour, ISelection
 			if (i < numberOfAnswers) {
 				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp [i].ToString ().ToUpper ();
 				answerButtons.Add (selectionButtons [randomNum]);
-
 			} else {
 				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = wrongChoiceGot.ToUpper ();
 			}
 			selectionButtons [randomNum].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+			selectionButtons [randomNum].GetComponent<Button> ().interactable = true;
 		}
 		QuestionSystemController.Instance.correctAnswerButtons = answerButtons;
 		answerString.Add (answerButtons [0].GetComponentInChildren<Text> ().text.ToUpper ());

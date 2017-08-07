@@ -14,6 +14,8 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 	{
 		this.gameObject.SetActive (true);
 		questionAnswer = QuestionSystemController.Instance.questionAnswer;
+		hintContainers.Clear ();
+		hasInitHints = false;
 	}
 
 	public void CheckAnswerFromSelection(string selectedAnswer, string questionAnswer){

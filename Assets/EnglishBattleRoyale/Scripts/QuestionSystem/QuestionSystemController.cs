@@ -14,10 +14,11 @@ using System.Collections;
 public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemController>, IQuestionTimeObserver
 {
 	private int correctAnswers;
-	private int currentQuestionNumber = 1;
+	private int currentQuestionNumber = 0;
 	private bool hasSkippedQuestion = false;
 	public string questionAnswer = "";
 	public string questionTarget = "";
+	public bool isQuestionRoundOver = false;
 	public QuestionSystemEnums.QuestionType questionType;
 
 	public ITarget targetType;
@@ -41,33 +42,36 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	//DEBUG FIELDS
 	public InputField timerInput;
 	public GameObject debugUI;
+	private bool isDebug = true;
 	//DEBUG FIELDS ENDS HERE
 
 	//
 	public Slider timerSlider;
-
+	private List<QuestionModel> questionList = new List<QuestionModel> ();
 	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
+		isQuestionRoundOver = false;
 		TimeManager.AddQuestionTimeObserver (this);
-		questionType = questionTypeModel.questionCategory;
-		targetType = questionTypeModel.targetType;
-		answerType = questionTypeModel.answerType;
-		selectionType = questionTypeModel.selectionType;
-		timerSlider.maxValue = 5;
+		questionList = QuestionBuilder.GetQuestionList (10,questionTypeModel);
+		double averageTime = 0;
+		for (int i = 0; i < questionList.Count; i++) {
+			averageTime += questionList [i].idealTime;
+		}
+		double totalTime = (averageTime / questionList.Count) * 7;
+		timerSlider.maxValue = (float)totalTime;
 		TimeManager.StartQuestionTimer (delegate(int timeLeft) {
-			TweenFacade.SliderTimer(timerSlider,timeLeft);
-			questionHint.OnTimeInterval();
-			if(timeLeft<=0){
-				CheckAnswer(false);
-				targetType.HideTargetType();
-				selectionType.HideSelectionType();
-				answerType.ClearHint();
-				onRoundResult(roundResultList);
-				Destroy(gameObject);
-
+			TweenFacade.SliderTimer (timerSlider, timeLeft);
+			questionHint.OnTimeInterval ();
+			if (timeLeft <= 0) {
+				CheckAnswer (false);
+				targetType.HideTargetType ();
+				selectionType.HideSelectionType ();
+				answerType.ClearHint ();
+				onRoundResult (roundResultList);
+				Destroy (gameObject);
 			}
-		}, 5);
+		}, (int)totalTime);
 		this.onRoundResult = onRoundResult;
 		NextQuestion ();
 	}
@@ -87,47 +91,26 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 			timePassed++;
 
 			action (timeLeft);
-
-			yield return new WaitForSeconds (1);
+			if (isQuestionRoundOver) {
+				yield break;
+			} else {
+				yield return new WaitForSeconds (1);
+			}
 		}
 	}
 
 	public void OnStopQuestionTimer ()
 	{
-
-	}
-
-	private IEnumerator WaitAndPrint (float waitTime)
-	{
-		while (true) {
-			yield return new WaitForSeconds (waitTime);
-			print ("WaitAndPrint " + Time.time);
-		}
-	}
-
-	public QuestionModel LoadQuestion ()
-	{
-		QuestionModel questionLoaded = QuestionBuilder.GetQuestion (questionType, selectionType);
-		if (questionLoaded.answers.Length == 2 && selectionType.Equals (partSelection.wordChoice)) {
-			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ());
-		} else {
-			questionAnswer = questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
-		}
-		questionTarget = questionLoaded.question;
-		return questionLoaded;
+		isQuestionRoundOver = true;
 	}
 
 	void Start ()
 	{
-//		MyConst.Init ();
-		/*
-		string[] questionTypes = new string[6]{ "sellect", "typing", "change", "word", "slot", "letter" };
-		QuestionSystemController.Instance.StartQuestionRound (
-			QuestionBuilder.getQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
-			, delegate(List<QuestionResultModel> result) {
-				//questionResultList = result;
-			}
-		);*/
+		if (isDebug) {
+			MyConst.Init ();
+			QuestionBuilder.PopulateQuestion ();
+			//			StartQuestionRound (null, null);
+		}
 	}
 
 	public void OnSkipQuestion ()
@@ -139,21 +122,28 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	}
 
 	private GameObject speedyEffect;
-	private double idealTime = QuestionSystemConst.ANSWER_SPEED_BASETIME;
 
 	public void CheckAnswer (bool isCorrect)
 	{
-		currentQuestionNumber++;
-		Debug.Log (timePassed);
+		double idealTime = questionList [currentQuestionNumber].idealTime;
+		questionHint.InitHints ();
 		if (isCorrect) {
+			currentQuestionNumber++;
 			correctAnswers++;
 			QuestionSpecialEffects spe = new QuestionSpecialEffects ();
 			spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
+			speedyEffect = SystemResourceController.Instance.LoadPrefab ("SpeedyEffectText", SystemPopupController.Instance.popUp.gameObject);
+			speedyEffect.transform.position = Vector3.zero;
+			TweenFacade.TweenScaleToLarge (speedyEffect.transform, Vector3.one, 0.3f);
+
 			if (timePassed < idealTime) {
-				speedyEffect = SystemResourceController.Instance.LoadPrefab ("SpeedyEffectText", SystemPopupController.Instance.popUp.gameObject);
-				speedyEffect.transform.position = Vector3.zero;
 				speedyEffect.GetComponent<Text> ().text = "Awesome";
-				TweenFacade.TweenScaleToLarge (speedyEffect.transform, Vector3.one, 0.3f);
+			} else if (timePassed >= idealTime) {
+				if (timePassed >= (idealTime * 2)) {
+					speedyEffect.GetComponent<Text> ().text = "Rotten";				
+				} else {
+					speedyEffect.GetComponent<Text> ().text = "Good";			
+				}
 			}
 			onQuestionResult.Invoke (new QuestionResultModel (00000, 13, 3, isCorrect, false));
 			Invoke ("NextQuestion", 1f);
@@ -163,19 +153,42 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	}
 
+	private void HideQuestionParts ()
+	{
+		questionList [currentQuestionNumber-1].questionType.answerType.ClearHint ();
+		questionList [currentQuestionNumber-1].questionType.selectionType.HideSelectionType ();
+		questionList [currentQuestionNumber-1].questionType.targetType.HideTargetType ();
+	}
+
 	public void NextQuestion ()
 	{
 		timePassed = 0;
+		questionType = questionList [currentQuestionNumber].questionType.questionCategory;
+		targetType = questionList [currentQuestionNumber].questionType.targetType;
+		answerType = questionList [currentQuestionNumber].questionType.answerType;
+		selectionType = questionList [currentQuestionNumber].questionType.selectionType;
 		Destroy (speedyEffect);
 		questionHint.InitHints ();
 		hasSkippedQuestion = false;
 		partSelection.HideSelectionType (selectionType);
 		answerType.ClearHint ();
-		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 
-			roundResultList.Add(onQuestionResult);
+		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
+			roundResultList.Add (onQuestionResult);
+			Invoke("HideQuestionParts",1.0f);
 		});
 
+	}
+	public QuestionModel LoadQuestion ()
+	{
+		QuestionModel questionLoaded = questionList [currentQuestionNumber];
+		if (questionLoaded.answers.Length == 2 && selectionType.Equals (partSelection.wordChoice)) {
+			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ());
+		} else {
+			questionAnswer = questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
+		}
+		questionTarget = questionLoaded.question;
+		return questionLoaded;
 	}
 
 	public void GetNewQuestion (QuestionSystemEnums.QuestionType questionType, Action<QuestionResultModel> onQuestionResult)
@@ -198,7 +211,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void OnDebugClick (Button button)
 	{
 		StartQuestionRound (QuestionBuilder.getQuestionType (button.name), delegate(List<QuestionResultModel> result) {
-			//questionResultList = result;
 			debugUI.SetActive (true);
 		});
 		debugUI.SetActive (false);

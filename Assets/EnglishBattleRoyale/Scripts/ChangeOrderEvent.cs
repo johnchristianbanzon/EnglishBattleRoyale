@@ -61,6 +61,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	{
 		if (isDragging) {
 			selectedIndex = this.transform.GetSiblingIndex ();
+			Debug.Log (selectedIndex);
 		}	
 	}
 }

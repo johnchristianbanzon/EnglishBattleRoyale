@@ -36,10 +36,11 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		for (int i = 0; i < selectionContainers.Length; i++) { 
 			if (i < answer.Length) {
 				selectionContainers [i].Init(letterArray[i]);
+				selectionsList.Add (selectionContainers [i].gameObject);
 			}  else {
 				selectionContainers [i].gameObject.SetActive (false);
 			}
-			selectionsList.Add (selectionContainers [i].gameObject);
+
 		}
 		QuestionSystemController.Instance.correctAnswerButtons = selectionsList;
 		ShuffleSelection ();

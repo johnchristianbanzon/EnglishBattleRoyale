@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class QuestionSystemConst {
+﻿/* Handles QUESTION SYSTEM Constants */
+public static partial class MyConst {
 
 	public const int HINT_REMOVE_TIME = 3;
 	public const int HINT_SHOW_LIMIT = 10;

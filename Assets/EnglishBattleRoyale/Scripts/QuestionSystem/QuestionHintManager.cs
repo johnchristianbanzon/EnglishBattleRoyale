@@ -4,22 +4,22 @@ using UnityEngine.UI;
 
 public class QuestionHintManager :MonoBehaviour{
 	public Button hintButton;
-	private int hintLimit = QuestionSystemConst.HINT_SHOW_LIMIT;
+	private int hintLimit = MyConst.HINT_SHOW_LIMIT;
 	private int hintIndex = 0;
-	private int hintUsed = 0;
-	private int hintRemovalRate = QuestionSystemConst.HINT_REMOVE_TIME;
+	public int hintUsed = 0;
+	private int hintRemovalRate = MyConst.HINT_REMOVE_TIME;
 	private int hintRemoveInterval = 3;
-	private int hintCooldown = QuestionSystemConst.HINT_BUTTON_COOLDOWN;
+	private int hintCooldown = MyConst.HINT_BUTTON_COOLDOWN;
 	private int hintCooldownCounter = 0;
 	private Action<int> onHintResult;
 
 	public void OnClick(){
 		hintButton.interactable = false;
 		int questionAnswerLength = QuestionSystemController.Instance.questionAnswer.Length;
-		if (hintUsed < hintLimit && questionAnswerLength >= hintIndex) {
+		if (hintUsed < hintLimit && QuestionSystemController.Instance.correctAnswerButtons.Count > hintIndex) {
 			QuestionSystemController.Instance.answerType.OnClickHint (hintIndex,delegate(bool onHintResult) {
 				if(onHintResult){
-					hintIndex = 0;
+					InitHints();
 				}
 			});
 			hintIndex ++;
@@ -30,6 +30,7 @@ public class QuestionHintManager :MonoBehaviour{
 
 	public void InitHints(){
 		hintRemoveInterval = hintRemovalRate;
+		hintIndex = 0;
 	}
 
 	public void OnTimeInterval(){
@@ -40,7 +41,7 @@ public class QuestionHintManager :MonoBehaviour{
 		hintRemoveInterval--;
 	}
 
-	private void InitCooldown(){
+	public void InitCooldown(){
 		hintCooldownCounter = hintCooldown;
 		InvokeRepeating ("CooldownTimer", 0, 1f);
 	}
