@@ -59,7 +59,6 @@ public class BattleStatusManager: IRPCDicObserver
 
 				case MyConst.BATTLE_STATUS_ATTACK:
 
-					Debug.Log ("battlecount: " +battleCount);
 					CheckBattleCount (battleCount);
 					break;
 
@@ -71,6 +70,7 @@ public class BattleStatusManager: IRPCDicObserver
 	private void CheckBattleCount (int battleCount, Action action = null)
 	{
 		Debug.Log ("battlecount: " +battleCount);
+		//Reminders: change to 1 if not testing
 		if (battleCount > 1) {
 			action ();
 			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
