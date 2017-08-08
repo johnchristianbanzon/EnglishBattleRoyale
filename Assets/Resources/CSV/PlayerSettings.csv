@@ -1,0 +1,7 @@
+Key,Value
+PlayerHP,100
+PlayerGP,5
+PlayerMaxGP,30
+PlayerBaseDamage,4
+PlayerGuardDamage,1
+PlayerCriticalDamageRate,1
