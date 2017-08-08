@@ -42,7 +42,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	//DEBUG FIELDS
 	public InputField timerInput;
 	public GameObject debugUI;
-	private bool isDebug = true;
+	public bool isDebug = false;
 	//DEBUG FIELDS ENDS HERE
 
 	//
@@ -109,6 +109,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		if (isDebug) {
 			MyConst.Init ();
 			QuestionBuilder.PopulateQuestion ();
+			debugUI.SetActive (true);
 			//			StartQuestionRound (null, null);
 		}
 	}
@@ -122,7 +123,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	}
 
 	private GameObject speedyEffect;
-
 	public void CheckAnswer (bool isCorrect)
 	{
 		double idealTime = questionList [currentQuestionNumber].idealTime;
@@ -155,9 +155,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private void HideQuestionParts ()
 	{
-		questionList [currentQuestionNumber-1].questionType.answerType.ClearHint ();
-		questionList [currentQuestionNumber-1].questionType.selectionType.HideSelectionType ();
-		questionList [currentQuestionNumber-1].questionType.targetType.HideTargetType ();
+		questionList [currentQuestionNumber].questionType.answerType.ClearHint ();
+		questionList [currentQuestionNumber].questionType.selectionType.HideSelectionType ();
+		questionList [currentQuestionNumber].questionType.targetType.HideTargetType ();
 	}
 
 	public void NextQuestion ()
@@ -171,7 +171,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		questionHint.InitHints ();
 		hasSkippedQuestion = false;
 		partSelection.HideSelectionType (selectionType);
-		answerType.ClearHint ();
+//		answerType.ClearHint ();
 
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 			roundResultList.Add (onQuestionResult);
