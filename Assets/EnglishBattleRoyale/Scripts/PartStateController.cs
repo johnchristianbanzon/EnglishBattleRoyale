@@ -116,29 +116,10 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	#region DamageCoroutine
 
-	private Action<bool> isDone;
 	//For draw results, doesn't need the other coroutine to finish
-	public void SetActionsWithOutDelay (Queue<Queue<Action>> playerOrderAction)
+	public void SetActions (Queue<Action> playersAction)
 	{
-		this.isDone = isDone;
-		StartCoroutine (StartBattleActions(playerOrderAction.Dequeue ()));
-		StartCoroutine (StartBattleActions(playerOrderAction.Dequeue ()));
-
-	}
-
-	//will wait for a player to end skill and attack and start the other player to skill and attack
-	public void SetActionsWithDelay (Queue<Queue<Action>> playerOrderAction)
-	{
-		this.isDone = isDone;
-		StartCoroutine (StartActionDelay(playerOrderAction));
-	}
-		
-	IEnumerator StartActionDelay (Queue<Queue<Action>> playerOrderAction)
-	{
-		yield return StartCoroutine(StartBattleActions (playerOrderAction.Dequeue()));
-		yield return new WaitForSeconds (1);
-		yield return StartCoroutine(StartBattleActions (playerOrderAction.Dequeue()));
-
+		StartCoroutine (StartBattleActions(playersAction));
 	}
 
 	//activate the player actions
@@ -146,14 +127,14 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	{
 		Queue<Action> playerActionsQueue = playersAction;
 		for (int i = 0; i < playerActionsQueue.Count; i++) {
-			playersAction.Dequeue ();
+			playersAction.Dequeue ().Invoke();
 			yield return new WaitForSeconds (1);
-		}
 
-		//if no winner, start phase 1 again
-		if (CheckHP ()) {
-			ScreenBattleController.Instance.StartPhase1 ();
-		}	
+			//if no winner, start phase 1 again
+			if (CheckHP ()) {
+				ScreenBattleController.Instance.StartPhase1 ();
+			}	
+		}
 	}
 
 	private bool CheckHP(){

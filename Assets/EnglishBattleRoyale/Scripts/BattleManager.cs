@@ -5,29 +5,11 @@ using System;
 
 public class BattleManager: IRPCDicObserver
 {
-	private static Queue<Action> playerActionsQueue = new Queue<Action> ();
-	private static  Queue<Action> enemyActionsQueue = new Queue<Action> ();
 	private static int characterActionCounter = 0;
 	private static int characterAttackCounter = 0;
 
-	//set first player actions which is activating characters
-	public static void SetPlayerActionQueue (Queue<Action> action)
-	{
-		Debug.Log("RECEIVE PLAYER QUEUE");
-		playerActionsQueue = action;
-		CheckActionList ();
-	}
-
-	//set first enemy actions which is activating characters
-	public static void SetEnemyActionQueue (Queue<Action> action)
-	{
-		Debug.Log("RECEIVE ENEMY QUEUE");
-		enemyActionsQueue = action;
-		CheckActionList ();
-	}
-
 	//after confirming that both players have sent skill, send attack
-	private static void CheckActionList ()
+	public static void CountCharacters ()
 	{
 		characterActionCounter++;
 		Debug.Log("CHARACTER COUNT " + characterActionCounter);
@@ -38,14 +20,9 @@ public class BattleManager: IRPCDicObserver
 		}
 	}
 
-	private static void ClearQueues ()
-	{
-		if (playerActionsQueue.Count > 0) {
-			playerActionsQueue.Clear ();
-		}
-		if (enemyActionsQueue.Count > 0) {
-			enemyActionsQueue.Clear ();
-		}
+	private static void ClearCounters(){
+		characterActionCounter = 0;
+		characterAttackCounter = 0;
 	}
 
 	#region Send Attack to Firebase
@@ -73,11 +50,9 @@ public class BattleManager: IRPCDicObserver
 	//show skill buttons after attack phase is done
 	public void OnEndPhase ()
 	{
-		ClearQueues ();
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		RPCDicObserver.RemoveObserver (this);
-		characterActionCounter = 0;
-		characterAttackCounter = 0;
+		ClearCounters ();
 	}
 
 	#endregion
@@ -96,13 +71,9 @@ public class BattleManager: IRPCDicObserver
 					AttackModel attack = JsonUtility.FromJson<AttackModel> (param [MyConst.RPC_DATA_ATTACK].ToString ());
 
 					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
-						playerActionsQueue.Enqueue (delegate() {
-							AttackCompute (true, attack);
-						});
+						playerAttack = attack;
 					} else {
-						enemyActionsQueue.Enqueue (delegate() {
-							AttackCompute (false, attack);
-						});
+						enemyAttack = attack;
 					}
 					CheckAttackList ();
 				}
@@ -113,6 +84,26 @@ public class BattleManager: IRPCDicObserver
 			//do something later
 		}
 	}
+
+	private static AttackModel playerAttack;
+	private static AttackModel enemyAttack;
+
+	private static Action GetPlayerAttack(){
+		return PlayerAttackCompute;
+	}
+
+	private static void PlayerAttackCompute(){
+		AttackCompute (true, playerAttack);
+	}
+
+	private static Action GetEnemyAttack(){
+		return EnemyAttackCompute;
+	}
+
+	private static void EnemyAttackCompute(){
+		AttackCompute (false, enemyAttack);
+	}
+
 
 	public static void AttackCompute (bool isPLayer, AttackModel attack)
 	{
@@ -139,24 +130,30 @@ public class BattleManager: IRPCDicObserver
 
 	public static void SetBattle ()
 	{
-		Queue<Queue<Action>> actionsQueue = new Queue<Queue<Action>> ();
+		Queue<Action> actionsQueue = new Queue<Action> ();
 
 		int attackOrder = GetBattleOrder ();
 		switch (attackOrder) {
 		case 0:
-			actionsQueue.Enqueue (playerActionsQueue);
-			actionsQueue.Enqueue (enemyActionsQueue);
-			ScreenBattleController.Instance.partState.SetActionsWithDelay (actionsQueue);
+			actionsQueue.Enqueue (CharacterManager.GetPlayerCharacterActivate ());
+			actionsQueue.Enqueue (GetPlayerAttack ());
+			actionsQueue.Enqueue (CharacterManager.GetEnemyCharacterActivate ());
+			actionsQueue.Enqueue (GetEnemyAttack ());
+			ScreenBattleController.Instance.partState.SetActions (actionsQueue);
 			break;
 		case 1:
-			actionsQueue.Enqueue (enemyActionsQueue);
-			actionsQueue.Enqueue (playerActionsQueue);
-			ScreenBattleController.Instance.partState.SetActionsWithDelay (actionsQueue);
+			actionsQueue.Enqueue (CharacterManager.GetEnemyCharacterActivate());
+			actionsQueue.Enqueue (GetEnemyAttack ());
+			actionsQueue.Enqueue (CharacterManager.GetPlayerCharacterActivate());
+			actionsQueue.Enqueue (GetPlayerAttack ());
+			ScreenBattleController.Instance.partState.SetActions (actionsQueue);
 			break;
 		case 2:
-			actionsQueue.Enqueue (playerActionsQueue);
-			actionsQueue.Enqueue (enemyActionsQueue);
-			ScreenBattleController.Instance.partState.SetActionsWithOutDelay (actionsQueue);
+			actionsQueue.Enqueue (CharacterManager.GetEnemyCharacterActivate());
+			actionsQueue.Enqueue (CharacterManager.GetPlayerCharacterActivate());
+			actionsQueue.Enqueue (GetEnemyAttack ());
+			actionsQueue.Enqueue (GetPlayerAttack ());
+			ScreenBattleController.Instance.partState.SetActions (actionsQueue);
 			break;
 		}
 

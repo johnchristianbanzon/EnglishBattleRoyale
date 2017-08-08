@@ -53,22 +53,28 @@ public class CharacterManager: IRPCDicObserver
 				if (param.ContainsKey (MyConst.RPC_DATA_CHARACTER)) {
 
 					CharacterModelList characterList = JsonUtility.FromJson<CharacterModelList> (param [MyConst.RPC_DATA_CHARACTER].ToString ());
-					Queue<Action> characterActionList = new Queue<Action> ();
+					Queue<Action<CharacterModel>> characterActionQueue = new Queue<Action<CharacterModel>> ();
+					Queue<CharacterModel> characterReceiveQueue = new Queue<CharacterModel> ();
+				
+					for (int i = 0; i < characterList.list.Count - 1; i++) {
+						if (characterList.list [i] != null) {
+							characterReceiveQueue.Enqueue (characterList.list [i]);
+							characterActionQueue.Enqueue (CharacterActivate);
 
-					for (int i = 0; i < characterList.list.Count; i++) {
-						characterActionList.Enqueue (delegate() {
-							CharacterActivate (characterList.list [i]);
-						});
+						}
 					}
 
 					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
-						Debug.Log("RECEIVE PLAYER");
-						BattleManager.SetPlayerActionQueue (characterActionList);
+						Debug.Log ("RECEIVE PLAYER");
+						playerCharacterActionQueue = characterActionQueue;
+						playerCharacterQueue = characterReceiveQueue;
+						BattleManager.CountCharacters();
 
 					} else {
-						Debug.Log("RECEIVE ENEMY");
-						BattleManager.SetEnemyActionQueue (characterActionList);
-
+						Debug.Log ("RECEIVE ENEMY");
+						enemyCharacterActionQueue = characterActionQueue;
+						enemyCharacterQueue = characterReceiveQueue;
+						BattleManager.CountCharacters();
 					}
 
 				}
@@ -85,8 +91,38 @@ public class CharacterManager: IRPCDicObserver
 
 	#region activate a character
 
-	public static void CharacterActivate (CharacterModel character)
+	private static Queue<Action<CharacterModel>> playerCharacterActionQueue = new Queue<Action<CharacterModel>> ();
+	private static Queue<Action<CharacterModel>> enemyCharacterActionQueue = new Queue<Action<CharacterModel>> ();
+	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
+	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
+
+	public static Action GetPlayerCharacterActivate(){
+		return PlayerCharacterActivate;
+	}
+
+	public static Action GetEnemyCharacterActivate(){
+		return EnemyCharacterActivate;
+	}
+
+	private static void PlayerCharacterActivate ()
 	{
+		for (int i = 0; i < playerCharacterActionQueue.Count; i++) {
+			playerCharacterActionQueue.Dequeue ().Invoke (playerCharacterQueue.Dequeue ());
+		}
+	}
+
+	private static void EnemyCharacterActivate ()
+	{
+		for (int i = 0; i < enemyCharacterActionQueue.Count; i++) {
+			enemyCharacterActionQueue.Dequeue ().Invoke (enemyCharacterQueue.Dequeue ());
+		}
+	}
+
+	private static void CharacterActivate (CharacterModel character)
+	{
+
+		Debug.Log ("CHARACTER NAME " + character.characterName);
+
 		float variable = 0;
 		switch (character.characterAmountVariable) {
 		case "none":
@@ -109,6 +145,7 @@ public class CharacterManager: IRPCDicObserver
 		}
 
 		//parses the string formula from csv
+
 		Expression e = new Expression (character.characterAmount);
 		e.Parameters ["N"] = variable;  
 
