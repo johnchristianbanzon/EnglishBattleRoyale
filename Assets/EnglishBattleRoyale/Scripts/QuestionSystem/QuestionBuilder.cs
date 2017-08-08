@@ -155,9 +155,17 @@ public static class QuestionBuilder
 	}
 
 	public static QuestionTypeModel getQuestionType(string selection){
+		Dictionary<string,int> dictionary = new Dictionary<string,int> ();
+		dictionary.Add ("select", 1);
+		dictionary.Add ("typing", 1);
+		dictionary.Add ("change", 1);
+		dictionary.Add ("word", 1);
+		dictionary.Add ("slot", 1);
+		dictionary.Add ("letter", 1);
 
+		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		QuestionTypeModel typeModel = null;
-		switch(selection){
+		switch(selectionFromRandom){
 		case "select":
 			typeModel = new QuestionTypeModel (
 				QuestionSystemEnums.QuestionType.Definition,

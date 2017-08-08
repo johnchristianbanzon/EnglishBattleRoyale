@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public static class QuestionGenerator
 {
@@ -7,32 +8,33 @@ public static class QuestionGenerator
 	{
 		FilteredQuestionModel[] filteredQuestion = new FilteredQuestionModel[questionRowArray.Length];
 		for (int i = 0; i < questionRowArray.Length; i++) {
-			filteredQuestion[i] = (new FilteredQuestionModel (questionRowArray [i], GetSelectWay (), GetTargetWay ()));
+//			filteredQuestion[i] = (new FilteredQuestionModel (questionRowArray [i], GetSelectWay (), GetTargetWay ()));
 		}
 
 		return filteredQuestion;
 	}
 
-	private static QuestionSystemEnums.SelectionType GetSelectWay ()
+
+	public static string GetPseudoRandomValue(Dictionary<string, int> ratios)
 	{
-		QuestionSystemEnums.SelectionType questionSystemEnum = QuestionSystemEnums.SelectionType.ChangeOrder;
-//		int[] weight;
-
-
-//		weight[0] = MyConst.GetQuestionConstKeyValue ("WeightSelectLetter");
-//		weight[1] = MyConst.GetQuestionConstKeyValue ("WeightWordChoice");
-//		weight[2] = MyConst.GetQuestionConstKeyValue ("WeightChangeOrder");
-//		weight[3] = MyConst.GetQuestionConstKeyValue ("WeighTyping");
-//		weight[4] = MyConst.GetQuestionConstKeyValue ("WeightLetterLink");
-//		weight[5] = MyConst.GetQuestionConstKeyValue ("WeightSlotMachine");
-
-//		int sum = weight.Sum();
-
-
-
-		return questionSystemEnum;
+		List<KeyValuePair<string, int>> numbers = new List<KeyValuePair<string, int>> ();
+		int sum = 0;
+		foreach (KeyValuePair<string, int> pair in ratios) {
+			int ratio = pair.Value;
+			sum = sum + ratio;
+			numbers.Add (pair);
+		}
+		int randomNumber = new Random ().Next (0, sum);
+		int total = 0;
+		for (int i = 0; i < numbers.Count; i++) {
+			total = total + numbers [i].Value;
+			if (randomNumber < total) {
+				return numbers [i].Key; 
+			}
+		}
+		return "";
 	}
-
+	
 	private static  QuestionSystemEnums.QuestionType GetTargetWay ()
 	{
 		QuestionSystemEnums.QuestionType questionSystemEnum = QuestionSystemEnums.QuestionType.Antonym;
