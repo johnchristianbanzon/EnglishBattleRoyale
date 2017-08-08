@@ -19,36 +19,39 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 		Init ();
 	}
 
-	private void Init(){
+	private void Init ()
+	{
 		ResetAnswer ();
 	}
 
 	public void OnNotify (Firebase.Database.DataSnapshot dataSnapShot)
 	{
-		//do something here
-	}
+		try {
+			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
+			if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
 
-	public void SetAnswerParameter (string answerParameter)
-	{
+				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
 
-		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result ["AnswerIndicatorRPC"] = JsonUtility.ToJson (answerParameter);
-		Dictionary<string, System.Object> answerResult = result;
+				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
+				if (param.ContainsKey (MyConst.RPC_DATA_ANSWER_INDICATOR)) {
 
-		foreach (KeyValuePair<string, System.Object> answer in answerResult) {
+					if (userHome.Equals (SystemGlobalDataController.Instance.isHost)) {
+						playerAnswerCounter++;
+						playerAnswerText.text = playerAnswerCounter.ToString ();
 
-			if (answer.Key == ParamNames.AnswerCorrect.ToString ()) {
-				if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
-					playerAnswerCounter++;
-					playerAnswerText.text = playerAnswerCounter.ToString();
+					} else {
+						enemyAnswerCounter++;
+						enemyAnswerText.text = enemyAnswerCounter.ToString ();
+					}
 
-				} else {
-					enemyAnswerCounter++;
-					enemyAnswerText.text = enemyAnswerCounter.ToString();
 				}
+
 			}
+		} catch (System.Exception e) {
+			//do something with exception in future
 		}
 	}
+		
 
 	public void ResetAnswer ()
 	{

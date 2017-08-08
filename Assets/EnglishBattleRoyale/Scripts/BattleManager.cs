@@ -63,14 +63,13 @@ public class BattleManager: IRPCDicObserver
 			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 			if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
 				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
-				SystemGlobalDataController.Instance.isSender = userHome;
 
 
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 				if (param.ContainsKey (MyConst.RPC_DATA_ATTACK)) {
 					AttackModel attack = JsonUtility.FromJson<AttackModel> (param [MyConst.RPC_DATA_ATTACK].ToString ());
 
-					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
+					if (userHome.Equals (SystemGlobalDataController.Instance.isHost)) {
 						playerAttack = attack;
 					} else {
 						enemyAttack = attack;
@@ -124,7 +123,6 @@ public class BattleManager: IRPCDicObserver
 		Debug.Log ("CHARACTER ATTACK COUNTER " + characterAttackCounter);
 		if (characterAttackCounter == 2) {
 			SetBattle ();
-			Debug.Log ("Starting battle logic");
 		}
 	}
 

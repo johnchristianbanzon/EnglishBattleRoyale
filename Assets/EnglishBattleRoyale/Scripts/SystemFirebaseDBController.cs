@@ -299,9 +299,9 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ANSWER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
 					if (SystemGlobalDataController.Instance.isHost) {
-						battleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM] = param;
-					} else {
 						battleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM] = param;
+					} else {
+						battleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM] = param;
 					}
 					//Reminders: change to 2 if not testing
 					if (battleCount == 2) {

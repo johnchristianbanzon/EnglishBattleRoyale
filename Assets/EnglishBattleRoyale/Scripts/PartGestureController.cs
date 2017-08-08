@@ -63,14 +63,13 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 			Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 
 			bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
-			SystemGlobalDataController.Instance.isSender = userHome;
 
 			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 
 			if (param.ContainsKey (MyConst.RPC_DATA_GESTURE)) {
 				
 				GestureModel gesture = JsonUtility.FromJson<GestureModel> (param [MyConst.RPC_DATA_GESTURE].ToString ());
-				if (SystemGlobalDataController.Instance.isSender.Equals (!SystemGlobalDataController.Instance.isHost)) {
+				if (userHome.Equals (!SystemGlobalDataController.Instance.isHost)) {
 					SetEnemyGesture (gesture.gestureNumber);
 				}
 			}

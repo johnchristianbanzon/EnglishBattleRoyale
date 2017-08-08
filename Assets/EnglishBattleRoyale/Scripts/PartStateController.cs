@@ -119,32 +119,38 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	//For draw results, doesn't need the other coroutine to finish
 	public void SetActions (Queue<Action> playersAction)
 	{
-		StartCoroutine (StartBattleActions(playersAction));
+		StartCoroutine (StartBattleActions (playersAction));
 	}
+
+
 
 	//activate the player actions
 	IEnumerator StartBattleActions (Queue<Action> playersAction)
 	{
 		Queue<Action> playerActionsQueue = playersAction;
-		for (int i = 0; i < playerActionsQueue.Count; i++) {
-			playersAction.Dequeue ().Invoke();
+		if (playerActionsQueue.Count > 0) {
+			playerActionsQueue.Dequeue ().Invoke ();
 			yield return new WaitForSeconds (1);
-
+			StartCoroutine (StartBattleActions (playerActionsQueue));
+		} else {
 			//if no winner, start phase 1 again
 			if (CheckHP ()) {
 				ScreenBattleController.Instance.StartPhase1 ();
 			}	
 		}
+
+	
 	}
 
-	private bool CheckHP(){
+	private bool CheckHP ()
+	{
 		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
 			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 
-			if (enemy.playerHP > 0 &&  player.playerHP <= 0) {
+			if (enemy.playerHP > 0 && player.playerHP <= 0) {
 				Debug.Log ("Lose");
 
-			} else if ( player.playerHP > 0 && enemy.playerHP <= 0) {
+			} else if (player.playerHP > 0 && enemy.playerHP <= 0) {
 				Debug.Log ("Win");
 			} else {
 				Debug.Log ("Draw");

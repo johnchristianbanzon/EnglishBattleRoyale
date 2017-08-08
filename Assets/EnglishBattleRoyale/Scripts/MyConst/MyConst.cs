@@ -22,6 +22,7 @@ public static partial class MyConst
 	public const string RPC_DATA_GESTURE = "RPC_DATA_GESTURE";
 	public const string RPC_DATA_CHARACTER = "RPC_DATA_CHARACTER";
 	public const string RPC_DATA_PLAYER = "RPC_DATA_PLAYER";
+	public const string RPC_DATA_ANSWER_INDICATOR = "RPC_DATA_ANSWER_INDICATOR";
 	public const string RPC_DATA_PLAYER_ANSWER_PARAM = "RPC_DATA_PLAYER_ANSWER_PARAM";
 	public const string RPC_DATA_ENEMY_ANSWER_PARAM = "RPC_DATA_ENEMY_ANSWER_PARAM";
 
