@@ -11,8 +11,6 @@ public class SystemGlobalDataController: SingletonMonoBehaviour<SystemGlobalData
 
 	public bool isHost{ get; set; }
 
-	public bool isSender{ get; set; }
-
 	public QuestionResultCountModel playerAnswerParam{ get; set; }
 
 	public QuestionResultCountModel enemyAnswerParam{ get; set; }

@@ -47,34 +47,31 @@ public class CharacterManager: IRPCDicObserver
 			if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
 
 				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
-				SystemGlobalDataController.Instance.isSender = userHome;
 
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 				if (param.ContainsKey (MyConst.RPC_DATA_CHARACTER)) {
 
 					CharacterModelList characterList = JsonUtility.FromJson<CharacterModelList> (param [MyConst.RPC_DATA_CHARACTER].ToString ());
-					Queue<Action<CharacterModel>> characterActionQueue = new Queue<Action<CharacterModel>> ();
 					Queue<CharacterModel> characterReceiveQueue = new Queue<CharacterModel> ();
 				
 					for (int i = 0; i < characterList.list.Count - 1; i++) {
-						if (characterList.list [i] != null) {
+						if (characterList.list [i].characterID != 0) {
 							characterReceiveQueue.Enqueue (characterList.list [i]);
-							characterActionQueue.Enqueue (CharacterActivate);
-
 						}
 					}
 
-					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
-						Debug.Log ("RECEIVE PLAYER");
-						playerCharacterActionQueue = characterActionQueue;
-						playerCharacterQueue = characterReceiveQueue;
-						BattleManager.CountCharacters();
+					BattleManager.CountCharacters ();
+					if (characterReceiveQueue.Count > 0) {
+						if (userHome.Equals (SystemGlobalDataController.Instance.isHost)) {
+							Debug.Log ("RECEIVE PLAYER CHARACTERS");
+							playerCharacterQueue.Clear();
+							playerCharacterQueue = characterReceiveQueue;
 
-					} else {
-						Debug.Log ("RECEIVE ENEMY");
-						enemyCharacterActionQueue = characterActionQueue;
-						enemyCharacterQueue = characterReceiveQueue;
-						BattleManager.CountCharacters();
+						} else {
+							Debug.Log ("RECEIVE ENEMY CHARACTERS");
+							enemyCharacterQueue.Clear();
+							enemyCharacterQueue = characterReceiveQueue;
+						}
 					}
 
 				}
@@ -91,37 +88,41 @@ public class CharacterManager: IRPCDicObserver
 
 	#region activate a character
 
-	private static Queue<Action<CharacterModel>> playerCharacterActionQueue = new Queue<Action<CharacterModel>> ();
-	private static Queue<Action<CharacterModel>> enemyCharacterActionQueue = new Queue<Action<CharacterModel>> ();
 	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
 	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
 
-	public static Action GetPlayerCharacterActivate(){
+	public static Action GetPlayerCharacterActivate ()
+	{
 		return PlayerCharacterActivate;
 	}
 
-	public static Action GetEnemyCharacterActivate(){
+	public static Action GetEnemyCharacterActivate ()
+	{
 		return EnemyCharacterActivate;
 	}
 
 	private static void PlayerCharacterActivate ()
 	{
-		for (int i = 0; i < playerCharacterActionQueue.Count; i++) {
-			playerCharacterActionQueue.Dequeue ().Invoke (playerCharacterQueue.Dequeue ());
+		if (playerCharacterQueue.Count > 0) {
+			CharacterModel character = playerCharacterQueue.Dequeue ();
+			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
+			CharacterActivate (character);
+			PlayerCharacterActivate ();
 		}
 	}
 
 	private static void EnemyCharacterActivate ()
 	{
-		for (int i = 0; i < enemyCharacterActionQueue.Count; i++) {
-			enemyCharacterActionQueue.Dequeue ().Invoke (enemyCharacterQueue.Dequeue ());
+		if (enemyCharacterQueue.Count > 0) {
+			CharacterModel character = enemyCharacterQueue.Dequeue ();
+			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
+			CharacterActivate (character);
+			EnemyCharacterActivate ();
 		}
 	}
 
 	private static void CharacterActivate (CharacterModel character)
 	{
-
-		Debug.Log ("CHARACTER NAME " + character.characterName);
 
 		float variable = 0;
 		switch (character.characterAmountVariable) {
