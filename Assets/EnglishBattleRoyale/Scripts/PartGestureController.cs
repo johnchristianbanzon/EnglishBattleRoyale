@@ -69,7 +69,7 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 			if (param.ContainsKey (MyConst.RPC_DATA_GESTURE)) {
 				
 				GestureModel gesture = JsonUtility.FromJson<GestureModel> (param [MyConst.RPC_DATA_GESTURE].ToString ());
-				if (userHome.Equals (!SystemGlobalDataController.Instance.isHost)) {
+				if (userHome.Equals (!GameManager.isHost)) {
 					SetEnemyGesture (gesture.gestureNumber);
 				}
 			}

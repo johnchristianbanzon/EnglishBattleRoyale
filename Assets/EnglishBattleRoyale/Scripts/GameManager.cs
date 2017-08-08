@@ -5,7 +5,16 @@ using System.Collections.Generic;
 /* Sets GameSettings*/
 public static class GameManager
 {
-	private static PlayerModel player;
+	public static PlayerModel player{ get; set; }
+
+	public static bool isHost{ get; set; }
+
+	public static QuestionResultCountModel playerAnswerParam{ get; set; }
+
+	public static QuestionResultCountModel enemyAnswerParam{ get; set; }
+
+	public static Dictionary<Firebase.Database.DataSnapshot, bool> initialState{ get; set; }
+
 	private static string playerName;
 	public static List<List<string>> gameSettingList;
 
@@ -18,7 +27,6 @@ public static class GameManager
 	public static void SetSettings ()
 	{
 		player = new PlayerModel (playerName, GetFloatList ());
-		SystemGlobalDataController.Instance.player = player;
 	}
 
 	//GET ALL VALUES FROM KEY VALUE CSV
@@ -29,8 +37,8 @@ public static class GameManager
 
 		float[] floatList = new float[6];
 
-		for (int i = 1; i < gameSettingList.Count-1; i++) {
-			floatList [i-1] = float.Parse (gameSettingList [i] [1].ToString ());
+		for (int i = 1; i < gameSettingList.Count - 1; i++) {
+			floatList [i - 1] = float.Parse (gameSettingList [i] [1].ToString ());
 		}
 
 		return floatList;

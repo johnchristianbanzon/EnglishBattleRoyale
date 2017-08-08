@@ -8,6 +8,11 @@ public class BattleManager: IRPCDicObserver
 	private static int characterActionCounter = 0;
 	private static int characterAttackCounter = 0;
 
+	public void Init ()
+	{
+		RPCDicObserver.AddObserver (this);
+	}
+
 	//after confirming that both players have sent skill, send attack
 	public static void CountCharacters ()
 	{
@@ -27,32 +32,14 @@ public class BattleManager: IRPCDicObserver
 
 	#region Send Attack to Firebase
 
-	public void OnStartPhase ()
-	{
-		Debug.Log ("Starting attack phase");
-		RPCDicObserver.AddObserver (this);
 
-		//Check toggle on characters on start of the phase and send it
-		ScreenBattleController.Instance.partCharacter.ActivateToggledCharacters ();
-
-		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (false);
-		PartAnswerIndicatorController.Instance.ResetAnswer ();
-	}
 		
 	//send attack to firebase
 	private static void SendAttack ()
 	{
-		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (SystemGlobalDataController.Instance.player.playerBaseDamage));
+
+		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (ScreenBattleController.Instance.partState.player.playerBaseDamage));
 		Debug.Log ("SENDING ATTACK");
-	}
-
-
-	//show skill buttons after attack phase is done
-	public void OnEndPhase ()
-	{
-		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
-		RPCDicObserver.RemoveObserver (this);
-		ClearCounters ();
 	}
 
 	#endregion
@@ -64,17 +51,16 @@ public class BattleManager: IRPCDicObserver
 			if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
 				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
 
-
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 				if (param.ContainsKey (MyConst.RPC_DATA_ATTACK)) {
 					AttackModel attack = JsonUtility.FromJson<AttackModel> (param [MyConst.RPC_DATA_ATTACK].ToString ());
 
-					if (userHome.Equals (SystemGlobalDataController.Instance.isHost)) {
+					if (userHome.Equals (GameManager.isHost)) {
 						playerAttack = attack;
 					} else {
 						enemyAttack = attack;
 					}
-					CheckAttackList ();
+					CountAttacks ();
 				}
 
 			
@@ -117,12 +103,13 @@ public class BattleManager: IRPCDicObserver
 	}
 
 
-	private static void CheckAttackList ()
+	private static void CountAttacks ()
 	{
 		characterAttackCounter++;
 		Debug.Log ("CHARACTER ATTACK COUNTER " + characterAttackCounter);
 		if (characterAttackCounter == 2) {
 			SetBattle ();
+			ClearCounters ();
 		}
 	}
 
@@ -160,8 +147,8 @@ public class BattleManager: IRPCDicObserver
 	public static int GetBattleOrder ()
 	{
 		int battleOrder = 0;
-		QuestionResultCountModel playerAnswerParam = SystemGlobalDataController.Instance.playerAnswerParam;
-		QuestionResultCountModel enemyAnswerParam = SystemGlobalDataController.Instance.enemyAnswerParam;
+		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
+		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
 
 		if (playerAnswerParam.correctCount > enemyAnswerParam.correctCount) {
 			battleOrder = 0;

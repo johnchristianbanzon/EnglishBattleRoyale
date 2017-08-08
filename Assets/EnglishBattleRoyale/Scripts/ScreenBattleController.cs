@@ -29,11 +29,10 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 			partQuestion.OnEndPhase ();
 		}
 
-		BattleManager battleManager = new BattleManager ();
 		if (attack) {
-			battleManager.OnStartPhase ();
+			partCharacter.OnStartPhase ();
 		} else {
-			battleManager.OnEndPhase ();
+			partCharacter.OnEndPhase ();
 		}
 	}
 }

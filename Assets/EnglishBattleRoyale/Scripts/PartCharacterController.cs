@@ -21,6 +21,20 @@ public class PartCharacterController : MonoBehaviour
 		CharacterManager.SetStartCharacters ();
 	}
 
+	public void OnStartPhase ()
+	{
+		//Check toggle on characters on start of the phase and send it
+		ActivateToggledCharacters ();
+		ShowAutoActivateButtons (false);
+		PartAnswerIndicatorController.Instance.ResetAnswer ();
+	}
+
+	//show skill buttons after attack phase is done
+	public void OnEndPhase ()
+	{
+		ShowAutoActivateButtons (true);
+	}
+
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
 	{
 		skillGpCost [characterNumber].text = charCard.characterGPCost.ToString () + "GP";

@@ -41,12 +41,14 @@ public class PartMatchController : MonoBehaviour
 		}
 	}
 
-
+	//initialize and go to battle
 	private void GoToGameRoom ()
 	{
 		BattleStatusManager battleStatusManager = new BattleStatusManager ();
+		BattleManager battleManager = new BattleManager ();
 		CharacterManager characterManager = new CharacterManager ();
 
+		battleManager.Init ();
 		characterManager.Init ();
 		battleStatusManager.Init ();
 
