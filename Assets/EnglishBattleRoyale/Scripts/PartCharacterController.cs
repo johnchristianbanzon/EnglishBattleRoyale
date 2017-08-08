@@ -72,7 +72,6 @@ public class PartCharacterController : MonoBehaviour
 		if (characterButtonToggleOn [skillNumber]) {
 			//if clicked
 			characterButtonOutline.enabled = true;
-			characterButtonOutline.effectColor = new Color32 (255, 96, 26, 255);
 		} else {
 			//if not
 			characterButtonOutline.enabled = false;
