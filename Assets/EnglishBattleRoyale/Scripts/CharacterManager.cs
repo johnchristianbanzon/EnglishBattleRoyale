@@ -25,6 +25,7 @@ public class CharacterManager: IRPCDicObserver
 		for (int i = 0; i < characterButtonToggleOn.Length; i++) {
 			if (characterButtonToggleOn [i] == true) {
 				charactersToSend.Add (currentCharacterInEquip [i]);
+				UseCharacterUI (i);
 			} else {
 				charactersToSend.Add (null);
 			}
