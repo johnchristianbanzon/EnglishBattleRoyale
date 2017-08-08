@@ -9,12 +9,13 @@ public class PartQuestionController: MonoBehaviour
 	private List<QuestionResultModel> questionResultList;
 	private GameObject questionSystem;
 
-	void Start(){
+	void Start ()
+	{
 		QuestionBuilder.PopulateQuestion ();
 	}
+
 	public void OnStartPhase ()
 	{
-		Debug.Log ("Starting Answer Phase");
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
 
@@ -31,6 +32,21 @@ public class PartQuestionController: MonoBehaviour
 
 			int correctCount = questionResultList.Count (p => p.isCorrect == true);
 			int speedyCount = questionResultList.Count (p => p.isSpeedy == true);
+
+			//bonus get from answers
+			float gpGainBonus = correctCount * 2;
+			float gpDamageBonus = correctCount;
+			float speedygpGainBonus = correctCount * 2;
+			float speedyDamageBonus = correctCount * 2;
+
+			ScreenBattleController.Instance.partState.player.playerGP += gpGainBonus + speedygpGainBonus;
+			Debug.Log ("GP GAINED A TOTAL OF " + (gpGainBonus + speedygpGainBonus));
+
+			ScreenBattleController.Instance.partState.player.playerBaseDamage += gpDamageBonus + speedyDamageBonus;
+			Debug.Log ("BONUS PLAYER DAMAGE NOW INCREASED TO " + ScreenBattleController.Instance.partState.player.playerBaseDamage);
+			//
+
+			
 			QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, speedyCount);
 			string param = JsonUtility.ToJson (questionResultCount);
 			SystemFirebaseDBController.Instance.AnswerPhase (param);
