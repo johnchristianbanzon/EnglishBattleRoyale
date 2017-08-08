@@ -116,54 +116,41 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	#region DamageCoroutine
 
-	private Action<bool> isDone;
 	//For draw results, doesn't need the other coroutine to finish
-	public void SetActionsWithOutDelay (Queue<Queue<Action>> playerOrderAction)
+	public void SetActions (Queue<Action> playersAction)
 	{
-		this.isDone = isDone;
-		StartCoroutine (StartBattleActions(playerOrderAction.Dequeue ()));
-		StartCoroutine (StartBattleActions(playerOrderAction.Dequeue ()));
-
+		StartCoroutine (StartBattleActions (playersAction));
 	}
 
-	//will wait for a player to end skill and attack and start the other player to skill and attack
-	public void SetActionsWithDelay (Queue<Queue<Action>> playerOrderAction)
-	{
-		this.isDone = isDone;
-		StartCoroutine (StartActionDelay(playerOrderAction));
-	}
-		
-	IEnumerator StartActionDelay (Queue<Queue<Action>> playerOrderAction)
-	{
-		yield return StartCoroutine(StartBattleActions (playerOrderAction.Dequeue()));
-		yield return new WaitForSeconds (1);
-		yield return StartCoroutine(StartBattleActions (playerOrderAction.Dequeue()));
 
-	}
 
 	//activate the player actions
 	IEnumerator StartBattleActions (Queue<Action> playersAction)
 	{
 		Queue<Action> playerActionsQueue = playersAction;
-		for (int i = 0; i < playerActionsQueue.Count; i++) {
-			playersAction.Dequeue ();
+		if (playerActionsQueue.Count > 0) {
+			playerActionsQueue.Dequeue ().Invoke ();
 			yield return new WaitForSeconds (1);
+			StartCoroutine (StartBattleActions (playerActionsQueue));
+		} else {
+			//if no winner, start phase 1 again
+			if (CheckHP ()) {
+				ScreenBattleController.Instance.StartPhase1 ();
+			}	
 		}
 
-		//if no winner, start phase 1 again
-		if (CheckHP ()) {
-			ScreenBattleController.Instance.StartPhase1 ();
-		}	
+	
 	}
 
-	private bool CheckHP(){
+	private bool CheckHP ()
+	{
+		SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
-			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 
-			if (enemy.playerHP > 0 &&  player.playerHP <= 0) {
+			if (enemy.playerHP > 0 && player.playerHP <= 0) {
 				Debug.Log ("Lose");
 
-			} else if ( player.playerHP > 0 && enemy.playerHP <= 0) {
+			} else if (player.playerHP > 0 && enemy.playerHP <= 0) {
 				Debug.Log ("Win");
 			} else {
 				Debug.Log ("Draw");

@@ -9,13 +9,15 @@ public class PartQuestionController: MonoBehaviour
 	private List<QuestionResultModel> questionResultList;
 	private GameObject questionSystem;
 
-
+	void Start(){
+		QuestionBuilder.PopulateQuestion ();
+	}
 	public void OnStartPhase ()
 	{
 		Debug.Log ("Starting Answer Phase");
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-		QuestionBuilder.PopulateQuestion ();
+
 
 		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
 

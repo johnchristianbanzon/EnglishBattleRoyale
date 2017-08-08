@@ -27,11 +27,13 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void ClearHint ()
 	{
 		for (int i = 0; i < answerContainers.Count; i++) {
-//			if (answerContainers [i].GetComponent<SelectLetterEvent> () != null) {
-////				answerContainers [i].GetComponent<SelectLetterEvent> ().ReturnSelectedLetter ();
-//			} else {
-				Destroy (answerContainers [i]);
-//			}
+			if (answerContainers [i].transform.childCount>0) {
+				if (answerContainers [i].GetComponentInChildren<SelectLetterEvent> () != null) {
+					answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().ReturnSelectedLetter ();
+				}
+
+			} 
+			Destroy (answerContainers [i]);
 		}
 	}
 
@@ -40,22 +42,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 		this.onHintResult = onHintResult;
 		CheckAnswerHolder ();
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, answerContainers [answerIndex]);
-		/*
-		int randomizedHintIndex = 0;
-		int whileCounter = 0;
-		randomizedHintIndex = UnityEngine.Random.Range (0, questionAnswer.Length);
-		while (hintIndexRandomList.Contains (randomizedHintIndex) &&
-		       questionAnswer [randomizedHintIndex].ToString ().Equals (
-			       answerContainers [randomizedHintIndex].GetComponentInChildren<Text> ().text)) {
-			randomizedHintIndex = UnityEngine.Random.Range (0, questionAnswer.Length);
-			if (whileCounter > 100) {
-				break;
-			}
-			whileCounter++;
-		}
-		hintIndexRandomList.Add (randomizedHintIndex);
-		QuestionSystemController.Instance.selectionType.ShowSelectionHint (randomizedHintIndex, answerContainers [randomizedHintIndex]);
-*/
 		CheckAnswer ();
 	}
 
@@ -63,7 +49,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	{
 		answerContainers.Clear ();
 		for (int i = 0; i < questionAnswer.Length; i++) {
-			GameObject answerPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", outviewContent);
+			GameObject answerPrefab = SystemResourceController.Instance.LoadPrefab ("AnswerContainer", outviewContent);
 			answerPrefab.name = "output" + (i + 1);
 			answerContainers.Add (answerPrefab);
 			answerPrefab.GetComponent<Button> ().onClick.AddListener (() => {
@@ -75,19 +61,21 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void OnAnswerClick (Button answerButton)
 	{
+		Debug.Log (answerButton);
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 		string answerclicked = "";
 		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
 		} else {
-			for (int i = 0; i < answerContainers.Count; i++) {
-				if (answerButton.name.Equals ("output" + (i + 1))) {
-					answerclicked = answerContainers [i].transform.GetChild (0).GetComponent<Text> ().text;
-					hintIndexRandomList.Remove (i);
-					answerContainers [i].GetComponentInChildren<Text> ().text = "";
-					GetSelectionIdentifier (i).SetActive (true);
-				}
-			}
+//			for (int i = 0; i < answerContainers.Count; i++) {
+//				if (answerButton.name.Equals ("output" + (i + 1))) {
+//					answerclicked = answerContainers [i].transform.GetChild (0).GetComponent<Text> ().text;
+//					hintIndexRandomList.Remove (i);
+//					answerContainers [i].GetComponentInChildren<Text> ().text = "";
+//					GetSelectionIdentifier (i).SetActive (true);
+//				}
+//			}
+			Destroy(answerButton.transform.GetChild(0).gameObject);
 			CheckAnswerHolder ();
 		}
 	}
@@ -99,11 +87,13 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 		if (string.IsNullOrEmpty (selectedObject.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (selectedObject.transform, 1.0f, 30.0f, 50, 90f);
 		} else {
-			selectionIdentifier [answerIndex] = selectedObject.gameObject;
-			hintIndexRandomList.Add (answerIndex);
-			answerContainers [answerIndex].GetComponentInChildren<Text> ().text 
-			= selectedObject.GetComponentInChildren<Text> ().text;
-			CheckAnswer ();
+			if (!isFull) {
+				GameObject container = SystemResourceController.Instance.LoadPrefab ("Input-UI", answerContainers [answerIndex]);
+				selectionIdentifier [answerIndex] = selectedObject.gameObject;
+				hintIndexRandomList.Add (answerIndex);
+				container.GetComponentInChildren<Text> ().text = selectedObject.GetComponentInChildren<Text> ().text;
+				CheckAnswer ();
+			}
 		}
 	}
 
@@ -126,8 +116,10 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public string GetAnswerWritten ()
 	{
 		string answerWrote = "";
-		for (int j = 0; j < questionAnswer.Length; j++) {
-			answerWrote += answerContainers [j].transform.GetChild (0).GetComponent<Text> ().text;
+		for (int i = 0; i < questionAnswer.Length; i++) {
+			if(answerContainers [i].transform.childCount>0){
+			answerWrote += answerContainers [i].transform.GetChild (0).GetComponentInChildren<Text> ().text;
+			}
 		}
 		return answerWrote;
 	}
@@ -162,7 +154,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	{
 		isFull = true;
 		foreach (Transform answerContainer in outviewContent.transform) {
-			if (string.IsNullOrEmpty (answerContainer.GetComponentInChildren<Text> ().text)) {
+			if (answerContainer.childCount.Equals(0)) {
 				answerIndex = answerContainer.GetSiblingIndex ();
 				isFull = false;
 				break;

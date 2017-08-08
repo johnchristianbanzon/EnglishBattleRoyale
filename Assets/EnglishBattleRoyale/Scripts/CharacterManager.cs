@@ -25,6 +25,7 @@ public class CharacterManager: IRPCDicObserver
 		for (int i = 0; i < characterButtonToggleOn.Length; i++) {
 			if (characterButtonToggleOn [i] == true) {
 				charactersToSend.Add (currentCharacterInEquip [i]);
+				UseCharacterUI (i);
 			} else {
 				charactersToSend.Add (null);
 			}
@@ -47,28 +48,31 @@ public class CharacterManager: IRPCDicObserver
 			if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
 
 				bool userHome = (bool)rpcReceive [MyConst.RPC_DATA_USERHOME];
-				SystemGlobalDataController.Instance.isSender = userHome;
 
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 				if (param.ContainsKey (MyConst.RPC_DATA_CHARACTER)) {
 
 					CharacterModelList characterList = JsonUtility.FromJson<CharacterModelList> (param [MyConst.RPC_DATA_CHARACTER].ToString ());
-					Queue<Action> characterActionList = new Queue<Action> ();
-
-					for (int i = 0; i < characterList.list.Count; i++) {
-						characterActionList.Enqueue (delegate() {
-							CharacterActivate (characterList.list [i]);
-						});
+					Queue<CharacterModel> characterReceiveQueue = new Queue<CharacterModel> ();
+				
+					for (int i = 0; i < characterList.list.Count - 1; i++) {
+						if (characterList.list [i].characterID != 0) {
+							characterReceiveQueue.Enqueue (characterList.list [i]);
+						}
 					}
 
-					if (SystemGlobalDataController.Instance.isSender.Equals (SystemGlobalDataController.Instance.isHost)) {
-						Debug.Log("RECEIVE PLAYER");
-						BattleManager.SetPlayerActionQueue (characterActionList);
+					BattleManager.CountCharacters ();
+					if (characterReceiveQueue.Count > 0) {
+						if (userHome.Equals (SystemGlobalDataController.Instance.isHost)) {
+							Debug.Log ("RECEIVE PLAYER CHARACTERS");
+							playerCharacterQueue.Clear();
+							playerCharacterQueue = characterReceiveQueue;
 
-					} else {
-						Debug.Log("RECEIVE ENEMY");
-						BattleManager.SetEnemyActionQueue (characterActionList);
-
+						} else {
+							Debug.Log ("RECEIVE ENEMY CHARACTERS");
+							enemyCharacterQueue.Clear();
+							enemyCharacterQueue = characterReceiveQueue;
+						}
 					}
 
 				}
@@ -85,8 +89,42 @@ public class CharacterManager: IRPCDicObserver
 
 	#region activate a character
 
-	public static void CharacterActivate (CharacterModel character)
+	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
+	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
+
+	public static Action GetPlayerCharacterActivate ()
 	{
+		return PlayerCharacterActivate;
+	}
+
+	public static Action GetEnemyCharacterActivate ()
+	{
+		return EnemyCharacterActivate;
+	}
+
+	private static void PlayerCharacterActivate ()
+	{
+		if (playerCharacterQueue.Count > 0) {
+			CharacterModel character = playerCharacterQueue.Dequeue ();
+			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
+			CharacterActivate (character);
+			PlayerCharacterActivate ();
+		}
+	}
+
+	private static void EnemyCharacterActivate ()
+	{
+		if (enemyCharacterQueue.Count > 0) {
+			CharacterModel character = enemyCharacterQueue.Dequeue ();
+			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
+			CharacterActivate (character);
+			EnemyCharacterActivate ();
+		}
+	}
+
+	private static void CharacterActivate (CharacterModel character)
+	{
+
 		float variable = 0;
 		switch (character.characterAmountVariable) {
 		case "none":
@@ -109,6 +147,7 @@ public class CharacterManager: IRPCDicObserver
 		}
 
 		//parses the string formula from csv
+
 		Expression e = new Expression (character.characterAmount);
 		e.Parameters ["N"] = variable;  
 

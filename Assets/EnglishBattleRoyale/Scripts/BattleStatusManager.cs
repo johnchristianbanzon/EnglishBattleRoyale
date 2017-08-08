@@ -69,7 +69,6 @@ public class BattleStatusManager: IRPCDicObserver
 
 	private void CheckBattleCount (int battleCount, Action action = null)
 	{
-		Debug.Log ("battlecount: " +battleCount);
 		//Reminders: change to 1 if not testing
 		if (battleCount > 1) {
 			action ();
