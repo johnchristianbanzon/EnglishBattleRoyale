@@ -11,6 +11,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 	public FillAnswerType fillAnswer;
 	public string questionAnswer;
 	List<SelectLetterEvent> correctContainers = new List<SelectLetterEvent> ();
+
 	public void OnSelect ()
 	{
 		QuestionSystemController.Instance.partAnswer.fillAnswer.GetAnswerWritten ();
@@ -47,17 +48,19 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public void HideSelectionHint ()
 	{
-//		if (QuestionSystemConst.ALLOW_REMOVE_SELECTLETTER.Equals (1)) {
-//			if (!initHideHint) {
-//				InitHideHint ();
-//				initHideHint = true;
-//			}
-//			if (hideSelectionIndex.Count > 0) {
-//				int randomHintIndex = UnityEngine.Random.Range (0, hideSelectionIndex.Count);
-//				selectionButtons [hideSelectionIndex [randomHintIndex]].gameObject.SetActive (false);
-//				hideSelectionIndex.RemoveAt (randomHintIndex);
-//			}
-//		}
+		if (MyConst.ALLOW_REMOVE_SELECTLETTER.Equals (1)) {
+			if (!initHideHint) {
+				InitHideHint ();
+				initHideHint = true;
+			}
+			if (hideSelectionIndex.Count > 0) {
+				int randomHintIndex = UnityEngine.Random.Range (0, hideSelectionIndex.Count);
+				selectionButtons [hideSelectionIndex [randomHintIndex]].GetComponent<EventTrigger> ().enabled = false;
+				selectionButtons [hideSelectionIndex [randomHintIndex]].GetComponent<Button> ().interactable = false;
+
+				hideSelectionIndex.RemoveAt (randomHintIndex);
+			}
+		}
 	}
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
@@ -70,10 +73,25 @@ public class SelectLetter : MonoBehaviour, ISelection
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
 		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
-			correctContainers [0].OnSelectLetter (correctContainers [0].gameObject);
-			correctContainers [0].GetComponent<Button> ().interactable = false;
-			correctContainers [0].GetComponent<Image> ().raycastTarget = false;
-			correctContainers.RemoveAt (0);
+			List<int> correctContainerIndexList = new List<int> ();
+			for (int i = 0; i < correctContainers.Count; i++) {
+				if (fillAnswer.answerContainers [i].transform.childCount.Equals (0)) {
+					correctContainerIndexList.Add (i);
+				} else {
+					if (!questionAnswer[i].ToString().Equals(fillAnswer.answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().letter.text)) {
+						correctContainerIndexList.Add (i);
+					}
+				}
+			}
+			correctContainerIndexList = ListShuffleUtility.Shuffle (correctContainerIndexList);
+			int firstContainerIndex = correctContainerIndexList[0];
+			if (fillAnswer.answerContainers [firstContainerIndex].GetComponentInChildren<SelectLetterEvent> () != null) {
+				fillAnswer.answerContainers [firstContainerIndex].transform.GetChild(0).transform.SetParent (transform);
+			}
+			correctContainers [firstContainerIndex].transform.SetParent (fillAnswer.answerContainers [correctContainers [firstContainerIndex].correctAnswerIndex].transform);
+			correctContainers [firstContainerIndex].GetComponent<EventTrigger> ().enabled = false;
+			correctContainers [firstContainerIndex].GetComponent<Button> ().interactable = false;
+			correctContainerIndexList.Remove(firstContainerIndex);
 		}
 	}
 
@@ -84,7 +102,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 	public void ShuffleSelection ()
 	{
 		List<int> randomizedIndexList = new List<int> ();
-
+		correctContainers.Clear ();
 		randomizedIndexList.AddRange (Enumerable.Range (0, selectionButtons.Length));
 		ListShuffleUtility.Shuffle (randomizedIndexList);
 		for (int i = 0; i < selectionButtons.Length; i++) {
@@ -92,7 +110,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 			if (i < questionAnswer.Length) {
 				isCorrect = true;
 			}
-			selectionButtons [randomizedIndexList[0]].Init (isCorrect,i);
+			selectionButtons [randomizedIndexList [0]].Init (isCorrect, i);
 			if (isCorrect) {
 				correctContainers.Add (selectionButtons [randomizedIndexList [0]]);
 			}
