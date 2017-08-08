@@ -144,8 +144,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	private bool CheckHP ()
 	{
+		SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
-			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 
 			if (enemy.playerHP > 0 && player.playerHP <= 0) {
 				Debug.Log ("Lose");

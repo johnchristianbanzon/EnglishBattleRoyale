@@ -311,20 +311,24 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			});
 		});
 	}
-		
+
 	public void AttackPhase (AttackModel param)
 	{
 		SetParam (MyConst.RPC_DATA_ATTACK, (param));
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
 		GetLatestKey (2, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
-				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK);
+				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
+					if (battleCount == 2) {
+						UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, "0", "0");
+					}
+				});
 			});
 		});
 	}
 
 	//Phasemutate uses transaction to update values in the table and increments battlecount
-	private Dictionary<string, System.Object> PhaseMutate (MutableData mutableData, string battleStatusName, Action<Dictionary<string, System.Object>,int> action = null)
+	private Dictionary<string, System.Object> PhaseMutate (MutableData mutableData, string battleStatusName, Action<Dictionary<string, System.Object>,int> action)
 	{
 		Dictionary<string, System.Object> battleStatus = (Dictionary<string, System.Object>)mutableData.Value;
 		string battleState = battleStatus [MyConst.BATTLE_STATUS_STATE].ToString ();
