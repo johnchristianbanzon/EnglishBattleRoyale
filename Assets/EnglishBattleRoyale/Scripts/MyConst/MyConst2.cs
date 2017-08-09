@@ -31,4 +31,17 @@ public static partial class MyConst {
 	public const double ANSWER_SPEED_SELECTLETTER = 1;
 	public const double ANSWER_SPEED_TYPING = 1.5;
 	public const double ANSWER_SPEED_SLOTMACHINE = 1;
+
+	public const int WEIGHT_SELECT_LETTER = 2;
+	public const int WEIGHT_WORD_CHOICE = 1;
+	public const int WEIGHT_CHANGE_ORDER = 1;
+	public const int WEIGHT_TYPING = 1;
+	public const int WEIGHT_LETTER_LINK = 1;
+	public const int WEIGHT_SLOT_MACHINE = 1;
+
+	public const int WEIGHT_DEFINITION = 1;
+	public const int WEIGHT_SYNONYM = 1;
+	public const int WEIGHT_ANTONYM = 1;
+	public const int WEIGHT_WORD_ASSOCIATION = 1;
+
 }

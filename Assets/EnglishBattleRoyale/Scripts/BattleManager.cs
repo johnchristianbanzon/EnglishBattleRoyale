@@ -133,17 +133,30 @@ public class BattleManager: IRPCDicObserver
 		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
 		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
 
+		//TO-DO: REFACTOR THIS CODE IF POSSIBLE
 		if (playerAnswerParam.correctCount > enemyAnswerParam.correctCount) {
 			battleOrder = 0;
 		} else if (playerAnswerParam.correctCount < enemyAnswerParam.correctCount) {
 			battleOrder = 1;
 		} else {
-			if (playerAnswerParam.speedyCount > enemyAnswerParam.speedyCount) {
+			if (playerAnswerParam.speedyAwesomeCount > enemyAnswerParam.speedyAwesomeCount) {
 				battleOrder = 0;
-			} else if (playerAnswerParam.speedyCount < enemyAnswerParam.speedyCount) {
+			} else if (playerAnswerParam.speedyAwesomeCount < enemyAnswerParam.speedyAwesomeCount) {
 				battleOrder = 1;
 			} else {
-				battleOrder = 2;
+				if (playerAnswerParam.speedyGoodCount > enemyAnswerParam.speedyGoodCount) {
+					battleOrder = 0;
+				} else if (playerAnswerParam.speedyGoodCount < enemyAnswerParam.speedyGoodCount) {
+					battleOrder = 1;
+				} else {
+					if (playerAnswerParam.speedyRottenCount > enemyAnswerParam.speedyRottenCount) {
+						battleOrder = 0;
+					} else if (playerAnswerParam.speedyRottenCount < enemyAnswerParam.speedyRottenCount) {
+						battleOrder = 1;
+					} else {
+						battleOrder = 2;
+					}
+				}
 			}
 		}
 		return battleOrder;

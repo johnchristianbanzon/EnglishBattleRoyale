@@ -9,7 +9,9 @@ public class Typing : MonoBehaviour, ISelection
 {
 	private string questionAnswer;
 	public GameObject[] selectionButtons = new GameObject[26];
-	public void ShowSelectionType (string questionAnswer,Action<List<GameObject>> onSelectCallBack){
+
+	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
+	{
 		this.questionAnswer = questionAnswer;
 		gameObject.SetActive (true);
 		for (int i = 0; i < selectionButtons.Length; i++) {
@@ -17,7 +19,8 @@ public class Typing : MonoBehaviour, ISelection
 		}
 	}
 
-	public void ShowCorrectAnswer(){
+	public void ShowCorrectAnswer ()
+	{
 
 	}
 
@@ -29,7 +32,7 @@ public class Typing : MonoBehaviour, ISelection
 	{
 		hideSelectionIndex.AddRange (Enumerable.Range (0, selectionButtons.Length));
 		for (int i = 0; i < hideSelectionIndex.Count; i++) {
-			if (questionAnswer.Contains (selectionButtons [hideSelectionIndex [i]].GetComponentInChildren<Text> ().text)) {
+			if (questionAnswer.Contains (selectionButtons [hideSelectionIndex [i]].transform.GetChild (0).GetComponentInChildren<Text> ().text)) {
 				hideSelectionIndex.RemoveAt (i);
 				i--;
 			}
@@ -44,7 +47,6 @@ public class Typing : MonoBehaviour, ISelection
 				InitHideHint ();
 				initHideHint = true;
 			}
-
 			if (hideSelectionIndex.Count > 0) {
 				int randomHintIndex = UnityEngine.Random.Range (0, hideSelectionIndex.Count);
 				selectionButtons [hideSelectionIndex [randomHintIndex]].SetActive (false);
@@ -53,19 +55,45 @@ public class Typing : MonoBehaviour, ISelection
 		}
 	}
 
-	public void HideSelectionType(){
+	public void HideSelectionType ()
+	{
 		gameObject.SetActive (false);
 	}
+		
+	private bool hasShowHintInit = false;
+	FillAnswerType fillAnswer;
+	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
+	{
+		List<int> randomizedIndexList = new List<int>();
+		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
+			fillAnswer = QuestionSystemController.Instance.partAnswer.fillAnswer;
+			for (int i = 0; i < fillAnswer.answerContainers.Count; i++) {
+				if (fillAnswer.answerContainers [i].transform.childCount.Equals (0)) {
+					randomizedIndexList.Add (i);
 
-	public void ShowSelectionHint(int hintIndex, GameObject correctAnswerContainer){
-		correctAnswerContainer.GetComponent<Button> ().enabled = false;
-		correctAnswerContainer.GetComponentInChildren<Text> ().text = questionAnswer [hintIndex].ToString ();
-		TweenFacade.TweenScaleToLarge (correctAnswerContainer.transform, Vector3.one, 0.3f);
-		correctAnswerContainer.GetComponent<Image> ().color = new Color (255 / 255, 102 / 255f, 51 / 255f);
-	}
+				} else {
+					if (!questionAnswer [i].ToString ().ToUpper ().Equals (fillAnswer.answerContainers [i].GetComponentInChildren<Text> ().text.ToUpper ())) {
+						randomizedIndexList.Add (i);
+					}
+				}
+			}
+			ListShuffleUtility.Shuffle (randomizedIndexList);
+			GameObject answerContainer;
+			if (fillAnswer.answerContainers [randomizedIndexList [0]].transform.childCount.Equals (0)) {
+				answerContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI", fillAnswer.answerContainers [randomizedIndexList [0]].gameObject);
+				answerContainer.GetComponentInChildren<Text> ().text = questionAnswer [randomizedIndexList [0]].ToString ();
+			} else {
+				answerContainer = fillAnswer.answerContainers [randomizedIndexList [0]];
+				Debug.Log (answerContainer.GetComponentInChildren<Text> ().text + "/" + questionAnswer [randomizedIndexList [0]].ToString ());
+				answerContainer.GetComponentInChildren<Text> ().text = questionAnswer [randomizedIndexList [0]].ToString ();
+			}
+			answerContainer.GetComponentInChildren<Button> ().interactable = false;
+		}
+	}	
 
-	public void OnSelect(){
+	public void OnSelect ()
+	{
 		QuestionSystemController.Instance.partAnswer.fillAnswer.
-		SelectionLetterGot(EventSystem.current.currentSelectedGameObject);
+		SelectionLetterGot (EventSystem.current.currentSelectedGameObject);
 	}
 }

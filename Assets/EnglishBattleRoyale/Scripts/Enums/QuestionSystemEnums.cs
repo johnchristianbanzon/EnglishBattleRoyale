@@ -1,5 +1,5 @@
 ﻿public class QuestionSystemEnums{
-	public enum QuestionType{
+	public enum TargetType{
 		Definition,
 		Synonym,
 		Antonym,
@@ -18,4 +18,10 @@
 		SlotMachine,
 		LetterLink
 	}
+	public enum SpeedyType{
+		Rotten,
+		Good,
+		Awesome
+	}
+
 }

@@ -1,10 +1,14 @@
 ﻿public class QuestionResultCountModel {
 	public int correctCount;
-	public int speedyCount;
+	public int speedyAwesomeCount;
+	public int speedyGoodCount;
+	public int speedyRottenCount;
 
-	public QuestionResultCountModel(int correctCount, int speedyCount){
+	public QuestionResultCountModel(int correctCount, int speedyAwesomeCount, int speedyGoodCount,int speedyRottenCount){
 		this.correctCount = correctCount;
-		this.speedyCount = speedyCount;
+		this.speedyAwesomeCount = speedyAwesomeCount;
+		this.speedyGoodCount = speedyGoodCount;
+		this.speedyRottenCount = speedyRottenCount;
 	}
 
 }

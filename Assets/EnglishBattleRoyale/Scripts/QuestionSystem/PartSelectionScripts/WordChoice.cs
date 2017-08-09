@@ -98,20 +98,17 @@ public class WordChoice : MonoBehaviour, ISelection
 		int numberOfAnswers = 2;
 		List <int> randomList = new List<int> ();
 		string[] temp = questionAnswer.Split ('/');
-
 		for (int i = 0; i < selectionButtons.Length; i++) {
 			int randomNum = UnityEngine.Random.Range (0, 4); 
 			while (randomList.Contains (randomNum)) {
 				randomNum = UnityEngine.Random.Range (0, selectionButtons.Length);
 			}
 			randomList.Add (randomNum);
-			string wrongChoiceGot = QuestionBuilder.GetRandomChoices ();
-
 			if (i < numberOfAnswers) {
 				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp [i].ToString ().ToUpper ();
 				answerButtons.Add (selectionButtons [randomNum]);
 			} else {
-				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = wrongChoiceGot.ToUpper ();
+				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp[i].ToUpper ();
 			}
 			selectionButtons [randomNum].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 			selectionButtons [randomNum].GetComponent<Button> ().interactable = true;
