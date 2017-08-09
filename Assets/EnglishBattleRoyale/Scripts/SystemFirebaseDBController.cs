@@ -298,10 +298,11 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ANSWER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
+					Debug.Log("IS HOST" + GameManager.isHost);
 					if (GameManager.isHost) {
-						battleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM] = param;
-					} else {
 						battleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM] = param;
+					} else {
+						battleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM] = param;
 					}
 					//Reminders: change to 2 if not testing
 					if (battleCount == 2) {

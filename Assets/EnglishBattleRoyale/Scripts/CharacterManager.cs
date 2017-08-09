@@ -174,6 +174,11 @@ public class CharacterManager: IRPCDicObserver
 
 		Expression e = new Expression (character.characterAmount);
 		e.Parameters ["N"] = variable;  
+//		string amountStr = "10 + enemyHP";
+//		int enemyHP = 10;
+//		amountStr.Replace ("enemyHP", enemyHP).Replace ("playerHP", playerHP);
+
+
 
 		CharacterCompute (isPlayer, character.characterSkillID, float.Parse (e.Evaluate ().ToString ()));
 	}
@@ -261,20 +266,17 @@ public class CharacterManager: IRPCDicObserver
 		return characterList;
 	}
 
-	//TO-DO THIS IS JUST TEST. REFACTOR LATER
-	//Add 8 characters to equip
+	//TO-DO: if characters already present in data, no need to generate
+	//Add 8 random characters to equip by default
 	public static List<CharacterModel>  GetEquipCharacterList ()
 	{
 		List<CharacterModel> equipCharacterList = new List<CharacterModel> (8);
 		List<CharacterModel> characterList = GetCharacterList ();
-		equipCharacterList.Add (characterList [0]);
-		equipCharacterList.Add (characterList [1]);
-		equipCharacterList.Add (characterList [2]);
-		equipCharacterList.Add (characterList [3]);
-		equipCharacterList.Add (characterList [4]);
-		equipCharacterList.Add (characterList [5]);
-		equipCharacterList.Add (characterList [6]);
-		equipCharacterList.Add (characterList [7]);
+		characterList = ListShuffleUtility.Shuffle (characterList);
+
+		for (int i = 0; i < 8; i++) {
+			equipCharacterList.Add (characterList [i]);
+		}
 		return equipCharacterList;
 	}
 
