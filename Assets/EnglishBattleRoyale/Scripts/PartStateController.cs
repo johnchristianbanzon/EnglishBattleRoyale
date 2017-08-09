@@ -57,7 +57,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		ScreenBattleController.Instance.partCameraWorks.StartIntroCamera ();
 
 		//get initial state for enemy and player stored in SystemGlobalDataController
-		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in SystemGlobalDataController.Instance.InitialState) {
+		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in GameManager.initialState) {
 			SetStateParam (initialState.Key, initialState.Value);
 		}
 	}
@@ -97,7 +97,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 
 		playerGPText.text = player.playerGP.ToString ();
-		playerGPBar.maxValue = player.playerGP;
+		playerGPBar.maxValue = player.playerMaxGP;
 		playerGPBar.value = player.playerGP;
 	
 	}
@@ -135,6 +135,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		} else {
 			//if no winner, start phase 1 again
 			if (CheckHP ()) {
+				//reset player attributes
+				ResetPlayerDamage();
 				ScreenBattleController.Instance.StartPhase1 ();
 			}	
 		}
@@ -160,6 +162,10 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		} 
 
 		return true;
+	}
+
+	private void ResetPlayerDamage(){
+		player.playerBaseDamage = GameManager.player.playerBaseDamage;
 	}
 
 	#endregion

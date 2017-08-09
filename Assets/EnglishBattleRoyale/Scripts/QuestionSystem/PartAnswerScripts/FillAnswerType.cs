@@ -61,20 +61,12 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void OnAnswerClick (Button answerButton)
 	{
-		Debug.Log (answerButton);
+		Debug.Log (answerButton.name);
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 		string answerclicked = "";
 		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
 		} else {
-//			for (int i = 0; i < answerContainers.Count; i++) {
-//				if (answerButton.name.Equals ("output" + (i + 1))) {
-//					answerclicked = answerContainers [i].transform.GetChild (0).GetComponent<Text> ().text;
-//					hintIndexRandomList.Remove (i);
-//					answerContainers [i].GetComponentInChildren<Text> ().text = "";
-//					GetSelectionIdentifier (i).SetActive (true);
-//				}
-//			}
 			Destroy(answerButton.transform.GetChild(0).gameObject);
 			CheckAnswerHolder ();
 		}
@@ -92,6 +84,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 				selectionIdentifier [answerIndex] = selectedObject.gameObject;
 				hintIndexRandomList.Add (answerIndex);
 				container.GetComponentInChildren<Text> ().text = selectedObject.GetComponentInChildren<Text> ().text;
+				container.GetComponent<Image> ().raycastTarget = false;
 				CheckAnswer ();
 			}
 		}
@@ -117,6 +110,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	{
 		string answerWrote = "";
 		for (int i = 0; i < questionAnswer.Length; i++) {
+			
 			if(answerContainers [i].transform.childCount>0){
 			answerWrote += answerContainers [i].transform.GetChild (0).GetComponentInChildren<Text> ().text;
 			}
@@ -150,7 +144,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 		return objectIdentifier;
 	}
 
-	public void CheckAnswerHolder ()
+	public int CheckAnswerHolder ()
 	{
 		isFull = true;
 		foreach (Transform answerContainer in outviewContent.transform) {
@@ -160,5 +154,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 				break;
 			}
 		}
+		return answerIndex;
 	}
 }

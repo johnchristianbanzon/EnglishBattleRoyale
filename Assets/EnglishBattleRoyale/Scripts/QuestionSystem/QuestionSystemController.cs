@@ -19,7 +19,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public string questionAnswer = "";
 	public string questionTarget = "";
 	public bool isQuestionRoundOver = false;
-	public QuestionSystemEnums.QuestionType questionType;
+	public QuestionSystemEnums.TargetType questionType;
 
 	public ITarget targetType;
 	public ISelection selectionType;
@@ -54,6 +54,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		isQuestionRoundOver = false;
 		TimeManager.AddQuestionTimeObserver (this);
 		questionList = QuestionBuilder.GetQuestionList (10,questionTypeModel);
+
 		double averageTime = 0;
 		for (int i = 0; i < questionList.Count; i++) {
 			averageTime += questionList [i].idealTime;
@@ -160,24 +161,27 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private void HideQuestionParts ()
 	{
+//		answerType.ClearHint ();
 		questionList [currentQuestionNumber-1].questionType.answerType.ClearHint ();
 		questionList [currentQuestionNumber-1].questionType.selectionType.HideSelectionType ();
-		questionList [currentQuestionNumber-1].questionType.targetType.HideTargetType ();
+		targetType.HideTargetType ();
 	}
 
 	public void NextQuestion ()
 	{
 		timePassed = 0;
 		questionType = questionList [currentQuestionNumber].questionType.questionCategory;
-		targetType = questionList [currentQuestionNumber].questionType.targetType;
+		if (questionType.Equals(QuestionSystemEnums.TargetType.Association)) {
+			targetType = partTarget.association;
+		} else {
+			targetType = partTarget.singleQuestion;
+		}
 		answerType = questionList [currentQuestionNumber].questionType.answerType;
 		selectionType = questionList [currentQuestionNumber].questionType.selectionType;
 		Destroy (speedyEffect);
 		questionHint.InitHints ();
 		hasSkippedQuestion = false;
 		partSelection.HideSelectionType (selectionType);
-//		answerType.ClearHint ();
-
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 			roundResultList.Add (onQuestionResult);
 			Invoke("HideQuestionParts",1.0f);
@@ -187,8 +191,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public QuestionModel LoadQuestion ()
 	{
 		QuestionModel questionLoaded = questionList [currentQuestionNumber];
-		if (questionLoaded.answers.Length == 2 && selectionType.Equals (partSelection.wordChoice)) {
-			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ());
+		if (questionLoaded.answers.Length >= 2 && selectionType.Equals (partSelection.wordChoice)) {
+			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ()
+				+"/"+questionLoaded.answers [2].ToUpper ());
 		} else {
 			questionAnswer = questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
 		}
@@ -196,7 +201,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		return questionLoaded;
 	}
 
-	public void GetNewQuestion (QuestionSystemEnums.QuestionType questionType, Action<QuestionResultModel> onQuestionResult)
+	public void GetNewQuestion (QuestionSystemEnums.TargetType questionType, Action<QuestionResultModel> onQuestionResult)
 	{
 		LoadQuestion ();
 		targetTypeUI.GetComponentInChildren<Text> ().text = questionType.ToString ();

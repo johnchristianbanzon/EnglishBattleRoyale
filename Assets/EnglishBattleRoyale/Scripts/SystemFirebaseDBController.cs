@@ -19,7 +19,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	string battleStatusKey = null;
 	private bool isMatchMakeSuccess = false;
 	private DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
-	private  Dictionary<DataSnapshot, bool> InitialState = new Dictionary<DataSnapshot, bool> ();
+	private  Dictionary<DataSnapshot, bool> initialState = new Dictionary<DataSnapshot, bool> ();
 
 	void Start ()
 	{
@@ -72,10 +72,10 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		try {
 			//TEMPORARY SOLUTION FOR PLAYER DETAILS
 			if (dataSnapShot.Key.ToString ().Equals (MyConst.GAMEROOM_HOME)) {
-				if (SystemGlobalDataController.Instance.isHost) {
-					InitialState.Add (dataSnapShot, true);
+				if (GameManager.isHost) {
+					initialState.Add (dataSnapShot, true);
 				} else {
-					InitialState.Add (dataSnapShot, false);
+					initialState.Add (dataSnapShot, false);
 				}
 
 
@@ -84,15 +84,15 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			if (dataSnapShot.Key.ToString ().Equals (MyConst.GAMEROOM_VISITOR)) {
 				isMatchMakeSuccess = true;
 				onSuccessMatchMake (true);
-				if (SystemGlobalDataController.Instance.isHost) {
-					InitialState.Add (dataSnapShot, false);
+				if (GameManager.isHost) {
+					initialState.Add (dataSnapShot, false);
 				} else {
-					InitialState.Add (dataSnapShot, true);
+					initialState.Add (dataSnapShot, true);
 				}
 				Debug.Log ("Matching Success!");
 			}
 
-			SystemGlobalDataController.Instance.InitialState = InitialState;
+			GameManager.initialState = initialState;
 		} catch (Exception e) {
 			//do someting in future
 		}
@@ -149,9 +149,9 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	public void CancelRoomSearch ()
 	{
 		if (!isMatchMakeSuccess) {
-			if (SystemGlobalDataController.Instance.isHost) {
+			if (GameManager.isHost) {
 				DeleteRoom ();
-				SystemGlobalDataController.Instance.isHost = false;
+				GameManager.isHost = false;
 				//return;
 			} 
 		}
@@ -202,11 +202,11 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	private void RoomCreateJoin (bool isHost, string userPlace)
 	{
-		SystemGlobalDataController.Instance.isHost = isHost;
+		GameManager.isHost = isHost;
 		RPCListener ();
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result [MyConst.RPC_DATA_PLAYER] = JsonUtility.ToJson (SystemGlobalDataController.Instance.player);
+		result [MyConst.RPC_DATA_PLAYER] = JsonUtility.ToJson (GameManager.player);
 		Dictionary<string, System.Object> entryValues = result;
 
 		string directory = MyConst.GAMEROOM_ROOM + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_INITITAL_STATE + "/" + userPlace + "/" + MyConst.RPC_DATA_PARAM + "/";
@@ -281,7 +281,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		string	rpcKey = reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_RPC).Push ().Key;
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result [MyConst.RPC_DATA_USERHOME] = SystemGlobalDataController.Instance.isHost;
+		result [MyConst.RPC_DATA_USERHOME] = GameManager.isHost;
 
 		Dictionary<string, System.Object> jsonResult = new Dictionary<string, System.Object> ();
 		jsonResult [objectName] = JsonUtility.ToJson (myObject);
@@ -298,7 +298,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ANSWER, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
-					if (SystemGlobalDataController.Instance.isHost) {
+					if (GameManager.isHost) {
 						battleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM] = param;
 					} else {
 						battleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM] = param;

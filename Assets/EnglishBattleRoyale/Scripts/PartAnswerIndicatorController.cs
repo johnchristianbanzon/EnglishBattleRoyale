@@ -35,7 +35,7 @@ public class PartAnswerIndicatorController : SingletonMonoBehaviour<PartAnswerIn
 				Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
 				if (param.ContainsKey (MyConst.RPC_DATA_ANSWER_INDICATOR)) {
 
-					if (userHome.Equals (SystemGlobalDataController.Instance.isHost)) {
+					if (userHome.Equals (GameManager.isHost)) {
 						playerAnswerCounter++;
 						playerAnswerText.text = playerAnswerCounter.ToString ();
 

@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public static class QuestionBuilder
 {
-	public static QuestionSystemEnums.QuestionType questionType;
+	public static QuestionSystemEnums.TargetType questionType;
 	private static List<string> questionsDone = new List<string> ();
 	private static List<QuestionRowModel> questionList = new List<QuestionRowModel> ();
 	private static List<string> wrongChoices = new List<string> ();
@@ -24,9 +24,19 @@ public static class QuestionBuilder
 
 	public static List<QuestionModel> GetQuestionList(int numberOfQuestions,QuestionTypeModel questionTypeModel){
 		List<QuestionModel> questions =  new List<QuestionModel>();
-		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
+
+		Dictionary<string,int> dictionary = new Dictionary<string,int> ();
+		dictionary.Add ("select", 1);
+		dictionary.Add ("typing", 1);
+		dictionary.Add ("change", 1);
+		dictionary.Add ("word", 1);
+		dictionary.Add ("slot", 1);
+		dictionary.Add ("letter", 1);
+//		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
+
+		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		for (int i = 0; i < numberOfQuestions; i++) {
-			questions.Add (GetQuestion (getQuestionType("")));
+			questions.Add (GetQuestion (getQuestionType(selectionFromRandom)));
 //			questions.Add(GetQuestion(questionTypeModel));
 		}
 		return questions;
@@ -47,11 +57,12 @@ public static class QuestionBuilder
 			randomize = UnityEngine.Random.Range (0, questionList.Count);
 			answersList.Clear ();
 			switch (questionType.questionCategory) {
-			case QuestionSystemEnums.QuestionType.Antonym:
+			case QuestionSystemEnums.TargetType.Antonym:
 				if (questionList [randomize].hasAntonym.ToString()=="1") {
 					if (questionType.selectionType.ToString().Equals("WordChoice (WordChoice)")) {
 						answersList.Add (questionList [randomize].antonym1);
 						answersList.Add (questionList [randomize].antonym2);
+						answersList.Add (wrongChoices [randomize]);
 						question = questionList [randomize].answer;
 						questionViable = true;
 					} else {
@@ -61,11 +72,12 @@ public static class QuestionBuilder
 					}
 				}
 				break;
-			case QuestionSystemEnums.QuestionType.Synonym:
+			case QuestionSystemEnums.TargetType.Synonym:
 				if (questionList [randomize].hasSynonym.ToString()=="1") {
 					if (questionType.selectionType.ToString().Equals("WordChoice (WordChoice)")) {
 						answersList.Add (questionList [randomize].synonym1);
 						answersList.Add (questionList [randomize].synonym2);
+						answersList.Add (wrongChoices [randomize]);
 						question = questionList [randomize].answer;
 						questionViable = true;
 					} else {
@@ -76,7 +88,7 @@ public static class QuestionBuilder
 				}
 				break;
 
-			case QuestionSystemEnums.QuestionType.Definition:
+			case QuestionSystemEnums.TargetType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
 					if (questionType.selectionType.ToString ().Equals("SlotMachine (SlotMachine)")) {
 						if (questionList [randomize].answer.Length < 6) {
@@ -93,7 +105,7 @@ public static class QuestionBuilder
 				}
 				break;
 
-			case QuestionSystemEnums.QuestionType.Association:
+			case QuestionSystemEnums.TargetType.Association:
 				if (questionList [randomize].hasClues.ToString()=="1") {
 					answersList.Add (questionList [randomize].answer);
 					question = questionList [randomize].clues1 + "/"+questionList [randomize].clues2
@@ -112,10 +124,10 @@ public static class QuestionBuilder
 		}
 
 		switch (questionType.questionCategory) {
-		case QuestionSystemEnums.QuestionType.Definition:
+		case QuestionSystemEnums.TargetType.Definition:
 			idealTime += 0.5;
 			break;
-		case QuestionSystemEnums.QuestionType.Association:
+		case QuestionSystemEnums.TargetType.Association:
 			idealTime += 1;
 			break;
 		}
@@ -151,81 +163,69 @@ public static class QuestionBuilder
 			randomnum = UnityEngine.Random.Range (0, wrongChoices.Count);
 		}
 		string wrongChoice = wrongChoices [randomnum];
+		Debug.Log (wrongChoice);
 		return wrongChoice;
 	}
 
 	public static QuestionTypeModel getQuestionType(string selection){
-		Dictionary<string,int> dictionary = new Dictionary<string,int> ();
-		dictionary.Add ("select", 1);
-		dictionary.Add ("typing", 1);
-		dictionary.Add ("change", 1);
-		dictionary.Add ("word", 2);
-		dictionary.Add ("slot", 10);
-		dictionary.Add ("letter", 1);
 
-		Dictionary<QuestionSystemEnums.QuestionType,int> targetDictionary = new Dictionary<QuestionSystemEnums.QuestionType,int> ();
-		targetDictionary.Add (QuestionSystemEnums.QuestionType.Definition, 1);
-		targetDictionary.Add (QuestionSystemEnums.QuestionType.Synonym, 1);
-		targetDictionary.Add (QuestionSystemEnums.QuestionType.Antonym, 1);
-		targetDictionary.Add (QuestionSystemEnums.QuestionType.Association, 1);
+		Dictionary<QuestionSystemEnums.TargetType,int> targetDictionary = new Dictionary<QuestionSystemEnums.TargetType,int> ();
+		targetDictionary.Add (QuestionSystemEnums.TargetType.Definition, 1);
+		targetDictionary.Add (QuestionSystemEnums.TargetType.Synonym, 1);
+		targetDictionary.Add (QuestionSystemEnums.TargetType.Antonym, 1);
+		targetDictionary.Add (QuestionSystemEnums.TargetType.Association, 1);
 
-		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		QuestionTypeModel typeModel = null;
-		switch(selectionFromRandom){
+		switch(selection){
 		case "select":
 			typeModel = new QuestionTypeModel (
+//				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
-				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
 				QuestionSystemController.Instance.partSelection.selectLetter
 			);
 			break;
 		case "typing":
 			typeModel = new QuestionTypeModel (
+//				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
-				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
 				QuestionSystemController.Instance.partSelection.typing
 			);
 			break;
 		case "change":
 			typeModel = new QuestionTypeModel (
+//				QuestionSystemEnums.TargetType.Synonym,
 				QuestionGenerator.GetTargetWay(targetDictionary),
-				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.changeOrder
 			);
 			break;
 		case "word":
 			typeModel = new QuestionTypeModel (
+//				QuestionSystemEnums.TargetType.Synonym,
 				QuestionGenerator.GetTargetWay(targetDictionary),
-				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.noAnswer,
 				QuestionSystemController.Instance.partSelection.wordChoice
 			);
 			break;
 		case "slot":
 			typeModel = new QuestionTypeModel (
+//				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
-				QuestionSystemController.Instance.partTarget.association,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.slotMachine
 			);
 			break;
 		case "letter":
 			typeModel = new QuestionTypeModel (
+//				QuestionSystemEnums.TargetType.Association,
 				QuestionGenerator.GetTargetWay(targetDictionary),
-				QuestionSystemController.Instance.partTarget.association,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.letterLink
 			);
 			break;
 		}
-
-
-
-
-
 		return typeModel;
 	}
 }

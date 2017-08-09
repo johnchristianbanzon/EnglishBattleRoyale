@@ -9,12 +9,13 @@ public class PartQuestionController: MonoBehaviour
 	private List<QuestionResultModel> questionResultList;
 	private GameObject questionSystem;
 
-	void Start(){
+	void Start ()
+	{
 		QuestionBuilder.PopulateQuestion ();
 	}
+
 	public void OnStartPhase ()
 	{
-		Debug.Log ("Starting Answer Phase");
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
 
@@ -31,6 +32,24 @@ public class PartQuestionController: MonoBehaviour
 
 			int correctCount = questionResultList.Count (p => p.isCorrect == true);
 			int speedyCount = questionResultList.Count (p => p.isSpeedy == true);
+
+			//:TO-DO count speedyawesome and speedygood and include in computation
+			//bonus get from answers
+			float correctGPBonus = correctCount * GameManager.gameSettings.correctGPBonus;
+			float correctDamageBonus = correctCount * GameManager.gameSettings.correctDamageBonus;
+			float speedyAwesomeGPBonus = speedyCount * GameManager.gameSettings.speedyAwesomeGPBonus;
+			float speedyAwesomeDamageBonus = speedyCount * GameManager.gameSettings.speedyAwesomeDamageBonus;
+//				float speedyGoodGPBonus = correctCount * GameManager.gameSettings.speedyGoodGPBonus;
+//				float speedyGoodDamageBonus = correctCount * GameManager.gameSettings.speedyGoodDamageBonus;
+
+			ScreenBattleController.Instance.partState.player.playerGP += correctGPBonus + speedyAwesomeGPBonus;
+			Debug.Log ("GP GAINED A TOTAL OF " + (correctGPBonus + speedyAwesomeGPBonus));
+
+			ScreenBattleController.Instance.partState.player.playerBaseDamage += correctDamageBonus + speedyAwesomeDamageBonus;
+			Debug.Log ("BONUS PLAYER DAMAGE NOW INCREASED TO " + ScreenBattleController.Instance.partState.player.playerBaseDamage);
+			//
+
+			
 			QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, speedyCount);
 			string param = JsonUtility.ToJson (questionResultCount);
 			SystemFirebaseDBController.Instance.AnswerPhase (param);

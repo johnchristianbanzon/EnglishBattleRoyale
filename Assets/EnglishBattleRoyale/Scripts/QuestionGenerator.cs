@@ -34,12 +34,12 @@ public static class QuestionGenerator
 		}
 		return "";
 	}
-
-	public static QuestionSystemEnums.QuestionType GetTargetWay (Dictionary<QuestionSystemEnums.QuestionType, int> ratios)
+		
+	public static QuestionSystemEnums.TargetType GetTargetWay (Dictionary<QuestionSystemEnums.TargetType, int> ratios)
 	{
-		List<KeyValuePair<QuestionSystemEnums.QuestionType, int>> numbers = new List<KeyValuePair<QuestionSystemEnums.QuestionType, int>> ();
+		List<KeyValuePair<QuestionSystemEnums.TargetType, int>> numbers = new List<KeyValuePair<QuestionSystemEnums.TargetType, int>> ();
 		int sum = 0;
-		foreach (KeyValuePair<QuestionSystemEnums.QuestionType, int> pair in ratios) {
+		foreach (KeyValuePair<QuestionSystemEnums.TargetType, int> pair in ratios) {
 			int ratio = pair.Value;
 			sum = sum + ratio;
 			numbers.Add (pair);
@@ -52,7 +52,7 @@ public static class QuestionGenerator
 				return numbers [i].Key; 
 			}
 		}
-		return QuestionSystemEnums.QuestionType.Synonym;
+		return QuestionSystemEnums.TargetType.Synonym;
 	}
 
 	private static QuestionSystemEnums.SelectionType GetSelectWay (Dictionary<QuestionSystemEnums.SelectionType, int> ratios)

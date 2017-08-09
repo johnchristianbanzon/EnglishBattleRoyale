@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using NCalc;
 using System;
 
-
-
 public class CharacterManager: IRPCDicObserver
 {
 	private static CharacterModel[] currentCharacterInEquip = new CharacterModel[3];
@@ -24,8 +22,17 @@ public class CharacterManager: IRPCDicObserver
 		List<CharacterModel> charactersToSend = new List<CharacterModel> ();
 		for (int i = 0; i < characterButtonToggleOn.Length; i++) {
 			if (characterButtonToggleOn [i] == true) {
-				charactersToSend.Add (currentCharacterInEquip [i]);
-				UseCharacterUI (i);
+
+				//if gp is enough, send character to firebase and remove from equip
+				if (ScreenBattleController.Instance.partState.player.playerGP >= currentCharacterInEquip [i].characterGPCost) {
+					Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [i].characterName);
+					ScreenBattleController.Instance.partState.player.playerGP -= currentCharacterInEquip [i].characterGPCost;
+					charactersToSend.Add (currentCharacterInEquip [i]);
+					UseCharacterUI (i);
+				} else {
+					Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [i].characterName);
+				}
+					
 			} else {
 				charactersToSend.Add (null);
 			}
@@ -55,7 +62,7 @@ public class CharacterManager: IRPCDicObserver
 					CharacterModelList characterList = JsonUtility.FromJson<CharacterModelList> (param [MyConst.RPC_DATA_CHARACTER].ToString ());
 					Queue<CharacterModel> characterReceiveQueue = new Queue<CharacterModel> ();
 				
-					for (int i = 0; i < characterList.list.Count - 1; i++) {
+					for (int i = 0; i < characterList.list.Count; i++) {
 						if (characterList.list [i].characterID != 0) {
 							characterReceiveQueue.Enqueue (characterList.list [i]);
 						}
@@ -63,14 +70,12 @@ public class CharacterManager: IRPCDicObserver
 
 					BattleManager.CountCharacters ();
 					if (characterReceiveQueue.Count > 0) {
-						if (userHome.Equals (SystemGlobalDataController.Instance.isHost)) {
-							Debug.Log ("RECEIVE PLAYER CHARACTERS");
-							playerCharacterQueue.Clear();
+						if (userHome.Equals (GameManager.isHost)) {
+							Debug.Log ("RECEIVE PLAYER CHARACTERS " + characterReceiveQueue.Count);
 							playerCharacterQueue = characterReceiveQueue;
 
 						} else {
-							Debug.Log ("RECEIVE ENEMY CHARACTERS");
-							enemyCharacterQueue.Clear();
+							Debug.Log ("RECEIVE ENEMY CHARACTERS " + characterReceiveQueue.Count);
 							enemyCharacterQueue = characterReceiveQueue;
 						}
 					}
@@ -107,7 +112,7 @@ public class CharacterManager: IRPCDicObserver
 		if (playerCharacterQueue.Count > 0) {
 			CharacterModel character = playerCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
-			CharacterActivate (character);
+			CharacterActivate (true, character);
 			PlayerCharacterActivate ();
 		}
 	}
@@ -117,12 +122,12 @@ public class CharacterManager: IRPCDicObserver
 		if (enemyCharacterQueue.Count > 0) {
 			CharacterModel character = enemyCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
-			CharacterActivate (character);
+			CharacterActivate (false, character);
 			EnemyCharacterActivate ();
 		}
 	}
 
-	private static void CharacterActivate (CharacterModel character)
+	private static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
 
 		float variable = 0;
@@ -131,18 +136,45 @@ public class CharacterManager: IRPCDicObserver
 			variable = 0;
 			break;
 		case "enemyHP":
-			variable = ScreenBattleController.Instance.partState.enemy.playerHP;
+			if (isPlayer) {
+				variable = ScreenBattleController.Instance.partState.enemy.playerHP;
+			} else {
+				variable = ScreenBattleController.Instance.partState.player.playerHP;
+			}
+
+
 			break;
 		case "playerHP":
-			variable = ScreenBattleController.Instance.partState.player.playerHP;
+			if (isPlayer) {
+				variable = ScreenBattleController.Instance.partState.player.playerHP;
+			} else {
+				variable = ScreenBattleController.Instance.partState.enemy.playerHP;
+			}
+
+
 			break;
 		case "enemyDamage":
-			variable = ScreenBattleController.Instance.partState.enemy.playerBaseDamage;
+			if (isPlayer) {
+				variable = ScreenBattleController.Instance.partState.enemy.playerBaseDamage;
+			} else {
+				variable = ScreenBattleController.Instance.partState.player.playerBaseDamage;
+			}
+
+
 			break;
 		case "playerDamage":
-			variable = ScreenBattleController.Instance.partState.player.playerBaseDamage;
+			if (isPlayer) {
+				variable = ScreenBattleController.Instance.partState.player.playerBaseDamage;
+			} else {
+				variable = ScreenBattleController.Instance.partState.enemy.playerBaseDamage;
+			}
+
+
 			break;
 		case "correctAnswer":
+			if (isPlayer) {
+
+			}
 			break;
 		}
 
@@ -151,35 +183,70 @@ public class CharacterManager: IRPCDicObserver
 		Expression e = new Expression (character.characterAmount);
 		e.Parameters ["N"] = variable;  
 
-		CharacterCompute (character, float.Parse (e.Evaluate ().ToString ()));
+		CharacterCompute (isPlayer, character.characterSkillID, float.Parse (e.Evaluate ().ToString ()));
 	}
 		
 	//activates the character and calculate the respective skills
-	private static void CharacterCompute (CharacterModel character, float calculateCharAmount)
+	private static void CharacterCompute (bool isPlayer, int skillID, float calculateCharAmount)
 	{
-		switch ((SkillEnum)character.characterSkillID) {
-
+		switch ((SkillEnum)skillID) {
 
 		case SkillEnum.DecreaseEnemyBaseDamage:
-			ScreenBattleController.Instance.partState.enemy.playerBaseDamage -= calculateCharAmount;
+			if (isPlayer) {
+				ScreenBattleController.Instance.partState.enemy.playerBaseDamage -= calculateCharAmount;
+				Debug.Log ("ENEMY BASE DAMAGE DECREASED BY " + calculateCharAmount);
+			} else {
+				ScreenBattleController.Instance.partState.player.playerBaseDamage -= calculateCharAmount;
+				Debug.Log ("PLAYER BASE DAMAGE DECREASED BY " + calculateCharAmount);
+			}
+
 			break;
 		case SkillEnum.DereaseEnemyHP:
-			ScreenBattleController.Instance.partState.enemy.playerHP -= calculateCharAmount;
+			if (isPlayer) {
+				ScreenBattleController.Instance.partState.enemy.playerHP -= calculateCharAmount;
+				Debug.Log ("ENEMY HP DECREASED BY " + calculateCharAmount);
+			} else {
+				ScreenBattleController.Instance.partState.player.playerHP -= calculateCharAmount;
+				Debug.Log ("PLAYER HP DECREASED BY " + calculateCharAmount);
+			}
+		
+
 			break;
 		case SkillEnum.IncreasePlayerBaseDamage:
-			ScreenBattleController.Instance.partState.player.playerBaseDamage += calculateCharAmount;
+			if (isPlayer) {
+				ScreenBattleController.Instance.partState.player.playerBaseDamage += calculateCharAmount;
+				Debug.Log ("PLAYER BASE DAMAGE INCREASED BY " + calculateCharAmount);
+			} else {
+				ScreenBattleController.Instance.partState.enemy.playerBaseDamage += calculateCharAmount;
+				Debug.Log ("ENEMY BASE DAMAGE INCREASED BY " + calculateCharAmount);
+			}
+
 			break;
 		case SkillEnum.IncreasePlayerGP:
-			ScreenBattleController.Instance.partState.player.playerGP += calculateCharAmount;
+			if (isPlayer) {
+				ScreenBattleController.Instance.partState.player.playerGP += calculateCharAmount;
+				Debug.Log ("PLAYER GP INCREASED BY " + calculateCharAmount);
+			} else {
+				ScreenBattleController.Instance.partState.enemy.playerGP += calculateCharAmount;
+				Debug.Log ("ENEMY GP INCREASED BY " + calculateCharAmount);
+			}
+
 			break;
 		case SkillEnum.IncreasePlayerHP:
-			ScreenBattleController.Instance.partState.enemy.playerHP += calculateCharAmount;
+			if (isPlayer) {
+				ScreenBattleController.Instance.partState.enemy.playerHP += calculateCharAmount;
+				Debug.Log ("ENEMY HP INCREASED BY " + calculateCharAmount);
+			} else {
+				ScreenBattleController.Instance.partState.player.playerHP += calculateCharAmount;
+				Debug.Log ("PLAYER HP INCREASED BY " + calculateCharAmount);
+			}
+
 			break;
 		case SkillEnum.LimitEnemySkill:
-			//not yet
+			Debug.Log ("CHARACTER EFFECT NOT IMPLEMENTED");
 			break;
 		case SkillEnum.Stop:
-			//not yet
+			Debug.Log ("CHARACTER EFFECT NOT IMPLEMENTED");
 			break;
 		default:
 			break;
