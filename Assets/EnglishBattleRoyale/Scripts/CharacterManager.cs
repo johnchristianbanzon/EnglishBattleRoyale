@@ -97,18 +97,9 @@ public class CharacterManager: IRPCDicObserver
 	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
 	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
 
-	public static Action GetPlayerCharacterActivate ()
+	public static void PlayerCharacterActivate ()
 	{
-		return PlayerCharacterActivate;
-	}
-
-	public static Action GetEnemyCharacterActivate ()
-	{
-		return EnemyCharacterActivate;
-	}
-
-	private static void PlayerCharacterActivate ()
-	{
+		Debug.Log ("PLAYER CHARACTERS REMAINING: " +playerCharacterQueue.Count);
 		if (playerCharacterQueue.Count > 0) {
 			CharacterModel character = playerCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
@@ -117,8 +108,9 @@ public class CharacterManager: IRPCDicObserver
 		}
 	}
 
-	private static void EnemyCharacterActivate ()
+	public static void EnemyCharacterActivate ()
 	{
+		Debug.Log ("ENEMY CHARACTERS REMAINING: " +enemyCharacterQueue.Count);
 		if (enemyCharacterQueue.Count > 0) {
 			CharacterModel character = enemyCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
@@ -234,11 +226,11 @@ public class CharacterManager: IRPCDicObserver
 			break;
 		case SkillEnum.IncreasePlayerHP:
 			if (isPlayer) {
-				ScreenBattleController.Instance.partState.enemy.playerHP += calculateCharAmount;
-				Debug.Log ("ENEMY HP INCREASED BY " + calculateCharAmount);
-			} else {
 				ScreenBattleController.Instance.partState.player.playerHP += calculateCharAmount;
 				Debug.Log ("PLAYER HP INCREASED BY " + calculateCharAmount);
+			} else {
+				ScreenBattleController.Instance.partState.enemy.playerHP += calculateCharAmount;
+				Debug.Log ("ENEMY HP INCREASED BY " + calculateCharAmount);
 			}
 
 			break;
@@ -269,7 +261,8 @@ public class CharacterManager: IRPCDicObserver
 		return characterList;
 	}
 
-	//TEST ONLY FOR NOW!!!!! Add 8 characters to equip
+	//TO-DO THIS IS JUST TEST. REFACTOR LATER
+	//Add 8 characters to equip
 	public static List<CharacterModel>  GetEquipCharacterList ()
 	{
 		List<CharacterModel> equipCharacterList = new List<CharacterModel> (8);
@@ -316,7 +309,7 @@ public class CharacterManager: IRPCDicObserver
 	//When characters is used, remove previous characters and enqueue replace with new characters in queue
 	public static void UseCharacterUI (int characterIndex)
 	{
-		//Reminders: Remove this if you want characters will be gone after use
+		//Reminders: Remove this if you want characters will be gone after use and not put at the bottom of the queue
 //		characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
 
 		SetCharacterUI (characterIndex, characterQueue.Dequeue ());
