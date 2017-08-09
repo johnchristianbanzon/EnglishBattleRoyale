@@ -33,9 +33,9 @@ public static class QuestionGenerator
 		return questionSystemEnum;
 	}
 
-	private static  QuestionSystemEnums.QuestionType GetTargetWay ()
+	private static  QuestionSystemEnums.TargetType GetTargetWay ()
 	{
-		QuestionSystemEnums.QuestionType questionSystemEnum = QuestionSystemEnums.QuestionType.Antonym;
+		QuestionSystemEnums.TargetType questionSystemEnum = QuestionSystemEnums.TargetType.Antonym;
 
 		return questionSystemEnum;
 	}

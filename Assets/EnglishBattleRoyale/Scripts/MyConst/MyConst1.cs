@@ -49,7 +49,8 @@ public static partial class MyConst {
 				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "an")[i].ToString()),
 				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "cl")[i].ToString())
 			));
-			wrongChoices.Add (CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString ()
+			wrongChoices.Add (CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "choice1")[i].ToString ()
+				+"/"+ CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "choice2")[i].ToString ()
 			);
 		}
 	}

@@ -24,7 +24,7 @@ public class PartQuestionController: MonoBehaviour
 
 		questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
 		QuestionSystemController.Instance.StartQuestionRound (
-			QuestionBuilder.getQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
+			QuestionBuilder.GetQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
 			, delegate(List<QuestionResultModel> resultList) {
 
 			//callback here

@@ -1,18 +1,16 @@
 ﻿public class QuestionTypeModel
 {
-	public ITarget targetType;
+	public QuestionSystemEnums.TargetType questionCategory;
 	public IAnswer answerType;
 	public ISelection selectionType;
-	public QuestionSystemEnums.QuestionType questionCategory;
+
 
 	public QuestionTypeModel (
-		QuestionSystemEnums.QuestionType questionCategory,
-		ITarget targetType,
+		QuestionSystemEnums.TargetType questionCategory,
 		IAnswer answerType,
 		ISelection selectionType)
 	{
 		this.questionCategory = questionCategory;
-		this.targetType = targetType;
 		this.answerType = answerType;
 		this.selectionType = selectionType;
 	}
