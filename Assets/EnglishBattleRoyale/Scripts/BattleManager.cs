@@ -6,7 +6,8 @@ using System;
 public class BattleManager: IRPCDicObserver
 {
 	private static int characterActionCounter = 0;
-	private static int characterAttackCounter = 0;
+	private static AttackModel playerAttack;
+	private static AttackModel enemyAttack;
 
 	public void Init ()
 	{
@@ -17,27 +18,26 @@ public class BattleManager: IRPCDicObserver
 	public static void CountCharacters ()
 	{
 		characterActionCounter++;
-		Debug.Log("CHARACTER COUNT " + characterActionCounter);
+		Debug.Log ("CHARACTER COUNT " + characterActionCounter);
 
 		//Reminders: Change to 2 if not testing
 		if (characterActionCounter == 2) {
-			SendAttack ();
+			ScreenBattleController.Instance.partState.StartBattle ();
 		}
 	}
 
-	private static void ClearCounters(){
+	public static void ClearBattleData ()
+	{
 		characterActionCounter = 0;
-		characterAttackCounter = 0;
+		playerAttack = null;
+		enemyAttack = null;
 	}
 
 	#region Send Attack to Firebase
 
-
-		
 	//send attack to firebase
-	private static void SendAttack ()
+	public static void SendAttack ()
 	{
-
 		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (ScreenBattleController.Instance.partState.player.playerBaseDamage));
 		Debug.Log ("SENDING ATTACK");
 	}
@@ -60,35 +60,59 @@ public class BattleManager: IRPCDicObserver
 					} else {
 						enemyAttack = attack;
 					}
-					CountAttacks ();
 				}
-
-			
 			}
 		} catch (System.Exception e) {
 			//do something later
 		}
 	}
 
-	private static AttackModel playerAttack;
-	private static AttackModel enemyAttack;
-
-	private static Action GetPlayerAttack(){
-		return PlayerAttackCompute;
+	public static bool CheckBothAttack ()
+	{
+		Debug.Log ("Checking both attack");
+		if (playerAttack != null && enemyAttack != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	private static void PlayerAttackCompute(){
+	public static void ComputeBothAttack ()
+	{
+		ComputePlayerAttack ();
+		ComputeEnemyAttack ();
+	}
+
+	public static bool CheckPlayerAttack ()
+	{
+		Debug.Log ("Checking player attack");
+		if (playerAttack != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static void ComputePlayerAttack ()
+	{
 		AttackCompute (true, playerAttack);
 	}
 
-	private static Action GetEnemyAttack(){
-		return EnemyAttackCompute;
+	public static bool CheckEnemyAttack ()
+	{
+		Debug.Log ("Checking enemy attack");
+		if (enemyAttack != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	private static void EnemyAttackCompute(){
+	public static void ComputeEnemyAttack ()
+	{
 		AttackCompute (false, enemyAttack);
 	}
-
+		
 
 	public static void AttackCompute (bool isPLayer, AttackModel attack)
 	{
@@ -102,47 +126,6 @@ public class BattleManager: IRPCDicObserver
 		}
 	}
 
-
-	private static void CountAttacks ()
-	{
-		characterAttackCounter++;
-		Debug.Log ("CHARACTER ATTACK COUNTER " + characterAttackCounter);
-		if (characterAttackCounter == 2) {
-			SetBattle ();
-			ClearCounters ();
-		}
-	}
-
-	public static void SetBattle ()
-	{
-		Queue<Action> actionsQueue = new Queue<Action> ();
-
-		int attackOrder = GetBattleOrder ();
-		switch (attackOrder) {
-		case 0:
-			actionsQueue.Enqueue (CharacterManager.GetPlayerCharacterActivate ());
-			actionsQueue.Enqueue (GetPlayerAttack ());
-			actionsQueue.Enqueue (CharacterManager.GetEnemyCharacterActivate ());
-			actionsQueue.Enqueue (GetEnemyAttack ());
-			ScreenBattleController.Instance.partState.SetActions (actionsQueue);
-			break;
-		case 1:
-			actionsQueue.Enqueue (CharacterManager.GetEnemyCharacterActivate());
-			actionsQueue.Enqueue (GetEnemyAttack ());
-			actionsQueue.Enqueue (CharacterManager.GetPlayerCharacterActivate());
-			actionsQueue.Enqueue (GetPlayerAttack ());
-			ScreenBattleController.Instance.partState.SetActions (actionsQueue);
-			break;
-		case 2:
-			actionsQueue.Enqueue (CharacterManager.GetEnemyCharacterActivate());
-			actionsQueue.Enqueue (CharacterManager.GetPlayerCharacterActivate());
-			actionsQueue.Enqueue (GetEnemyAttack ());
-			actionsQueue.Enqueue (GetPlayerAttack ());
-			ScreenBattleController.Instance.partState.SetActions (actionsQueue);
-			break;
-		}
-
-	}
 
 	public static int GetBattleOrder ()
 	{
