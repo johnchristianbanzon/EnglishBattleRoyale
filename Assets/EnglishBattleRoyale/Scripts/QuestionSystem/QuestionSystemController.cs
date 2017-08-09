@@ -141,17 +141,20 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 			speedyEffect = SystemResourceController.Instance.LoadPrefab ("SpeedyEffectText", SystemPopupController.Instance.popUp.gameObject);
 			speedyEffect.transform.position = Vector3.zero;
 			TweenFacade.TweenScaleToLarge (speedyEffect.transform, Vector3.one, 0.3f);
-
+			QuestionSystemEnums.SpeedyType speedyType = QuestionSystemEnums.SpeedyType.Good;
 			if (timePassed < idealTime) {
 				speedyEffect.GetComponent<Text> ().text = "Awesome";
+				speedyType = QuestionSystemEnums.SpeedyType.Awesome;
 			} else if (timePassed >= idealTime) {
 				if (timePassed >= (idealTime * 2)) {
-					speedyEffect.GetComponent<Text> ().text = "Rotten";				
+					speedyEffect.GetComponent<Text> ().text = "Rotten";
+					speedyType = QuestionSystemEnums.SpeedyType.Rotten;
 				} else {
-					speedyEffect.GetComponent<Text> ().text = "Good";			
+					speedyEffect.GetComponent<Text> ().text = "Good";
+					speedyType = QuestionSystemEnums.SpeedyType.Good;
 				}
 			}
-			onQuestionResult.Invoke (new QuestionResultModel (00000, 13, 3, isCorrect, false));
+			onQuestionResult.Invoke (new QuestionResultModel (00000, 13, 3, isCorrect, speedyType));
 			Invoke ("NextQuestion", 1f);
 		} else {
 			TweenFacade.TweenShakePosition (gameObject.transform, 1.0f, 30.0f, 50, 90f);

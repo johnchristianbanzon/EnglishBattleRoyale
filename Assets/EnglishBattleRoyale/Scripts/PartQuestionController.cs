@@ -31,14 +31,15 @@ public class PartQuestionController: MonoBehaviour
 			questionResultList = resultList;
 
 			int correctCount = questionResultList.Count (p => p.isCorrect == true);
-			int speedyCount = questionResultList.Count (p => p.isSpeedy == true);
-
+			int awesomeSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Awesome);
+				int goodSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Good);
+				int rottenSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Rotten);
 			//:TO-DO count speedyawesome and speedygood and include in computation
 			//bonus get from answers
 			float correctGPBonus = correctCount * GameManager.gameSettings.correctGPBonus;
 			float correctDamageBonus = correctCount * GameManager.gameSettings.correctDamageBonus;
-			float speedyAwesomeGPBonus = speedyCount * GameManager.gameSettings.speedyAwesomeGPBonus;
-			float speedyAwesomeDamageBonus = speedyCount * GameManager.gameSettings.speedyAwesomeDamageBonus;
+				float speedyAwesomeGPBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeGPBonus;
+				float speedyAwesomeDamageBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeDamageBonus;
 //				float speedyGoodGPBonus = correctCount * GameManager.gameSettings.speedyGoodGPBonus;
 //				float speedyGoodDamageBonus = correctCount * GameManager.gameSettings.speedyGoodDamageBonus;
 
@@ -50,7 +51,7 @@ public class PartQuestionController: MonoBehaviour
 			//
 
 			
-			QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, speedyCount);
+				QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount,awesomeSpeedyCount,goodSpeedyCount,rottenSpeedyCount);
 			string param = JsonUtility.ToJson (questionResultCount);
 			SystemFirebaseDBController.Instance.AnswerPhase (param);
 

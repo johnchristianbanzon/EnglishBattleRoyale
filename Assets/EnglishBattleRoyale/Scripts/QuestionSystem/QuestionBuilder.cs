@@ -29,7 +29,7 @@ public static class QuestionBuilder
 		dictionary.Add ("select", 1);
 		dictionary.Add ("typing", 1);
 		dictionary.Add ("change", 1);
-		dictionary.Add ("word", 1);
+		dictionary.Add ("word", 15);
 		dictionary.Add ("slot", 1);
 		dictionary.Add ("letter", 1);
 //		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
@@ -37,7 +37,6 @@ public static class QuestionBuilder
 		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		for (int i = 0; i < numberOfQuestions; i++) {
 			questions.Add (GetQuestion (getQuestionType(selectionFromRandom)));
-//			questions.Add(GetQuestion(questionTypeModel));
 		}
 		return questions;
 	}
@@ -202,6 +201,8 @@ public static class QuestionBuilder
 			);
 			break;
 		case "word":
+			targetDictionary.Remove (QuestionSystemEnums.TargetType.Definition);
+			targetDictionary.Remove (QuestionSystemEnums.TargetType.Association);
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Synonym,
 				QuestionGenerator.GetTargetWay(targetDictionary),

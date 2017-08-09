@@ -18,4 +18,10 @@
 		SlotMachine,
 		LetterLink
 	}
+	public enum SpeedyType{
+		Rotten,
+		Good,
+		Awesome
+	}
+
 }

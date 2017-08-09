@@ -116,55 +116,115 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	#region DamageCoroutine
 
-	//For draw results, doesn't need the other coroutine to finish
-	public void SetActions (Queue<Action> playersAction)
+	public void StartBattle ()
 	{
-		StartCoroutine (StartBattleActions (playersAction));
+		StartCoroutine (StartBattleCoroutine ());
 	}
 
-
-
-	//activate the player actions
-	IEnumerator StartBattleActions (Queue<Action> playersAction)
+	IEnumerator StartBattleCoroutine ()
 	{
-		Queue<Action> playerActionsQueue = playersAction;
-		if (playerActionsQueue.Count > 0) {
-			playerActionsQueue.Dequeue ().Invoke ();
-			yield return new WaitForSeconds (1);
-			StartCoroutine (StartBattleActions (playerActionsQueue));
-		} else {
-			//if no winner, start phase 1 again
-			if (CheckHP ()) {
-				//reset player attributes
-				ResetPlayerDamage();
-				ScreenBattleController.Instance.StartPhase1 ();
-			}	
+
+		int attackOrder = BattleManager.GetBattleOrder ();
+		switch (attackOrder) {
+		case 0:
+			Debug.Log ("PLAYER ATTACK FIRST");
+			yield return StartCoroutine (BattleLogicCoroutine (true,false));
+			yield return new WaitForSeconds (2);
+			yield return StartCoroutine (BattleLogicCoroutine (false,true));
+			break;
+
+		case 1:
+			Debug.Log ("ENEMY ATTACK FIRST");
+			yield return StartCoroutine (BattleLogicCoroutine (false,false));
+			yield return new WaitForSeconds (2);
+			yield return StartCoroutine (BattleLogicCoroutine (true,true));
+			break;
+
+		case 2:
+			Debug.Log ("BOTH ATTACK SAME TIME");
+			CharacterManager.PlayerCharacterActivate ();
+			CharacterManager.EnemyCharacterActivate ();
+			BattleManager.SendAttack ();
+			CheckHP (false);
+			yield return new WaitForSeconds (2);
+			yield return StartCoroutine (CheckBothAttackCoroutine ());
+			CheckHP (true);
+			break;
+
 		}
-
-	
 	}
 
-	private bool CheckHP ()
+	IEnumerator CheckBothAttackCoroutine(){
+		
+		if (BattleManager.CheckBothAttack ()) {
+			BattleManager.ComputeBothAttack ();
+		} else {
+			yield return new WaitForSeconds (1);
+			yield return StartCoroutine(CheckBothAttackCoroutine ());
+		}
+	}
+
+	IEnumerator CheckPlayerAttackCoroutine(){
+		if (BattleManager.CheckPlayerAttack ()) {
+			BattleManager.ComputePlayerAttack ();
+		} else {
+			yield return new WaitForSeconds (1);
+			yield return StartCoroutine(CheckPlayerAttackCoroutine ());
+		}
+	}
+
+	IEnumerator CheckEnemyAttackCoroutine(){
+		if (BattleManager.CheckEnemyAttack ()) {
+			BattleManager.ComputeEnemyAttack ();
+		} else {
+			yield return new WaitForSeconds (1);
+			yield return StartCoroutine(CheckEnemyAttackCoroutine ());
+		}
+	}
+
+	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
+	{
+		if (isPLayer) {
+			CharacterManager.PlayerCharacterActivate ();
+			BattleManager.SendAttack ();
+			yield return new WaitForSeconds (1);
+			yield return StartCoroutine (CheckPlayerAttackCoroutine());
+			CheckHP (isSecondCheck);
+		} else {
+			CharacterManager.EnemyCharacterActivate ();
+			yield return new WaitForSeconds (1);
+			yield return StartCoroutine (CheckEnemyAttackCoroutine());
+			CheckHP (isSecondCheck);
+		}
+	}
+
+	//check HP of each player, if there is winner, stop battle
+	private void CheckHP (bool isSecondCheck)
 	{
 		SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
 
 			if (enemy.playerHP > 0 && player.playerHP <= 0) {
 				Debug.Log ("Lose");
-
 			} else if (player.playerHP > 0 && enemy.playerHP <= 0) {
 				Debug.Log ("Win");
 			} else {
 				Debug.Log ("Draw");
 			}
 			StopAllCoroutines ();
-			return false;
+			return;
 		} 
 
-		return true;
+		if (isSecondCheck) {
+			ResetPlayerDamage ();
+			BattleManager.ClearBattleData ();
+			ScreenBattleController.Instance.StartPhase1 ();
+		}
+
 	}
 
-	private void ResetPlayerDamage(){
+	private void ResetPlayerDamage ()
+	{
 		player.playerBaseDamage = GameManager.player.playerBaseDamage;
 	}
 

@@ -32,7 +32,7 @@ public static class TweenFacade{
 	}
 
 	public static void TweenScaleToZero(float duration, GameObject scaleObject){
-		scaleObject.transform.DOScale(new Vector3(1,0,0), duration);
+//		scaleObject.transform.DOScale(new Vector3(1,0,0), duration);
 	}
 
 	public static void TweenRotateForever(RectTransform rotateObject){
