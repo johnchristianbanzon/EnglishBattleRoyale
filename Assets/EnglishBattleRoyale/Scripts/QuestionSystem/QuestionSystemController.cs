@@ -108,7 +108,8 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	void Start ()
 	{
 		MyConst.Init ();
-		QuestionBuilder.PopulateQuestion ();
+		IQuestionProvider provider = new QuestionCSVProvider ();
+		QuestionBuilder.PopulateQuestion (provider);
 		if (isDebug) {
 
 			debugUI.SetActive (true);

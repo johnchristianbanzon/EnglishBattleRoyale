@@ -14,12 +14,12 @@ public static class QuestionBuilder
 
 	public static int questionIndex = 1;
 
-	public static void PopulateQuestion ()
+	public static void PopulateQuestion (IQuestionProvider provider)
 	{
 		questionList.Clear ();
 		wrongChoices.Clear ();
-		questionList = MyConst.GetQuestionList();
-		wrongChoices = MyConst.GetWrongChoices ();
+		questionList = provider.GetQuestionList();
+		wrongChoices = MyConst.GetWrongChoices();
 	}
 
 	public static List<QuestionModel> GetQuestionList(int numberOfQuestions,QuestionTypeModel questionTypeModel){
@@ -29,7 +29,7 @@ public static class QuestionBuilder
 		dictionary.Add ("select", 1);
 		dictionary.Add ("typing", 1);
 		dictionary.Add ("change", 1);
-		dictionary.Add ("word", 15);
+		dictionary.Add ("word", 1);
 		dictionary.Add ("slot", 1);
 		dictionary.Add ("letter", 1);
 //		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };

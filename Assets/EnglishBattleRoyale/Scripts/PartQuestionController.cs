@@ -11,7 +11,8 @@ public class PartQuestionController: MonoBehaviour
 
 	void Start ()
 	{
-		QuestionBuilder.PopulateQuestion ();
+		IQuestionProvider provider = new QuestionCSVProvider ();
+		QuestionBuilder.PopulateQuestion (provider);
 	}
 
 	public void OnStartPhase ()
