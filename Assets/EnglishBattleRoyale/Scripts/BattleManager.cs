@@ -133,6 +133,9 @@ public class BattleManager: IRPCDicObserver
 		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
 		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
 
+		Debug.Log ("PLAYER ANSWER CORRECT COUNT: " +playerAnswerParam.correctCount);
+		Debug.Log ("ENEMY ANSWER CORRECT COUNT: " +enemyAnswerParam.correctCount);
+
 		//TO-DO: REFACTOR THIS CODE IF POSSIBLE
 		if (playerAnswerParam.correctCount > enemyAnswerParam.correctCount) {
 			battleOrder = 0;
@@ -159,6 +162,8 @@ public class BattleManager: IRPCDicObserver
 				}
 			}
 		}
+
+		Debug.Log ("BATTLE ORDER IS" + battleOrder);
 		return battleOrder;
 	}
 

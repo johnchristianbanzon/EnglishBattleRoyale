@@ -107,16 +107,12 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	void Start ()
 	{
-		MyConst.Init ();
-		QuestionBuilder.PopulateQuestion ();
+		
 		if (isDebug) {
-
+			MyConst.Init ();
+			QuestionBuilder.PopulateQuestion ();
 			debugUI.SetActive (true);
 
-		} else {
-			StartQuestionRound (QuestionBuilder.getQuestionType(""), delegate(List<QuestionResultModel> obj) {
-				Debug.Log("ended");
-			});
 		}
 	}
 

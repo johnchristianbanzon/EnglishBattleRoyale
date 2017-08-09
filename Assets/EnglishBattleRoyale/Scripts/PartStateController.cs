@@ -192,6 +192,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			CheckHP (isSecondCheck);
 		} else {
 			CharacterManager.EnemyCharacterActivate ();
+			BattleManager.SendAttack ();
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckEnemyAttackCoroutine());
 			CheckHP (isSecondCheck);
