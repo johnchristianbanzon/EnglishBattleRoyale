@@ -106,11 +106,16 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	void Start ()
 	{
+		MyConst.Init ();
+		QuestionBuilder.PopulateQuestion ();
 		if (isDebug) {
-			MyConst.Init ();
-			QuestionBuilder.PopulateQuestion ();
+
 			debugUI.SetActive (true);
-			//			StartQuestionRound (null, null);
+
+		} else {
+			StartQuestionRound (QuestionBuilder.getQuestionType(""), delegate(List<QuestionResultModel> obj) {
+				Debug.Log("ended");
+			});
 		}
 	}
 
@@ -155,9 +160,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private void HideQuestionParts ()
 	{
-		questionList [currentQuestionNumber].questionType.answerType.ClearHint ();
-		questionList [currentQuestionNumber].questionType.selectionType.HideSelectionType ();
-		questionList [currentQuestionNumber].questionType.targetType.HideTargetType ();
+		questionList [currentQuestionNumber-1].questionType.answerType.ClearHint ();
+		questionList [currentQuestionNumber-1].questionType.selectionType.HideSelectionType ();
+		questionList [currentQuestionNumber-1].questionType.targetType.HideTargetType ();
 	}
 
 	public void NextQuestion ()

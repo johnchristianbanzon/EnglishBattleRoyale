@@ -26,8 +26,8 @@ public static class QuestionBuilder
 		List<QuestionModel> questions =  new List<QuestionModel>();
 		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
 		for (int i = 0; i < numberOfQuestions; i++) {
-//			questions.Add (GetQuestion (getQuestionType(questionTypes[UnityEngine.Random.Range(0,questionTypes.Length)])));
-			questions.Add(GetQuestion(questionTypeModel));
+			questions.Add (GetQuestion (getQuestionType("")));
+//			questions.Add(GetQuestion(questionTypeModel));
 		}
 		return questions;
 	}
@@ -159,16 +159,22 @@ public static class QuestionBuilder
 		dictionary.Add ("select", 1);
 		dictionary.Add ("typing", 1);
 		dictionary.Add ("change", 1);
-		dictionary.Add ("word", 1);
-		dictionary.Add ("slot", 1);
+		dictionary.Add ("word", 2);
+		dictionary.Add ("slot", 10);
 		dictionary.Add ("letter", 1);
+
+		Dictionary<QuestionSystemEnums.QuestionType,int> targetDictionary = new Dictionary<QuestionSystemEnums.QuestionType,int> ();
+		targetDictionary.Add (QuestionSystemEnums.QuestionType.Definition, 1);
+		targetDictionary.Add (QuestionSystemEnums.QuestionType.Synonym, 1);
+		targetDictionary.Add (QuestionSystemEnums.QuestionType.Antonym, 1);
+		targetDictionary.Add (QuestionSystemEnums.QuestionType.Association, 1);
 
 		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		QuestionTypeModel typeModel = null;
 		switch(selectionFromRandom){
 		case "select":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Definition,
+				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
 				QuestionSystemController.Instance.partSelection.selectLetter
@@ -176,7 +182,7 @@ public static class QuestionBuilder
 			break;
 		case "typing":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Definition,
+				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
 				QuestionSystemController.Instance.partSelection.typing
@@ -184,7 +190,7 @@ public static class QuestionBuilder
 			break;
 		case "change":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Synonym,
+				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.changeOrder
@@ -192,7 +198,7 @@ public static class QuestionBuilder
 			break;
 		case "word":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Synonym,
+				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemController.Instance.partTarget.singleQuestion,
 				QuestionSystemController.Instance.partAnswer.noAnswer,
 				QuestionSystemController.Instance.partSelection.wordChoice
@@ -200,15 +206,15 @@ public static class QuestionBuilder
 			break;
 		case "slot":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Definition,
-				QuestionSystemController.Instance.partTarget.singleQuestion,
+				QuestionGenerator.GetTargetWay(targetDictionary),
+				QuestionSystemController.Instance.partTarget.association,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.slotMachine
 			);
 			break;
 		case "letter":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Association,
+				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemController.Instance.partTarget.association,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.letterLink
