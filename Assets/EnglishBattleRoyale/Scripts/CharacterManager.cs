@@ -67,8 +67,9 @@ public class CharacterManager: IRPCDicObserver
 							characterReceiveQueue.Enqueue (characterList.list [i]);
 						}
 					}
+					Debug.Log("CHARACTER COUNT " + characterReceiveQueue.Count);
 
-					BattleManager.CountCharacters ();
+				
 					if (characterReceiveQueue.Count > 0) {
 						if (userHome.Equals (GameManager.isHost)) {
 							Debug.Log ("RECEIVE PLAYER CHARACTERS " + characterReceiveQueue.Count);
@@ -78,7 +79,11 @@ public class CharacterManager: IRPCDicObserver
 							Debug.Log ("RECEIVE ENEMY CHARACTERS " + characterReceiveQueue.Count);
 							enemyCharacterQueue = characterReceiveQueue;
 						}
+					}else{
+						Debug.Log ("NO CHARACTERS ");
 					}
+
+					BattleManager.CountCharacters ();
 
 				}
 
@@ -97,7 +102,7 @@ public class CharacterManager: IRPCDicObserver
 	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
 	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
 
-	public static void PlayerCharacterActivate ()
+	public static bool PlayerCharacterActivate ()
 	{
 		Debug.Log ("PLAYER CHARACTERS REMAINING: " +playerCharacterQueue.Count);
 		if (playerCharacterQueue.Count > 0) {
@@ -106,9 +111,10 @@ public class CharacterManager: IRPCDicObserver
 			CharacterActivate (true, character);
 			PlayerCharacterActivate ();
 		}
+		return true;
 	}
 
-	public static void EnemyCharacterActivate ()
+	public static bool EnemyCharacterActivate ()
 	{
 		Debug.Log ("ENEMY CHARACTERS REMAINING: " +enemyCharacterQueue.Count);
 		if (enemyCharacterQueue.Count > 0) {
@@ -117,6 +123,7 @@ public class CharacterManager: IRPCDicObserver
 			CharacterActivate (false, character);
 			EnemyCharacterActivate ();
 		}
+		return true;
 	}
 
 	private static void CharacterActivate (bool isPlayer, CharacterModel character)

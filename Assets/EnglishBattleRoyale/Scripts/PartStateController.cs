@@ -144,6 +144,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			Debug.Log ("BOTH ATTACK SAME TIME");
 			CharacterManager.PlayerCharacterActivate ();
 			CharacterManager.EnemyCharacterActivate ();
+			yield return new WaitForSeconds (5);
 			BattleManager.SendAttack ();
 			CheckHP (false);
 			yield return new WaitForSeconds (2);
@@ -185,14 +186,16 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
 	{
 		if (isPLayer) {
-			CharacterManager.PlayerCharacterActivate ();
-			BattleManager.SendAttack ();
+			if (CharacterManager.PlayerCharacterActivate ()) {
+				BattleManager.SendAttack ();
+			}
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckPlayerAttackCoroutine());
 			CheckHP (isSecondCheck);
 		} else {
-			CharacterManager.EnemyCharacterActivate ();
-			BattleManager.SendAttack ();
+			if (CharacterManager.EnemyCharacterActivate ()) {
+				BattleManager.SendAttack ();
+			};
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckEnemyAttackCoroutine());
 			CheckHP (isSecondCheck);
