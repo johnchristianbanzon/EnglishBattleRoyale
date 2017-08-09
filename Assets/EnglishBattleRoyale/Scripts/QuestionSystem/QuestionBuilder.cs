@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public static class QuestionBuilder
 {
-	public static QuestionSystemEnums.QuestionType questionType;
+	public static QuestionSystemEnums.TargetType questionType;
 	private static List<string> questionsDone = new List<string> ();
 	private static List<QuestionRowModel> questionList = new List<QuestionRowModel> ();
 	private static List<string> wrongChoices = new List<string> ();
@@ -26,8 +26,8 @@ public static class QuestionBuilder
 		List<QuestionModel> questions =  new List<QuestionModel>();
 		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
 		for (int i = 0; i < numberOfQuestions; i++) {
-//			questions.Add (GetQuestion (getQuestionType(questionTypes[UnityEngine.Random.Range(0,questionTypes.Length)])));
-			questions.Add(GetQuestion(questionTypeModel));
+			questions.Add (GetQuestion (GetQuestionType(questionTypes[UnityEngine.Random.Range(0,questionTypes.Length)])));
+//			questions.Add(GetQuestion(questionTypeModel));
 		}
 		return questions;
 	}
@@ -47,11 +47,12 @@ public static class QuestionBuilder
 			randomize = UnityEngine.Random.Range (0, questionList.Count);
 			answersList.Clear ();
 			switch (questionType.questionCategory) {
-			case QuestionSystemEnums.QuestionType.Antonym:
+			case QuestionSystemEnums.TargetType.Antonym:
 				if (questionList [randomize].hasAntonym.ToString()=="1") {
 					if (questionType.selectionType.ToString().Equals("WordChoice (WordChoice)")) {
 						answersList.Add (questionList [randomize].antonym1);
 						answersList.Add (questionList [randomize].antonym2);
+						answersList.Add (wrongChoices [randomize]);
 						question = questionList [randomize].answer;
 						questionViable = true;
 					} else {
@@ -61,11 +62,12 @@ public static class QuestionBuilder
 					}
 				}
 				break;
-			case QuestionSystemEnums.QuestionType.Synonym:
+			case QuestionSystemEnums.TargetType.Synonym:
 				if (questionList [randomize].hasSynonym.ToString()=="1") {
 					if (questionType.selectionType.ToString().Equals("WordChoice (WordChoice)")) {
 						answersList.Add (questionList [randomize].synonym1);
 						answersList.Add (questionList [randomize].synonym2);
+						answersList.Add (wrongChoices [randomize]);
 						question = questionList [randomize].answer;
 						questionViable = true;
 					} else {
@@ -76,7 +78,7 @@ public static class QuestionBuilder
 				}
 				break;
 
-			case QuestionSystemEnums.QuestionType.Definition:
+			case QuestionSystemEnums.TargetType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
 					if (questionType.selectionType.ToString ().Equals("SlotMachine (SlotMachine)")) {
 						if (questionList [randomize].answer.Length < 6) {
@@ -93,7 +95,7 @@ public static class QuestionBuilder
 				}
 				break;
 
-			case QuestionSystemEnums.QuestionType.Association:
+			case QuestionSystemEnums.TargetType.Association:
 				if (questionList [randomize].hasClues.ToString()=="1") {
 					answersList.Add (questionList [randomize].answer);
 					question = questionList [randomize].clues1 + "/"+questionList [randomize].clues2
@@ -112,10 +114,10 @@ public static class QuestionBuilder
 		}
 
 		switch (questionType.questionCategory) {
-		case QuestionSystemEnums.QuestionType.Definition:
+		case QuestionSystemEnums.TargetType.Definition:
 			idealTime += 0.5;
 			break;
-		case QuestionSystemEnums.QuestionType.Association:
+		case QuestionSystemEnums.TargetType.Association:
 			idealTime += 1;
 			break;
 		}
@@ -151,67 +153,57 @@ public static class QuestionBuilder
 			randomnum = UnityEngine.Random.Range (0, wrongChoices.Count);
 		}
 		string wrongChoice = wrongChoices [randomnum];
+		Debug.Log (wrongChoice);
 		return wrongChoice;
 	}
 
-	public static QuestionTypeModel getQuestionType(string selection){
+	public static QuestionTypeModel GetQuestionType(string selection){
 
 		QuestionTypeModel typeModel = null;
 		switch(selection){
 		case "select":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Definition,
-				QuestionSystemController.Instance.partTarget.singleQuestion,
+				QuestionSystemEnums.TargetType.Definition,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
 				QuestionSystemController.Instance.partSelection.selectLetter
 			);
 			break;
 		case "typing":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Definition,
-				QuestionSystemController.Instance.partTarget.singleQuestion,
+				QuestionSystemEnums.TargetType.Definition,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
 				QuestionSystemController.Instance.partSelection.typing
 			);
 			break;
 		case "change":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Synonym,
-				QuestionSystemController.Instance.partTarget.singleQuestion,
+				QuestionSystemEnums.TargetType.Synonym,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.changeOrder
 			);
 			break;
 		case "word":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Synonym,
-				QuestionSystemController.Instance.partTarget.singleQuestion,
+				QuestionSystemEnums.TargetType.Synonym,
 				QuestionSystemController.Instance.partAnswer.noAnswer,
 				QuestionSystemController.Instance.partSelection.wordChoice
 			);
 			break;
 		case "slot":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Definition,
-				QuestionSystemController.Instance.partTarget.singleQuestion,
+				QuestionSystemEnums.TargetType.Definition,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.slotMachine
 			);
 			break;
 		case "letter":
 			typeModel = new QuestionTypeModel (
-				QuestionSystemEnums.QuestionType.Association,
-				QuestionSystemController.Instance.partTarget.association,
+				QuestionSystemEnums.TargetType.Association,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.letterLink
 			);
 			break;
 		}
-
-
-
-
-
 		return typeModel;
 	}
 }

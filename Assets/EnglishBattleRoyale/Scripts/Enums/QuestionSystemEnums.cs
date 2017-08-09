@@ -1,5 +1,5 @@
 ﻿public class QuestionSystemEnums{
-	public enum QuestionType{
+	public enum TargetType{
 		Definition,
 		Synonym,
 		Antonym,
