@@ -32,26 +32,26 @@ public class PartQuestionController: MonoBehaviour
 
 			int correctCount = questionResultList.Count (p => p.isCorrect == true);
 			int awesomeSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Awesome);
-				int goodSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Good);
-				int rottenSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Rotten);
+			int goodSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Good);
+			int rottenSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Rotten);
 			//:TO-DO count speedyawesome and speedygood and include in computation
 			//bonus get from answers
 			float correctGPBonus = correctCount * GameManager.gameSettings.correctGPBonus;
 			float correctDamageBonus = correctCount * GameManager.gameSettings.correctDamageBonus;
-				float speedyAwesomeGPBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeGPBonus;
-				float speedyAwesomeDamageBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeDamageBonus;
-//				float speedyGoodGPBonus = correctCount * GameManager.gameSettings.speedyGoodGPBonus;
-//				float speedyGoodDamageBonus = correctCount * GameManager.gameSettings.speedyGoodDamageBonus;
+			float speedyAwesomeGPBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeGPBonus;
+			float speedyAwesomeDamageBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeDamageBonus;
+			float speedyGoodGPBonus = correctCount * GameManager.gameSettings.speedyGoodGPBonus;
+			float speedyGoodDamageBonus = correctCount * GameManager.gameSettings.speedyGoodDamageBonus;
 
-			ScreenBattleController.Instance.partState.player.playerGP += correctGPBonus + speedyAwesomeGPBonus;
+			ScreenBattleController.Instance.partState.player.playerGP += correctGPBonus + speedyAwesomeGPBonus + speedyGoodGPBonus;
 			Debug.Log ("GP GAINED A TOTAL OF " + (correctGPBonus + speedyAwesomeGPBonus));
 
-			ScreenBattleController.Instance.partState.player.playerBaseDamage += correctDamageBonus + speedyAwesomeDamageBonus;
-			Debug.Log ("BONUS PLAYER DAMAGE NOW INCREASED TO " + ScreenBattleController.Instance.partState.player.playerBaseDamage);
+			ScreenBattleController.Instance.partState.player.playerBaseDamage += correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus;
+			Debug.Log ("BONUS PLAYER DAMAGE ADDED " + (correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus));
 			//
 
 			
-				QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount,awesomeSpeedyCount,goodSpeedyCount,rottenSpeedyCount);
+			QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, awesomeSpeedyCount, goodSpeedyCount, rottenSpeedyCount);
 			string param = JsonUtility.ToJson (questionResultCount);
 			SystemFirebaseDBController.Instance.AnswerPhase (param);
 
