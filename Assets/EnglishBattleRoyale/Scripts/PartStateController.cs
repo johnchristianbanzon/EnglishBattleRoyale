@@ -24,10 +24,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public PlayerModel enemy{ get; set; }
 
-	private List<bool> userHome = new List<bool> ();
-	private List<Dictionary<string, System.Object>> param = new List<Dictionary<string, object>> ();
-	private int attackCount = 0;
-
 	void Update ()
 	{
 		if (player != null && enemy != null) {
@@ -128,23 +124,23 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		switch (attackOrder) {
 		case 0:
 			Debug.Log ("PLAYER ATTACK FIRST");
-			yield return StartCoroutine (BattleLogicCoroutine (true,false));
+			yield return StartCoroutine (BattleLogicCoroutine (true, false));
 			yield return new WaitForSeconds (2);
-			yield return StartCoroutine (BattleLogicCoroutine (false,true));
+			yield return StartCoroutine (BattleLogicCoroutine (false, true));
 			break;
 
 		case 1:
 			Debug.Log ("ENEMY ATTACK FIRST");
-			yield return StartCoroutine (BattleLogicCoroutine (false,false));
+			yield return StartCoroutine (BattleLogicCoroutine (false, false));
 			yield return new WaitForSeconds (2);
-			yield return StartCoroutine (BattleLogicCoroutine (true,true));
+			yield return StartCoroutine (BattleLogicCoroutine (true, true));
 			break;
 
 		case 2:
 			Debug.Log ("BOTH ATTACK SAME TIME");
 			CharacterManager.PlayerCharacterActivate ();
 			CharacterManager.EnemyCharacterActivate ();
-			yield return new WaitForSeconds (5);
+			yield return new WaitForSeconds (3);
 			BattleManager.SendAttack ();
 			CheckHP (false);
 			yield return new WaitForSeconds (2);
@@ -155,49 +151,52 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 	}
 
-	IEnumerator CheckBothAttackCoroutine(){
+	IEnumerator CheckBothAttackCoroutine ()
+	{
 		
 		if (BattleManager.CheckBothAttack ()) {
 			BattleManager.ComputeBothAttack ();
 		} else {
 			yield return new WaitForSeconds (1);
-			yield return StartCoroutine(CheckBothAttackCoroutine ());
+			yield return StartCoroutine (CheckBothAttackCoroutine ());
 		}
 	}
 
-	IEnumerator CheckPlayerAttackCoroutine(){
+	IEnumerator CheckPlayerAttackCoroutine ()
+	{
 		if (BattleManager.CheckPlayerAttack ()) {
 			BattleManager.ComputePlayerAttack ();
 		} else {
 			yield return new WaitForSeconds (1);
-			yield return StartCoroutine(CheckPlayerAttackCoroutine ());
+			yield return StartCoroutine (CheckPlayerAttackCoroutine ());
 		}
 	}
 
-	IEnumerator CheckEnemyAttackCoroutine(){
+	IEnumerator CheckEnemyAttackCoroutine ()
+	{
 		if (BattleManager.CheckEnemyAttack ()) {
 			BattleManager.ComputeEnemyAttack ();
 		} else {
 			yield return new WaitForSeconds (1);
-			yield return StartCoroutine(CheckEnemyAttackCoroutine ());
+			yield return StartCoroutine (CheckEnemyAttackCoroutine ());
 		}
 	}
 
 	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
 	{
 		if (isPLayer) {
-			if (CharacterManager.PlayerCharacterActivate ()) {
-				BattleManager.SendAttack ();
-			}
+			CharacterManager.PlayerCharacterActivate ();
+			yield return new WaitForSeconds (3);
+			BattleManager.SendAttack ();
 			yield return new WaitForSeconds (1);
-			yield return StartCoroutine (CheckPlayerAttackCoroutine());
+			yield return StartCoroutine (CheckPlayerAttackCoroutine ());
 			CheckHP (isSecondCheck);
 		} else {
-			if (CharacterManager.EnemyCharacterActivate ()) {
-				BattleManager.SendAttack ();
-			};
+			CharacterManager.EnemyCharacterActivate ();
+			yield return new WaitForSeconds (3);
+			BattleManager.SendAttack ();
 			yield return new WaitForSeconds (1);
-			yield return StartCoroutine (CheckEnemyAttackCoroutine());
+			yield return StartCoroutine (CheckEnemyAttackCoroutine ());
 			CheckHP (isSecondCheck);
 		}
 	}

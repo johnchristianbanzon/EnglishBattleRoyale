@@ -7,7 +7,6 @@ public class CharacterManager: IRPCDicObserver
 {
 	private static CharacterModel[] currentCharacterInEquip = new CharacterModel[3];
 	private static Queue<CharacterModel> characterQueue = new Queue<CharacterModel> (8);
-	private static int characterReceiveCount = 0;
 
 	public void Init ()
 	{
@@ -79,8 +78,6 @@ public class CharacterManager: IRPCDicObserver
 							Debug.Log ("RECEIVE ENEMY CHARACTERS " + characterReceiveQueue.Count);
 							enemyCharacterQueue = characterReceiveQueue;
 						}
-					}else{
-						Debug.Log ("NO CHARACTERS ");
 					}
 
 					BattleManager.CountCharacters ();
@@ -102,7 +99,7 @@ public class CharacterManager: IRPCDicObserver
 	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
 	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
 
-	public static bool PlayerCharacterActivate ()
+	public static void PlayerCharacterActivate ()
 	{
 		Debug.Log ("PLAYER CHARACTERS REMAINING: " +playerCharacterQueue.Count);
 		if (playerCharacterQueue.Count > 0) {
@@ -111,10 +108,9 @@ public class CharacterManager: IRPCDicObserver
 			CharacterActivate (true, character);
 			PlayerCharacterActivate ();
 		}
-		return true;
 	}
 
-	public static bool EnemyCharacterActivate ()
+	public static void EnemyCharacterActivate ()
 	{
 		Debug.Log ("ENEMY CHARACTERS REMAINING: " +enemyCharacterQueue.Count);
 		if (enemyCharacterQueue.Count > 0) {
@@ -123,7 +119,6 @@ public class CharacterManager: IRPCDicObserver
 			CharacterActivate (false, character);
 			EnemyCharacterActivate ();
 		}
-		return true;
 	}
 
 	private static void CharacterActivate (bool isPlayer, CharacterModel character)

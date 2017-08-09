@@ -11,7 +11,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public GameObject outviewContent;
 	private string questionAnswer;
 	private int answerIndex = 0;
-	private Action<bool> onHintResult;
 	List <int> hintIndexRandomList = new List<int> ();
 	public GameObject clearButton;
 	public bool isFull = false;
@@ -39,7 +38,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void OnClickHint (int hintIndex, Action<bool> onHintResult)
 	{
-		this.onHintResult = onHintResult;
 		CheckAnswerHolder ();
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, answerContainers [answerIndex]);
 		CheckAnswer ();
@@ -63,7 +61,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	{
 		Debug.Log (answerButton.name);
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
-		string answerclicked = "";
 		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
 		} else {

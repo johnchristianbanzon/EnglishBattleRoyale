@@ -60,7 +60,6 @@ public class Typing : MonoBehaviour, ISelection
 		gameObject.SetActive (false);
 	}
 		
-	private bool hasShowHintInit = false;
 	FillAnswerType fillAnswer;
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{

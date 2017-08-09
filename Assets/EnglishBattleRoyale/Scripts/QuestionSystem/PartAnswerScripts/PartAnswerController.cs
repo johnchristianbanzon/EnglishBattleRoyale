@@ -6,7 +6,6 @@ public class PartAnswerController : MonoBehaviour {
 	public List<GameObject> answerContainer = new List<GameObject>();
 
 	private QuestionSystemEnums.AnswerType answerType;
-	private int answerIndex = 0;
 	public FillAnswerType fillAnswer;
 	public NoAnswerType noAnswer;
 	public ShowAnswer showAnswer;
