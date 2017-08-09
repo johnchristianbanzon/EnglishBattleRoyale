@@ -1,8 +1,8 @@
 ﻿public class FilteredQuestionModel
 {
-	QuestionRowModel questionRow;
-	QuestionSystemEnums.SelectionType selectWay;
-	QuestionSystemEnums.TargetType targetWay;
+	public QuestionRowModel questionRow;
+	public QuestionSystemEnums.SelectionType selectWay;
+	public QuestionSystemEnums.TargetType targetWay;
 
 	public FilteredQuestionModel (
 		QuestionRowModel questionRow,

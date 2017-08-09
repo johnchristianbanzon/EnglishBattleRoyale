@@ -6,14 +6,12 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 {
 	public GameObject showLetterView;
 	private Action<bool> onHintResult;
-	private string questionAnswer;
 	private bool hasInitHints = false;
 	private List<GameObject> hintContainers = new List<GameObject>();
 
 	public void DeployAnswerType ()
 	{
 		this.gameObject.SetActive (true);
-		questionAnswer = QuestionSystemController.Instance.questionAnswer;
 		hintContainers.Clear ();
 		hasInitHints = false;
 	}

@@ -2,7 +2,6 @@
 using System;
 public class NoAnswerType : MonoBehaviour,IAnswer {
 	public GameObject correctAnswerContainer;
-	private Action<bool> onHintResult;
 
 	public void CheckAnswerFromSelection(string selectedAnswer, string questionAnswer){
 		Debug.Log (selectedAnswer + "/" + questionAnswer);
@@ -12,7 +11,6 @@ public class NoAnswerType : MonoBehaviour,IAnswer {
 	}
 
 	public void OnClickHint (int hintIndex,Action<bool> onHintResult){
-		this.onHintResult = onHintResult;
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex,null);
 
 	}

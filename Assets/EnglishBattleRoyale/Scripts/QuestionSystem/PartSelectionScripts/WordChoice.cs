@@ -13,7 +13,6 @@ public class WordChoice : MonoBehaviour, ISelection
 	private List<GameObject> answerClicked = new List<GameObject> ();
 	private List<GameObject> answerButtons = new List<GameObject> ();
 	private List<string> answerString = new List<string> ();
-	private int answerIndex = 0;
 	private GameObject selectedObject;
 	private int hintIndex = 0;
 
@@ -45,7 +44,8 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	}
 
-	public void HideSelectionHint(){
+	public void HideSelectionHint ()
+	{
 
 	}
 
@@ -108,7 +108,7 @@ public class WordChoice : MonoBehaviour, ISelection
 				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp [i].ToString ().ToUpper ();
 				answerButtons.Add (selectionButtons [randomNum]);
 			} else {
-				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp[i].ToUpper ();
+				selectionButtons [randomNum].GetComponentInChildren<Text> ().text = temp [i].ToUpper ();
 			}
 			selectionButtons [randomNum].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 			selectionButtons [randomNum].GetComponent<Button> ().interactable = true;

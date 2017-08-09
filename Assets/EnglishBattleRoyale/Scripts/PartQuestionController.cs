@@ -7,7 +7,6 @@ using System.Linq;
 public class PartQuestionController: MonoBehaviour
 {
 	private List<QuestionResultModel> questionResultList;
-	private GameObject questionSystem;
 
 	void Start ()
 	{
@@ -22,7 +21,7 @@ public class PartQuestionController: MonoBehaviour
 
 		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
 
-		questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
+		SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
 		QuestionSystemController.Instance.StartQuestionRound (
 			QuestionBuilder.getQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
 			, delegate(List<QuestionResultModel> resultList) {
