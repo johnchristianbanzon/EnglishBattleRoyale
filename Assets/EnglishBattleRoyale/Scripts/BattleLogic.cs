@@ -13,7 +13,7 @@ public class BattleLogic {
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "hit2");
 			} else {
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "attack1");
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "hit");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "hit1");
 			}
 		
 
