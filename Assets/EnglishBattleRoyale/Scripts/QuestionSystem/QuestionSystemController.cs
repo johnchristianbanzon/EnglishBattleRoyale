@@ -53,13 +53,13 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		isQuestionRoundOver = false;
 		TimeManager.AddQuestionTimeObserver (this);
-		questionList = QuestionBuilder.GetQuestionList (10,questionTypeModel);
+		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
 
 		double averageTime = 0;
 		for (int i = 0; i < questionList.Count; i++) {
 			averageTime += questionList [i].idealTime;
 		}
-		double totalTime = (averageTime / questionList.Count) * 7;
+		double totalTime = (averageTime / questionList.Count) * 7.5;
 		timerSlider.maxValue = (float)totalTime;
 		TimeManager.StartQuestionTimer (delegate(int timeLeft) {
 			TweenFacade.SliderTimer (timerSlider, timeLeft);
@@ -70,7 +70,12 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 				selectionType.HideSelectionType ();
 				answerType.ClearHint ();
 				onRoundResult (roundResultList);
-				Destroy (gameObject);
+				if (isDebug) {
+					debugUI.SetActive (true);
+					debugUI.transform.GetChild(0).gameObject.SetActive (true);
+				} else {
+					Destroy (gameObject);
+				}
 			}
 		}, (int)totalTime);
 		this.onRoundResult = onRoundResult;
@@ -79,25 +84,33 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public void OnStartQuestionTimer (Action<int> action, int timer)
 	{
+		isTimerOn = true;
 		StartCoroutine (StartQuestionTimer (action, timer));
 	}
 
 	private int timePassed = 0;
+	private bool isTimerOn = false;
 
 	public IEnumerator StartQuestionTimer (Action<int> action, int timer)
 	{
 		int timeLeft = timer;
-		while (timeLeft > 0) {
-			timeLeft--;
-			timePassed++;
 
-			action (timeLeft);
-			if (isQuestionRoundOver) {
-				yield break;
-			} else {
-				yield return new WaitForSeconds (1);
+
+		while (timeLeft > 0) {
+			if (isTimerOn) {
+				timeLeft--;
+				timePassed++;
+
+				action (timeLeft);
 			}
+				if (isQuestionRoundOver) {
+					yield break;
+				} else {
+					yield return new WaitForSeconds (1);
+				}
+			
 		}
+
 	}
 
 	public void OnStopQuestionTimer ()
@@ -107,10 +120,10 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	void Start ()
 	{
-		
 		if (isDebug) {
 			MyConst.Init ();
-			QuestionBuilder.PopulateQuestion ();
+			IQuestionProvider provider = new QuestionCSVProvider ();
+			QuestionBuilder.PopulateQuestion (provider);
 			debugUI.SetActive (true);
 
 		}
@@ -125,31 +138,37 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	}
 
 	private GameObject speedyEffect;
+
 	public void CheckAnswer (bool isCorrect)
 	{
 		double idealTime = questionList [currentQuestionNumber].idealTime;
 		questionHint.InitHints ();
 		if (isCorrect) {
+			isTimerOn = false;
 			currentQuestionNumber++;
 			correctAnswers++;
 			QuestionSpecialEffects spe = new QuestionSpecialEffects ();
 			spe.DeployEffect (isCorrect, correctAnswerButtons, questionAnswer);
-			speedyEffect = SystemResourceController.Instance.LoadPrefab ("SpeedyEffectText", SystemPopupController.Instance.popUp.gameObject);
-			speedyEffect.transform.position = Vector3.zero;
-			TweenFacade.TweenScaleToLarge (speedyEffect.transform, Vector3.one, 0.3f);
 			QuestionSystemEnums.SpeedyType speedyType = QuestionSystemEnums.SpeedyType.Good;
 			if (timePassed < idealTime) {
+				speedyEffect = SystemResourceController.Instance.LoadPrefab ("AwesomeEffect", SystemPopupController.Instance.popUp.gameObject);
 				speedyEffect.GetComponent<Text> ().text = "Awesome";
 				speedyType = QuestionSystemEnums.SpeedyType.Awesome;
 			} else if (timePassed >= idealTime) {
 				if (timePassed >= (idealTime * 2)) {
-					speedyEffect.GetComponent<Text> ().text = "Rotten";
+					speedyEffect = SystemResourceController.Instance.LoadPrefab ("RottenEffect", SystemPopupController.Instance.popUp.gameObject);
+					speedyEffect.GetComponent<Text> ().text = "Rotten?!";
+
 					speedyType = QuestionSystemEnums.SpeedyType.Rotten;
 				} else {
+					speedyEffect = SystemResourceController.Instance.LoadPrefab ("AwesomeEffect", SystemPopupController.Instance.popUp.gameObject);
 					speedyEffect.GetComponent<Text> ().text = "Good";
 					speedyType = QuestionSystemEnums.SpeedyType.Good;
 				}
 			}
+
+			speedyEffect.transform.position = Vector3.zero;
+			TweenFacade.TweenScaleToLarge (speedyEffect.transform, Vector3.one, 0.3f);
 			onQuestionResult.Invoke (new QuestionResultModel (00000, 13, 3, isCorrect, speedyType));
 			Invoke ("NextQuestion", 1f);
 		} else {
@@ -160,17 +179,17 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private void HideQuestionParts ()
 	{
-//		answerType.ClearHint ();
-		questionList [currentQuestionNumber-1].questionType.answerType.ClearHint ();
-		questionList [currentQuestionNumber-1].questionType.selectionType.HideSelectionType ();
+		questionList [currentQuestionNumber - 1].questionType.answerType.ClearHint ();
+		questionList [currentQuestionNumber - 1].questionType.selectionType.HideSelectionType ();
 		targetType.HideTargetType ();
+		isTimerOn = true;
 	}
 
 	public void NextQuestion ()
 	{
 		timePassed = 0;
 		questionType = questionList [currentQuestionNumber].questionType.questionCategory;
-		if (questionType.Equals(QuestionSystemEnums.TargetType.Association)) {
+		if (questionType.Equals (QuestionSystemEnums.TargetType.Association)) {
 			targetType = partTarget.association;
 		} else {
 			targetType = partTarget.singleQuestion;
@@ -183,16 +202,18 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		partSelection.HideSelectionType (selectionType);
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 			roundResultList.Add (onQuestionResult);
-			Invoke("HideQuestionParts",1.0f);
+			Invoke ("HideQuestionParts", 1.0f);
 		});
 
+
 	}
+
 	public QuestionModel LoadQuestion ()
 	{
 		QuestionModel questionLoaded = questionList [currentQuestionNumber];
 		if (questionLoaded.answers.Length >= 2 && selectionType.Equals (partSelection.wordChoice)) {
 			questionAnswer = (questionLoaded.answers [0].ToUpper () + "/" + questionLoaded.answers [1].ToUpper ()
-				+"/"+questionLoaded.answers [2].ToUpper ());
+			+ "/" + questionLoaded.answers [2].ToUpper ());
 		} else {
 			questionAnswer = questionLoaded.answers [UnityEngine.Random.Range (0, questionLoaded.answers.Length)].ToUpper ();
 		}
@@ -219,7 +240,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public void OnDebugClick (Button button)
 	{
-		StartQuestionRound (QuestionBuilder.getQuestionType (button.name), delegate(List<QuestionResultModel> result) {
+		StartQuestionRound (QuestionBuilder.GetQuestionType (button.name), delegate(List<QuestionResultModel> result) {
 			debugUI.SetActive (true);
 		});
 		debugUI.SetActive (false);

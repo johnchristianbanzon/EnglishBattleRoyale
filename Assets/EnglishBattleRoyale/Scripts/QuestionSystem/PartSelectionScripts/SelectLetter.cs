@@ -36,6 +36,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	private List<int> InitHideHint ()
 	{
+		hideSelectionIndex.Clear ();
 		hideSelectionIndex.AddRange (Enumerable.Range (0, selectionButtons.Length));
 		for (int i = 0; i < hideSelectionIndex.Count; i++) {
 			if (questionAnswer.Contains (selectionButtons [hideSelectionIndex [i]].GetComponentInChildren<Text> ().text)) {
@@ -66,6 +67,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
 	{
 		gameObject.SetActive (true);
+		initHideHint = false;
 		this.questionAnswer = questionAnswer;
 		ShuffleSelection ();
 	}

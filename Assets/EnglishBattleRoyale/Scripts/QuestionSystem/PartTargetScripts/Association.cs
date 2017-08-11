@@ -28,13 +28,13 @@ public class Association : MonoBehaviour,ITarget {
 	}
 
 	public void HideTargetType(){
+		CancelInvoke ();
 		gameObject.SetActive (false);
 	}
 
 	public List<string> ClueArrayToList(string targetString){
 		clueNumber = 1;
 		ClearCluePrefabs ();
-
 		List<string> listClues = new List<string>(targetString.Split ('/'));
 		listClues.AddRange(targetString.Split ('/'));
 		return listClues;

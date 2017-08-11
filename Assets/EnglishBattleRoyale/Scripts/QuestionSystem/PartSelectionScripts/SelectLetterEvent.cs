@@ -47,6 +47,7 @@ public class SelectLetterEvent : MonoBehaviour
 
 	public void ReturnSelectedLetter(){
 //		selectLetter.fillAnswer.InitContainer (transform.GetSiblingIndex());
+		isSelected = false;
 		transform.SetParent(selectLetter.transform);
 	}
 }

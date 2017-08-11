@@ -23,6 +23,17 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 		PopulateContainer ();
 	}
 
+	public void ClearAnswerContainers(){
+		for (int i = 0; i < answerContainers.Count; i++) {
+			if (answerContainers [i].transform.childCount>0) {
+				if (answerContainers [i].GetComponentInChildren<SelectLetterEvent> () != null) {
+					answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().ReturnSelectedLetter ();
+				}
+
+			} 
+		}
+	}
+
 	public void ClearHint ()
 	{
 		for (int i = 0; i < answerContainers.Count; i++) {
@@ -59,7 +70,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void OnAnswerClick (Button answerButton)
 	{
-		Debug.Log (answerButton.name);
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
@@ -85,11 +95,6 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 				CheckAnswer ();
 			}
 		}
-	}
-
-	public void ClearAnswerContainers ()
-	{
-		
 	}
 
 	public void ShowSelectedLetter (GameObject selectedObject)

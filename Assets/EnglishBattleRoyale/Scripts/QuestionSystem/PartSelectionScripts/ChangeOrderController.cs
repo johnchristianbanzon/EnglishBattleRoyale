@@ -76,7 +76,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		if (GetSelectedAnswer ().Equals (questionAnswer)) {
 			selectionViewContent.GetComponent<HorizontalLayoutGroup> ().enabled = false;
 		    showAnswerPrefab = SystemResourceController.Instance.LoadPrefab ("CluePrefab", selectionViewContent);
-			showAnswerPrefab.transform.position = Vector2.zero;
+			showAnswerPrefab.transform.position = transform.position;
 			showAnswerPrefab.GetComponentInChildren<Text> ().text = questionAnswer;
 			TweenFacade.TweenScaleToLarge (showAnswerPrefab.transform, Vector3.one, 0.3f);
 			for (int i = 0; i < selectionContainers.Length; i++) {
@@ -107,9 +107,17 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		TweenFacade.TweenMoveTo(transform,new Vector2(transform.parent.position.x,transform.parent.position.y - 80f),0.4f);
-		TweenFacade.TweenScaleToLarge (correctAnswerContainer.transform,Vector3.one,0.3f);
-		correctAnswerContainer.GetComponentInChildren<Text> ().enabled = true;
+		ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
+		List<int> selectionIndex = new List<int>();
+		for (int i = 0; i < showAnswer.hintContainers.Count; i++) {
+			if(showAnswer.hintContainers[i].GetComponent<Button>().interactable){
+				selectionIndex.Add (i);
+			}
+		}
+		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
+		TweenFacade.TweenScaleToLarge (showAnswer.hintContainers[selectionIndex[0]].transform,Vector3.one,0.3f);
+		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;
+		showAnswer.hintContainers [selectionIndex [0]].GetComponentInChildren<Text> ().text = questionAnswer [selectionIndex [0]].ToString();
 	}
 
 	public void HideSelectionHint(){

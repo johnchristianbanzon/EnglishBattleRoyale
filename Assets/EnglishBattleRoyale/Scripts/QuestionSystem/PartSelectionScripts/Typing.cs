@@ -13,9 +13,10 @@ public class Typing : MonoBehaviour, ISelection
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
 	{
 		this.questionAnswer = questionAnswer;
+		initHideHint = false;
 		gameObject.SetActive (true);
 		for (int i = 0; i < selectionButtons.Length; i++) {
-			selectionButtons [i].SetActive (true);
+			selectionButtons [i].GetComponent<Button> ().interactable = true;
 		}
 	}
 
@@ -24,12 +25,11 @@ public class Typing : MonoBehaviour, ISelection
 
 	}
 
-
 	private bool initHideHint = false;
 	private List<int> hideSelectionIndex = new List<int> ();
-
 	private List<int> InitHideHint ()
 	{
+		hideSelectionIndex.Clear ();
 		hideSelectionIndex.AddRange (Enumerable.Range (0, selectionButtons.Length));
 		for (int i = 0; i < hideSelectionIndex.Count; i++) {
 			if (questionAnswer.Contains (selectionButtons [hideSelectionIndex [i]].transform.GetChild (0).GetComponentInChildren<Text> ().text)) {
@@ -49,7 +49,7 @@ public class Typing : MonoBehaviour, ISelection
 			}
 			if (hideSelectionIndex.Count > 0) {
 				int randomHintIndex = UnityEngine.Random.Range (0, hideSelectionIndex.Count);
-				selectionButtons [hideSelectionIndex [randomHintIndex]].SetActive (false);
+				selectionButtons [hideSelectionIndex [randomHintIndex]].GetComponent<Button> ().interactable = false;
 				hideSelectionIndex.RemoveAt (randomHintIndex);
 			}
 		}
