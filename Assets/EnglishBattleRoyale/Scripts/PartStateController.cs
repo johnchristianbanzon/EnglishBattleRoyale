@@ -208,11 +208,14 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
 
 			if (enemy.playerHP > 0 && player.playerHP <= 0) {
-				Debug.Log ("Lose");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "lose");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
 			} else if (player.playerHP > 0 && enemy.playerHP <= 0) {
-				Debug.Log ("Win");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "lose");
 			} else {
-				Debug.Log ("Draw");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
 			}
 			StopAllCoroutines ();
 			return;
@@ -220,6 +223,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		if (isSecondCheck) {
 			ResetPlayerDamage ();
+			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
+			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
 			BattleManager.ClearBattleData ();
 			ScreenBattleController.Instance.StartPhase1 ();
 		}

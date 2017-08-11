@@ -61,6 +61,14 @@ public class BattleStatusManager: IRPCDicObserver
 						}
 					}
 
+					if (GameManager.playerAnswerParam.speedyAwesomeCount > 0) {
+						ScreenBattleController.Instance.partAvatars.player.LoadArmPowerEffect ();
+					}
+
+					if (GameManager.enemyAnswerParam.speedyAwesomeCount > 0) {
+						ScreenBattleController.Instance.partAvatars.enemy.LoadArmPowerEffect ();
+					}
+
 					CheckBattleCount (battleCount, delegate() {
 						ScreenBattleController.Instance.StartPhase2 ();
 
