@@ -14,12 +14,12 @@ public static class QuestionBuilder
 
 	public static int questionIndex = 1;
 
-	public static void PopulateQuestion ()
+	public static void PopulateQuestion (IQuestionProvider provider)
 	{
 		questionList.Clear ();
 		wrongChoices.Clear ();
-		questionList = MyConst.GetQuestionList();
-		wrongChoices = MyConst.GetWrongChoices ();
+		questionList = provider.GetQuestionList();
+		wrongChoices = MyConst.GetWrongChoices();
 	}
 
 	public static List<QuestionModel> GetQuestionList(int numberOfQuestions,QuestionTypeModel questionTypeModel){
@@ -29,17 +29,21 @@ public static class QuestionBuilder
 		dictionary.Add ("select", 1);
 		dictionary.Add ("typing", 1);
 		dictionary.Add ("change", 1);
-		dictionary.Add ("word", 15);
+		dictionary.Add ("word", 1);
 		dictionary.Add ("slot", 1);
 		dictionary.Add ("letter", 1);
-//		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
-
 		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		for (int i = 0; i < numberOfQuestions; i++) {
-			questions.Add (GetQuestion (getQuestionType(selectionFromRandom)));
+			if (QuestionSystemController.Instance.isDebug) {
+				questions.Add (GetQuestion (questionTypeModel));
+			} else {
+				questions.Add (GetQuestion (GetQuestionType (selectionFromRandom)));
+				selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
+			}
 		}
 		return questions;
 	}
+
 
 	public static QuestionModel GetQuestion (QuestionTypeModel questionType)
 	{
@@ -49,16 +53,14 @@ public static class QuestionBuilder
 		List<string> answersList = new List<string> ();
 		int numOfQuestions = questionList.Count;
 		int whileIndex = 0;
-
 		double idealTime = 2.5;
-
 		while (!questionViable) {
 			randomize = UnityEngine.Random.Range (0, questionList.Count);
 			answersList.Clear ();
 			switch (questionType.questionCategory) {
 			case QuestionSystemEnums.TargetType.Antonym:
 				if (questionList [randomize].hasAntonym.ToString()=="1") {
-					if (questionType.selectionType.ToString().Equals("WordChoice (WordChoice)")) {
+					if (questionType.selectionType.GetType().Name.Equals("WordChoice")) {
 						answersList.Add (questionList [randomize].antonym1);
 						answersList.Add (questionList [randomize].antonym2);
 						answersList.Add (wrongChoices [randomize]);
@@ -73,7 +75,7 @@ public static class QuestionBuilder
 				break;
 			case QuestionSystemEnums.TargetType.Synonym:
 				if (questionList [randomize].hasSynonym.ToString()=="1") {
-					if (questionType.selectionType.ToString().Equals("WordChoice (WordChoice)")) {
+					if (questionType.selectionType.GetType().Name.Equals("WordChoice")) {
 						answersList.Add (questionList [randomize].synonym1);
 						answersList.Add (questionList [randomize].synonym2);
 						answersList.Add (wrongChoices [randomize]);
@@ -89,18 +91,11 @@ public static class QuestionBuilder
 
 			case QuestionSystemEnums.TargetType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
-					if (questionType.selectionType.ToString ().Equals("SlotMachine (SlotMachine)")) {
-						if (questionList [randomize].answer.Length < 6) {
-							answersList.Add (questionList [randomize].answer);
-							question = questionList [randomize].definition;
-							questionViable = true;
-						} 
-
-					} else {
+					 
 						answersList.Add (questionList [randomize].answer);
 						question = questionList [randomize].definition;
 						questionViable = true;
-					}
+
 				}
 				break;
 
@@ -113,6 +108,13 @@ public static class QuestionBuilder
 				}
 				break;
 			}
+
+			if (questionType.selectionType.GetType().Name.Equals("SlotMachine")) {
+				if (questionList [randomize].answer.Length > 6) {
+					questionViable = false;
+				} 
+			}
+
 			if (questionsDone.Contains (question)) {
 				questionViable = false;
 				if (whileIndex >= numOfQuestions) {
@@ -145,9 +147,6 @@ public static class QuestionBuilder
 
 		QuestionModel questionGot = new QuestionModel (questionType,question, answersList.ToArray (),idealTime);
 		questionsDone.Add (question);
-
-		//Debug.Log (questionGot.answers[0] + "/" + questionGot.question);
-
 		return questionGot;
 	}
 
@@ -162,17 +161,16 @@ public static class QuestionBuilder
 			randomnum = UnityEngine.Random.Range (0, wrongChoices.Count);
 		}
 		string wrongChoice = wrongChoices [randomnum];
-		Debug.Log (wrongChoice);
 		return wrongChoice;
 	}
 
-	public static QuestionTypeModel getQuestionType(string selection){
+	public static QuestionTypeModel GetQuestionType(string selection){
 
 		Dictionary<QuestionSystemEnums.TargetType,int> targetDictionary = new Dictionary<QuestionSystemEnums.TargetType,int> ();
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Definition, 1);
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Synonym, 1);
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Antonym, 1);
-		targetDictionary.Add (QuestionSystemEnums.TargetType.Association, 1);
+		targetDictionary.Add (QuestionSystemEnums.TargetType.Association, 15);
 
 		QuestionTypeModel typeModel = null;
 		switch(selection){
@@ -227,7 +225,9 @@ public static class QuestionBuilder
 			);
 			break;
 		}
+
 		return typeModel;
 	}
+
 }
 

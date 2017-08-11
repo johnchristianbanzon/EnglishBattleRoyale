@@ -9,6 +9,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	public static int selectedIndex;
 	public static bool isDragging;
 	public Text letterText;
+	private static GameObject duplicateContainer;
 
 	public void Init(string letter){
 		letterText.text = letter;
@@ -21,6 +22,9 @@ public class ChangeOrderEvent : MonoBehaviour
 	/// </summary>
 	public void OnSelectionBeginDrag ()
 	{
+		duplicateContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI",selectionContent);
+		duplicateContainer.transform.SetSiblingIndex (this.transform.GetSiblingIndex ());
+		duplicateContainer.GetComponent<Image> ().color = new Color (81f / 255, 134f / 255f, 221f / 255f);
 		this.transform.SetParent (selectionContent.transform.parent);
 	}
 
@@ -51,6 +55,7 @@ public class ChangeOrderEvent : MonoBehaviour
 		this.GetComponent<Image> ().raycastTarget = true;
 		transform.SetSiblingIndex (selectedIndex);
 		QuestionSystemController.Instance.partSelection.changeOrder.OnChangeOrder ();
+		Destroy (duplicateContainer);
 		isDragging = false;
 	}
 
@@ -61,7 +66,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	{
 		if (isDragging) {
 			selectedIndex = this.transform.GetSiblingIndex ();
-			Debug.Log (selectedIndex);
+			duplicateContainer.transform.SetSiblingIndex (selectedIndex);
 		}	
 	}
 }

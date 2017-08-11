@@ -10,7 +10,8 @@ public class PartQuestionController: MonoBehaviour
 
 	void Start ()
 	{
-		QuestionBuilder.PopulateQuestion ();
+		IQuestionProvider provider = new QuestionCSVProvider ();
+		QuestionBuilder.PopulateQuestion (provider);
 	}
 
 	public void OnStartPhase ()
@@ -23,7 +24,7 @@ public class PartQuestionController: MonoBehaviour
 
 		SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
 		QuestionSystemController.Instance.StartQuestionRound (
-			QuestionBuilder.getQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
+			QuestionBuilder.GetQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)])
 			, delegate(List<QuestionResultModel> resultList) {
 
 			//callback here

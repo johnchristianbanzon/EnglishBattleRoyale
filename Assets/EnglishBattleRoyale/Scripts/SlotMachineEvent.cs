@@ -72,6 +72,7 @@ public class SlotMachineEvent : MonoBehaviour
 		int randomizeContainer = Random.Range (0, wrongContainer.Count);
 		hintContainersLeft--;
 		overAllHintContainersLeft--;
+		wrongContainer [randomizeContainer].GetComponentInChildren<Text> ().text = "";
 		wrongContainer [randomizeContainer].GetComponent<Image> ().color = Color.black;
 		wrongContainer.RemoveAt (randomizeContainer);
 	}
@@ -79,6 +80,7 @@ public class SlotMachineEvent : MonoBehaviour
 	public void OnClickDownButton ()
 	{
 		slotContent.transform.GetChild (0).SetAsLastSibling ();
+	
 		QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
 	}
 

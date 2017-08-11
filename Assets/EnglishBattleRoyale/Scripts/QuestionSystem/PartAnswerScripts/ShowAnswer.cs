@@ -2,22 +2,26 @@
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
+
 public class ShowAnswer : MonoBehaviour,IAnswer
 {
 	public GameObject showLetterView;
 	private Action<bool> onHintResult;
 	private bool hasInitHints = false;
-	private List<GameObject> hintContainers = new List<GameObject>();
+	public List<GameObject> hintContainers = new List<GameObject> ();
+	public string questionAnswer;
 
 	public void DeployAnswerType ()
 	{
 		this.gameObject.SetActive (true);
 		hintContainers.Clear ();
 		hasInitHints = false;
+		questionAnswer = QuestionSystemController.Instance.questionAnswer;
 	}
 
-	public void CheckAnswerFromSelection(string selectedAnswer, string questionAnswer){
-		if(selectedAnswer.Equals(questionAnswer)){
+	public void CheckAnswerFromSelection (string selectedAnswer, string questionAnswer)
+	{
+		if (selectedAnswer.Equals (questionAnswer)) {
 			QuestionSystemController.Instance.CheckAnswer (true);
 			onHintResult.Invoke (true);
 			ClearLettersInView ();
@@ -26,30 +30,40 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 
 	public void OnClickHint (int hintIndex, Action<bool> onHintResult)
 	{
+		selectedIndex = 0;
 		this.onHintResult = onHintResult;
 		InitHints ();
-		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, hintContainers[hintIndex]);
+		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, hintContainers [hintIndex]);
 
 	}
 
-	private void InitHints(){
+	private void InitHints ()
+	{
 		if (!hasInitHints) {
 			hasInitHints = true;
 			for (int i = 0; i < QuestionSystemController.Instance.correctAnswerButtons.Count; i++) {
-				GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI",QuestionSystemController.Instance.partAnswer.showAnswer.showLetterView);
-				letterPrefab.GetComponentInChildren<Text> ().text = QuestionSystemController.Instance.correctAnswerButtons [i].GetComponentInChildren<Text> ().text;	
+				GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", QuestionSystemController.Instance.partAnswer.showAnswer.showLetterView);
 				hintContainers.Add (letterPrefab);
-				letterPrefab.GetComponentInChildren<Text> ().enabled = false;
-				
 			}
 		}
 	}
 
+	private int selectedIndex = 0;
 	public void ShowLetterInView (GameObject selectedLetter)
 	{
-		GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", showLetterView);
-		letterPrefab.GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text> ().text;
-		TweenFacade.TweenScaleToLarge (letterPrefab.transform, Vector3.one, 0.3f);
+		if (hasInitHints) {
+			if (selectedIndex < questionAnswer.Length) {
+				if (hintContainers[selectedIndex].GetComponent<Button>().interactable) {
+					hintContainers [selectedIndex].GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text>().text;
+					TweenFacade.TweenScaleToLarge (hintContainers [selectedIndex].transform, Vector3.one, 0.3f);
+				}
+			}
+		} else {
+			GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", showLetterView);
+			letterPrefab.GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text> ().text;
+			TweenFacade.TweenScaleToLarge (letterPrefab.transform, Vector3.one, 0.3f);
+		}
+		selectedIndex++;
 	}
 
 	public void ClearHint ()
@@ -61,9 +75,15 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 
 	public void ClearLettersInView ()
 	{
-
+		selectedIndex = 0;
 		foreach (Transform letter in showLetterView.transform) {
-			GameObject.Destroy (letter.gameObject);
+			if (!hasInitHints) {
+				GameObject.Destroy (letter.gameObject);
+			} else {
+				if (letter.GetComponent<Button> ().interactable) {
+					letter.GetComponentInChildren<Text> ().text = "";
+				}
+			}
 		}
 	}
 

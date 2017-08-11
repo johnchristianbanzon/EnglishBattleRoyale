@@ -12,18 +12,19 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void ShowCorrectAnswer ()
 	{
-
+		//TO BE IMPLEMENTED
 	}
 
 	public void HideSelectionType ()
 	{
 		gameObject.SetActive (false);
 	}
-		
+
 	public void HideSelectionHint ()
 	{
-		if (slots [0].getOverAllHintLeft() > 0) {
+		if (slots [0].getOverAllHintLeft() > 1) {
 			int randomSlot = UnityEngine.Random.Range (0, slots.Length-(slots.Length-correctAnswerSlots.Count));
+
 			while (slots [randomSlot].hintContainersLeft <= 0) {
 				randomSlot = UnityEngine.Random.Range (0, slots.Length-(slots.Length-correctAnswerSlots.Count));
 			}
@@ -45,8 +46,16 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		correctAnswerContainer.GetComponentInChildren<Text> ().enabled = true;
-		TweenFacade.TweenMoveTo (gameObject.transform, new Vector2 (gameObject.transform.position.x, gameObject.transform.position.y - 40f), 0.3f);
+		ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
+		List<int> selectionIndex = new List<int>();
+		for (int i = 0; i < showAnswer.hintContainers.Count; i++) {
+			if(showAnswer.hintContainers[i].GetComponent<Button>().interactable){
+				selectionIndex.Add (i);
+			}
+		}
+		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
+		showAnswer.hintContainers[selectionIndex[0]].GetComponentInChildren<Text> ().text = questionAnswer[selectionIndex[0]].ToString();
+		showAnswer.hintContainers [selectionIndex [0]].GetComponent<Button> ().interactable = false;
 	}
 
 	private string GetAnswer(){
