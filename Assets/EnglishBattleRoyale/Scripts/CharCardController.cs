@@ -29,8 +29,8 @@ public class CharCardController : MonoBehaviour
 	}
 
 	public void InfoButton(){
-		GameObject popUpSkillOverview = SystemPopupController.Instance.ShowPopUp ("PopUpSkillOverview");
-		popUpSkillOverview.GetComponent<PopUpSkillOverviewController> ().SetCharCard (charCard);
+		GameObject popUpSkillOverview = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
+		popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
 	}
 
 	public void UseButton(){

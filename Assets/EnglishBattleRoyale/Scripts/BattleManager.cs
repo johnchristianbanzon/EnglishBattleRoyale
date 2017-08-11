@@ -95,7 +95,7 @@ public class BattleManager: IRPCDicObserver
 
 	public static void ComputePlayerAttack ()
 	{
-		AttackCompute (true, playerAttack);
+		BattleLogic.AttackCompute (true, playerAttack);
 	}
 
 	public static bool CheckEnemyAttack ()
@@ -110,31 +110,15 @@ public class BattleManager: IRPCDicObserver
 
 	public static void ComputeEnemyAttack ()
 	{
-		AttackCompute (false, enemyAttack);
+		BattleLogic.AttackCompute (false, enemyAttack);
 	}
 		
-
-	public static void AttackCompute (bool isPLayer, AttackModel attack)
-	{
-		if (isPLayer) {
-			Debug.Log ("PLAYER DAMAGE: " + attack.attackDamage);
-			ScreenBattleController.Instance.partState.enemy.playerHP -= attack.attackDamage;
-
-		} else {
-			Debug.Log ("ENEMY DAMAGE: " + attack.attackDamage);
-			ScreenBattleController.Instance.partState.player.playerHP -= attack.attackDamage;
-		}
-	}
-
 
 	public static int GetBattleOrder ()
 	{
 		int battleOrder = 0;
 		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
 		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
-
-		Debug.Log ("PLAYER ANSWER CORRECT COUNT: " +playerAnswerParam.correctCount);
-		Debug.Log ("ENEMY ANSWER CORRECT COUNT: " +enemyAnswerParam.correctCount);
 
 		//TO-DO: REFACTOR THIS CODE IF POSSIBLE
 		if (playerAnswerParam.correctCount > enemyAnswerParam.correctCount) {

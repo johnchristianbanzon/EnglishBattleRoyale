@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PopUpSkillOverviewController : MonoBehaviour {
+public class PopUpCharacterOverviewController : MonoBehaviour {
 
 	public Text charName;
 	public Text charDescription;
