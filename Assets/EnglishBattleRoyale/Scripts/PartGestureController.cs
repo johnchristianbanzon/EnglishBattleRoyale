@@ -30,10 +30,8 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 
 			button.gameObject.GetComponent<Image> ().sprite = closeImage;
 		} else {
-//			TweenController.TweenScaleToLarge (gestureButtonContainer.transform, new Vector3(1,1,1), 0.2f);
 			button.gameObject.GetComponent<Image> ().sprite = gestureImage;
 			Invoke ("ScaleToSmall", 0.05f);
-
 		}
 	}
 
@@ -93,21 +91,16 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	}
 
 	//Hide gesture camera after displaying
-	IEnumerator StartTimer (bool isPlayer)
+	private void HideGesture ()
 	{
-		yield return new WaitForSeconds (1.5f);
-		if (!isPlayer) {
-			ScreenBattleController.Instance.partCameraWorks.HideGestureCamera ();
-		}
+		ScreenBattleController.Instance.partCameraWorks.HideGestureCamera ();
 	}
 
 	private void ShowGesture (bool isPlayer, string param)
 	{
-		StartCoroutine (StartTimer (isPlayer));
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, param);
-		if (!isPlayer) {
-			ScreenBattleController.Instance.partCameraWorks.ShowGestureCamera ();
-		}
+		ScreenBattleController.Instance.partCameraWorks.ShowGestureCamera ();
+		Invoke ("HideGesture", 1.5f);
 	}
 
 
