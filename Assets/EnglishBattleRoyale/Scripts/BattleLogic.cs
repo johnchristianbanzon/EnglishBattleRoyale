@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-public class BattleLogic {
+
+public class BattleLogic
+{
 
 	public static void AttackCompute (bool isPLayer, AttackModel attack)
 	{
