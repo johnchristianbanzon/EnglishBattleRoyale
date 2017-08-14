@@ -15,6 +15,4 @@ public class PartAvatarsController :  MonoBehaviour
 			enemyAnim.SetTrigger(param);
 		}
 	}
-
-
 }
