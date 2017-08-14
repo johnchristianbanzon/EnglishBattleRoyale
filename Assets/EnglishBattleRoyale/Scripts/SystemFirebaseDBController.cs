@@ -283,9 +283,11 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
 		result [MyConst.RPC_DATA_USERHOME] = GameManager.isHost;
 
+
 		Dictionary<string, System.Object> jsonResult = new Dictionary<string, System.Object> ();
 		jsonResult [objectName] = JsonUtility.ToJson (myObject);
 		result [MyConst.RPC_DATA_PARAM] = jsonResult;
+
 
 		string directory = "/" + MyConst.GAMEROOM_ROOM + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_RPC + "/" + rpcKey;
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, result);

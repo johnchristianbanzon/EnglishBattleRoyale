@@ -8,21 +8,35 @@ public class CharEquipCardController : MonoBehaviour
 	public Text charGpCost;
 	public Image charImage;
 	public Button charButton;
-	private CharacterModel charCard;
+	public CharacterModel charCard;
 	private GameObject selectedObject;
 	private static int selectedIndex = 0;
-	public GameObject characterContent;
+	public GameObject characterLayout;
 	private static GameObject containerPlacer;
 	private static bool isDragging = false;
+	private static CharacterModel[] charArray = new CharacterModel[3];
+
 
 	public void OnEndDrag ()
 	{
 		charImage.raycastTarget = true;
-		selectedObject.transform.SetParent (characterContent.transform);
+		selectedObject.transform.SetParent (characterLayout.transform);
 		selectedObject.transform.SetSiblingIndex (selectedIndex);
 		Destroy (containerPlacer);
 		isDragging = false;
 		this.transform.position = startPos;
+
+	
+		Invoke ("SendNewCharOrder", 0.1f);
+	}
+
+	private void SendNewCharOrder ()
+	{
+		for (int i = 0; i < charArray.Length; i++) {
+			charArray [i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ().charCard;
+		}
+
+		CharacterManager.SetCharacterOrder (charArray);
 	}
 
 	public void SetCharacter (CharacterModel charCard)
@@ -47,13 +61,14 @@ public class CharEquipCardController : MonoBehaviour
 	{
 		selectedObject = this.gameObject;
 		startPos = this.transform.position;
-		selectedObject.transform.SetParent (characterContent.transform.parent);
-		containerPlacer = SystemResourceController.Instance.LoadPrefab ("Input-UI", characterContent);
+		selectedObject.transform.SetParent (characterLayout.transform.parent);
+		containerPlacer = SystemResourceController.Instance.LoadPrefab ("Input-UI", characterLayout);
 		charImage.raycastTarget = false;
 		isDragging = true;
 	}
 
-	public void OnPointerEnter(){
+	public void OnPointerEnter ()
+	{
 		if (isDragging) {
 			selectedIndex = transform.GetSiblingIndex ();
 			containerPlacer.transform.SetSiblingIndex (selectedIndex);
