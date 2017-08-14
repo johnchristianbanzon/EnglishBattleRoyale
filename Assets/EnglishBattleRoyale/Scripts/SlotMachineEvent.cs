@@ -52,6 +52,7 @@ public class SlotMachineEvent : MonoBehaviour
 		int randomAnswerPosition = Random.Range (0, 3);
 		int slotIndex = 0;
 		gameObject.SetActive (true);
+		alphabet = alphabet.Replace (answerLetter.ToString(),"");
 		foreach (Transform slot in slotContent.transform) {
 			if (slotIndex == randomAnswerPosition) {
 				slot.GetComponentInChildren<Text> ().text = answerLetter.ToString ();

@@ -39,7 +39,7 @@ public class WordChoice : MonoBehaviour, ISelection
 		}
 	}
 
-	public void ShowCorrectAnswer ()
+	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
 
 	}

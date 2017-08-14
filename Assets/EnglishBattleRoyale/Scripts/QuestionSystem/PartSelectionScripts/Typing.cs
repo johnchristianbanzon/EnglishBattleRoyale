@@ -20,7 +20,7 @@ public class Typing : MonoBehaviour, ISelection
 		}
 	}
 
-	public void ShowCorrectAnswer ()
+	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
 
 	}

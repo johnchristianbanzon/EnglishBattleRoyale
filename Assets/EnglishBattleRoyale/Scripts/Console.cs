@@ -62,7 +62,7 @@ public class Console : MonoBehaviour
 		QuestionSystemController.Instance.targetType.HideTargetType ();
 		QuestionSystemController.Instance.answerType.ClearHint ();
 		QuestionSystemController.Instance.selectionType.HideSelectionType ();
-		QuestionSystemController.Instance.OnStopQuestionTimer ();
+		QuestionSystemController.Instance.questionRoundTimer.OnStopQuestionTimer ();
 		QuestionSystemController.Instance.debugUI.SetActive (true);
 		QuestionSystemController.Instance.debugUI.transform.GetChild (0).gameObject.SetActive (true);
 		QuestionSystemController.Instance.questionHint.hintUsed = 0;

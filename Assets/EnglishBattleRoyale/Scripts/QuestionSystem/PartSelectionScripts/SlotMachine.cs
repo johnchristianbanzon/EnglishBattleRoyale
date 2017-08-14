@@ -10,7 +10,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 	private string questionAnswer = "";
 	List<GameObject> correctAnswerSlots = new List<GameObject>();
 
-	public void ShowCorrectAnswer ()
+	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
 		//TO BE IMPLEMENTED
 	}

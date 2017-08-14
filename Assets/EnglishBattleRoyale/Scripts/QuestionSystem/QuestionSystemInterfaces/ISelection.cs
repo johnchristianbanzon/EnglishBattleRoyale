@@ -6,5 +6,5 @@ public interface ISelection {
 	void ShowSelectionHint (int hintIndex,GameObject answerContainer);
 	void HideSelectionHint();
 	void HideSelectionType();
-	void ShowCorrectAnswer();
+	void ShowCorrectAnswer(bool isAnswerCorrect);
 }

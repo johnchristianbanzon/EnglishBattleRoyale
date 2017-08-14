@@ -29,7 +29,6 @@ public class LetterLinkEvent : MonoBehaviour
 
 	public void OnEndDrag ()
 	{
-		Debug.Log (letterlink.questionAnswer+"/"+writtenAnswer);
 		if (letterlink.questionAnswer == writtenAnswer) {
 			startSelection = false;
 
