@@ -2,6 +2,6 @@ Key,Value
 CorrectGPBonus, 2
 CorrectDamageBonus, 1
 SpeedyAwesomeGPBonus, 2
-SpeedyAwesomeDamageBonus, 2
-SpeedyGoodGPBonus, 2
-SpeedyGoodDamageBonus, 2
+SpeedyAwesomeDamageBonus, 1
+SpeedyGoodGPBonus, 0
+SpeedyGoodDamageBonus, 0

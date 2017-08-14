@@ -80,7 +80,7 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 
 	public void SetEnemyGesture (int gestureNumber)
 	{
-		ShowGesture (false, "Gesture" + gestureNumber);
+		ShowGesture (false, "gesture" + gestureNumber);
 	}
 
 	private void SendGesture (int gestureNumber)
@@ -99,8 +99,10 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 	private void ShowGesture (bool isPlayer, string param)
 	{
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, param);
-		ScreenBattleController.Instance.partCameraWorks.ShowGestureCamera ();
-		Invoke ("HideGesture", 1.5f);
+		if (!isPlayer) {
+			ScreenBattleController.Instance.partCameraWorks.ShowGestureCamera ();
+			Invoke ("HideGesture", 1.5f);
+		}
 	}
 
 
