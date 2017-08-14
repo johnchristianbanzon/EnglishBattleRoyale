@@ -51,6 +51,7 @@ public class PartQuestionController: MonoBehaviour
 			//
 
 			
+			//send answer results to firebase
 			QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, awesomeSpeedyCount, goodSpeedyCount, rottenSpeedyCount);
 			string param = JsonUtility.ToJson (questionResultCount);
 			SystemFirebaseDBController.Instance.AnswerPhase (param);

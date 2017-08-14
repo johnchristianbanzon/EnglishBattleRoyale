@@ -10,15 +10,22 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	public PartGestureController partGesture;
 	public PartCameraWorksController partCameraWorks;
 	public PartAvatarsController partAvatars;
+	private bool isPhase1 = false;
 
 	public void StartPhase1 ()
 	{
 		PhaseActivate (true, false);
+		isPhase1 = true;
 	}
 
 	public void StartPhase2 ()
 	{
 		PhaseActivate (false, true);
+		isPhase1 = false;
+	}
+
+	public bool GetIsPhase1(){
+		return isPhase1;
 	}
 
 	private void PhaseActivate (bool answer, bool attack)
