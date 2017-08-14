@@ -26,7 +26,6 @@ public static partial class MyConst
 	public const string RPC_DATA_PLAYER_ANSWER_PARAM = "RPC_DATA_PLAYER_ANSWER_PARAM";
 	public const string RPC_DATA_ENEMY_ANSWER_PARAM = "RPC_DATA_ENEMY_ANSWER_PARAM";
 
-
 	public  const string BATTLE_STATUS_ANSWER = "BATTLE_STATUS_ANSWER";
 	public  const string BATTLE_STATUS_ATTACK = "BATTLE_STATUS_ATTACK";
 	public  const string BATTLE_STATUS_STATE = "BATTLE_STATUS_STATE";

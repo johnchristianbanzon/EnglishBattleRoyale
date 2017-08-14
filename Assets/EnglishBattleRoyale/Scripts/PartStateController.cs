@@ -226,9 +226,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
 			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
 			BattleManager.ClearBattleData ();
-			ScreenBattleController.Instance.StartPhase1 ();
+			Invoke ("StartPhase1", 1);
 		}
+	}
 
+	private void StartPhase1(){
+		ScreenBattleController.Instance.StartPhase1 ();
 	}
 
 	private void ResetPlayerDamage ()

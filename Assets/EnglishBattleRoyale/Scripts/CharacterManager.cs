@@ -151,7 +151,18 @@ public class CharacterManager: IRPCDicObserver
 	{
 		currentCharacterInEquip [characterIndex] = character;
 		ScreenBattleController.Instance.partCharacter.SetCharacterUI (characterIndex, character);
+	
 	}
+
+	//When player switch reOrder characters when battle
+	public static void SetCharacterOrder(CharacterModel[] indexArray){
+		Array.Copy (indexArray, currentCharacterInEquip, 3);
+
+		for (int i = 0; i < currentCharacterInEquip.Length; i++) {
+			Debug.Log (currentCharacterInEquip[i].characterName);
+		}
+	}
+		
 
 	//receive skill list from prepare phase and shuffle for random skill in start and put in queue
 	public static void SetCharacterEnqueue (List<CharacterModel> characterList)
@@ -164,6 +175,8 @@ public class CharacterManager: IRPCDicObserver
 			characterQueue.Enqueue (characterList [i]);
 		}
 	}
+
+
 
 	//Default 3 starting characters when starting the game
 	public static void SetStartCharacters ()

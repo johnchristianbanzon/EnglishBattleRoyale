@@ -202,6 +202,11 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		partSelection.HideSelectionType (selectionType);
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 			roundResultList.Add (onQuestionResult);
+
+			//for every correct answer, send to firebase for answer indicator count
+			if(onQuestionResult.isCorrect){
+				SystemFirebaseDBController.Instance.SetParam(MyConst.RPC_DATA_ANSWER_INDICATOR, "isCorrect");
+			}
 			Invoke ("HideQuestionParts", 1.0f);
 		});
 

@@ -20,6 +20,7 @@ public class PartCharacterController : MonoBehaviour
 		CharacterManager.StartCharacters ();
 		ShowAutoActivateButtons (false);
 		PartAnswerIndicatorController.Instance.ResetAnswer ();
+
 	}
 
 	//show skill buttons after attack phase is done
