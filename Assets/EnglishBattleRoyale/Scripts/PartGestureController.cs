@@ -27,7 +27,6 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 		if (!gestureButtonContainer.activeInHierarchy) {
 			gestureButtonContainer.SetActive (true);
 			TweenFacade.TweenScaleToLarge (gestureButtonContainer.transform, new Vector3 (1, 1, 1), 0.4f);
-
 			button.gameObject.GetComponent<Image> ().sprite = closeImage;
 		} else {
 			button.gameObject.GetComponent<Image> ().sprite = gestureImage;
@@ -49,7 +48,8 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 
 	public void ShowPlayerGesture (int gestureNum)
 	{
-		ShowGesture (true, "Gesture" + gestureNum);
+		Invoke ("ScaleToSmall", 0.05f);
+		ShowGesture (true, "gesture" + gestureNum);
 
 		SendGesture (gestureNum);
 	}
