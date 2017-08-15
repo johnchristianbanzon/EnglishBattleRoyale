@@ -92,28 +92,30 @@ public class CharacterManager: IRPCDicObserver
 	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
 	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
 
+	public static int GetCharacterCount(bool isPlayer){
+		if (isPlayer) {
+			return playerCharacterQueue.Count;
+		} else {
+			return enemyCharacterQueue.Count;
+		}
+	}
+
 	public static void PlayerCharacterActivate ()
 	{
-		Debug.Log ("PLAYER CHARACTERS REMAINING: " + playerCharacterQueue.Count);
-		if (playerCharacterQueue.Count > 0) {
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "skill1");
 			CharacterModel character = playerCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
 			CharacterLogic.CharacterActivate (true, character);
-			PlayerCharacterActivate ();
-		}
 	}
 
 	public static void EnemyCharacterActivate ()
 	{
-		Debug.Log ("ENEMY CHARACTERS REMAINING: " + enemyCharacterQueue.Count);
-		if (enemyCharacterQueue.Count > 0) {
+
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "skill1");
 			CharacterModel character = enemyCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
 			CharacterLogic.CharacterActivate (false, character);
-			EnemyCharacterActivate ();
-		}
 	}
-
 
 	#endregion
 
