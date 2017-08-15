@@ -20,8 +20,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public Text enemyNameText;
 	public Text enemyHPText;
 
-	public Text hitComboCount;
-	public Text totalDamage;
+	public Text playerHitComboCountText;
+	public Text playerTotalDamageText;
+
+	public Text enemyHitComboCountText;
+	public Text enemyTotalDamageText;
 
 	public PlayerModel player{ get; set; }
 
@@ -204,6 +207,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	IEnumerator BattleAnimationCoroutine (bool isPLayer, float attackDamage, Action action)
 	{
+		string hitComboCount = "";
+		string totalDamageCount = "";
 		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
 
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
@@ -214,12 +219,22 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		for (int i = 0; i < playerAnswerParam.correctCount; i++) {
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
-			hitComboCount.text = i.ToString ();
+			hitComboCount = (i + 2) + " HIT COMBO";
 			yield return new WaitForSeconds (1);
 		}
 
 		action ();
+		totalDamageCount = attackDamage + " DAMAGE";
+	
+		if (isPLayer) {
+			playerHitComboCountText.text = hitComboCount;
+			playerTotalDamageText.text = totalDamageCount;
+		} else {
+			enemyHitComboCountText.text = hitComboCount;
+			enemyTotalDamageText.text = totalDamageCount;
+		}
 	}
+
 
 	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
 	{
@@ -267,6 +282,10 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
 			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
 			BattleManager.ClearBattleData ();
+			playerHitComboCountText.text = "";
+			playerTotalDamageText.text = "";
+			enemyTotalDamageText.text = "";
+			enemyHitComboCountText.text = "";
 			Invoke ("StartPhase1", 1);
 		}
 	}
