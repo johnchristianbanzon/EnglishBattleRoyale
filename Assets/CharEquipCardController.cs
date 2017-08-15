@@ -6,6 +6,7 @@ public class CharEquipCardController : MonoBehaviour
 {
 	private Vector2 startPos;
 	public Text charGpCost;
+	public Image charGPContainer;
 	public Image charImage;
 	public Button charButton;
 	public CharacterModel charCard;
@@ -16,6 +17,25 @@ public class CharEquipCardController : MonoBehaviour
 	private static bool isDragging = false;
 	private static CharacterModel[] charArray = new CharacterModel[3];
 
+	#region CHARACTER DATA
+
+	public void SetCharacter (CharacterModel charCard)
+	{
+		this.charCard = charCard;
+		charImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
+		charGpCost.text = charCard.characterGPCost.ToString ();
+		NewCardAnimation ();
+	}
+
+	public void ShowCharacterDescription (int skillNumber)
+	{
+		GameObject characterDescription = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
+		characterDescription.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
+	}
+
+	#endregion
+
+	#region CHANGE CARD ORDER
 
 	public void OnEndDrag ()
 	{
@@ -26,30 +46,23 @@ public class CharEquipCardController : MonoBehaviour
 		isDragging = false;
 		this.transform.position = startPos;
 
-	
 		Invoke ("SendNewCharOrder", 0.1f);
+	}
+
+	private CharEquipCardController[] EquipCards(){
+		CharEquipCardController[] charEquipCard =   new CharEquipCardController[3];
+		for (int i = 0; i < charArray.Length; i++) {
+			charEquipCard[i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ();
+		}
+		return charEquipCard;
 	}
 
 	private void SendNewCharOrder ()
 	{
-		for (int i = 0; i < charArray.Length; i++) {
-			charArray [i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ().charCard;
+		for (int i = 0; i < EquipCards ().Length; i++) {
+			charArray[i] = EquipCards () [i].charCard;
 		}
-
 		CharacterManager.SetCharacterOrder (charArray);
-	}
-
-	public void SetCharacter (CharacterModel charCard)
-	{
-		this.charCard = charCard;
-		charImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
-		charGpCost.text = charCard.characterGPCost.ToString ();
-	}
-
-	public void ShowCharacterDescription (int skillNumber)
-	{
-		GameObject characterDescription = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
-		characterDescription.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
 	}
 
 	public void ToggleButtonInteractable (bool toggle)
@@ -83,6 +96,22 @@ public class CharEquipCardController : MonoBehaviour
 		this.transform.position = myCanvas.transform.TransformPoint (pos);
 
 	}
+
+	#endregion
+
+
+	#region CARD ANIMATION
+
+	public void NewCardAnimation(){
+		TweenFacade.TweenNewCharacterCard (this.transform);
+	}
+
+	public void ActivateCardAnimation(){
+		TweenFacade.TweenActivateCharacterCard (this.transform);
+	}
+
+
+	#endregion
 
 
 }

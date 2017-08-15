@@ -24,7 +24,7 @@ public class CharacterManager: IRPCDicObserver
 				Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [i].characterName);
 				ScreenBattleController.Instance.partState.player.playerGP -= currentCharacterInEquip [i].characterGPCost;
 				charactersToSend.Add (currentCharacterInEquip [i]);
-				UseCharacterUI (i);
+				ActivateCharacterUI (i);
 			} else {
 				Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [i].characterName);
 			}
@@ -189,12 +189,18 @@ public class CharacterManager: IRPCDicObserver
 	}
 
 	//When characters is used, remove previous characters and enqueue replace with new characters in queue
-	public static void UseCharacterUI (int characterIndex)
+	public static void ActivateCharacterUI (int characterIndex)
 	{
-		//Reminders: Remove this if you want characters will be gone after use and not put at the bottom of the queue
-//		characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
-
-		SetCharacterUI (characterIndex, characterQueue.Dequeue ());
+		ScreenBattleController.Instance.partCharacter.ChangeCharacterCard (
+		delegate() {
+				//Reminders: Remove this if you want characters will be gone after use and not put at the bottom of the queue
+				characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
+		}, 
+		delegate() {
+				SetCharacterUI (characterIndex, characterQueue.Dequeue ());
+				ScreenBattleController.Instance.partCharacter.ActivateCharacterUI(characterIndex);
+		});
+	
 	}
 
 	public static CharacterModel GetCharacter (int characterNumber)

@@ -86,4 +86,17 @@ public static class TweenFacade{
 	}
 
 
+	public static void TweenNewCharacterCard(Transform obj){
+
+		float originalX = obj.position.x;
+		obj.transform.localScale = Vector3.one;
+		obj.transform.position = new Vector3 (obj.position.x - 20,obj.position.y);
+		obj.DOMoveX (originalX, 1).SetEase(Ease.OutCirc);
+	}
+
+	public static void TweenActivateCharacterCard(Transform obj){
+		obj.DOScale (Vector3.zero, 1).SetEase (Ease.InOutElastic);
+	}
+
+
 }
