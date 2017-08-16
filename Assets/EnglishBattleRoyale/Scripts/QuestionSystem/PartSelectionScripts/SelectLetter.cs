@@ -18,7 +18,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 		if (questionAnswer.Length > QuestionSystemController.Instance.partAnswer.fillAnswer.GetAnswerWritten ().Length) {
 			QuestionSystemController.Instance.partAnswer.fillAnswer.SelectionLetterGot (EventSystem.current.currentSelectedGameObject);
 			EventSystem.current.currentSelectedGameObject.SetActive (false);
-		} 
+		}
 	}
 
 	public void HideSelectionType ()
@@ -32,34 +32,24 @@ public class SelectLetter : MonoBehaviour, ISelection
 			container.ShowCorrectAnswer (isAnswerCorrect);
 		}
 	}
-
-	private bool initHideHint = false;
+		
 	private List<int> hideSelectionIndex = new List<int> ();
-
 	private List<int> InitHideHint ()
 	{
 		hideSelectionIndex.Clear ();
-		hideSelectionIndex.AddRange (Enumerable.Range (0, selectionButtons.Length));
-		Debug.Log (questionAnswer);
-		for (int i = 0; i < hideSelectionIndex.Count; i++) {
-			if (questionAnswer.Contains (selectionButtons [hideSelectionIndex [i]].GetComponentInChildren<Text> ().text)
-				|| selectionButtons[i].isSelected) {
-				Debug.Log (questionAnswer.Contains (selectionButtons [hideSelectionIndex [i]].GetComponentInChildren<Text> ().text)+"/"+selectionButtons [hideSelectionIndex [i]].GetComponentInChildren<Text> ().text);
-				hideSelectionIndex.RemoveAt (i);
-				i--;
+		for (int i = 0; i < selectionButtons.Length; i++) {
+			if ((!questionAnswer.Contains (selectionButtons [i].GetComponentInChildren<Text> ().text) 
+				&& !selectionButtons [i].isSelected) && selectionButtons [i].GetComponent<Button>().interactable) {
+				hideSelectionIndex.Add (i);
 			}
 		}
-		Debug.Log(hideSelectionIndex.Count);
 		return hideSelectionIndex;
 	}
 
 	public void HideSelectionHint ()
 	{
 		if (MyConst.ALLOW_REMOVE_SELECTLETTER.Equals (1)) {
-//			if (!initHideHint) {
-				InitHideHint ();
-//				initHideHint = true;
-//			}
+			InitHideHint ();
 			if (hideSelectionIndex.Count > 0) {
 				int randomHintIndex = UnityEngine.Random.Range (0, hideSelectionIndex.Count);
 				selectionButtons [hideSelectionIndex [randomHintIndex]].GetComponent<EventTrigger> ().enabled = false;
@@ -68,12 +58,10 @@ public class SelectLetter : MonoBehaviour, ISelection
 			}
 		}
 	}
-		
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
 	{
 		gameObject.SetActive (true);
-		initHideHint = false;
 		this.questionAnswer = questionAnswer;
 		ShuffleSelection ();
 	}
@@ -86,21 +74,22 @@ public class SelectLetter : MonoBehaviour, ISelection
 				if (fillAnswer.answerContainers [i].transform.childCount.Equals (0)) {
 					correctContainerIndexList.Add (i);
 				} else {
-					if (!questionAnswer[i].ToString().Equals(fillAnswer.answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().letter.text)) {
+					if (!questionAnswer [i].ToString ().Equals (fillAnswer.answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().letter.text)) {
 						correctContainerIndexList.Add (i);
 					}
 				}
 			}
 			correctContainerIndexList = ListShuffleUtility.Shuffle (correctContainerIndexList);
-			int firstContainerIndex = correctContainerIndexList[0];
+			int firstContainerIndex = correctContainerIndexList [0];
 			fillAnswer.answerIndex = firstContainerIndex;
 
 			GameObject answerContainer = null;
 			if (fillAnswer.answerContainers [firstContainerIndex].GetComponentInChildren<SelectLetterEvent> () != null) {
-				answerContainer = fillAnswer.answerContainers [firstContainerIndex].GetComponentInChildren<SelectLetterEvent>().containerReplacement;
-				SelectLetterEvent chosenContainer  = fillAnswer.answerContainers [firstContainerIndex].GetComponentInChildren<SelectLetterEvent> ();
+				answerContainer = fillAnswer.answerContainers [firstContainerIndex].GetComponentInChildren<SelectLetterEvent> ().containerReplacement;
+				SelectLetterEvent chosenContainer = fillAnswer.answerContainers [firstContainerIndex].GetComponentInChildren<SelectLetterEvent> ();
 				chosenContainer.transform.SetParent (transform);
 				chosenContainer.transform.SetSiblingIndex (chosenContainer.containerIndex);
+				chosenContainer.isSelected = false;
 			}
 			correctContainers [firstContainerIndex].transform.SetParent (fillAnswer.answerContainers [correctContainers [firstContainerIndex].correctAnswerIndex].transform);
 			correctContainers [firstContainerIndex].transform.SetSiblingIndex (correctContainers [firstContainerIndex].containerIndex);

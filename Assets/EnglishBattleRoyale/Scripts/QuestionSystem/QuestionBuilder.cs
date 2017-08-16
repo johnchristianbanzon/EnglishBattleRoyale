@@ -26,20 +26,23 @@ public static class QuestionBuilder
 		List<QuestionModel> questions =  new List<QuestionModel>();
 
 		Dictionary<string,int> dictionary = new Dictionary<string,int> ();
-		dictionary.Add ("select", 1);
-		dictionary.Add ("typing", 1);
-		dictionary.Add ("change", 1);
-		dictionary.Add ("word", 1);
-		dictionary.Add ("slot", 1);
-		dictionary.Add ("letter", 1);
+		dictionary.Add ("SelectLetter", 1);
+		dictionary.Add ("Typing", 1);
+		dictionary.Add ("ChangeOrderController", 1);
+		dictionary.Add ("WordChoice", 1);
+		dictionary.Add ("SlotMachine", 1);
+		dictionary.Add ("LetterLink", 1);
 		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		for (int i = 0; i < numberOfQuestions; i++) {
 			if (QuestionSystemController.Instance.isDebug) {
-				questions.Add (GetQuestion (questionTypeModel));
+//				questions.Add (GetQuestion (questionTypeModel));
+				string questionType = questionTypeModel.selectionType.GetType().Name;
+				questions.Add (GetQuestion (GetQuestionType(questionType)));
 			} else {
 				questions.Add (GetQuestion (GetQuestionType (selectionFromRandom)));
-				selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
+
 			}
+			selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		}
 		return questions;
 	}
@@ -170,11 +173,10 @@ public static class QuestionBuilder
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Definition, 1);
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Synonym, 1);
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Antonym, 1);
-		targetDictionary.Add (QuestionSystemEnums.TargetType.Association, 15);
-
+		targetDictionary.Add (QuestionSystemEnums.TargetType.Association, 1);
 		QuestionTypeModel typeModel = null;
 		switch(selection){
-		case "select":
+		case "SelectLetter":
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
@@ -182,7 +184,7 @@ public static class QuestionBuilder
 				QuestionSystemController.Instance.partSelection.selectLetter
 			);
 			break;
-		case "typing":
+		case "Typing":
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
@@ -190,7 +192,7 @@ public static class QuestionBuilder
 				QuestionSystemController.Instance.partSelection.typing
 			);
 			break;
-		case "change":
+		case "ChangeOrderController":
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Synonym,
 				QuestionGenerator.GetTargetWay(targetDictionary),
@@ -198,7 +200,7 @@ public static class QuestionBuilder
 				QuestionSystemController.Instance.partSelection.changeOrder
 			);
 			break;
-		case "word":
+		case "WordChoice":
 			targetDictionary.Remove (QuestionSystemEnums.TargetType.Definition);
 			targetDictionary.Remove (QuestionSystemEnums.TargetType.Association);
 			typeModel = new QuestionTypeModel (
@@ -208,7 +210,7 @@ public static class QuestionBuilder
 				QuestionSystemController.Instance.partSelection.wordChoice
 			);
 			break;
-		case "slot":
+		case "SlotMachine":
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
@@ -216,7 +218,7 @@ public static class QuestionBuilder
 				QuestionSystemController.Instance.partSelection.slotMachine
 			);
 			break;
-		case "letter":
+		case "LetterLink":
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Association,
 				QuestionGenerator.GetTargetWay(targetDictionary),
@@ -225,7 +227,6 @@ public static class QuestionBuilder
 			);
 			break;
 		}
-
 		return typeModel;
 	}
 

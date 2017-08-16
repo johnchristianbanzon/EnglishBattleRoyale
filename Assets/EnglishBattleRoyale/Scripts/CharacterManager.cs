@@ -24,7 +24,7 @@ public class CharacterManager: IRPCDicObserver
 				Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [i].characterName);
 				ScreenBattleController.Instance.partState.player.playerGP -= currentCharacterInEquip [i].characterGPCost;
 				charactersToSend.Add (currentCharacterInEquip [i]);
-				UseCharacterUI (i);
+				ActivateCharacterUI (i);
 			} else {
 				Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [i].characterName);
 			}
@@ -92,28 +92,30 @@ public class CharacterManager: IRPCDicObserver
 	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
 	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
 
+	public static int GetCharacterCount(bool isPlayer){
+		if (isPlayer) {
+			return playerCharacterQueue.Count;
+		} else {
+			return enemyCharacterQueue.Count;
+		}
+	}
+
 	public static void PlayerCharacterActivate ()
 	{
-		Debug.Log ("PLAYER CHARACTERS REMAINING: " + playerCharacterQueue.Count);
-		if (playerCharacterQueue.Count > 0) {
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "skill1");
 			CharacterModel character = playerCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
 			CharacterLogic.CharacterActivate (true, character);
-			PlayerCharacterActivate ();
-		}
 	}
 
 	public static void EnemyCharacterActivate ()
 	{
-		Debug.Log ("ENEMY CHARACTERS REMAINING: " + enemyCharacterQueue.Count);
-		if (enemyCharacterQueue.Count > 0) {
+
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "skill1");
 			CharacterModel character = enemyCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
 			CharacterLogic.CharacterActivate (false, character);
-			EnemyCharacterActivate ();
-		}
 	}
-
 
 	#endregion
 
@@ -151,7 +153,18 @@ public class CharacterManager: IRPCDicObserver
 	{
 		currentCharacterInEquip [characterIndex] = character;
 		ScreenBattleController.Instance.partCharacter.SetCharacterUI (characterIndex, character);
+	
 	}
+
+	//When player switch reOrder characters when battle
+	public static void SetCharacterOrder(CharacterModel[] indexArray){
+		Array.Copy (indexArray, currentCharacterInEquip, 3);
+
+		for (int i = 0; i < currentCharacterInEquip.Length; i++) {
+			Debug.Log (currentCharacterInEquip[i].characterName);
+		}
+	}
+		
 
 	//receive skill list from prepare phase and shuffle for random skill in start and put in queue
 	public static void SetCharacterEnqueue (List<CharacterModel> characterList)
@@ -165,6 +178,8 @@ public class CharacterManager: IRPCDicObserver
 		}
 	}
 
+
+
 	//Default 3 starting characters when starting the game
 	public static void SetStartCharacters ()
 	{
@@ -174,12 +189,18 @@ public class CharacterManager: IRPCDicObserver
 	}
 
 	//When characters is used, remove previous characters and enqueue replace with new characters in queue
-	public static void UseCharacterUI (int characterIndex)
+	public static void ActivateCharacterUI (int characterIndex)
 	{
-		//Reminders: Remove this if you want characters will be gone after use and not put at the bottom of the queue
-//		characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
-
-		SetCharacterUI (characterIndex, characterQueue.Dequeue ());
+		ScreenBattleController.Instance.partCharacter.ChangeCharacterCard (
+		delegate() {
+				//Reminders: Remove this if you want characters will be gone after use and not put at the bottom of the queue
+				characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
+		}, 
+		delegate() {
+				SetCharacterUI (characterIndex, characterQueue.Dequeue ());
+				ScreenBattleController.Instance.partCharacter.ActivateCharacterUI(characterIndex);
+		});
+	
 	}
 
 	public static CharacterModel GetCharacter (int characterNumber)

@@ -18,6 +18,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void DeployAnswerType ()
 	{
 		gameObject.SetActive (true);
+		clearButton.SetActive (true);
 		hintIndexRandomList.Clear ();
 		questionAnswer = QuestionSystemController.Instance.questionAnswer;
 		PopulateContainer ();
@@ -28,14 +29,22 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 		for (int i = 0; i < answerContainers.Count; i++) {
 			if (answerContainers [i].transform.childCount > 0) {
 				if (answerContainers [i].GetComponentInChildren<SelectLetterEvent> () != null) {
-					answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().ReturnSelectedLetter (answerContainers [i]);
+					if (answerContainers [i].transform.GetChild(0).GetComponentInChildren<Button> ().interactable) {
+						answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().ReturnSelectedLetter (answerContainers [i]);
+					}
+				} else {
+					if (answerContainers [i].transform.GetChild(0).GetComponentInChildren<Button> ().interactable) {
+						Destroy (answerContainers [i].transform.GetChild (0).gameObject);
+					}
 				}
 			} 
 		}
+		CheckAnswerHolder ();
 	}
 
 	public void ClearHint ()
 	{
+		clearButton.SetActive (false);
 		for (int i = 0; i < answerContainers.Count; i++) {
 			if (answerContainers [i].transform.childCount > 0) {
 				if (answerContainers [i].GetComponentInChildren<SelectLetterEvent> () != null) {
@@ -98,13 +107,13 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void ShowSelectedLetter (GameObject selectedObject)
 	{
+		CheckAnswerHolder ();
 		if (!isFull) {
 			if (questionAnswer.Length > answerIndex) {
 				selectedObject.transform.parent = answerContainers [answerIndex].transform;
 				CheckAnswer ();
 			}
 		}
-		CheckAnswerHolder ();
 	}
 
 	public string GetAnswerWritten ()

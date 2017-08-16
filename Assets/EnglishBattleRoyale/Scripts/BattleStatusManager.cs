@@ -70,14 +70,24 @@ public class BattleStatusManager: IRPCDicObserver
 					}
 
 					CheckBattleCount (battleCount, delegate() {
-						ScreenBattleController.Instance.StartPhase2 ();
+						if (GameManager.isHost) {
+							SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
+						}
+
 
 					});
 					break;
 
 				case MyConst.BATTLE_STATUS_ATTACK:
+					if (ScreenBattleController.Instance.GetIsPhase1 ()) {
+						ScreenBattleController.Instance.StartPhase2 ();
+					}
 
-					CheckBattleCount (battleCount);
+					CheckBattleCount (battleCount, delegate() {
+						if (GameManager.isHost) {
+							SystemFirebaseDBController.Instance.UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, "0", "0");
+						}
+					});
 					break;
 
 				}
@@ -85,7 +95,7 @@ public class BattleStatusManager: IRPCDicObserver
 		}
 	}
 
-	private void CheckBattleCount (int battleCount, Action action = null)
+	private void CheckBattleCount (int battleCount, Action action)
 	{
 		//Reminders: change to 1 if not testing
 		if (battleCount > 1) {

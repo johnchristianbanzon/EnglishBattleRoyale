@@ -65,7 +65,7 @@ public class SelectLetterEvent : MonoBehaviour
 		}
 		isSelected = false;
 		transform.SetParent (selectLetter.transform);
-		selectedLetter.transform.SetSiblingIndex (containerIndex);
+		transform.SetSiblingIndex (containerIndex);
 	}
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)

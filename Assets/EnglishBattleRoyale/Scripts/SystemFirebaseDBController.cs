@@ -283,9 +283,11 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
 		result [MyConst.RPC_DATA_USERHOME] = GameManager.isHost;
 
+
 		Dictionary<string, System.Object> jsonResult = new Dictionary<string, System.Object> ();
 		jsonResult [objectName] = JsonUtility.ToJson (myObject);
 		result [MyConst.RPC_DATA_PARAM] = jsonResult;
+
 
 		string directory = "/" + MyConst.GAMEROOM_ROOM + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_RPC + "/" + rpcKey;
 		FirebaseDBFacade.CreateTableChildrenAsync (directory, reference, result);
@@ -303,10 +305,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 					} else {
 						battleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM] = param;
 					}
-					//Reminders: change to 2 if not testing
-					if (battleCount == 2) {
-						UpdateBattleStatus (MyConst.BATTLE_STATUS_ATTACK, 0);
-					}
+
 				});
 			});
 		});
@@ -318,17 +317,14 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
 		GetLatestKey (2, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
-				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK, delegate(Dictionary<string, System.Object> battleStatus, int battleCount) {
-					if (battleCount == 2) {
-						UpdateBattleStatus (MyConst.BATTLE_STATUS_ANSWER, 0, "0", "0");
-					}
-				});
+				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK);
 			});
 		});
 	}
+		
 
 	//Phasemutate uses transaction to update values in the table and increments battlecount
-	private Dictionary<string, System.Object> PhaseMutate (MutableData mutableData, string battleStatusName, Action<Dictionary<string, System.Object>,int> action)
+	private Dictionary<string, System.Object> PhaseMutate (MutableData mutableData, string battleStatusName, Action<Dictionary<string, System.Object>,int> action = null)
 	{
 		Dictionary<string, System.Object> battleStatus = (Dictionary<string, System.Object>)mutableData.Value;
 		string battleState = battleStatus [MyConst.BATTLE_STATUS_STATE].ToString ();

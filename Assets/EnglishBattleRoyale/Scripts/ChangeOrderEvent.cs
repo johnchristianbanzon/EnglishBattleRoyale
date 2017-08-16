@@ -24,6 +24,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	{
 		duplicateContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI",selectionContent);
 		duplicateContainer.transform.SetSiblingIndex (this.transform.GetSiblingIndex ());
+		selectedIndex = transform.GetSiblingIndex ();
 		duplicateContainer.GetComponent<Image> ().color = new Color (81f / 255, 134f / 255f, 221f / 255f);
 		this.transform.SetParent (selectionContent.transform.parent);
 	}

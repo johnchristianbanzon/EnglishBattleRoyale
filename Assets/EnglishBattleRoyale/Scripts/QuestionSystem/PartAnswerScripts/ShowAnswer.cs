@@ -34,7 +34,6 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 		this.onHintResult = onHintResult;
 		InitHints ();
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, hintContainers [hintIndex]);
-
 	}
 
 	private void InitHints ()
@@ -43,6 +42,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 			hasInitHints = true;
 			for (int i = 0; i < QuestionSystemController.Instance.correctAnswerButtons.Count; i++) {
 				GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", QuestionSystemController.Instance.partAnswer.showAnswer.showLetterView);
+				letterPrefab.GetComponentInChildren<Text> ().text = "_";
 				hintContainers.Add (letterPrefab);
 			}
 		}

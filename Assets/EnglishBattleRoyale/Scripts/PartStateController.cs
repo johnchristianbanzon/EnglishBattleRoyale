@@ -20,6 +20,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public Text enemyNameText;
 	public Text enemyHPText;
 
+	public Text playerHitComboCountText;
+	public Text playerTotalDamageText;
+
+	public Text enemyHitComboCountText;
+	public Text enemyTotalDamageText;
+
 	public PlayerModel player{ get; set; }
 
 	public PlayerModel enemy{ get; set; }
@@ -110,7 +116,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	#endregion
 
-	#region DamageCoroutine
+	#region COROUTINES
 
 	public void StartBattle ()
 	{
@@ -138,9 +144,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		case 2:
 			Debug.Log ("BOTH ATTACK SAME TIME");
-			CharacterManager.PlayerCharacterActivate ();
-			CharacterManager.EnemyCharacterActivate ();
-			yield return new WaitForSeconds (3);
+			StartCoroutine (CharacterActivateCoroutine (true));
+			StartCoroutine (CharacterActivateCoroutine (false));
+			yield return new WaitForSeconds (4);
 			BattleManager.SendAttack ();
 			CheckHP (false);
 			yield return new WaitForSeconds (2);
@@ -148,6 +154,18 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			CheckHP (true);
 			break;
 
+		}
+	}
+
+	IEnumerator CharacterActivateCoroutine (bool isPlayer)
+	{
+		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
+			yield return new WaitForSeconds (1);
+			if (isPlayer) {
+				CharacterManager.PlayerCharacterActivate ();
+			} else {
+				CharacterManager.EnemyCharacterActivate ();
+			}
 		}
 	}
 
@@ -182,17 +200,53 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 	}
 
+	public void StartBattleAnimation (bool isPLayer, float attackDamage, Action action)
+	{
+		StartCoroutine (BattleAnimationCoroutine (isPLayer, attackDamage, action));
+	}
+
+	IEnumerator BattleAnimationCoroutine (bool isPLayer, float attackDamage, Action action)
+	{
+		string hitComboCount = "";
+		string totalDamageCount = "";
+		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
+
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+
+		yield return new WaitForSeconds (1);
+
+		for (int i = 0; i < playerAnswerParam.correctCount; i++) {
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+			hitComboCount = (i + 2) + " HIT COMBO";
+			yield return new WaitForSeconds (1);
+		}
+
+		action ();
+		totalDamageCount = attackDamage + " DAMAGE";
+	
+		if (isPLayer) {
+			playerHitComboCountText.text = hitComboCount;
+			playerTotalDamageText.text = totalDamageCount;
+		} else {
+			enemyHitComboCountText.text = hitComboCount;
+			enemyTotalDamageText.text = totalDamageCount;
+		}
+	}
+
+
 	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
 	{
 		if (isPLayer) {
-			CharacterManager.PlayerCharacterActivate ();
+			yield return StartCoroutine (CharacterActivateCoroutine (true));
 			yield return new WaitForSeconds (3);
 			BattleManager.SendAttack ();
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckPlayerAttackCoroutine ());
 			CheckHP (isSecondCheck);
 		} else {
-			CharacterManager.EnemyCharacterActivate ();
+			yield return StartCoroutine (CharacterActivateCoroutine (false));
 			yield return new WaitForSeconds (3);
 			BattleManager.SendAttack ();
 			yield return new WaitForSeconds (1);
@@ -200,6 +254,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			CheckHP (isSecondCheck);
 		}
 	}
+
+
 
 	//check HP of each player, if there is winner, stop battle
 	private void CheckHP (bool isSecondCheck)
@@ -226,9 +282,17 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
 			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
 			BattleManager.ClearBattleData ();
-			ScreenBattleController.Instance.StartPhase1 ();
+			playerHitComboCountText.text = "";
+			playerTotalDamageText.text = "";
+			enemyTotalDamageText.text = "";
+			enemyHitComboCountText.text = "";
+			Invoke ("StartPhase1", 1);
 		}
+	}
 
+	private void StartPhase1 ()
+	{
+		ScreenBattleController.Instance.StartPhase1 ();
 	}
 
 	private void ResetPlayerDamage ()

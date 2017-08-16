@@ -48,6 +48,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
+		currentQuestionNumber = 0;
 		isQuestionRoundOver = false;
 		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
 		questionRoundTimer = new QuestionSystemTimer ();
@@ -159,6 +160,11 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		hasSkippedQuestion = false;
 		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 			roundResultList.Add (onQuestionResult);
+
+			//for every correct answer, send to firebase for answer indicator count
+			if(onQuestionResult.isCorrect && !isDebug){
+				SystemFirebaseDBController.Instance.SetParam(MyConst.RPC_DATA_ANSWER_INDICATOR, "isCorrect");
+			}
 			Invoke ("HideQuestionParts", 1.0f);
 		});
 
@@ -182,12 +188,12 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		LoadQuestion ();
 		targetTypeUI.GetComponentInChildren<Text> ().text = questionType.ToString ();
+		partTarget.ChangeTargetColor (questionType);
 		partTarget.DeployPartTarget (targetType, questionTarget);
 		partAnswer.DeployAnswerType (answerType);
 		partSelection.DeploySelectionType (selectionType, questionAnswer, delegate(List<GameObject> selectionList) {
 			CheckAnswerSent (null);
 		});
-
 		this.onQuestionResult = onQuestionResult;
 	}
 
@@ -201,6 +207,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	{
 		StartQuestionRound (QuestionBuilder.GetQuestionType (button.name), delegate(List<QuestionResultModel> result) {
 			debugUI.SetActive (true);
+			HideQuestionParts();
 		});
 		debugUI.SetActive (false);
 		button.transform.parent.gameObject.SetActive (false);
