@@ -110,7 +110,6 @@ public class CharacterManager: IRPCDicObserver
 
 	public static void EnemyCharacterActivate ()
 	{
-
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "skill1");
 			CharacterModel character = enemyCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
