@@ -210,28 +210,39 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		string hitComboCount = "";
 		string totalDamageCount = "";
 		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
+		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
 
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "attack1");
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "hit1");
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 
 		yield return new WaitForSeconds (1);
 
-		for (int i = 0; i < playerAnswerParam.correctCount; i++) {
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "attack1");
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "hit1");
-			hitComboCount = (i + 2) + " HIT COMBO";
-			yield return new WaitForSeconds (1);
+		//TO-DO: REFACTOR THIS CODE
+		if (isPLayer) {
+			for (int i = 0; i < playerAnswerParam.correctCount; i++) {
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+				hitComboCount = (i + 2) + " HIT COMBO";
+				yield return new WaitForSeconds (1);
+			}
+		} else {
+			for (int i = 0; i < enemyAnswerParam.correctCount; i++) {
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+				hitComboCount = (i + 2) + " HIT COMBO";
+				yield return new WaitForSeconds (1);
+			}
 		}
 
 		action ();
 		totalDamageCount = attackDamage + " DAMAGE";
 	
 		if (isPLayer) {
-			enemyHitComboCountText.text = hitComboCount;
-			enemyTotalDamageText.text = totalDamageCount;
-		} else {
 			playerHitComboCountText.text = hitComboCount;
 			playerTotalDamageText.text = totalDamageCount;
+		} else {
+			enemyHitComboCountText.text = hitComboCount;
+			enemyTotalDamageText.text = totalDamageCount;
 		}
 	}
 
