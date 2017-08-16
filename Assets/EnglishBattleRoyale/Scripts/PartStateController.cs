@@ -33,6 +33,25 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	void Update ()
 	{
 		if (player != null && enemy != null) {
+			if (player.playerHP > GameManager.player.playerHP) {
+				player.playerHP = GameManager.player.playerHP;
+			}
+
+			if (player.playerHP < 0) {
+				player.playerHP = 0;
+			}
+
+
+			if (player.playerGP > player.playerMaxGP) {
+				player.playerHP = player.playerMaxGP;
+			}
+
+			if (player.playerGP < 0) {
+				player.playerGP = 0;
+			}
+
+
+
 			playerHPText.text = player.playerHP.ToString ();
 			playerHPBar.value = player.playerHP;
 
