@@ -33,22 +33,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	void Update ()
 	{
 		if (player != null && enemy != null) {
-			if (player.playerHP > GameManager.player.playerHP) {
-				player.playerHP = GameManager.player.playerHP;
-			}
-
-			if (player.playerHP < 0) {
-				player.playerHP = 0;
-			}
-
-			if (player.playerGP > player.playerMaxGP) {
-				player.playerGP = player.playerMaxGP;
-			}
-
-			if (player.playerGP < 0) {
-				player.playerGP = 0;
-			}
-
 			playerHPText.text = player.playerHP.ToString ();
 			playerHPBar.value = player.playerHP;
 
@@ -179,9 +163,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			yield return new WaitForSeconds (1);
 			if (isPlayer) {
 				CharacterManager.PlayerCharacterActivate ();
-				ScreenBattleController.Instance.partCharacter.ActivateCharacterUI(CharacterManager.GetActivateCardIndexQueue());
-				yield return new WaitForSeconds (1);
-				CharacterManager.SetCharacterUI (CharacterManager.GetActivateCardIndexQueue(), CharacterManager.GetActivateCardQueue());
 			} else {
 				CharacterManager.EnemyCharacterActivate ();
 			}
