@@ -5,6 +5,4 @@
 	IncreasePlayerBaseDamage,
 	DecreaseEnemyBaseDamage,
 	IncreasePlayerGP,
-	LimitEnemySkill,
-	Stop
 }

@@ -92,7 +92,8 @@ public class CharacterManager: IRPCDicObserver
 	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
 	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
 
-	public static int GetCharacterCount(bool isPlayer){
+	public static int GetCharacterCount (bool isPlayer)
+	{
 		if (isPlayer) {
 			return playerCharacterQueue.Count;
 		} else {
@@ -102,19 +103,23 @@ public class CharacterManager: IRPCDicObserver
 
 	public static void PlayerCharacterActivate ()
 	{
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "skill1");
-			CharacterModel character = playerCharacterQueue.Dequeue ();
-			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
-			CharacterLogic.CharacterActivate (true, character);
+		CharacterModel character = playerCharacterQueue.Dequeue ();
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "skill1");
+		ScreenBattleController.Instance.partAvatars.player.LoadSkillAuraEffect (character.characterSkillID);
+			
+		Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
+		CharacterLogic.CharacterActivate (true, character);
 	}
 
 	public static void EnemyCharacterActivate ()
 	{
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "skill1");
-			CharacterModel character = enemyCharacterQueue.Dequeue ();
-			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
-			CharacterLogic.CharacterActivate (false, character);
+		CharacterModel character = enemyCharacterQueue.Dequeue ();
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "skill1");
+		ScreenBattleController.Instance.partAvatars.enemy.LoadSkillAuraEffect (character.characterSkillID);
+		Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
+		CharacterLogic.CharacterActivate (false, character);
 	}
+
 
 	#endregion
 
@@ -156,11 +161,12 @@ public class CharacterManager: IRPCDicObserver
 	}
 
 	//When player switch reOrder characters when battle
-	public static void SetCharacterOrder(CharacterModel[] indexArray){
+	public static void SetCharacterOrder (CharacterModel[] indexArray)
+	{
 		Array.Copy (indexArray, currentCharacterInEquip, 3);
 
 		for (int i = 0; i < currentCharacterInEquip.Length; i++) {
-			Debug.Log (currentCharacterInEquip[i].characterName);
+			Debug.Log (currentCharacterInEquip [i].characterName);
 		}
 	}
 		
@@ -191,16 +197,16 @@ public class CharacterManager: IRPCDicObserver
 	public static void ActivateCharacterUI (int characterIndex)
 	{
 		ScreenBattleController.Instance.partCharacter.ChangeCharacterCard (
-		delegate() {
+			delegate() {
 				//Reminders: Remove this if you want characters will be gone after use and not put at the bottom of the queue
-				ScreenBattleController.Instance.partCharacter.ActivateCharacterUI(characterIndex);
+				ScreenBattleController.Instance.partCharacter.ActivateCharacterUI (characterIndex);
 				characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
 
-		}, 
-		delegate() {
+			}, 
+			delegate() {
 				SetCharacterUI (characterIndex, characterQueue.Dequeue ());
 
-		});
+			});
 	
 	}
 
