@@ -227,11 +227,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		totalDamageCount = attackDamage + " DAMAGE";
 	
 		if (isPLayer) {
-			playerHitComboCountText.text = hitComboCount;
-			playerTotalDamageText.text = totalDamageCount;
-		} else {
 			enemyHitComboCountText.text = hitComboCount;
 			enemyTotalDamageText.text = totalDamageCount;
+		} else {
+			playerHitComboCountText.text = hitComboCount;
+			playerTotalDamageText.text = totalDamageCount;
 		}
 	}
 
