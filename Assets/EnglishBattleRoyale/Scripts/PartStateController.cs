@@ -202,7 +202,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public void StartBattleAnimation (bool isPLayer, float attackDamage, Action action)
 	{
-		StartCoroutine (BattleAnimationCoroutine (isPLayer, attackDamage, action));
+		yield return StartCoroutine (BattleAnimationCoroutine (isPLayer, attackDamage, action));
 	}
 
 	IEnumerator BattleAnimationCoroutine (bool isPLayer, float attackDamage, Action action)
@@ -211,14 +211,14 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		string totalDamageCount = "";
 		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
 
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "attack1");
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "hit1");
 
 		yield return new WaitForSeconds (1);
 
 		for (int i = 0; i < playerAnswerParam.correctCount; i++) {
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "attack1");
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "hit1");
 			hitComboCount = (i + 2) + " HIT COMBO";
 			yield return new WaitForSeconds (1);
 		}
