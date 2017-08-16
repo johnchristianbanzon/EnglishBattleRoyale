@@ -23,7 +23,6 @@ public class CharacterLogic
 			Replace ("correctAnswer", GameManager.enemyAnswerParam.correctCount.ToString ());
 		}
 		Expression e = new Expression (character.characterAmount);
-
 		CharacterCompute (isPlayer, character.characterSkillID, float.Parse (e.Evaluate ().ToString ()));
 	}
 
