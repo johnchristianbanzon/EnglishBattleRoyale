@@ -50,7 +50,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			}
 
 			if (player.playerGP > player.playerMaxGP) {
-				player.playerHP = player.playerMaxGP;
+				player.playerGP = player.playerMaxGP;
 			}
 
 			if (player.playerGP < 0) {
