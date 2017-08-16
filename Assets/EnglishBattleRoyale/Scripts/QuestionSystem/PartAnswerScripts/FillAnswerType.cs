@@ -29,11 +29,11 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 		for (int i = 0; i < answerContainers.Count; i++) {
 			if (answerContainers [i].transform.childCount > 0) {
 				if (answerContainers [i].GetComponentInChildren<SelectLetterEvent> () != null) {
-					if (answerContainers [i].transform.GetChild(0).GetComponentInChildren<Button> ().interactable) {
+					if (answerContainers [i].transform.GetChild (0).GetComponentInChildren<Button> ().interactable) {
 						answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().ReturnSelectedLetter (answerContainers [i]);
 					}
 				} else {
-					if (answerContainers [i].transform.GetChild(0).GetComponentInChildren<Button> ().interactable) {
+					if (answerContainers [i].transform.GetChild (0).GetComponentInChildren<Button> ().interactable) {
 						Destroy (answerContainers [i].transform.GetChild (0).gameObject);
 					}
 				}
@@ -78,12 +78,15 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void OnAnswerClick (Button answerButton)
 	{
+		
 		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
 		} else {
-			Destroy (answerButton.transform.GetChild (0).gameObject);
-			CheckAnswerHolder ();
+			if (answerButton.transform.GetChild (0).GetComponent<Button> ().interactable) {
+				Destroy (answerButton.transform.GetChild (0).gameObject);
+				CheckAnswerHolder ();
+			}
 		}
 	}
 
