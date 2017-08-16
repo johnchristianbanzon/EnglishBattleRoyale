@@ -6,24 +6,23 @@ public class CharacterLogic
 
 	public static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
-		string calcString = character.characterAmount;
 		//parses the string formula from csv
 		if (isPlayer) {
-			calcString.
+			character.characterAmount = character.characterAmount.
 			Replace ("enemyHP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString ()).
 			Replace ("playerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
 			Replace ("enemyDamage", ScreenBattleController.Instance.partState.enemy.playerBaseDamage.ToString ()).
 			Replace ("playerDamage", ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString ()).
 			Replace ("correctAnswer", GameManager.playerAnswerParam.correctCount.ToString ());
 		} else {
-			calcString.
+			character.characterAmount = character.characterAmount.
 			Replace ("enemyHP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
 			Replace ("playerHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString ()).
 			Replace ("enemyDamage", ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString ()).
 			Replace ("playerDamage", ScreenBattleController.Instance.partState.enemy.playerBaseDamage.ToString ()).
 			Replace ("correctAnswer", GameManager.enemyAnswerParam.correctCount.ToString ());
 		}
-		Expression e = new Expression (calcString);
+		Expression e = new Expression (character.characterAmount);
 		CharacterCompute (isPlayer, character.characterSkillID, float.Parse (e.Evaluate ().ToString ()));
 	}
 
