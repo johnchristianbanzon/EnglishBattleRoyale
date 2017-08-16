@@ -12,6 +12,7 @@ public class PartCharacterController : MonoBehaviour
 	{
 		//Set starting skills during start of battle
 		CharacterManager.SetStartCharacters ();
+
 	}
 
 	public void OnStartPhase ()
