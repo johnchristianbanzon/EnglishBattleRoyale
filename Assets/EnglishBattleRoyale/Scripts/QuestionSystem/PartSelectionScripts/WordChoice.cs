@@ -19,7 +19,6 @@ public class WordChoice : MonoBehaviour, ISelection
 	public void OnClickSelection (GameObject clickedButton)
 	{
 		selectedObject = clickedButton;
-		Debug.Log (answerClicked.Count);
 		if (!justAnswered) {
 			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 			GameObject wordClicked = clickedButton;
@@ -40,6 +39,7 @@ public class WordChoice : MonoBehaviour, ISelection
 	}
 
 	private bool isAnswerCorrect;
+
 	private void CheckAnswer (string answerClicked1, string answerClicked2)
 	{
 		if (answerString.Contains (answerClicked1) && answerString.Contains (answerClicked2)) {
@@ -48,7 +48,7 @@ public class WordChoice : MonoBehaviour, ISelection
 			isAnswerCorrect = false;
 		}
 		ShowCorrectAnswer (isAnswerCorrect);
-		Invoke ("CheckIfCorrect",0.3f);
+		Invoke ("CheckIfCorrect", 0.3f);
 	}
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
@@ -76,8 +76,17 @@ public class WordChoice : MonoBehaviour, ISelection
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{ 
 		if (hintIndex < numberOfCorrectAnswer) {
+			for (int i = 0; i < answerButtons.Count; i++) {
+				if (answerButtons [i].GetComponent<Image> ().color != Color.gray &&
+				   answerString.Contains (answerButtons [i].GetComponentInChildren<Text> ().text)) {
+					answerButtons [i].GetComponent<Button> ().interactable = false;
+					OnClickSelection (answerButtons [i].gameObject);
+					break;
+				}
+			}
+			/*
 			answerButtons [answerClicked.Count].GetComponent<Button> ().interactable = false;
-			OnClickSelection (answerButtons [answerClicked.Count].gameObject);
+			OnClickSelection (answerButtons [answerClicked.Count].gameObject);*/
 			this.hintIndex++;
 		}
 	}
@@ -94,9 +103,23 @@ public class WordChoice : MonoBehaviour, ISelection
 			QuestionSystemController.Instance.CheckAnswer (true);
 		} else {
 			for (int i = 0; i < answerClicked.Count; i++) {
-				answerClicked [i].GetComponent<Image> ().color =  new Color (94f / 255, 255f / 255f, 148f / 255f);
+				if (answerClicked [i].GetComponent<Button> ().interactable) {
+					answerClicked [i].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+					if (hintIndex > 0) {
+						answerClicked.Remove (answerClicked [i]);
+					}
+				}
 			}
-			answerClicked.Clear ();
+			if (hintIndex.Equals(0)) {
+				answerClicked.Clear ();
+			}
+			/*
+			if (hintIndex > 0) {
+				answerClicked.Remove (answerClicked [hintIndex]);
+			} else {
+				answerClicked.Clear ();
+			}
+			*/
 		}
 	}
 
@@ -113,6 +136,7 @@ public class WordChoice : MonoBehaviour, ISelection
 		answerButtons.Clear ();
 		answerString.Clear ();
 		answerClicked.Clear ();
+		hintIndex = 0;
 		int numberOfAnswers = 2;
 		List <int> randomList = new List<int> ();
 		string[] temp = questionAnswer.Split ('/');

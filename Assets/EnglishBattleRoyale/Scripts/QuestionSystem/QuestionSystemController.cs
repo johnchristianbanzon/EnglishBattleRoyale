@@ -133,8 +133,12 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private void HideQuestionParts ()
 	{
-		questionList [currentQuestionNumber - 1].questionType.answerType.ClearHint ();
-		questionList [currentQuestionNumber - 1].questionType.selectionType.HideSelectionType ();
+		int questionNumber = currentQuestionNumber;
+		if (questionNumber>0) {
+			questionNumber = questionNumber - 1;
+		}
+		questionList [questionNumber].questionType.answerType.ClearHint ();
+		questionList [questionNumber].questionType.selectionType.HideSelectionType ();
 		targetType.HideTargetType ();
 		questionRoundTimer.isTimerOn = true;
 	}
