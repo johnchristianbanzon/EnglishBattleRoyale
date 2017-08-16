@@ -343,7 +343,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public void OnStartGameTimer (int timer)
 	{
-		StartCoroutine (StartTimer (timer, true));
+//		StartCoroutine (StartTimer (timer, true));
 	}
 
 
