@@ -41,7 +41,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 				player.playerHP = 0;
 			}
 
-
 			if (player.playerGP > player.playerMaxGP) {
 				player.playerHP = player.playerMaxGP;
 			}
@@ -49,8 +48,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			if (player.playerGP < 0) {
 				player.playerGP = 0;
 			}
-
-
 
 			playerHPText.text = player.playerHP.ToString ();
 			playerHPBar.value = player.playerHP;

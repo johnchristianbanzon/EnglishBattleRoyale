@@ -96,6 +96,7 @@ public class BattleManager: IRPCDicObserver
 	public static void ComputePlayerAttack ()
 	{
 		BattleLogic.AttackCompute (true, playerAttack);
+		playerAttack = null;
 	}
 
 	public static bool CheckEnemyAttack ()
@@ -111,6 +112,7 @@ public class BattleManager: IRPCDicObserver
 	public static void ComputeEnemyAttack ()
 	{
 		BattleLogic.AttackCompute (false, enemyAttack);
+		enemyAttack = null;
 	}
 		
 
