@@ -9,7 +9,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 	public string questionAnswer;
 
 
-	public void ShowCorrectAnswer ()
+	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
 
 	}
@@ -21,7 +21,6 @@ public class LetterLink : MonoBehaviour ,ISelection
 		
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		//HINT STILL IN PLANNING
 		ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
 		List<int> selectionIndex = new List<int>();
 		for (int i = 0; i < showAnswer.hintContainers.Count; i++) {

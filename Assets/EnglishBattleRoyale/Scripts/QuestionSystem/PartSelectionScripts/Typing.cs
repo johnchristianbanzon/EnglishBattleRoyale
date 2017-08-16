@@ -20,13 +20,23 @@ public class Typing : MonoBehaviour, ISelection
 		}
 	}
 
-	public void ShowCorrectAnswer ()
+	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
-
+		Color answerColor = new Color();
+		if (isAnswerCorrect) {
+			answerColor = new Color32 (255, 223, 0, 255);
+		} else {
+			answerColor = new Color32 (255, 100, 100, 255);
+		}
+		List<GameObject> answerContainers = QuestionSystemController.Instance.partAnswer.fillAnswer.answerContainers;
+		for (int i = 0; i < answerContainers.Count; i++) {
+			answerContainers [i].transform.GetChild(0).GetComponentInChildren<Image> ().color = answerColor;
+		}
 	}
 
 	private bool initHideHint = false;
 	private List<int> hideSelectionIndex = new List<int> ();
+
 	private List<int> InitHideHint ()
 	{
 		hideSelectionIndex.Clear ();
@@ -59,11 +69,12 @@ public class Typing : MonoBehaviour, ISelection
 	{
 		gameObject.SetActive (false);
 	}
-		
+
 	FillAnswerType fillAnswer;
+
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		List<int> randomizedIndexList = new List<int>();
+		List<int> randomizedIndexList = new List<int> ();
 		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
 			fillAnswer = QuestionSystemController.Instance.partAnswer.fillAnswer;
 			for (int i = 0; i < fillAnswer.answerContainers.Count; i++) {
@@ -80,15 +91,13 @@ public class Typing : MonoBehaviour, ISelection
 			GameObject answerContainer;
 			if (fillAnswer.answerContainers [randomizedIndexList [0]].transform.childCount.Equals (0)) {
 				answerContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI", fillAnswer.answerContainers [randomizedIndexList [0]].gameObject);
-				answerContainer.GetComponentInChildren<Text> ().text = questionAnswer [randomizedIndexList [0]].ToString ();
 			} else {
 				answerContainer = fillAnswer.answerContainers [randomizedIndexList [0]];
-				Debug.Log (answerContainer.GetComponentInChildren<Text> ().text + "/" + questionAnswer [randomizedIndexList [0]].ToString ());
-				answerContainer.GetComponentInChildren<Text> ().text = questionAnswer [randomizedIndexList [0]].ToString ();
 			}
+			answerContainer.GetComponentInChildren<Text> ().text = questionAnswer [randomizedIndexList [0]].ToString ();
 			answerContainer.GetComponentInChildren<Button> ().interactable = false;
 		}
-	}	
+	}
 
 	public void OnSelect ()
 	{

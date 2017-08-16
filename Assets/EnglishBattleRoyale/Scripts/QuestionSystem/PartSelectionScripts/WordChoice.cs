@@ -19,7 +19,7 @@ public class WordChoice : MonoBehaviour, ISelection
 	public void OnClickSelection (GameObject clickedButton)
 	{
 		selectedObject = clickedButton;
-
+		Debug.Log (answerClicked.Count);
 		if (!justAnswered) {
 			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 			GameObject wordClicked = clickedButton;
@@ -30,18 +30,42 @@ public class WordChoice : MonoBehaviour, ISelection
 			} else {
 				wordClicked.GetComponent<Image> ().color = Color.gray;
 				answerClicked.Add (wordClicked);
-				if (answerClicked.Count >= 2) {
+				if (answerClicked.Count.Equals (2)) {
 					string answerClicked1 = answerClicked [0].GetComponentInChildren<Text> ().text.ToUpper ();
 					string answerClicked2 = answerClicked [1].GetComponentInChildren<Text> ().text.ToUpper ();
-					CheckIfCorrect (answerClicked1, answerClicked2);
+					CheckAnswer (answerClicked1, answerClicked2);
 				}
 			}
 		}
 	}
 
-	public void ShowCorrectAnswer ()
+	private bool isAnswerCorrect;
+	private void CheckAnswer (string answerClicked1, string answerClicked2)
 	{
+		if (answerString.Contains (answerClicked1) && answerString.Contains (answerClicked2)) {
+			isAnswerCorrect = true;
+		} else {
+			isAnswerCorrect = false;
+		}
+		ShowCorrectAnswer (isAnswerCorrect);
+		Invoke ("CheckIfCorrect",0.3f);
+	}
 
+	public void ShowCorrectAnswer (bool isAnswerCorrect)
+	{
+		Color answerColor = new Color ();
+		if (isAnswerCorrect) {
+			answerColor = new Color32 (255, 223, 0, 255);
+		} else {
+			answerColor = new Color32 (255, 100, 100, 255);
+		}
+
+		for (int i = 0; i < answerClicked.Count; i++) {
+			answerClicked [i].GetComponent<Image> ().color = answerColor;
+			if (!isAnswerCorrect) {
+				TweenFacade.TweenShakePosition (answerClicked [i].transform, 0.3f, 30.0f, 90, 90f);
+			}
+		}
 	}
 
 	public void HideSelectionHint ()
@@ -63,23 +87,16 @@ public class WordChoice : MonoBehaviour, ISelection
 		gameObject.SetActive (false);
 	}
 
-	private void CheckIfCorrect (string answerClicked1, string answerClicked2)
+	private void CheckIfCorrect ()
 	{
-		if (answerString.Contains (answerClicked1) && answerString.Contains (answerClicked2)) {
+		if (isAnswerCorrect) {
+			QuestionSystemController.Instance.selectionType.ShowCorrectAnswer (true);
 			QuestionSystemController.Instance.CheckAnswer (true);
-			answerClicked.Clear ();
 		} else {
-			QuestionSystemController.Instance.CheckAnswer (false);
-			if (hintIndex > 0) {
-				answerClicked.Remove (selectedObject);
-			} else {
-				answerClicked.Clear ();
+			for (int i = 0; i < answerClicked.Count; i++) {
+				answerClicked [i].GetComponent<Image> ().color =  new Color (94f / 255, 255f / 255f, 148f / 255f);
 			}
-			for (int i = 0; i < selectionButtons.Length; i++) {
-				if (selectionButtons [i].GetComponent<Button> ().interactable) {
-					selectionButtons [i].GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
-				}
-			}
+			answerClicked.Clear ();
 		}
 	}
 
@@ -87,6 +104,7 @@ public class WordChoice : MonoBehaviour, ISelection
 	{
 		this.gameObject.SetActive (true);
 		this.questionAnswer = questionAnswer;
+		answerClicked.Clear ();
 		ShuffleSelection ();
 	}
 

@@ -27,6 +27,15 @@ public class QuestionHintManager :MonoBehaviour{
 		}
 			InitCooldown ();		
 	}
+		
+	public void disableHintButton(){
+		hintButton.interactable = false;
+	}
+
+	public void enableHintButton(){
+		hintButton.interactable = true;
+		TweenFacade.TweenScaleToLarge (hintButton.transform, Vector3.one, 0.3f);
+	}
 
 	public void InitHints(){
 		hintRemoveInterval = hintRemovalRate;

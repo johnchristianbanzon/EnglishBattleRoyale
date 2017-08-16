@@ -10,9 +10,18 @@ public class SlotMachine : MonoBehaviour,ISelection
 	private string questionAnswer = "";
 	List<GameObject> correctAnswerSlots = new List<GameObject>();
 
-	public void ShowCorrectAnswer ()
+	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
-		//TO BE IMPLEMENTED
+		Color answerColor = new Color();
+		if (isAnswerCorrect) {
+			answerColor = new Color32 (255, 223, 0, 255);
+		} else {
+			answerColor = new Color32 (255, 100, 100, 255);
+		}
+		for (int i = 0; i < correctAnswerSlots.Count; i++) {
+			correctAnswerSlots [i].GetComponent<Image> ().color = answerColor;
+		}
+
 	}
 
 	public void HideSelectionType ()
@@ -71,6 +80,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void CheckAnswer(){
 		if (GetAnswer () == questionAnswer) {
+			ShowCorrectAnswer (true);
 			QuestionSystemController.Instance.CheckAnswer (true);
 		}
 	}

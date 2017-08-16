@@ -101,7 +101,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		}
 	}
 
-	public void ShowCorrectAnswer(){
+	public void ShowCorrectAnswer(bool isAnswerCorrect){
 
 	}
 
@@ -117,7 +117,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		TweenFacade.TweenScaleToLarge (showAnswer.hintContainers[selectionIndex[0]].transform,Vector3.one,0.3f);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;
-		showAnswer.hintContainers [selectionIndex [0]].GetComponentInChildren<Text> ().text = questionAnswer [selectionIndex [0]].ToString();
+		showAnswer.hintContainers [selectionIndex [0]].GetComponentInChildren<Text> ().text = letterArray [selectionIndex [0]].ToString();
 	}
 
 	public void HideSelectionHint(){
