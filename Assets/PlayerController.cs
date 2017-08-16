@@ -30,6 +30,10 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void LoadSkillAuraEffect(int skillID){
+		//temporary fix
+		ParticleSystem.MainModule hover = skillAura.transform.GetChild(0).GetComponent<ParticleSystem>().main;
+		ParticleSystem.MainModule shine = skillAura.transform.GetChild(1).GetComponent<ParticleSystem>().main;
+		//
 		ParticleSystem.MainModule main = skillAura.main;
 		Color skillColor = Color.black;
 		switch (skillID) {
@@ -48,6 +52,8 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		main.startColor = skillColor;
+		hover.startColor = skillColor;
+		shine.startColor = skillColor;
 		ShowSkillAura ();
 	}
 

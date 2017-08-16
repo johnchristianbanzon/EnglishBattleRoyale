@@ -113,7 +113,6 @@ public class CharacterManager: IRPCDicObserver
 
 	public static void EnemyCharacterActivate ()
 	{
-
 		CharacterModel character = enemyCharacterQueue.Dequeue ();
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "skill1");
 		ScreenBattleController.Instance.partAvatars.enemy.LoadSkillAuraEffect (character.characterSkillID);
