@@ -82,14 +82,6 @@ public class CharacterLogic
 			}
 
 			break;
-		case SkillEnum.LimitEnemySkill:
-			Debug.Log ("CHARACTER EFFECT NOT IMPLEMENTED");
-			break;
-		case SkillEnum.Stop:
-			Debug.Log ("CHARACTER EFFECT NOT IMPLEMENTED");
-			break;
-		default:
-			break;
 		}
 	}
 }
