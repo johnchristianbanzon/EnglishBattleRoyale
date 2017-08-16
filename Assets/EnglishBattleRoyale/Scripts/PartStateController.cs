@@ -33,12 +33,20 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	void Update ()
 	{
 		if (player != null && enemy != null) {
-			if (player.playerHP > GameManager.player.playerHP) {
-				player.playerHP = GameManager.player.playerHP;
+			if (player.playerHP > 100) {
+				player.playerHP = 100;
+			}
+
+			if (enemy.playerHP > 100) {
+				enemy.playerHP = 100;
 			}
 
 			if (player.playerHP < 0) {
 				player.playerHP = 0;
+			}
+
+			if (enemy.playerHP < 0) {
+				enemy.playerHP = 0;
 			}
 
 			if (player.playerGP > player.playerMaxGP) {
@@ -265,6 +273,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
 	{
+		Debug.Log ("START SENDING");
 		if (isPLayer) {
 			yield return StartCoroutine (CharacterActivateCoroutine (true));
 			yield return new WaitForSeconds (3);
@@ -274,9 +283,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			CheckHP (isSecondCheck);
 		} else {
 			yield return StartCoroutine (CharacterActivateCoroutine (false));
-			yield return new WaitForSeconds (3);
-			BattleManager.SendAttack ();
-			yield return new WaitForSeconds (1);
+			yield return new WaitForSeconds (4);
 			yield return StartCoroutine (CheckEnemyAttackCoroutine ());
 			CheckHP (isSecondCheck);
 		}
