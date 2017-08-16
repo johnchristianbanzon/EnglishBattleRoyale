@@ -86,4 +86,13 @@ public static class TweenFacade{
 	}
 
 
+	public static void TweenNewCharacterCard(Transform obj){
+		obj.DOScale (Vector3.one, 1).SetEase (Ease.InOutElastic);
+	}
+
+	public static void TweenActivateCharacterCard(Transform obj){
+		obj.DOScale (Vector3.zero, 1).SetEase (Ease.InOutElastic);
+	}
+
+
 }

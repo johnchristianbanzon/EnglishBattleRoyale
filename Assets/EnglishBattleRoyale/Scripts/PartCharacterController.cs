@@ -12,6 +12,7 @@ public class PartCharacterController : MonoBehaviour
 	{
 		//Set starting skills during start of battle
 		CharacterManager.SetStartCharacters ();
+
 	}
 
 	public void OnStartPhase ()
@@ -32,6 +33,12 @@ public class PartCharacterController : MonoBehaviour
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
 	{
 		charCards [characterNumber].SetCharacter (charCard);
+	
+	}
+
+	public void ActivateCharacterUI (int characterNumber)
+	{
+		charCards [characterNumber].ActivateCardAnimation();
 	}
 
 	private void OnEndQuestionTime ()
@@ -51,5 +58,20 @@ public class PartCharacterController : MonoBehaviour
 		charCards [1].ToggleButtonInteractable (buttonEnable);
 		charCards [2].ToggleButtonInteractable (buttonEnable);
 	}
+
+	#region COROUTINES
+
+	public void ChangeCharacterCard(Action removeCard, Action newCard){
+		StartCoroutine (ChangeCharacterCardCoroutine(removeCard,newCard));
+		
+	}
+
+	IEnumerator ChangeCharacterCardCoroutine(Action removeCard, Action newCard){
+		removeCard ();
+		yield return new WaitForSeconds (1);
+		newCard ();
+	}
+
+	#endregion
 		
 }
