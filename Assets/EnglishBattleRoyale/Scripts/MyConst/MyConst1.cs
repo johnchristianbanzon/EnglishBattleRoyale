@@ -85,13 +85,13 @@ public static partial class MyConst {
 				int.Parse(characterConst[i][4].ToString()),  //Character SKill ID
 				int.Parse(characterConst[i][5].ToString()),  //Character Calculation Type
 				characterConst[i][6].ToString(),  //Character Amount
-				int.Parse(characterConst[i][8].ToString()),  //Character Condition Type
-				characterConst[i][9].ToString(), //Character Condition Ref
-				characterConst[i][10].ToString(), //Character Condition Amount
-				int.Parse(characterConst[i][11].ToString()),  //Character Sacrifice type
-				int.Parse(characterConst[i][12].ToString()),  //Character Sacrifice amount
-				int.Parse(characterConst[i][13].ToString()),  //Character Turn
-				int.Parse(characterConst[i][14].ToString()) //Character Type
+				int.Parse(characterConst[i][7].ToString()),  //Character Condition Type
+				characterConst[i][8].ToString(), //Character Condition Ref
+				characterConst[i][9].ToString(), //Character Condition Amount
+				int.Parse(characterConst[i][10].ToString()),  //Character Sacrifice type
+				int.Parse(characterConst[i][11].ToString()),  //Character Sacrifice amount
+				int.Parse(characterConst[i][12].ToString()),  //Character Turn
+				int.Parse(characterConst[i][13].ToString()) //Character Type
 			);
 			characterList.Add(character);
 		}
