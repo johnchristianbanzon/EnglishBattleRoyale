@@ -6,24 +6,27 @@ public class CharacterLogic
 
 	public static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
+		CharacterModel newCharacter = character;
 		//parses the string formula from csv
 		if (isPlayer) {
-			character.characterAmount.
+			newCharacter.characterAmount.
 			Replace ("enemyHP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString ()).
 			Replace ("playerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
 			Replace ("enemyDamage", ScreenBattleController.Instance.partState.enemy.playerBaseDamage.ToString ()).
 			Replace ("playerDamage", ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString ()).
 			Replace ("correctAnswer", GameManager.playerAnswerParam.correctCount.ToString ());
 		} else {
-			character.characterAmount.
+			newCharacter.characterAmount.
 			Replace ("enemyHP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
 			Replace ("playerHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString ()).
 			Replace ("enemyDamage", ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString ()).
 			Replace ("playerDamage", ScreenBattleController.Instance.partState.enemy.playerBaseDamage.ToString ()).
 			Replace ("correctAnswer", GameManager.enemyAnswerParam.correctCount.ToString ());
 		}
-		Expression e = new Expression (character.characterAmount);
-		CharacterCompute (isPlayer, character.characterSkillID, float.Parse (e.Evaluate ().ToString ()));
+		Debug.Log ("NEW CHARACTER AMOUNT:" + newCharacter.characterAmount);
+		Expression e = new Expression (newCharacter.characterAmount);
+		Debug.Log (newCharacter.characterAmount);
+		CharacterCompute (isPlayer, newCharacter.characterSkillID, float.Parse (e.Evaluate ().ToString ()));
 	}
 
 	//activates the character and calculate the respective skills
