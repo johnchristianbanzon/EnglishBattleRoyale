@@ -24,6 +24,8 @@ public class CharEquipCardController : MonoBehaviour
 		this.charCard = charCard;
 		charImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
 		charGpCost.text = charCard.characterGPCost.ToString ();
+
+		Debug.Log ("SETTING NEW CHARACTER");
 		NewCardAnimation ();
 	}
 
@@ -101,13 +103,6 @@ public class CharEquipCardController : MonoBehaviour
 
 
 	#region CARD ANIMATION
-
-	public void ToggleInteractivity(bool isToggle){
-		charGpCost.enabled = isToggle;
-		charGPContainer.enabled = isToggle;
-		charImage.enabled = isToggle;
-		charButton.enabled = isToggle;
-	}
 
 	public void NewCardAnimation(){
 		this.transform.localScale = Vector3.zero;

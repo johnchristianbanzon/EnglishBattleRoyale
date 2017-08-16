@@ -110,7 +110,6 @@ public class CharacterManager: IRPCDicObserver
 
 	public static void EnemyCharacterActivate ()
 	{
-
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "skill1");
 			CharacterModel character = enemyCharacterQueue.Dequeue ();
 			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
@@ -194,11 +193,13 @@ public class CharacterManager: IRPCDicObserver
 		ScreenBattleController.Instance.partCharacter.ChangeCharacterCard (
 		delegate() {
 				//Reminders: Remove this if you want characters will be gone after use and not put at the bottom of the queue
+				ScreenBattleController.Instance.partCharacter.ActivateCharacterUI(characterIndex);
 				characterQueue.Enqueue (currentCharacterInEquip [characterIndex]);
+
 		}, 
 		delegate() {
 				SetCharacterUI (characterIndex, characterQueue.Dequeue ());
-				ScreenBattleController.Instance.partCharacter.ActivateCharacterUI(characterIndex);
+
 		});
 	
 	}

@@ -14,6 +14,7 @@ public class PartMatchController : MonoBehaviour
 	public void SearchRoom ()
 	{
 		if (isSearchingRoom == false) {
+			isSearchingRoom = true;
 			searchRoomText.text = "Searching Opponent";
 			searchRoomImage.sprite = searchRoomCancel;
 			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
@@ -28,16 +29,20 @@ public class PartMatchController : MonoBehaviour
 					AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
 				}
 			});
+
+		} else {
+			CancelRoomSearch ();
 		}
 	}
 
 
 
-	public void CancelRoomSearch ()
+	private void CancelRoomSearch ()
 	{
 		if (isSearchingRoom) {
 			searchRoomButton.interactable = false;
 			SystemFirebaseDBController.Instance.CancelRoomSearch ();
+			isSearchingRoom = false;
 		}
 	}
 
