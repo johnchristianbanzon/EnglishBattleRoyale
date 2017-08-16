@@ -202,7 +202,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public void StartBattleAnimation (bool isPLayer, float attackDamage, Action action)
 	{
-		yield return StartCoroutine (BattleAnimationCoroutine (isPLayer, attackDamage, action));
+		StartCoroutine (BattleAnimationCoroutine (isPLayer, attackDamage, action));
 	}
 
 	IEnumerator BattleAnimationCoroutine (bool isPLayer, float attackDamage, Action action)
