@@ -105,6 +105,7 @@ public class CharEquipCardController : MonoBehaviour
 	#region CARD ANIMATION
 
 	public void NewCardAnimation(){
+		this.transform.localScale = Vector3.zero;
 		TweenFacade.TweenNewCharacterCard (this.transform);
 	}
 
