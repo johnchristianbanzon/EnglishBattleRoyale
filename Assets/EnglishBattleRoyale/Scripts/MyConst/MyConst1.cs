@@ -85,7 +85,6 @@ public static partial class MyConst {
 				int.Parse(characterConst[i][4].ToString()),  //Character SKill ID
 				int.Parse(characterConst[i][5].ToString()),  //Character Calculation Type
 				characterConst[i][6].ToString(),  //Character Amount
-				characterConst[i][7].ToString(),  //Character Amount Variable
 				int.Parse(characterConst[i][8].ToString()),  //Character Condition Type
 				characterConst[i][9].ToString(), //Character Condition Ref
 				characterConst[i][10].ToString(), //Character Condition Amount

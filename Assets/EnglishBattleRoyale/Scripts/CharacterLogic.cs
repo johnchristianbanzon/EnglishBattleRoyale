@@ -1,68 +1,28 @@
 ﻿using UnityEngine;
 using NCalc;
 
-public class CharacterLogic{
+public class CharacterLogic
+{
 
 	public static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
-
-		float variable = 0;
-		switch (character.characterAmountVariable) {
-		case "none":
-			variable = 0;
-			break;
-		case "enemyHP":
-			if (isPlayer) {
-				variable = ScreenBattleController.Instance.partState.enemy.playerHP;
-			} else {
-				variable = ScreenBattleController.Instance.partState.player.playerHP;
-			}
-
-
-			break;
-		case "playerHP":
-			if (isPlayer) {
-				variable = ScreenBattleController.Instance.partState.player.playerHP;
-			} else {
-				variable = ScreenBattleController.Instance.partState.enemy.playerHP;
-			}
-
-
-			break;
-		case "enemyDamage":
-			if (isPlayer) {
-				variable = ScreenBattleController.Instance.partState.enemy.playerBaseDamage;
-			} else {
-				variable = ScreenBattleController.Instance.partState.player.playerBaseDamage;
-			}
-
-
-			break;
-		case "playerDamage":
-			if (isPlayer) {
-				variable = ScreenBattleController.Instance.partState.player.playerBaseDamage;
-			} else {
-				variable = ScreenBattleController.Instance.partState.enemy.playerBaseDamage;
-			}
-
-
-			break;
-		case "correctAnswer":
-			if (isPlayer) {
-
-			}
-			break;
-		}
-
 		//parses the string formula from csv
-
+		if (isPlayer) {
+			character.characterAmount.
+			Replace ("enemyHP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString ()).
+			Replace ("playerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
+			Replace ("enemyDamage", ScreenBattleController.Instance.partState.enemy.playerBaseDamage.ToString ()).
+			Replace ("playerDamage", ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString ()).
+			Replace ("correctAnswer", GameManager.playerAnswerParam.correctCount.ToString ());
+		} else {
+			character.characterAmount.
+			Replace ("enemyHP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
+			Replace ("playerHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString ()).
+			Replace ("enemyDamage", ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString ()).
+			Replace ("playerDamage", ScreenBattleController.Instance.partState.enemy.playerBaseDamage.ToString ()).
+			Replace ("correctAnswer", GameManager.enemyAnswerParam.correctCount.ToString ());
+		}
 		Expression e = new Expression (character.characterAmount);
-		e.Parameters ["N"] = variable;  
-		//		string amountStr = "10 + enemyHP";
-		//		int enemyHP = 10;
-		//		amountStr.Replace ("enemyHP", enemyHP).Replace ("playerHP", playerHP);
-
-
 
 		CharacterCompute (isPlayer, character.characterSkillID, float.Parse (e.Evaluate ().ToString ()));
 	}
