@@ -167,7 +167,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
 	{
-		SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 		if (isPLayer) {
 			yield return StartCoroutine (CharacterActivateCoroutine (true));
 			BattleManager.SendAttack ();
@@ -227,6 +226,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	IEnumerator CheckAttackCoroutine (bool isPlayer)
 	{
 		if (BattleManager.CheckAttack (isPlayer)) {
+			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 			yield return BattleManager.ComputeAttack (isPlayer);
 		} else {
 			yield return new WaitForSeconds (1);
@@ -253,7 +253,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 			hitComboCount = (i + 2) + " HIT COMBO";
-			yield return new WaitForSeconds (0.3f);
+			yield return new WaitForSeconds (0.5f);
 		}
 
 		action ();
