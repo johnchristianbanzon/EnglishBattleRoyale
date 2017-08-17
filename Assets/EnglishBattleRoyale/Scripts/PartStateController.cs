@@ -149,7 +149,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	IEnumerator StartBattleCoroutine ()
 	{
-
 		int attackOrder = BattleManager.GetBattleOrder ();
 		switch (attackOrder) {
 		case 0:
@@ -168,6 +167,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
 	{
+		SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 		if (isPLayer) {
 			yield return StartCoroutine (CharacterActivateCoroutine (true));
 			BattleManager.SendAttack ();
@@ -182,12 +182,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 	}
 
-
-
 	//check HP of each player, if there is winner, stop battle
 	private void CheckHP (bool isSecondCheck)
 	{
-		SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
 
 			if (enemy.playerHP > 0 && player.playerHP <= 0) {
@@ -245,11 +242,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
 		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
 
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
-
-		yield return new WaitForSeconds (1);
-
 		QuestionResultCountModel answerParam = null;
 		if (isPLayer) {
 			answerParam = playerAnswerParam;
@@ -257,11 +249,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			answerParam = enemyAnswerParam;
 		}
 
-		for (int i = 0; i < answerParam.correctCount; i++) {
+		for (int i = 0; i <= answerParam.correctCount; i++) {
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 			hitComboCount = (i + 2) + " HIT COMBO";
-			yield return new WaitForSeconds (1);
+			yield return new WaitForSeconds (0.3f);
 		}
 
 		action ();
@@ -278,9 +270,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		yield return new WaitForSeconds (1);
 
 	}
-
-
-
 
 	private void StartPhase1 ()
 	{
