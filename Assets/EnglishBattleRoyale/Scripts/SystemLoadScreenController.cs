@@ -34,8 +34,8 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 	}
 
 	public void StopWaitOpponentScreen(){
-		Destroy (waitOpponent, waitOpponentTweenTime);
 		TweenFacade.TweenStopWaitOpponent (waitOpponentTweenTime, waitOpponent);
+		Destroy (waitOpponent, waitOpponentTweenTime + 0.1f);
 	}
 
 
