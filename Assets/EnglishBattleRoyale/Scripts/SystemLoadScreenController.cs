@@ -15,8 +15,6 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 	private GameObject waitOpponent;
 
 	public void StartLoadingScreen(Action action){
-		ClearAllLoadingScreen ();
-
 		loadingScreen = SystemResourceController.Instance.LoadPrefab (LOADING_SCREEN,loadScreen);
 		action ();
 	}
@@ -26,11 +24,8 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 	}
 
 	public void StartWaitOpponentScreen(){
-		ClearAllLoadingScreen ();
-
 		waitOpponent = SystemResourceController.Instance.LoadPrefab (WAIT_OPPONENT,loadScreen);
 		TweenFacade.TweenStartWaitOpponent (waitOpponentTweenTime, waitOpponent);
-
 	}
 
 	public void StopWaitOpponentScreen(){
@@ -39,11 +34,5 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 	}
 
 
-
-	public void ClearAllLoadingScreen(){
-		for (int i = 0; i < loadScreen.transform.childCount; i++) {
-			Destroy (loadScreen.transform.GetChild(i).gameObject);
-		}
-	}
 
 }

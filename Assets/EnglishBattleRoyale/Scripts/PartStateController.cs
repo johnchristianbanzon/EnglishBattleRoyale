@@ -168,6 +168,57 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 	}
 
+	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
+	{
+		if (isPLayer) {
+			yield return StartCoroutine (CharacterActivateCoroutine (true));
+			BattleManager.SendAttack ();
+			yield return new WaitForSeconds (1);
+			yield return StartCoroutine (CheckAttackCoroutine (true));
+			CheckHP (isSecondCheck);
+		} else {
+			yield return StartCoroutine (CharacterActivateCoroutine (false));
+			yield return new WaitForSeconds (1);
+			yield return StartCoroutine (CheckAttackCoroutine (false));
+			CheckHP (isSecondCheck);
+		}
+	}
+
+
+
+	//check HP of each player, if there is winner, stop battle
+	private void CheckHP (bool isSecondCheck)
+	{
+		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
+
+			if (enemy.playerHP > 0 && player.playerHP <= 0) {
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "lose");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
+			} else if (player.playerHP > 0 && enemy.playerHP <= 0) {
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "lose");
+			} else {
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
+			}
+			StopAllCoroutines ();
+			return;
+		} 
+
+		if (isSecondCheck) {
+			Debug.Log ("DONE CHECKING: STARTING PHASE 1");
+			ResetPlayerDamage ();
+			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
+			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
+			BattleManager.ClearBattleData ();
+			playerHitComboCountText.text = "";
+			playerTotalDamageText.text = "";
+			enemyTotalDamageText.text = "";
+			enemyHitComboCountText.text = "";
+			Invoke ("StartPhase1", 1);
+		}
+	}
+
 	IEnumerator CharacterActivateCoroutine (bool isPlayer)
 	{
 		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
@@ -232,59 +283,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	}
 
 
-	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
-	{
-		Debug.Log ("START SENDING");
-		if (isPLayer) {
-			yield return StartCoroutine (CharacterActivateCoroutine (true));
-			yield return new WaitForSeconds (3);
-			BattleManager.SendAttack ();
-			yield return new WaitForSeconds (1);
-			yield return StartCoroutine (CheckAttackCoroutine (true));
-			CheckHP (isSecondCheck);
-		} else {
-			yield return StartCoroutine (CharacterActivateCoroutine (false));
-			yield return new WaitForSeconds (4);
-			yield return StartCoroutine (CheckAttackCoroutine (false));
-			CheckHP (isSecondCheck);
-		}
-	}
 
-
-
-	//check HP of each player, if there is winner, stop battle
-	private void CheckHP (bool isSecondCheck)
-	{
-		SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
-		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
-
-			if (enemy.playerHP > 0 && player.playerHP <= 0) {
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "lose");
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
-			} else if (player.playerHP > 0 && enemy.playerHP <= 0) {
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "lose");
-			} else {
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
-			}
-			StopAllCoroutines ();
-			return;
-		} 
-
-		if (isSecondCheck) {
-			Debug.Log ("DONE CHECKING: STARTING PHASE 1");
-			ResetPlayerDamage ();
-			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
-			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
-			BattleManager.ClearBattleData ();
-			playerHitComboCountText.text = "";
-			playerTotalDamageText.text = "";
-			enemyTotalDamageText.text = "";
-			enemyHitComboCountText.text = "";
-			Invoke ("StartPhase1", 1);
-		}
-	}
 
 	private void StartPhase1 ()
 	{
