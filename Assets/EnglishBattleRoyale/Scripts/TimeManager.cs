@@ -7,10 +7,6 @@ public class TimeManager
 	private static IQuestionTimeObserver questionTimeObserver;
 
 	//PANTOY HERE
-	public static void StartGameTimer (int timer)
-	{
-		gameTimeObserver.OnStartGameTimer (timer);
-	}
 
 	public static void StartPreBattleTimer(int timer){
 		gameTimeObserver.OnStartPreBattleTimer (timer);

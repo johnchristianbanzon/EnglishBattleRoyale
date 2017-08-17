@@ -14,6 +14,8 @@ public class ScreenSettingController : MonoBehaviour {
 		GameManager.SetPLayerName (playerName.text);
 		PlayerPrefs.SetString ("PlayerInputName", playerName.text);
 		SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
+
+		GameManager.SetSettings ();
 	}
 
 

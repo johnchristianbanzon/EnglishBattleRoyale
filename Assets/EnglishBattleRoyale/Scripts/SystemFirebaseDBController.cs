@@ -107,9 +107,6 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 				Debug.Log ("has game rooms");
 				foreach (DataSnapshot snapshot in dataSnapshot.Children) {
 
-
-					GameManager.SetSettings ();
-
 					if (snapshot.Child (MyConst.GAMEROOM_STATUS).Value.ToString ().Equals ("0")) {
 
 						gameRoomKey = snapshot.Key.ToString ();
@@ -141,7 +138,6 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	private void CreateRoom ()
 	{
-		GameManager.SetSettings ();
 		gameRoomKey = FirebaseDBFacade.CreateKey (reference.Child (MyConst.GAMEROOM_ROOM));
 		RoomCreateJoin (true, MyConst.GAMEROOM_HOME);
 	}
@@ -313,8 +309,8 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	public void AttackPhase (AttackModel param)
 	{
-		SetParam (MyConst.RPC_DATA_ATTACK, (param));
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
+		SetParam (MyConst.RPC_DATA_ATTACK, (param));
 		GetLatestKey (2, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK);

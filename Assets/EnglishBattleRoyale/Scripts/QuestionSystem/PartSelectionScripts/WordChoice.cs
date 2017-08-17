@@ -20,7 +20,7 @@ public class WordChoice : MonoBehaviour, ISelection
 	{
 		selectedObject = clickedButton;
 		if (!justAnswered) {
-			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
+			SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 			GameObject wordClicked = clickedButton;
 			string wordClickedString = wordClicked.GetComponentInChildren<Text> ().text;
 			if (wordClicked.GetComponent<Image> ().color == Color.gray) {

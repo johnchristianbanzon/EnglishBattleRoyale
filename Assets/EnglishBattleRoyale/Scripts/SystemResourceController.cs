@@ -20,7 +20,11 @@ public class SystemResourceController : SingletonMonoBehaviour<SystemResourceCon
 		return charCardSprite;
 	}
 
-
+	public AudioClip LoadAudio (string audioName)
+	{
+		AudioClip audioClip = Resources.Load ("Audio/" + audioName) as AudioClip;
+		return audioClip;
+	}
 
 
 }

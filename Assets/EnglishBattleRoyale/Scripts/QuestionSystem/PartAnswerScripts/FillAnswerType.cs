@@ -78,8 +78,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void OnAnswerClick (Button answerButton)
 	{
-		
-		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
 		} else {
@@ -93,7 +92,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void SelectionLetterGot (GameObject selectedObject)
 	{
 		CheckAnswerHolder ();
-		AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		if (string.IsNullOrEmpty (selectedObject.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (selectedObject.transform, 1.0f, 30.0f, 50, 90f);
 		} else {

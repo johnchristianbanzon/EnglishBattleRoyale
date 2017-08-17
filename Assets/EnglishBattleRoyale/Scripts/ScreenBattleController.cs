@@ -12,6 +12,24 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	public PartAvatarsController partAvatars;
 	private bool isPhase1 = false;
 
+	void Start(){
+		Init ();
+	}
+
+	private void Init(){
+		TimeManager.AddGameTimeObserver (partState);
+		SystemSoundController.Instance.PlayBGM ("BGM_Battle");
+
+		SystemLoadScreenController.Instance.StopLoadingScreen ();
+		partCameraWorks.StartIntroCamera ();
+		TimeManager.StartPreBattleTimer (3);
+
+		//get initial state for enemy and player stored in GameManager
+		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in GameManager.initialState) {
+			partState.SetStateParam (initialState.Key, initialState.Value);
+		}
+	}
+
 	public void StartPhase1 ()
 	{
 		PhaseActivate (true, false);

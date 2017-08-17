@@ -24,21 +24,22 @@ public static class TweenFacade{
 
 	//WaitOpponent
 
-	public static void TweenScaleToNormal(float duration, GameObject scaleObject,GameObject loadingIndicator = null){
-		scaleObject.transform.DOScale(new Vector3(1,1,1), duration);
-		if (loadingIndicator != null) {
-			TweenRotateForever (loadingIndicator.GetComponent<RectTransform>());
-		}
+	public static void TweenScaleYToCustom(float duration, GameObject scaleObject, float customScale){
+		scaleObject.transform.localScale = new Vector3 (customScale, 0, customScale);
+		scaleObject.transform.DOScale(Vector3.one, duration);
 	}
 
-	public static void TweenScaleToZero(float duration, GameObject scaleObject){
-//		scaleObject.transform.DOScale(new Vector3(1,0,0), duration);
+	public static void TweenScaleYT0Zero(float duration, GameObject scaleObject, float customScale){
+		scaleObject.transform.DOScale(new Vector3(customScale,0,customScale), duration);
 	}
 
-	public static void TweenRotateForever(RectTransform rotateObject){
-		Sequence mySequence = DOTween.Sequence();
-		mySequence.Append(rotateObject.DOLocalRotate(new Vector3(0, 0, -360), 5, RotateMode.FastBeyond360).SetEase(Ease.Linear)).SetLoops(-1);
+	public static void TweenWaitOpponentText(RectTransform obj){
+		Sequence mySequence = DOTween.Sequence ();
+		mySequence.SetLoops (-1);
+		mySequence.Append(obj.DOScale(new Vector3(1.2f,1.2f,1.2f), 0.5f).SetEase(Ease.Linear));
+		mySequence.Append(obj.DOScale(Vector3.one,0.5f).SetEase(Ease.Linear));
 	}
+		
 
 	public static void TweenTextScale(Transform text, Vector3 endValue, float duration){
 		text.transform.DOScale (endValue,duration).SetEase(Ease.InElastic,30,1);

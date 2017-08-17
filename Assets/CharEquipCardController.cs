@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class CharEquipCardController : MonoBehaviour
 {
@@ -9,13 +10,15 @@ public class CharEquipCardController : MonoBehaviour
 	public Image charGPContainer;
 	public Image charImage;
 	public Button charButton;
-	public CharacterModel charCard;
+	private CharacterModel charCard;
 	private GameObject selectedObject;
 	private static int selectedIndex = 0;
 	public GameObject characterLayout;
 	private static GameObject containerPlacer;
 	private static bool isDragging = false;
 	private static CharacterModel[] charArray = new CharacterModel[3];
+	private bool isTap = false;
+	private Coroutine checkTap;
 
 	#region CHARACTER DATA
 
@@ -29,10 +32,37 @@ public class CharEquipCardController : MonoBehaviour
 		NewCardAnimation ();
 	}
 
+	public CharacterModel GetCharacter(){
+		return charCard;
+	}
+
 	public void ShowCharacterDescription (int skillNumber)
 	{
 		GameObject characterDescription = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
 		characterDescription.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
+	}
+
+	public void InfoButton(){
+		GameObject popUpSkillOverview = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
+		popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
+	}
+
+	public void OnPointerDown(){
+		checkTap = StartCoroutine (CheckTapTimeCoroutine());
+
+	}
+
+	public void OnPointerUp(){
+		if (isTap) {
+			InfoButton ();
+		}
+		StopCoroutine (checkTap);
+	}
+
+	IEnumerator CheckTapTimeCoroutine(){
+		isTap = true;
+		yield return new WaitForSeconds (0.2f);
+		isTap = false;
 	}
 
 	#endregion
@@ -51,10 +81,10 @@ public class CharEquipCardController : MonoBehaviour
 		Invoke ("SendNewCharOrder", 0.1f);
 	}
 
-	private CharEquipCardController[] EquipCards(){
-		CharEquipCardController[] charEquipCard =   new CharEquipCardController[3];
-		for (int i = 0; i < charArray.Length; i++) {
-			charEquipCard[i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ();
+	private CharacterModel[] EquipCards(){
+		CharacterModel[] charEquipCard =   new CharacterModel[3];
+		for (int i = charArray.Length-1; i >= 0; i--) {
+			charEquipCard[i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ().GetCharacter();
 		}
 		return charEquipCard;
 	}
@@ -62,9 +92,12 @@ public class CharEquipCardController : MonoBehaviour
 	private void SendNewCharOrder ()
 	{
 		for (int i = 0; i < EquipCards ().Length; i++) {
-			charArray[i] = EquipCards () [i].charCard;
+			charArray[i] = EquipCards () [i];
 		}
 		CharacterManager.SetCharacterOrder (charArray);
+
+		//Checks hierarchy of character UI and updates it's index
+		ScreenBattleController.Instance.partCharacter.SetCharacterOrder ();
 	}
 
 	public void ToggleButtonInteractable (bool toggle)
@@ -96,7 +129,6 @@ public class CharEquipCardController : MonoBehaviour
 		Canvas myCanvas = SystemGlobalDataController.Instance.gameCanvas;
 		RectTransformUtility.ScreenPointToLocalPointInRectangle (myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
 		this.transform.position = myCanvas.transform.TransformPoint (pos);
-
 	}
 
 	#endregion

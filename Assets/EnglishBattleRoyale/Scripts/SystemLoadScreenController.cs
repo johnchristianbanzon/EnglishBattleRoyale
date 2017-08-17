@@ -15,36 +15,30 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 	private GameObject waitOpponent;
 
 	public void StartLoadingScreen(Action action){
-		ClearAllLoadingScreen ();
-
 		loadingScreen = SystemResourceController.Instance.LoadPrefab (LOADING_SCREEN,loadScreen);
+		StartCoroutine (ActivateActionCoroutine(action));
+	}
+
+	IEnumerator ActivateActionCoroutine(Action action){
+		yield return new WaitForSeconds (1);
 		action ();
 	}
 		
 	public void StopLoadingScreen(){
 		Destroy (loadingScreen, loadingScreenTweenTime);
-		TweenFacade.TweenScaleToZero (loadingScreenTweenTime, loadingScreen);
 	}
 
 	public void StartWaitOpponentScreen(){
-		ClearAllLoadingScreen ();
-
 		waitOpponent = SystemResourceController.Instance.LoadPrefab (WAIT_OPPONENT,loadScreen);
-		TweenFacade.TweenScaleToNormal (waitOpponentTweenTime, waitOpponent,waitOpponent.transform.Find("LoadingIndicator").gameObject);
-
+		TweenFacade.TweenScaleYToCustom (waitOpponentTweenTime, waitOpponent,waitOpponent.transform.localScale.y);
 	}
 
 	public void StopWaitOpponentScreen(){
-		Destroy (waitOpponent, waitOpponentTweenTime);
-		TweenFacade.TweenScaleToZero (waitOpponentTweenTime, waitOpponent);
+//		TweenFacade.TweenStopWaitOpponent (waitOpponentTweenTime, waitOpponent);
+		Destroy (waitOpponent);
+
 	}
 
 
-
-	public void ClearAllLoadingScreen(){
-		for (int i = 0; i < loadScreen.transform.childCount; i++) {
-			Destroy (loadScreen.transform.GetChild(i).gameObject);
-		}
-	}
 
 }

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class BattleLogic
 {
-	public static void AttackCompute (bool isPLayer, AttackModel attack)
+	public static IEnumerator AttackCompute (bool isPLayer, AttackModel attack)
 	{
-		ScreenBattleController.Instance.partState.StartBattleAnimation (isPLayer, attack.attackDamage, delegate() {
+		yield return ScreenBattleController.Instance.partState.StartBattleAnimation (isPLayer, attack.attackDamage, delegate() {
 			if (isPLayer) {
 				Debug.Log ("PLAYER DAMAGE: " + attack.attackDamage);
 				ScreenBattleController.Instance.partState.enemy.playerHP -= attack.attackDamage;
@@ -14,4 +15,6 @@ public class BattleLogic
 			}
 		});
 	}
+
+
 }
