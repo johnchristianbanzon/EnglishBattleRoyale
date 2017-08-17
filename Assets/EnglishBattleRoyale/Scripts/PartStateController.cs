@@ -234,6 +234,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 			hitComboCount = (i + 1) + " HIT COMBO";
+			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
+
 			yield return new WaitForSeconds (0.5f);
 		}
 

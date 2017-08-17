@@ -25,6 +25,7 @@ public class CharacterManager: IRPCDicObserver
 				ScreenBattleController.Instance.partState.player.playerGP -= currentCharacterInEquip [i].characterGPCost;
 				charactersToSend.Add (currentCharacterInEquip [i]);
 				ActivateCharacterUI (i);
+
 			} else {
 				Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [i].characterName);
 				break;

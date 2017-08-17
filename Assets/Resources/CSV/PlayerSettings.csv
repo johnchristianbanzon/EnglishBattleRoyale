@@ -1,6 +1,6 @@
 Key,Value
 PlayerHP,100
-PlayerGP,0
+PlayerGP,10
 PlayerMaxGP,30
 PlayerBaseDamage,4
 PlayerGuardDamage,1

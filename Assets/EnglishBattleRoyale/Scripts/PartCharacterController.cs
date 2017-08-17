@@ -6,10 +6,13 @@ using System;
 
 public class PartCharacterController : MonoBehaviour
 {
-	public CharEquipCardController[] charCards;
+	public GameObject charCardsContainer;
+	private CharEquipCardController[] charCards = new CharEquipCardController[3];
 
 	void Start ()
 	{
+		SetCharacterOrder ();
+		 
 		//Set starting skills during start of battle
 		CharacterManager.SetStartCharacters ();
 
@@ -35,10 +38,17 @@ public class PartCharacterController : MonoBehaviour
 		charCards [characterNumber].SetCharacter (charCard);
 	
 	}
+		
 
 	public void ActivateCharacterUI (int characterNumber)
 	{
 		charCards [characterNumber].ActivateCardAnimation();
+	}
+
+	public void SetCharacterOrder(){
+		for (int i = 0; i < charCards.Length; i++) {
+			charCards [i] = charCardsContainer.transform.GetChild (i).GetComponent<CharEquipCardController>();
+		}
 	}
 
 	private void OnEndQuestionTime ()

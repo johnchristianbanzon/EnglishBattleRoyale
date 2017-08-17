@@ -10,7 +10,7 @@ public class CharEquipCardController : MonoBehaviour
 	public Image charGPContainer;
 	public Image charImage;
 	public Button charButton;
-	public CharacterModel charCard;
+	private CharacterModel charCard;
 	private GameObject selectedObject;
 	private static int selectedIndex = 0;
 	public GameObject characterLayout;
@@ -30,6 +30,10 @@ public class CharEquipCardController : MonoBehaviour
 
 		Debug.Log ("SETTING NEW CHARACTER");
 		NewCardAnimation ();
+	}
+
+	public CharacterModel GetCharacter(){
+		return charCard;
 	}
 
 	public void ShowCharacterDescription (int skillNumber)
@@ -57,7 +61,7 @@ public class CharEquipCardController : MonoBehaviour
 
 	IEnumerator CheckTapTimeCoroutine(){
 		isTap = true;
-		yield return new WaitForSeconds (0.5f);
+		yield return new WaitForSeconds (0.2f);
 		isTap = false;
 	}
 
@@ -77,10 +81,10 @@ public class CharEquipCardController : MonoBehaviour
 		Invoke ("SendNewCharOrder", 0.1f);
 	}
 
-	private CharEquipCardController[] EquipCards(){
-		CharEquipCardController[] charEquipCard =   new CharEquipCardController[3];
-		for (int i = 0; i < charArray.Length; i++) {
-			charEquipCard[i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ();
+	private CharacterModel[] EquipCards(){
+		CharacterModel[] charEquipCard =   new CharacterModel[3];
+		for (int i = charArray.Length-1; i >= 0; i--) {
+			charEquipCard[i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ().GetCharacter();
 		}
 		return charEquipCard;
 	}
@@ -88,9 +92,12 @@ public class CharEquipCardController : MonoBehaviour
 	private void SendNewCharOrder ()
 	{
 		for (int i = 0; i < EquipCards ().Length; i++) {
-			charArray[i] = EquipCards () [i].charCard;
+			charArray[i] = EquipCards () [i];
 		}
 		CharacterManager.SetCharacterOrder (charArray);
+
+		//Checks hierarchy of character UI and updates it's index
+		ScreenBattleController.Instance.partCharacter.SetCharacterOrder ();
 	}
 
 	public void ToggleButtonInteractable (bool toggle)
@@ -122,7 +129,6 @@ public class CharEquipCardController : MonoBehaviour
 		Canvas myCanvas = SystemGlobalDataController.Instance.gameCanvas;
 		RectTransformUtility.ScreenPointToLocalPointInRectangle (myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
 		this.transform.position = myCanvas.transform.TransformPoint (pos);
-
 	}
 
 	#endregion

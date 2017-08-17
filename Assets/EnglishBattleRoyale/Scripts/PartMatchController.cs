@@ -34,9 +34,7 @@ public class PartMatchController : MonoBehaviour
 			CancelRoomSearch ();
 		}
 	}
-
-
-
+		
 	private void CancelRoomSearch ()
 	{
 		if (isSearchingRoom) {

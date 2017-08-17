@@ -13,7 +13,6 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	private bool isPhase1 = false;
 
 	void Start(){
-		Debug.Log ("hello");
 		Init ();
 	}
 
