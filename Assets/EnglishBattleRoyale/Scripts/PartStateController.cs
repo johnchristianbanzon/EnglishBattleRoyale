@@ -154,29 +154,31 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		switch (attackOrder) {
 		case 0:
 			Debug.Log ("PLAYER ATTACK FIRST");
-			yield return StartCoroutine (BattleLogicCoroutine (true));
-			yield return StartCoroutine (BattleLogicCoroutine (false));
+			yield return StartCoroutine (BattleLogicCoroutine (true, false));
+			yield return StartCoroutine (BattleLogicCoroutine (false, true));
 			break;
 
 		case 1:
 			Debug.Log ("ENEMY ATTACK FIRST");
-			yield return StartCoroutine (BattleLogicCoroutine (false));
-			yield return StartCoroutine (BattleLogicCoroutine (true));
+			yield return StartCoroutine (BattleLogicCoroutine (false, false));
+			yield return StartCoroutine (BattleLogicCoroutine (true, true));
 			break;
 		}
 	}
 
-	IEnumerator BattleLogicCoroutine (bool isPLayer)
+	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
 	{
 		if (isPLayer) {
 			yield return StartCoroutine (CharacterActivateCoroutine (true));
 			BattleManager.SendAttack ();
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckAttackCoroutine (true));
+			CheckHP (isSecondCheck);
 		} else {
 			yield return StartCoroutine (CharacterActivateCoroutine (false));
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckAttackCoroutine (false));
+			CheckHP (isSecondCheck);
 		}
 	}
 
