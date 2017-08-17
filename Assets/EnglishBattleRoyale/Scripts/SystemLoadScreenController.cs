@@ -23,7 +23,6 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 		
 	public void StopLoadingScreen(){
 		Destroy (loadingScreen, loadingScreenTweenTime);
-		TweenFacade.TweenStartWaitOpponent (loadingScreenTweenTime, loadingScreen);
 	}
 
 	public void StartWaitOpponentScreen(){
