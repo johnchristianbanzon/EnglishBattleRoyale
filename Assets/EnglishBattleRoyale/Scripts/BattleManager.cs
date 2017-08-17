@@ -67,53 +67,35 @@ public class BattleManager: IRPCDicObserver
 		}
 	}
 
-	public static bool CheckBothAttack ()
+	public static bool CheckAttack (bool isPlayer)
 	{
-		Debug.Log ("Checking both attack");
-		if (playerAttack != null && enemyAttack != null) {
-			return true;
+		if (isPlayer) {
+			Debug.Log ("Checking player attack");
+			if (playerAttack != null) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-			return false;
+			Debug.Log ("Checking enemy attack");
+			if (enemyAttack != null) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
-	public static void ComputeBothAttack ()
+	public static void ComputeAttack (bool isPLayer)
 	{
-		ComputePlayerAttack ();
-		ComputeEnemyAttack ();
-	}
-
-	public static bool CheckPlayerAttack ()
-	{
-		Debug.Log ("Checking player attack");
-		if (playerAttack != null) {
-			return true;
+		if (isPLayer) {
+			BattleLogic.AttackCompute (true, playerAttack);
 		} else {
-			return false;
+			BattleLogic.AttackCompute (false, enemyAttack);
 		}
-	}
-
-	public static void ComputePlayerAttack ()
-	{
-		BattleLogic.AttackCompute (true, playerAttack);
-	}
-
-	public static bool CheckEnemyAttack ()
-	{
-		Debug.Log ("Checking enemy attack");
-		if (enemyAttack != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public static void ComputeEnemyAttack ()
-	{
-		BattleLogic.AttackCompute (false, enemyAttack);
 	}
 		
-
+	//Returns which player is to act first
 	public static int GetBattleOrder ()
 	{
 		int battleOrder = 0;
@@ -141,13 +123,12 @@ public class BattleManager: IRPCDicObserver
 					} else if (playerAnswerParam.speedyRottenCount < enemyAnswerParam.speedyRottenCount) {
 						battleOrder = 1;
 					} else {
-						battleOrder = 2;
+						//RANDOM IF BOTH RESULTS ARE THE SAME
+						battleOrder = UnityEngine.Random.Range (0, 2);
 					}
 				}
 			}
 		}
-
-		Debug.Log ("BATTLE ORDER IS" + battleOrder);
 		return battleOrder;
 	}
 

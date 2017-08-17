@@ -165,19 +165,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			yield return new WaitForSeconds (2);
 			yield return StartCoroutine (BattleLogicCoroutine (true, true));
 			break;
-
-		case 2:
-			Debug.Log ("BOTH ATTACK SAME TIME");
-			StartCoroutine (CharacterActivateCoroutine (true));
-			StartCoroutine (CharacterActivateCoroutine (false));
-			yield return new WaitForSeconds (4);
-			BattleManager.SendAttack ();
-			CheckHP (false);
-			yield return new WaitForSeconds (2);
-			yield return StartCoroutine (CheckBothAttackCoroutine ());
-			CheckHP (true);
-			break;
-
 		}
 	}
 
@@ -185,42 +172,17 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	{
 		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
 			yield return new WaitForSeconds (1);
-			if (isPlayer) {
-				CharacterManager.PlayerCharacterActivate ();
-			} else {
-				CharacterManager.EnemyCharacterActivate ();
-			}
+			CharacterManager.CharacterActivate (isPlayer);
 		}
 	}
 
-	IEnumerator CheckBothAttackCoroutine ()
+	IEnumerator CheckAttackCoroutine (bool isPlayer)
 	{
-		
-		if (BattleManager.CheckBothAttack ()) {
-			BattleManager.ComputeBothAttack ();
+		if (BattleManager.CheckAttack (isPlayer)) {
+			BattleManager.ComputeAttack (isPlayer);
 		} else {
 			yield return new WaitForSeconds (1);
-			yield return StartCoroutine (CheckBothAttackCoroutine ());
-		}
-	}
-
-	IEnumerator CheckPlayerAttackCoroutine ()
-	{
-		if (BattleManager.CheckPlayerAttack ()) {
-			BattleManager.ComputePlayerAttack ();
-		} else {
-			yield return new WaitForSeconds (1);
-			yield return StartCoroutine (CheckPlayerAttackCoroutine ());
-		}
-	}
-
-	IEnumerator CheckEnemyAttackCoroutine ()
-	{
-		if (BattleManager.CheckEnemyAttack ()) {
-			BattleManager.ComputeEnemyAttack ();
-		} else {
-			yield return new WaitForSeconds (1);
-			yield return StartCoroutine (CheckEnemyAttackCoroutine ());
+			yield return StartCoroutine (CheckAttackCoroutine (isPlayer));
 		}
 	}
 
@@ -241,21 +203,18 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		yield return new WaitForSeconds (1);
 
-		//TO-DO: REFACTOR THIS CODE
+		QuestionResultCountModel answerParam = null;
 		if (isPLayer) {
-			for (int i = 0; i < playerAnswerParam.correctCount; i++) {
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
-				hitComboCount = (i + 2) + " HIT COMBO";
-				yield return new WaitForSeconds (1);
-			}
+			answerParam = playerAnswerParam;
 		} else {
-			for (int i = 0; i < enemyAnswerParam.correctCount; i++) {
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
-				hitComboCount = (i + 2) + " HIT COMBO";
-				yield return new WaitForSeconds (1);
-			}
+			answerParam = enemyAnswerParam;
+		}
+
+		for (int i = 0; i < answerParam.correctCount; i++) {
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+			hitComboCount = (i + 2) + " HIT COMBO";
+			yield return new WaitForSeconds (1);
 		}
 
 		action ();
@@ -268,6 +227,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			enemyHitComboCountText.text = hitComboCount;
 			enemyTotalDamageText.text = totalDamageCount;
 		}
+
+		yield return new WaitForSeconds (1);
 	}
 
 
@@ -279,12 +240,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			yield return new WaitForSeconds (3);
 			BattleManager.SendAttack ();
 			yield return new WaitForSeconds (1);
-			yield return StartCoroutine (CheckPlayerAttackCoroutine ());
+			yield return StartCoroutine (CheckAttackCoroutine (true));
 			CheckHP (isSecondCheck);
 		} else {
 			yield return StartCoroutine (CharacterActivateCoroutine (false));
 			yield return new WaitForSeconds (4);
-			yield return StartCoroutine (CheckEnemyAttackCoroutine ());
+			yield return StartCoroutine (CheckAttackCoroutine (false));
 			CheckHP (isSecondCheck);
 		}
 	}
@@ -312,6 +273,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		} 
 
 		if (isSecondCheck) {
+			Debug.Log ("DONE CHECKING: STARTING PHASE 1");
 			ResetPlayerDamage ();
 			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
 			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
@@ -338,35 +300,25 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	#region TIMER Subscriber
 
-	public Text gameTimerText;
 	public Text preBattleTimerText;
-
-	public void OnStartGameTimer (int timer)
-	{
-//		StartCoroutine (StartTimer (timer, true));
-	}
-
 
 	public void OnStartPreBattleTimer (int timer)
 	{
-		StartCoroutine (StartTimer (timer, false, delegate() {
+		StartCoroutine (StartTimer (timer, delegate() {
 			preBattleTimerText.enabled = false;
 			ScreenBattleController.Instance.StartPhase1 ();
-			TimeManager.StartGameTimer (180);
 		}));
 	}
 
 
-	IEnumerator StartTimer (int timer, bool isGameTimer, Action action = null)
+	IEnumerator StartTimer (int timer,Action action = null)
 	{
 		int timeLeft = timer;
 
 		while (timeLeft > 0) {
-			if (isGameTimer) {
-				gameTimerText.text = "" + timeLeft;
-			} else {
-				preBattleTimerText.text = "" + timeLeft;
-			}
+			
+			preBattleTimerText.text = "" + timeLeft;
+
 			timeLeft--;
 			yield return new WaitForSeconds (1);
 

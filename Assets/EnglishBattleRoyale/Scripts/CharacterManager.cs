@@ -27,6 +27,7 @@ public class CharacterManager: IRPCDicObserver
 				ActivateCharacterUI (i);
 			} else {
 				Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [i].characterName);
+				break;
 			}
 		}
 
@@ -101,25 +102,22 @@ public class CharacterManager: IRPCDicObserver
 		}
 	}
 
-	public static void PlayerCharacterActivate ()
+	public static void CharacterActivate (bool isPlayer)
 	{
-		CharacterModel character = playerCharacterQueue.Dequeue ();
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "skill1");
-		ScreenBattleController.Instance.partAvatars.player.LoadSkillAuraEffect (character.characterSkillID);
+		CharacterModel character = null;
+		if (isPlayer) {
+			character = playerCharacterQueue.Dequeue ();
+			ScreenBattleController.Instance.partAvatars.player.LoadSkillAuraEffect (character.characterSkillID);
+			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
+		} else {
+			character = enemyCharacterQueue.Dequeue ();
+			ScreenBattleController.Instance.partAvatars.enemy.LoadSkillAuraEffect (character.characterSkillID);
+			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
+		}
 			
-		Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
-		CharacterLogic.CharacterActivate (true, character);
+		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "skill1");
+		CharacterLogic.CharacterActivate (isPlayer, character);
 	}
-
-	public static void EnemyCharacterActivate ()
-	{
-		CharacterModel character = enemyCharacterQueue.Dequeue ();
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "skill1");
-		ScreenBattleController.Instance.partAvatars.enemy.LoadSkillAuraEffect (character.characterSkillID);
-		Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
-		CharacterLogic.CharacterActivate (false, character);
-	}
-
 
 	#endregion
 
