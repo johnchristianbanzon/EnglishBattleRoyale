@@ -86,12 +86,12 @@ public class BattleManager: IRPCDicObserver
 		}
 	}
 
-	public static void ComputeAttack (bool isPLayer)
+	public static IEnumerator ComputeAttack (bool isPLayer)
 	{
 		if (isPLayer) {
-			BattleLogic.AttackCompute (true, playerAttack);
+			yield return BattleLogic.AttackCompute (true, playerAttack);
 		} else {
-			BattleLogic.AttackCompute (false, enemyAttack);
+			yield return BattleLogic.AttackCompute (false, enemyAttack);
 		}
 	}
 		

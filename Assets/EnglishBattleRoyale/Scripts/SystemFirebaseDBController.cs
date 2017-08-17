@@ -309,8 +309,8 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	public void AttackPhase (AttackModel param)
 	{
-		SetParam (MyConst.RPC_DATA_ATTACK, (param));
 		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
+		SetParam (MyConst.RPC_DATA_ATTACK, (param));
 		GetLatestKey (2, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 				mutableData.Value = PhaseMutate (mutableData, MyConst.BATTLE_STATUS_ATTACK);

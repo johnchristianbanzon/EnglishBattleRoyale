@@ -154,33 +154,29 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		switch (attackOrder) {
 		case 0:
 			Debug.Log ("PLAYER ATTACK FIRST");
-			yield return StartCoroutine (BattleLogicCoroutine (true, false));
-			yield return new WaitForSeconds (2);
-			yield return StartCoroutine (BattleLogicCoroutine (false, true));
+			yield return StartCoroutine (BattleLogicCoroutine (true));
+			yield return StartCoroutine (BattleLogicCoroutine (false));
 			break;
 
 		case 1:
 			Debug.Log ("ENEMY ATTACK FIRST");
-			yield return StartCoroutine (BattleLogicCoroutine (false, false));
-			yield return new WaitForSeconds (2);
-			yield return StartCoroutine (BattleLogicCoroutine (true, true));
+			yield return StartCoroutine (BattleLogicCoroutine (false));
+			yield return StartCoroutine (BattleLogicCoroutine (true));
 			break;
 		}
 	}
 
-	IEnumerator BattleLogicCoroutine (bool isPLayer, bool isSecondCheck)
+	IEnumerator BattleLogicCoroutine (bool isPLayer)
 	{
 		if (isPLayer) {
 			yield return StartCoroutine (CharacterActivateCoroutine (true));
 			BattleManager.SendAttack ();
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckAttackCoroutine (true));
-			CheckHP (isSecondCheck);
 		} else {
 			yield return StartCoroutine (CharacterActivateCoroutine (false));
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckAttackCoroutine (false));
-			CheckHP (isSecondCheck);
 		}
 	}
 
@@ -189,6 +185,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	//check HP of each player, if there is winner, stop battle
 	private void CheckHP (bool isSecondCheck)
 	{
+		SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
 
 			if (enemy.playerHP > 0 && player.playerHP <= 0) {
@@ -206,7 +203,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		} 
 
 		if (isSecondCheck) {
-			Debug.Log ("DONE CHECKING: STARTING PHASE 1");
+			
 			ResetPlayerDamage ();
 			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
 			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
@@ -216,6 +213,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			enemyTotalDamageText.text = "";
 			enemyHitComboCountText.text = "";
 			Invoke ("StartPhase1", 1);
+			Debug.Log ("DONE CHECKING: STARTING PHASE 1");
 		}
 	}
 
@@ -230,19 +228,15 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	IEnumerator CheckAttackCoroutine (bool isPlayer)
 	{
 		if (BattleManager.CheckAttack (isPlayer)) {
-			BattleManager.ComputeAttack (isPlayer);
+			yield return BattleManager.ComputeAttack (isPlayer);
 		} else {
 			yield return new WaitForSeconds (1);
 			yield return StartCoroutine (CheckAttackCoroutine (isPlayer));
 		}
 	}
 
-	public void StartBattleAnimation (bool isPLayer, float attackDamage, Action action)
-	{
-		StartCoroutine (BattleAnimationCoroutine (isPLayer, attackDamage, action));
-	}
 
-	IEnumerator BattleAnimationCoroutine (bool isPLayer, float attackDamage, Action action)
+	public IEnumerator StartBattleAnimation (bool isPLayer, float attackDamage, Action action)
 	{
 		string hitComboCount = "";
 		string totalDamageCount = "";
@@ -280,6 +274,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 
 		yield return new WaitForSeconds (1);
+
 	}
 
 
