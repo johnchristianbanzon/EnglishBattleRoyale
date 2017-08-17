@@ -29,7 +29,7 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 		ClearAllLoadingScreen ();
 
 		waitOpponent = SystemResourceController.Instance.LoadPrefab (WAIT_OPPONENT,loadScreen);
-		TweenFacade.TweenStartWaitOpponent (waitOpponentTweenTime, waitOpponent,waitOpponent.transform.Find("LoadingIndicator").gameObject);
+		TweenFacade.TweenStartWaitOpponent (waitOpponentTweenTime, waitOpponent);
 
 	}
 

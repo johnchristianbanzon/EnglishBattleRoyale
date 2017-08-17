@@ -24,7 +24,7 @@ public static class TweenFacade{
 
 	//WaitOpponent
 
-	public static void TweenStartWaitOpponent(float duration, GameObject scaleObject,GameObject loadingIndicator = null){
+	public static void TweenStartWaitOpponent(float duration, GameObject scaleObject){
 		scaleObject.transform.localScale = new Vector3 (1, 0, 1);
 		scaleObject.transform.DOScale(Vector3.one, duration);
 	}
