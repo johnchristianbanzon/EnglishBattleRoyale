@@ -16,6 +16,11 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 
 	public void StartLoadingScreen(Action action){
 		loadingScreen = SystemResourceController.Instance.LoadPrefab (LOADING_SCREEN,loadScreen);
+		StartCoroutine (ActivateActionCoroutine(action));
+	}
+
+	IEnumerator ActivateActionCoroutine(Action action){
+		yield return new WaitForSeconds (1);
 		action ();
 	}
 		

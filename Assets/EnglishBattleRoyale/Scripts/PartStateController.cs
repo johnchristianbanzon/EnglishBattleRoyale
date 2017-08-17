@@ -67,30 +67,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			enemyHPBar.value = enemy.playerHP;
 		}
 	}
-
-
-	void Start ()
-	{
-		Init ();
-	}
-
-	private void Init ()
-	{
-		TimeManager.AddGameTimeObserver (this);
-		TimeManager.StartPreBattleTimer (3);
-		AudioController.Instance.PlayAudio (AudioEnum.Bgm);
-
-		ScreenBattleController.Instance.partCameraWorks.StartIntroCamera ();
-
-		//get initial state for enemy and player stored in SystemGlobalDataController
-		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in GameManager.initialState) {
-			SetStateParam (initialState.Key, initialState.Value);
-		}
-	}
+		
 
 	#region INITIAL STATE
 
-	private void SetStateParam (Firebase.Database.DataSnapshot dataSnapShot, bool isHome)
+	public void SetStateParam (Firebase.Database.DataSnapshot dataSnapShot, bool isHome)
 	{
 		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
 		if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
@@ -252,7 +233,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		for (int i = 0; i <= answerParam.correctCount; i++) {
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
-			hitComboCount = (i + 2) + " HIT COMBO";
+			hitComboCount = (i + 1) + " HIT COMBO";
 			yield return new WaitForSeconds (0.5f);
 		}
 

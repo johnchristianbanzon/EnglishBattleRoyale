@@ -17,7 +17,7 @@ public class PartMatchController : MonoBehaviour
 			isSearchingRoom = true;
 			searchRoomText.text = "Searching Opponent";
 			searchRoomImage.sprite = searchRoomCancel;
-			AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
+			SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 			SystemFirebaseDBController.Instance.SearchRoom (delegate(bool result) {
 				if (result) {
 					GoToGameRoom ();	
@@ -26,7 +26,7 @@ public class PartMatchController : MonoBehaviour
 					searchRoomText.text = "Find Match";
 					Debug.Log ("Cancelled Search");
 					searchRoomButton.interactable = true;
-					AudioController.Instance.PlayAudio (AudioEnum.ClickButton);
+					SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 				}
 			});
 
@@ -49,16 +49,17 @@ public class PartMatchController : MonoBehaviour
 	//initialize and go to battle
 	private void GoToGameRoom ()
 	{
-		BattleStatusManager battleStatusManager = new BattleStatusManager ();
-		BattleManager battleManager = new BattleManager ();
-		CharacterManager characterManager = new CharacterManager ();
+		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
+			BattleStatusManager battleStatusManager = new BattleStatusManager ();
+			BattleManager battleManager = new BattleManager ();
+			CharacterManager characterManager = new CharacterManager ();
 
-		battleManager.Init ();
-		characterManager.Init ();
-		battleStatusManager.Init ();
+			battleManager.Init ();
+			characterManager.Init ();
+			battleStatusManager.Init ();
 
-
-		SystemScreenController.Instance.ShowScreen ("ScreenBattle");
+			SystemScreenController.Instance.ShowScreen ("ScreenBattle");
+		});
 	}
 
 
