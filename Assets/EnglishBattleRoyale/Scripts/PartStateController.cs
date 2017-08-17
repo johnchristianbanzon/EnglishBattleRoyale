@@ -7,8 +7,10 @@ using System;
 /* Controls the battle */
 public class PartStateController : MonoBehaviour, IGameTimeObserver
 {
-	public Text playerNameText;
+	public GameObject playerCardContainer;
+	public GameObject enemyCardContainer;
 
+	public Text playerNameText;
 
 	public Slider playerHPBar;
 	public Text playerHPText;
@@ -233,10 +235,17 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		for (int i = 0; i <= answerParam.correctCount; i++) {
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+
+			if (isPLayer) {
+				ScreenBattleController.Instance.partAvatars.enemy.LoadHitEffect ();
+			} else {
+				ScreenBattleController.Instance.partAvatars.player.LoadHitEffect ();
+			}
+
 			hitComboCount = (i + 1) + " HIT COMBO";
 			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 
-			yield return new WaitForSeconds (0.5f);
+			yield return new WaitForSeconds (1);
 		}
 
 		action ();

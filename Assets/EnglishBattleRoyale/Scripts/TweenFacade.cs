@@ -24,13 +24,13 @@ public static class TweenFacade{
 
 	//WaitOpponent
 
-	public static void TweenStartWaitOpponent(float duration, GameObject scaleObject){
-		scaleObject.transform.localScale = new Vector3 (1, 0, 1);
+	public static void TweenScaleYToCustom(float duration, GameObject scaleObject, float customScale){
+		scaleObject.transform.localScale = new Vector3 (customScale, 0, customScale);
 		scaleObject.transform.DOScale(Vector3.one, duration);
 	}
 
-	public static void TweenStopWaitOpponent(float duration, GameObject scaleObject){
-		scaleObject.transform.DOScale(new Vector3(1,0,1), duration);
+	public static void TweenScaleYT0Zero(float duration, GameObject scaleObject, float customScale){
+		scaleObject.transform.DOScale(new Vector3(customScale,0,customScale), duration);
 	}
 
 	public static void TweenWaitOpponentText(RectTransform obj){
