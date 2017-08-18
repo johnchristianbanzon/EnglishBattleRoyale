@@ -1,50 +1,44 @@
 ﻿using System.Collections.Generic;
 using System;
+
 [Serializable]
-public class CharacterModel {
+public class CharacterModel
+{
 	public int characterID;
 	public string characterName;
 	public string characterDescription;
+	public string characterAlternateName;
 	public int characterGPCost;
-	public int characterSkillID;
-	public int characterCalculationType;
-	public string characterAmount;
-	public int characterConditionType;
-	public string characterConditionRef;
-	public string characterConditionAmount;
+	public int characterSkillType;
+	public string characterCalculation;
+	public string characterSacrificeCalculation;
 	public int characterSacrificeType;
-	public int characterSacrificeAmount;
-	public int characterTurn;
 	public int characterType;
+	public int characterTurn;
 
-	public CharacterModel(
+	public CharacterModel (
 		int characterID,
 		string characterName,
 		string characterDescription,
+		string characterAlternateName,
 		int characterGPCost,
-		int characterSkillID,
-		int characterCalculationType,
-		string characterAmount,
-		int characterConditionType,
-		string characterConditionRef,
-		string characterConditionAmount,
-		int characterSacrificeType,
-		int characterSacrificeAmount,
-		int characterTurn,
-		int characterType){
+		int characterSkillType,
+		string characterCalculation,
+		string characterSacrificeCalculation,
+		int characterSacrificeType, 
+		int characterType,
+		int characterTurn
+		)
+	{
 
 		this.characterID = characterID;
 		this.characterName = characterName;
 		this.characterDescription = characterDescription;
+		this.characterAlternateName = characterAlternateName;
 		this.characterGPCost = characterGPCost;
-		this.characterSkillID = characterSkillID;
-		this.characterCalculationType = characterCalculationType;
-		this.characterAmount = characterAmount;
-		this.characterConditionType = characterConditionType;
-		this.characterConditionRef = characterConditionRef;
-		this.characterConditionAmount = characterConditionAmount;
+		this.characterSkillType = characterSkillType;
+		this.characterCalculation = characterCalculation;
 		this.characterSacrificeType = characterSacrificeType;
-		this.characterSacrificeAmount = characterSacrificeAmount;
 		this.characterTurn = characterTurn;
 		this.characterType = characterType;
 	
