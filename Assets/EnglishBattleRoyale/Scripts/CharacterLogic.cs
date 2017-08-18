@@ -6,34 +6,52 @@ public class CharacterLogic
 
 	public static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
-//		PlayerGP
-//		EnemyDamage
-//		PlayerBD
-//		PlayerAwesome
-//		EnemyRotten
-//		PlayerNerf
-//		EnemyHP
-//		EnemyGPGain
-//		PlayerDamage
+		if(character.characterCalculation.Contains("PlayerNerf")){
+			//nerf code here
+			if (isPlayer) {
+				
+			} else {
+			
+			}
+
+			return;
+			
+		}
+
+		if(character.characterCalculation.Contains("EnemyCharacterSlot")){
+			//EnemyCharacterSlot code here
+			if (isPlayer) {
+				
+			} else {
+			
+			}
+			return;
+
+		}
 
 		//parses the string formula from csv
 		if (isPlayer) {
-//			character.characterAmount = character.characterAmount.
-//			Replace ("enemyHP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString ()).
-//			Replace ("playerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
-//				Replace ("enemyDamage", ScreenBattleController.Instance.partState.enemy.playerTD.ToString ()).
-//			Replace ("playerDamage", ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString ()).
-//			Replace ("correctAnswer", GameManager.playerAnswerParam.correctCount.ToString ());
+			
+			character.characterCalculation = character.characterCalculation.
+				Replace ("PlayerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString()).
+				Replace ("PlayerGP", ScreenBattleController.Instance.partState.player.playerGP.ToString()).
+				Replace ("PlayerBD", ScreenBattleController.Instance.partState.player.playerBD.ToString()).
+				Replace ("PlayerSD", ScreenBattleController.Instance.partState.player.playerSD.ToString()).
+				Replace ("PlayerTD", ScreenBattleController.Instance.partState.player.playerTD.ToString()).
+				Replace ("PlayerRotten", GameManager.playerAnswerParam.speedyRottenCount.ToString()).
+				Replace ("PlayerAwesome", GameManager.playerAnswerParam.speedyAwesomeCount.ToString());
 		} else {
-//			character.characterAmount = character.characterAmount.
-//			Replace ("enemyHP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
-//			Replace ("playerHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString ()).
-//			Replace ("enemyDamage", ScreenBattleController.Instance.partState.player.playerBaseDamage.ToString ()).
-//			Replace ("playerDamage", ScreenBattleController.Instance.partState.enemy.playerBaseDamage.ToString ()).
-//			Replace ("correctAnswer", GameManager.enemyAnswerParam.correctCount.ToString ());
+			character.characterCalculation = character.characterCalculation.
+				Replace ("EnemyHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString()).
+				Replace ("EnemyHP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString()).
+				Replace ("EnemyBD", ScreenBattleController.Instance.partState.enemy.playerBD.ToString()).
+				Replace ("EnemySD", ScreenBattleController.Instance.partState.enemy.playerSD.ToString()).
+				Replace ("EnemyTD", ScreenBattleController.Instance.partState.enemy.playerTD.ToString()).
+				Replace ("EnemyRotten", GameManager.enemyAnswerParam.speedyRottenCount.ToString()).
+				Replace ("EnemyAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString());
 		}
-//		Expression e = new Expression (character.characterAmount);
-//		CharacterCompute (isPlayer, character.characterSkillID, float.Parse (e.Evaluate ().ToString ()));
+		Expression e = new Expression (character.characterCalculation);
+		CharacterCompute (isPlayer, character.characterSkillType, float.Parse (e.Evaluate ().ToString ()));
 	}
 
 	//activates the character and calculate the respective skills
@@ -149,14 +167,6 @@ public class CharacterLogic
 
 			break;
 
-		case CharacterEnums.SkillType.Stop:
-			if (isPlayer) {
-				
-			} else {
-				
-			}
-
-			break;
 		}
 	}
 }

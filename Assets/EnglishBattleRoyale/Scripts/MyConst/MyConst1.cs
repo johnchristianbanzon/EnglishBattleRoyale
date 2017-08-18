@@ -63,7 +63,7 @@ public static partial class MyConst {
 
 	private static void InitCharacterConst ()
 	{
-		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("Characters");
+		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("Character");
 		characterConst = CSVParserUtility.Parse (csvData.ToString ());
 	}
 
