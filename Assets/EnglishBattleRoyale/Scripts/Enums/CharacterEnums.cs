@@ -19,16 +19,22 @@
 	}
 
 	public enum SkillType{
-		IncreasePlayerHP,
-		DecreaseEnemyHP,
-		IncreasePlayerBD,
-		DecreaseEnemyBD,
-		IncreasePlayerTD,
-		DecreaseEnemyTD,
-		IncreasePlayerSD,
-		DecreaseEnemySD,
-		IncreasePlayerGP,
-		DecreaseEnemyGP,
-		Stop
+		PlayerHP,
+		EnemyHP,
+		PlayerBD,
+		EnemyBD,
+		PlayerTD,
+		EnemyTD,
+		PlayerSD,
+		EnemySD,
+		PlayerGP,
+		EnemyGP,
+		Custom
+	}
+
+	public enum SkillOperator{
+		None,
+		Add,
+		Multiply
 	}
 }

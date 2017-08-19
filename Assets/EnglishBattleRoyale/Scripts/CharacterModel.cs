@@ -10,7 +10,8 @@ public class CharacterModel
 	public string characterAlternateName;
 	public int characterGPCost;
 	public int characterSkillType;
-	public string characterCalculation;
+	public int characterSkillOperator;
+	public string characterSkillCalculation;
 	public string characterSacrificeCalculation;
 	public int characterSacrificeType;
 	public int characterType;
@@ -23,7 +24,8 @@ public class CharacterModel
 		string characterAlternateName,
 		int characterGPCost,
 		int characterSkillType,
-		string characterCalculation,
+		int characterSkillOperator,
+		string characterSkillCalculation,
 		string characterSacrificeCalculation,
 		int characterSacrificeType, 
 		int characterType,
@@ -37,7 +39,8 @@ public class CharacterModel
 		this.characterAlternateName = characterAlternateName;
 		this.characterGPCost = characterGPCost;
 		this.characterSkillType = characterSkillType;
-		this.characterCalculation = characterCalculation;
+		this.characterSkillOperator = characterSkillOperator;
+		this.characterSkillCalculation = characterSkillCalculation;
 		this.characterSacrificeType = characterSacrificeType;
 		this.characterTurn = characterTurn;
 		this.characterType = characterType;

@@ -84,11 +84,12 @@ public static partial class MyConst {
 				characterConst[i][3].ToString(), //Character Alternate name
 				int.Parse(characterConst[i][4].ToString()), //Character GP COST
 				int.Parse(characterConst[i][5].ToString()),  //Character SKillType
-				characterConst[i][6].ToString(),  //Character Calculation
-				characterConst[i][7].ToString(),  //Character Sacrifice Calculation
-				int.Parse(characterConst[i][8].ToString()),  //Character Sacrifice type
-				int.Parse(characterConst[i][9].ToString()), //Character Type
-				int.Parse(characterConst[i][10].ToString())  //Character Turn
+				int.Parse(characterConst[i][6].ToString()),  //Character Skill Operator
+				characterConst[i][7].ToString(),  //Character Calculation
+				characterConst[i][8].ToString(),  //Character Sacrifice Calculation
+				int.Parse(characterConst[i][9].ToString()),  //Character Sacrifice type
+				int.Parse(characterConst[i][10].ToString()), //Character Type
+				int.Parse(characterConst[i][11].ToString())  //Character Turn
 
 			);
 			characterList.Add(character);
