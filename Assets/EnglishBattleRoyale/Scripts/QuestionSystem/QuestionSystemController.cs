@@ -258,7 +258,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		currentQuestionNumber = 0;
 		isQuestionRoundOver = false;
 		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
-		scrollHeaderPos = scrollHeader.transform.localPosition;
+		scrollHeaderPos = new Vector2 (0, scrollHeader.transform.localPosition.y);
 		scrollHeader.transform.localPosition = new Vector2 (0, 240);
 		targetTypeUI.text = questionList [0].questionType.questionCategory.ToString();
 		popUpSelectionIndicator = SystemResourceController.Instance.LoadPrefab (popUpName, SystemPopupController.Instance.popUp);
