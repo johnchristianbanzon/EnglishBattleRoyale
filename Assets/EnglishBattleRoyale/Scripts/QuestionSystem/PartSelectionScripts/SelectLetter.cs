@@ -21,6 +21,26 @@ public class SelectLetter : MonoBehaviour, ISelection
 		}
 	}
 
+	public void ShowSelectionPopUp(GameObject selectionPopUp){
+		List<GameObject> popUpSelectionList = new List<GameObject> ();
+		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
+			popUpSelectionList.Add(selectionPopUp.transform.GetChild(i).gameObject);
+		}
+		if (popUpSelectionList.Count > 0) {
+			for (int i = 0; i < popUpSelectionList.Count; i++) {
+				if (i % 2 == 0) {
+					TweenFacade.TweenJumpTo (
+						popUpSelectionList [i].transform, popUpSelectionList [i].transform.localPosition, 40f, 1, 0.1f
+					,0);
+				} else {
+					TweenFacade.TweenJumpTo (
+						popUpSelectionList [i].transform, popUpSelectionList [i].transform.localPosition, 40f, 1, 0.1f
+						,0.5f);
+				}
+			}
+		}
+	}
+
 	public void HideSelectionType ()
 	{
 		gameObject.SetActive (false);

@@ -11,14 +11,49 @@ public class LetterLink : MonoBehaviour ,ISelection
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
-
+		foreach (LetterLinkEvent container in connectLetterButtons) {
+			container.ShowCorrectAnswer (isAnswerCorrect);
+		}
 	}
 
 	public void HideSelectionType ()
 	{
 		gameObject.SetActive (false);
 	}
-		
+	private List<GameObject> popUpSelectionList = new List<GameObject>();
+	private GameObject handCursor;
+	public void ShowSelectionPopUp(GameObject selectionPopUp){
+		popUpSelectionList.Clear ();
+		popUpSelectIndex = 0;
+		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
+			if(selectionPopUp.transform.GetChild(i).childCount>0){
+			popUpSelectionList.Add(selectionPopUp.transform.GetChild(i).gameObject);
+			}
+		}
+		if (popUpSelectionList.Count > 0) {
+			float popUpDelay = 1.8f;
+			handCursor = SystemResourceController.Instance.LoadPrefab ("HandCursor", SystemPopupController.Instance.popUp);
+			handCursor.transform.localPosition = new Vector2(popUpSelectionList [0].transform.localPosition.x,popUpSelectionList [0].transform.localPosition.y - 100f);
+			TweenFacade.TweenMoveTo (handCursor.transform, new Vector2(popUpSelectionList [popUpSelectionList.Count-1].transform.localPosition.x
+				,handCursor.transform.localPosition.y), popUpDelay);
+			Destroy (handCursor, popUpDelay+0.1f);
+			InvokeRepeating ("PopUpSelect", 0, (popUpDelay/4));
+
+		}
+	}
+	private int popUpSelectIndex = 0;
+	public void PopUpSelect(){
+		if (popUpSelectIndex.Equals (popUpSelectionList.Count)) {
+			for (int i = 0; i < popUpSelectionList.Count; i++) {
+				popUpSelectionList [i].GetComponent<Image> ().color = new Color32 (255, 223, 0, 255);
+			}
+			CancelInvoke ();
+		} else {
+			popUpSelectionList [popUpSelectIndex].GetComponent<Image> ().color = new Color (36f / 255, 189f / 255f, 88f / 255f);
+		}
+			popUpSelectIndex++;
+	}
+
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
 		ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
@@ -30,6 +65,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 		}
 		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponentInChildren<Text>().text = questionAnswer[selectionIndex[0]].ToString();
+		showAnswer.hintContainers [selectionIndex [0]].GetComponent<Image> ().color = new Color32 (255,255,255,255);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;
 	}
 
@@ -41,6 +77,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 	{
 		this.questionAnswer = questionAnswer;
 		ShuffleSelection ();
+		QuestionSystemController.Instance.partAnswer.showAnswer.InitHints ();
 		gameObject.SetActive (true);
 	}
 

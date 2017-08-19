@@ -40,9 +40,9 @@ public static class QuestionBuilder
 				questions.Add (GetQuestion (GetQuestionType(questionType)));
 			} else {
 				questions.Add (GetQuestion (GetQuestionType (selectionFromRandom)));
-
+//				selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 			}
-			selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
+
 		}
 		return questions;
 	}

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Linq;
-
+using UnityEngine.EventSystems;
 public class SlotMachine : MonoBehaviour,ISelection
 {
 	public SlotMachineEvent[] slots = new SlotMachineEvent[6];
@@ -14,13 +14,18 @@ public class SlotMachine : MonoBehaviour,ISelection
 	{
 		Color answerColor = new Color();
 		if (isAnswerCorrect) {
-			answerColor = new Color32 (255, 223, 0, 255);
+			answerColor = new Color32 (255, 223, 0, 255);	
 		} else {
 			answerColor = new Color32 (255, 100, 100, 255);
 		}
 		for (int i = 0; i < correctAnswerSlots.Count; i++) {
 			correctAnswerSlots [i].GetComponent<Image> ().color = answerColor;
+			slots [i].isDraggable = false;
 		}
+
+	}
+
+	public void ShowSelectionPopUp(GameObject selectionPopUp){
 
 	}
 

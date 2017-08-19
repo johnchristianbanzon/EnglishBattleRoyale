@@ -18,6 +18,18 @@ public class LetterLinkEvent : MonoBehaviour
 
 	}
 
+	public void ShowCorrectAnswer(bool isAnswerCorrect){
+		Color containerColor = new Color ();
+		if (isAnswerCorrect) {
+			containerColor = new Color32 (36, 189, 88, 255);
+		} else {
+			containerColor = new Color32 (255, 100, 100, 255);
+		}
+		if (letterlink.questionAnswer.Contains (GetComponentInChildren<Text>().text)) {
+			GetComponent<Image> ().color = containerColor;
+		}
+	}
+
 	public void OnDragSelection (GameObject currentSelectedLetter)
 	{
 		if (startSelection && (currentSelectedLetter.GetComponent<Image> ().color != selectedColor)) {
@@ -26,6 +38,7 @@ public class LetterLinkEvent : MonoBehaviour
 			currentSelectedLetter.GetComponent<Image> ().color = selectedColor;
 		}
 	}
+
 
 	public void OnEndDrag ()
 	{

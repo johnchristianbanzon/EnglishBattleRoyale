@@ -20,6 +20,10 @@ public class Typing : MonoBehaviour, ISelection
 		}
 	}
 
+	public void ShowSelectionPopUp(GameObject selectionPopUp){
+
+	}
+
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
 		Color answerColor = new Color();

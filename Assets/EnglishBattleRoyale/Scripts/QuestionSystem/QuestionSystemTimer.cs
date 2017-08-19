@@ -68,7 +68,9 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 			questionSystemController.debugUI.SetActive (true);
 			questionSystemController.debugUI.transform.GetChild(0).gameObject.SetActive (true);
 		} else {
-			UnityEngine.GameObject.Destroy (questionSystemController.gameObject);
+//			UnityEngine.GameObject.Destroy (questionSystemController.gameObject);
+			questionSystemController.HideQuestionParts();
+			questionSystemController.gameObject.SetActive (false);
 		}
 	}
 
