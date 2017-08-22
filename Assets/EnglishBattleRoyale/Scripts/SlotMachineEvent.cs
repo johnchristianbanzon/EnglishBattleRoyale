@@ -32,8 +32,6 @@ public class SlotMachineEvent : MonoBehaviour
 	}
 	public void OnBeginDrag(){
 		if (isDraggable) {
-			
-
 			dragStartingPosition = Input.mousePosition.y;
 			isDragging = true;
 		}
@@ -76,6 +74,7 @@ public class SlotMachineEvent : MonoBehaviour
 				overAllHintContainersLeft++;
 			}
 			slot.GetComponent<Image> ().color = slotColor [slotIndex];
+			slot.GetComponent<Image> ().enabled = false;
 			slotIndex++;
 		}
 		hintContainersLeft = wrongContainer.Count;
@@ -88,7 +87,8 @@ public class SlotMachineEvent : MonoBehaviour
 		hintContainersLeft--;
 		overAllHintContainersLeft--;
 		wrongContainer [randomizeContainer].GetComponentInChildren<Text> ().text = "";
-		wrongContainer [randomizeContainer].GetComponent<Image> ().color = Color.black;
+		wrongContainer [randomizeContainer].GetComponent<Image> ().enabled = true;
+		wrongContainer [randomizeContainer].GetComponent<Image> ().color = Color.gray;
 		wrongContainer.RemoveAt (randomizeContainer);
 	}
 
