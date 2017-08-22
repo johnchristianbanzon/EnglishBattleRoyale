@@ -56,6 +56,7 @@ public class CharacterLogic
 		Expression e = new Expression (character.characterSkillCalculation);
 
 		Queue<Action> characterQueue = new Queue<Action> ();
+		//Depending on turn, add to queue
 		for (int i = 0; i < character.characterTurn; i++) {
 			characterQueue.Enqueue (delegate() {
 				CharacterCompute (isPlayer, character, float.Parse (e.Evaluate ().ToString ()));
@@ -69,9 +70,11 @@ public class CharacterLogic
 
 	static List<Queue<Action>> characterQueueList = new List<Queue<Action>> ();
 
+	//activate character if turn is existing
 	private static void CheckTurns ()
 	{
 		for (int i = 0; i < characterQueueList.Count; i++) {
+			//remove item in list if no queues
 			if (characterQueueList [i].Count == 0) {
 				characterQueueList.RemoveAt (i);
 			}
