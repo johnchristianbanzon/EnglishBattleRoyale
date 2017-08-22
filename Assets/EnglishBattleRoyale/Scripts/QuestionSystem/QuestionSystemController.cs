@@ -13,6 +13,7 @@ using System.Collections;
 /// </summary>
 public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemController>
 {
+	public bool questionRoundHasStarted = false;
 	private int currentQuestionNumber = 0;
 	private bool hasSkippedQuestion = false;
 	public string questionAnswer = "";
@@ -53,6 +54,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
+		questionRoundHasStarted = true;
 		questionRoundTimer = new QuestionSystemTimer ();
 		questionRoundTimer.InitQuestionSystemTimer (true);
 		this.onRoundResult = onRoundResult;
@@ -111,6 +113,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private void OnQuestionRoundFinish(){
 		debugUI.SetActive (false);
+		questionRoundHasStarted = false;
 		TweenFacade.TweenScaleYT0Zero(0.5f,partScrollImage,1);
 		selectionType.ShowCorrectAnswer(false);
 		Invoke("HideScrollUI",3.0f);
@@ -174,6 +177,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		selectionType = questionList [currentQuestionNumber].questionType.selectionType;
 	}
 
+	public bool hasNextQuestion = true;
 	public void NextQuestion ()
 	{
 		questionRoundTimer.timePassed = 0;
@@ -182,15 +186,16 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		Destroy (speedyEffect);
 		questionHint.enableHintButton ();
 		hasSkippedQuestion = false;
-		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
-			roundResultList.Add (onQuestionResult);
-			if(onQuestionResult.isCorrect && !isDebug){
-				SystemFirebaseDBController.Instance.SetParam(MyConst.RPC_DATA_ANSWER_INDICATOR, "isCorrect");
-			}
-			Invoke ("HideQuestionParts", 1.0f);
-		});
-
-
+		if (hasNextQuestion) {
+			
+			GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
+				roundResultList.Add (onQuestionResult);
+				if (onQuestionResult.isCorrect && !isDebug) {
+					SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_ANSWER_INDICATOR, "isCorrect");
+				}
+				Invoke ("HideQuestionParts", 1.0f);
+			});
+		}
 	}
 
 	public QuestionModel LoadQuestion ()
@@ -255,9 +260,13 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private Vector2 scrollHeaderPos = new Vector2();
 	public void InitQuestionSystem(string popUpName){
+		CancelInvoke ();
 		currentQuestionNumber = 0;
 		isQuestionRoundOver = false;
 		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
+		if (questionList.Count > 0) {
+			hasNextQuestion = true;
+		}
 		scrollHeaderPos = new Vector2 (0, scrollHeader.transform.localPosition.y);
 		scrollHeader.transform.localPosition = new Vector2 (0, 240);
 		targetTypeUI.text = questionList [0].questionType.questionCategory.ToString();
@@ -307,6 +316,5 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 			debugUI.SetActive (true);
 		}
 	}
-
 
 }

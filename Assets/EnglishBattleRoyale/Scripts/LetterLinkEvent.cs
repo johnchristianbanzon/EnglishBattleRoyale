@@ -8,7 +8,8 @@ public class LetterLinkEvent : MonoBehaviour
 	private static bool startSelection = false;
 	private static string writtenAnswer;
 	private Color selectedColor = new Color (36f / 255, 189f / 255f, 88f / 255f);
-	private Color defaultColor = new Color (94f / 255, 255f / 255f, 148f / 255f);
+	private Color defaultColor = new Color32 (255,255,255,255);
+
 
 	public void OnBeginDrag (GameObject currentSelectedLetter)
 	{

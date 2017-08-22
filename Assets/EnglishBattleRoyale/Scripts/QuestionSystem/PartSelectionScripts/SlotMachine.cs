@@ -24,9 +24,28 @@ public class SlotMachine : MonoBehaviour,ISelection
 		}
 
 	}
-
+	List<GameObject> popUpSelectionList= new List<GameObject> ();
 	public void ShowSelectionPopUp(GameObject selectionPopUp){
+		for (int i = 0; i < selectionPopUp.transform.GetChild(0).childCount; i++) {
+			popUpSelectionList.Add(selectionPopUp.transform.GetChild(0).GetChild(i).gameObject);
+		}
+		Debug.Log (popUpSelectionList.Count);
+		if (popUpSelectionList.Count > 0) {
+			InvokeRepeating ("PopUpMoveSelection", 0, 0.7f);
+		}
+	}
 
+	int popUpSelectionCounter = 0;
+	private void PopUpMoveSelection(){
+		if (popUpSelectionCounter < 3) {
+			popUpSelectionList [0].GetComponent<SlotMachineEvent> ().OnClickDownButton ();
+			popUpSelectionList [1].GetComponent<SlotMachineEvent> ().OnClickUpButton ();
+			popUpSelectionList [2].GetComponent<SlotMachineEvent> ().OnClickDownButton ();
+			popUpSelectionList [3].GetComponent<SlotMachineEvent> ().OnClickUpButton ();
+		} else {
+			CancelInvoke ();
+		}
+		popUpSelectionCounter++;
 	}
 
 	public void HideSelectionType ()

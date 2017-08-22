@@ -22,14 +22,17 @@ public class SlotMachineEvent : MonoBehaviour
 		return overAllHintContainersLeft;
 	}
 
+	private void GetSlots(){
+		topSlotPosition = slotContent.transform.GetChild (0).localPosition;
+		middleSlotPosition = slotContent.transform.GetChild (1).localPosition;
+		bottomSlotPosition = slotContent.transform.GetChild (2).localPosition;
+		topSlot = slotContent.transform.GetChild (0).gameObject;
+		middleSlot = slotContent.transform.GetChild (1).gameObject;
+		bottomSlot = slotContent.transform.GetChild (2).gameObject;
+	}
 	public void OnBeginDrag(){
 		if (isDraggable) {
-			topSlotPosition = slotContent.transform.GetChild (0).localPosition;
-			middleSlotPosition = slotContent.transform.GetChild (1).localPosition;
-			bottomSlotPosition = slotContent.transform.GetChild (2).localPosition;
-			topSlot = slotContent.transform.GetChild (0).gameObject;
-			middleSlot = slotContent.transform.GetChild (1).gameObject;
-			bottomSlot = slotContent.transform.GetChild (2).gameObject;
+			
 
 			dragStartingPosition = Input.mousePosition.y;
 			isDragging = true;
@@ -95,10 +98,11 @@ public class SlotMachineEvent : MonoBehaviour
 	private GameObject topSlot;
 	private GameObject middleSlot;
 	private GameObject bottomSlot;
-	private static float scrollDelay = 0.8f;
+	private static float scrollDelay = 0.5f;
 
 	public void OnClickDownButton ()
 	{
+		GetSlots ();
 		TweenFacade.RotateObject (topSlot,new Vector3(-50,0,0),scrollDelay);
 		topSlot.transform.localPosition = new Vector2(topSlot.transform.localPosition.x,bottomSlot.transform.localPosition.y - 80f);
 		TweenFacade.TweenMoveTo (topSlot.transform, bottomSlotPosition,scrollDelay);
@@ -108,7 +112,9 @@ public class SlotMachineEvent : MonoBehaviour
 		TweenFacade.TweenMoveTo (bottomSlot.transform, middleSlotPosition,scrollDelay);
 		TweenFacade.RotateObject (bottomSlot,new Vector3(0,0,0),scrollDelay);
 		isDraggable = false;
-		QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
+		if (QuestionSystemController.Instance.questionRoundHasStarted) {
+			QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
+		}
 		Invoke ("DraggingDone", scrollDelay);
 	}
 
@@ -118,6 +124,7 @@ public class SlotMachineEvent : MonoBehaviour
 
 	public void OnClickUpButton ()
 	{
+		GetSlots ();
 		TweenFacade.RotateObject (topSlot,new Vector3(0,0,0),scrollDelay);
 		TweenFacade.TweenMoveTo (topSlot.transform, middleSlotPosition,scrollDelay);
 
@@ -128,8 +135,10 @@ public class SlotMachineEvent : MonoBehaviour
 		TweenFacade.TweenMoveTo (bottomSlot.transform, topSlotPosition,scrollDelay);
 		TweenFacade.RotateObject (bottomSlot,new Vector3(-50,0,0),scrollDelay);
 		bottomSlot.transform.SetAsFirstSibling ();
-		QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
 		isDraggable = false;
+		if (QuestionSystemController.Instance.questionRoundHasStarted) {
+			QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
+		}
 		Invoke ("DraggingDone", scrollDelay);
 	}
 }

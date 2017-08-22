@@ -34,7 +34,7 @@ public class Typing : MonoBehaviour, ISelection
 		}
 		List<GameObject> answerContainers = QuestionSystemController.Instance.partAnswer.fillAnswer.answerContainers;
 		for (int i = 0; i < answerContainers.Count; i++) {
-			answerContainers [i].transform.GetChild(0).GetComponentInChildren<Image> ().color = answerColor;
+			answerContainers [i].transform.GetComponentInChildren<Image> ().color = answerColor;
 		}
 	}
 

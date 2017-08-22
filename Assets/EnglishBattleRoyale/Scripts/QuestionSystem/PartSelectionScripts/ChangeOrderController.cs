@@ -182,7 +182,6 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 				orderCouplingCount--;
 			}
 		}
-
 		return letterArray;
 
 	}

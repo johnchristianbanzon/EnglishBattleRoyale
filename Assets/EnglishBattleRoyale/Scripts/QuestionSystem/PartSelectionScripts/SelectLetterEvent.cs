@@ -70,12 +70,17 @@ public class SelectLetterEvent : MonoBehaviour
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
-		if (isCorrect) {
-			if (isAnswerCorrect) {
-				GetComponent<Image> ().color = new Color32 (255, 223, 0, 255);
-			} else {
-				GetComponent<Image> ().color = new Color32 (255, 255, 148, 255);
-			}
+		Color selectionColor = new Color ();
+		if (isAnswerCorrect) {
+			selectionColor = new Color32 (255, 223, 0, 255);
+		} else {
+			
+			selectionColor = new Color32 (255, 100, 100, 255);
 		}
+		GetComponent<Image> ().color = selectionColor;
+		GameObject answerContainer = selectLetter.fillAnswer.answerContainers [correctAnswerIndex];
+		answerContainer.GetComponent<Image> ().color = selectionColor;
+//		answerContainer.GetComponent<Text> ().text = GetComponentInChildren<Text>().text;
 	}
+
 }

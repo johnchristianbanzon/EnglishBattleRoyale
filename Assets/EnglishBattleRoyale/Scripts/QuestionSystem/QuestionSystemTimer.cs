@@ -65,10 +65,8 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		questionSystemController.CheckAnswer (false);
 		questionSystemController.onRoundResult (questionSystemController.roundResultList);
 		if (questionSystemController.isDebug) {
-			questionSystemController.debugUI.SetActive (true);
 			questionSystemController.debugUI.transform.GetChild(0).gameObject.SetActive (true);
 		} else {
-//			UnityEngine.GameObject.Destroy (questionSystemController.gameObject);
 			questionSystemController.HideQuestionParts();
 			questionSystemController.gameObject.SetActive (false);
 		}
@@ -82,6 +80,9 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 				timeLeft--;
 				timePassed++;
 				action (timeLeft);
+				if (timeLeft<=3) {
+					QuestionSystemController.Instance.hasNextQuestion = false;
+				}
 			}
 			if (questionSystemController.isQuestionRoundOver) {
 				yield break;
