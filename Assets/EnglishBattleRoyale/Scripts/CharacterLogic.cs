@@ -5,16 +5,15 @@ using NCalc;
 
 public class CharacterLogic
 {
-
 	public static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
-
 		if (character.characterSkillCalculation.Contains ("PlayerNerf")) {
 			//nerf code here
 			if (isPlayer) {
 				
+				Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
 			} else {
-			
+				Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
 			}
 
 			return;
@@ -24,9 +23,9 @@ public class CharacterLogic
 		if (character.characterSkillCalculation.Contains ("EnemyCharacterSlot")) {
 			//EnemyCharacterSlot code here
 			if (isPlayer) {
-				
+				Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
 			} else {
-			
+				Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
 			}
 			return;
 
@@ -65,8 +64,7 @@ public class CharacterLogic
 
 		CheckTurns ();
 	}
-
-
+		
 	static List<Queue<CharacterComputeModel>> characterQueueList = new List<Queue<CharacterComputeModel>> ();
 
 	//activate character if turn is existing

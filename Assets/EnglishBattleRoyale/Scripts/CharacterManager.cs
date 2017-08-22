@@ -117,6 +117,8 @@ public class CharacterManager: IRPCDicObserver
 
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.characterID);
 
+			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (true, character.characterID);
+
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
 
@@ -125,9 +127,11 @@ public class CharacterManager: IRPCDicObserver
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.enemyCardContainer.transform.position;
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.characterID);
 
-	
+			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (false, character.characterID);
 		
 		}
+
+
 			
 		SystemSoundController.Instance.PlaySFX ("SFX_SKILLACTIVATE");
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "skill1");

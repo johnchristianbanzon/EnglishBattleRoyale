@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-/* Controls the battle */
 public class PartStateController : MonoBehaviour, IGameTimeObserver
 {
 	public GameObject playerCardContainer;
@@ -36,7 +35,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public PlayerModel enemy{ get; set; }
 
-	void Start(){
+	void Start ()
+	{
 		playerAwesomeIndicator.enabled = false;
 		enemyAwesomeIndicator.enabled = false;
 	}
@@ -78,7 +78,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			enemyHPBar.value = enemy.playerHP;
 		}
 	}
-		
+
 
 	#region INITIAL STATE
 
@@ -249,20 +249,20 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 
 			if (isPLayer) {
-				ScreenBattleController.Instance.partAvatars.enemy.LoadHitEffect ();
+				ScreenBattleController.Instance.partAvatars.LoadHitEffect (false);
 				//load power effect in arms for every awesome count
 				if (i < GameManager.playerAnswerParam.speedyAwesomeCount) {
 					awesomeCounter++;
-					ScreenBattleController.Instance.partAvatars.player.LoadArmPowerEffect ();
-					StartCoroutine (ShowAwesomeIndicatorCoroutine(true));
+					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (true);
+					StartCoroutine (ShowAwesomeIndicatorCoroutine (true));
 				}
 			} else {
-				ScreenBattleController.Instance.partAvatars.player.LoadHitEffect ();
+				ScreenBattleController.Instance.partAvatars.LoadHitEffect (true);
 				//load power effect in arms for every awesome count
 				if (i < GameManager.enemyAnswerParam.speedyAwesomeCount) {
 					awesomeCounter++;
-					ScreenBattleController.Instance.partAvatars.enemy.LoadArmPowerEffect ();
-					StartCoroutine (ShowAwesomeIndicatorCoroutine(false));
+					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (false);
+					StartCoroutine (ShowAwesomeIndicatorCoroutine (false));
 				}
 			}
 				
@@ -290,7 +290,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	}
 
-	IEnumerator ShowAwesomeIndicatorCoroutine(bool isPlayer){
+	IEnumerator ShowAwesomeIndicatorCoroutine (bool isPlayer)
+	{
 		if (isPlayer) {
 			playerAwesomeIndicator.enabled = true;
 			yield return new WaitForSeconds (1);
@@ -327,7 +328,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	}
 
 
-	IEnumerator StartTimer (int timer,Action action = null)
+	IEnumerator StartTimer (int timer, Action action = null)
 	{
 		int timeLeft = timer;
 
