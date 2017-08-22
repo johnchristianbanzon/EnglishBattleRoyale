@@ -11,11 +11,12 @@ public class PlayerModel
 
 	public float playerMaxGP;
 
-	public float playerBaseDamage;
+	public float playerBD;
 
-	public float playerGuardDamage;
+	public float playerSD;
 
-	public float playerCriticalDamageRate;
+	public float playerTD;
+
 
 	public PlayerModel (string playerName, float[] playerParam)
 	{
@@ -23,9 +24,8 @@ public class PlayerModel
 		this.playerHP = playerParam [0];
 		this.playerGP = playerParam [1];
 		this.playerMaxGP = playerParam [2];
-		this.playerBaseDamage = playerParam [3];
-		this.playerGuardDamage = playerParam [4];
-		this.playerCriticalDamageRate = playerParam [5];
+		this.playerBD = playerParam [3];
+		this.playerSD = playerParam [4];
+		this.playerTD = playerParam [5];
 	}
-		
 }

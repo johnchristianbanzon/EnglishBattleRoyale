@@ -38,7 +38,7 @@ public class BattleManager: IRPCDicObserver
 	//send attack to firebase
 	public static void SendAttack ()
 	{
-		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (ScreenBattleController.Instance.partState.player.playerBaseDamage));
+		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (ScreenBattleController.Instance.partState.player.playerTD));
 		Debug.Log ("SENDING ATTACK");
 	}
 

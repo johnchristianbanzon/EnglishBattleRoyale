@@ -105,11 +105,11 @@ public class CharacterManager: IRPCDicObserver
 
 	public static void CharacterActivate (bool isPlayer)
 	{
+		
 		//TO-DO REFACTOR THIS CODE
 		CharacterModel character = null;
 		if (isPlayer) {
 			character = playerCharacterQueue.Dequeue ();
-			ScreenBattleController.Instance.partAvatars.player.LoadSkillAuraEffect (character.characterSkillID);
 
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
 				                         ScreenBattleController.Instance.partState.playerCardContainer);
@@ -120,7 +120,6 @@ public class CharacterManager: IRPCDicObserver
 			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
-			ScreenBattleController.Instance.partAvatars.enemy.LoadSkillAuraEffect (character.characterSkillID);
 
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
 				ScreenBattleController.Instance.partState.enemyCardContainer);
@@ -130,9 +129,8 @@ public class CharacterManager: IRPCDicObserver
 	
 			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
 		}
-
-	
 			
+		SystemSoundController.Instance.PlaySFX ("SFX_SKILLACTIVATE");
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "skill1");
 		CharacterLogic.CharacterActivate (isPlayer, character);
 	}

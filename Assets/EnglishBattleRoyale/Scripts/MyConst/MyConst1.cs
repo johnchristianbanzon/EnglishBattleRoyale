@@ -63,7 +63,7 @@ public static partial class MyConst {
 
 	private static void InitCharacterConst ()
 	{
-		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("Characters");
+		TextAsset csvData = SystemResourceController.Instance.LoadCSV ("Character");
 		characterConst = CSVParserUtility.Parse (csvData.ToString ());
 	}
 
@@ -81,28 +81,26 @@ public static partial class MyConst {
 				int.Parse(characterConst[i][0].ToString()), //Character ID
 				characterConst[i][1].ToString(), // Character Name
 				characterConst[i][2].ToString(), //Character Description
-				int.Parse(characterConst[i][3].ToString()), //Character GP COST
-				int.Parse(characterConst[i][4].ToString()),  //Character SKill ID
-				int.Parse(characterConst[i][5].ToString()),  //Character Calculation Type
-				characterConst[i][6].ToString(),  //Character Amount
-				int.Parse(characterConst[i][7].ToString()),  //Character Condition Type
-				characterConst[i][8].ToString(), //Character Condition Ref
-				characterConst[i][9].ToString(), //Character Condition Amount
-				int.Parse(characterConst[i][10].ToString()),  //Character Sacrifice type
-				int.Parse(characterConst[i][11].ToString()),  //Character Sacrifice amount
-				int.Parse(characterConst[i][12].ToString()),  //Character Turn
-				int.Parse(characterConst[i][13].ToString()) //Character Type
+				characterConst[i][3].ToString(), //Character Alternate name
+				int.Parse(characterConst[i][4].ToString()), //Character GP COST
+				int.Parse(characterConst[i][5].ToString()),  //Character SKillType
+				int.Parse(characterConst[i][6].ToString()),  //Character Skill Operator
+				characterConst[i][7].ToString(),  //Character Calculation
+				characterConst[i][8].ToString(),  //Character Sacrifice Calculation
+				int.Parse(characterConst[i][9].ToString()),  //Character Sacrifice type
+				int.Parse(characterConst[i][10].ToString()), //Character Type
+				int.Parse(characterConst[i][11].ToString())  //Character Turn
+
 			);
 			characterList.Add(character);
 		}
-
 		return characterList;
 	}
 
-	public static CharacterModel GetCharacterBySkillID (int skillID)
+	public static CharacterModel GetCharacterBySkillType (int skillID)
 	{
 		List<CharacterModel> characterList = GetCharacterList ();
-		CharacterModel character = characterList.Where(p => p.characterSkillID == skillID).FirstOrDefault();
+		CharacterModel character = characterList.Where(p => p.characterSkillType == skillID).FirstOrDefault();
 		return character;
 	}
 
