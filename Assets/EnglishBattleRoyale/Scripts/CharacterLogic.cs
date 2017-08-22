@@ -8,7 +8,6 @@ public class CharacterLogic
 
 	public static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
-		Debug.Log (character.characterSkillCalculation);
 
 		if (character.characterSkillCalculation.Contains ("PlayerNerf")) {
 			//nerf code here
@@ -56,15 +55,29 @@ public class CharacterLogic
 		}
 		Expression e = new Expression (character.characterSkillCalculation);
 
-		characterQueue.Enqueue (delegate() {
-			CharacterCompute (isPlayer, character, float.Parse (e.Evaluate ().ToString ()));
-		});
-		test ();
+		Queue<Action> characterQueue = new Queue<Action> ();
+		for (int i = 0; i < character.characterTurn; i++) {
+			characterQueue.Enqueue (delegate() {
+				CharacterCompute (isPlayer, character, float.Parse (e.Evaluate ().ToString ()));
+			});
+		}
+		characterQueueList.Add (characterQueue);
+
+		CheckTurns ();
 
 	}
-	static Queue<Action> characterQueue = new Queue<Action>();
-	private static void test(){
-		characterQueue.Dequeue ()();
+
+	static List<Queue<Action>> characterQueueList = new List<Queue<Action>> ();
+
+	private static void CheckTurns ()
+	{
+		for (int i = 0; i < characterQueueList.Count; i++) {
+			if (characterQueueList [i].Count == 0) {
+				characterQueueList.RemoveAt (i);
+			}
+			characterQueueList [i].Dequeue ();
+		}
+		
 	}
 		
 

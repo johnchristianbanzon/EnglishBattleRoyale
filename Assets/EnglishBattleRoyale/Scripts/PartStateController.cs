@@ -200,8 +200,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			playerTotalDamageText.text = "";
 			enemyTotalDamageText.text = "";
 			enemyHitComboCountText.text = "";
+			playerAwesomeTotalDamageText.text = "";
+			enemyAwesomeTotalDamageText.text = "";
 			Invoke ("StartPhase1", 1);
-			Debug.Log ("DONE CHECKING: STARTING PHASE 1");
 		}
 	}
 
@@ -290,11 +291,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	IEnumerator ShowAwesomeIndicatorCoroutine(bool isPlayer){
 		if (isPlayer) {
 			playerAwesomeIndicator.enabled = true;
-			yield return new WaitForSeconds (0.5f);
+			yield return new WaitForSeconds (1);
 			playerAwesomeIndicator.enabled = false;
 		} else {
 			enemyAwesomeIndicator.enabled = true;
-			yield return new WaitForSeconds (0.5f);
+			yield return new WaitForSeconds (1);
 			enemyAwesomeIndicator.enabled = false;
 		}
 	}
