@@ -117,7 +117,6 @@ public class CharacterManager: IRPCDicObserver
 
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.characterID);
 
-			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
 
@@ -127,7 +126,7 @@ public class CharacterManager: IRPCDicObserver
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.characterID);
 
 	
-			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
+		
 		}
 			
 		SystemSoundController.Instance.PlaySFX ("SFX_SKILLACTIVATE");
