@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System;
+using System.Collections.Generic;
 using NCalc;
 
 public class CharacterLogic
@@ -6,6 +8,8 @@ public class CharacterLogic
 
 	public static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
+		Debug.Log (character.characterSkillCalculation);
+
 		if (character.characterSkillCalculation.Contains ("PlayerNerf")) {
 			//nerf code here
 			if (isPlayer) {
@@ -51,14 +55,22 @@ public class CharacterLogic
 				Replace ("EnemyAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
 		}
 		Expression e = new Expression (character.characterSkillCalculation);
-		CharacterCompute (isPlayer, character, float.Parse (e.Evaluate ().ToString ()));
+
+		characterQueue.Enqueue (delegate() {
+			CharacterCompute (isPlayer, character, float.Parse (e.Evaluate ().ToString ()));
+		});
+		test ();
 
 	}
+	static Queue<Action> characterQueue = new Queue<Action>();
+	private static void test(){
+		characterQueue.Dequeue ()();
+	}
 		
+
 	//activates the character and calculate the respective skills
 	private static void CharacterCompute (bool isPlayer, CharacterModel character, float calculateCharAmount)
 	{
-
 		switch ((CharacterEnums.SkillType)character.characterSkillType) {
 
 		case CharacterEnums.SkillType.PlayerHP:
