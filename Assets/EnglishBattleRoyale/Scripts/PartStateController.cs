@@ -212,6 +212,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			yield return new WaitForSeconds (1);
 			CharacterManager.CharacterActivate (isPlayer);
 		}
+
+		yield return null;
 	}
 
 	IEnumerator CheckAttackCoroutine (bool isPlayer)
