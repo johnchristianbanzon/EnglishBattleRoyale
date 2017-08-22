@@ -133,7 +133,7 @@ public class SlotMachineEvent : MonoBehaviour
 
 		bottomSlot.transform.localPosition = new Vector2(bottomSlot.transform.localPosition.x,topSlot.transform.localPosition.y + 80f);
 		TweenFacade.TweenMoveTo (bottomSlot.transform, topSlotPosition,scrollDelay);
-		TweenFacade.RotateObject (bottomSlot,new Vector3(-50,0,0),scrollDelay);
+		TweenFacade.RotateObject (bottomSlot,new Vector3(-50,0,0),0.1f);
 		bottomSlot.transform.SetAsFirstSibling ();
 		isDraggable = false;
 		if (QuestionSystemController.Instance.questionRoundHasStarted) {

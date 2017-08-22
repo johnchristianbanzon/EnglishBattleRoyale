@@ -29,7 +29,6 @@ public class SlotMachine : MonoBehaviour,ISelection
 		for (int i = 0; i < selectionPopUp.transform.GetChild(0).childCount; i++) {
 			popUpSelectionList.Add(selectionPopUp.transform.GetChild(0).GetChild(i).gameObject);
 		}
-		Debug.Log (popUpSelectionList.Count);
 		if (popUpSelectionList.Count > 0) {
 			InvokeRepeating ("PopUpMoveSelection", 0, 0.7f);
 		}

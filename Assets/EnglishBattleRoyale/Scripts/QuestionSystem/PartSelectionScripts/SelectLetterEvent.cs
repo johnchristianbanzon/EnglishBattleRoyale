@@ -30,7 +30,8 @@ public class SelectLetterEvent : MonoBehaviour
 		}
 		Destroy (containerReplacement);
 		containerIndex = transform.GetSiblingIndex ();
-		gameObject.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+//		gameObject.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+		gameObject.GetComponent<Image> ().color = Color.white;
 		isSelected = false;
 		gameObject.GetComponent<Button> ().interactable = true;
 		gameObject.GetComponent<EventTrigger> ().enabled = true;
