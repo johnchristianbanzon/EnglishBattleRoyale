@@ -17,20 +17,29 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public Text playerGPText;
 	public Slider playerGPBar;
 
-
 	public Slider enemyHPBar;
 	public Text enemyNameText;
 	public Text enemyHPText;
 
 	public Text playerHitComboCountText;
 	public Text playerTotalDamageText;
+	public Text playerAwesomeTotalDamageText;
 
 	public Text enemyHitComboCountText;
 	public Text enemyTotalDamageText;
+	public Text enemyAwesomeTotalDamageText;
+
+	public Image playerAwesomeIndicator;
+	public Image enemyAwesomeIndicator;
 
 	public PlayerModel player{ get; set; }
 
 	public PlayerModel enemy{ get; set; }
+
+	void Start(){
+		playerAwesomeIndicator.enabled = false;
+		enemyAwesomeIndicator.enabled = false;
+	}
 
 	void Update ()
 	{
@@ -186,15 +195,14 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		if (isSecondCheck) {
 			
 			ResetPlayerDamage ();
-			ScreenBattleController.Instance.partAvatars.player.UnLoadArmPowerEffect ();
-			ScreenBattleController.Instance.partAvatars.enemy.UnLoadArmPowerEffect ();
 			BattleManager.ClearBattleData ();
 			playerHitComboCountText.text = "";
 			playerTotalDamageText.text = "";
 			enemyTotalDamageText.text = "";
 			enemyHitComboCountText.text = "";
+			playerAwesomeTotalDamageText.text = "";
+			enemyAwesomeTotalDamageText.text = "";
 			Invoke ("StartPhase1", 1);
-			Debug.Log ("DONE CHECKING: STARTING PHASE 1");
 		}
 	}
 
@@ -204,6 +212,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			yield return new WaitForSeconds (1);
 			CharacterManager.CharacterActivate (isPlayer);
 		}
+
+		yield return null;
 	}
 
 	IEnumerator CheckAttackCoroutine (bool isPlayer)
@@ -222,6 +232,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	{
 		string hitComboCount = "";
 		string totalDamageCount = "";
+		string awesomeCount = "";
 		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
 		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
 
@@ -232,16 +243,29 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			answerParam = enemyAnswerParam;
 		}
 
+		int awesomeCounter = 0;
 		for (int i = 0; i <= answerParam.correctCount; i++) {
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 
 			if (isPLayer) {
 				ScreenBattleController.Instance.partAvatars.enemy.LoadHitEffect ();
+				//load power effect in arms for every awesome count
+				if (i < GameManager.playerAnswerParam.speedyAwesomeCount) {
+					awesomeCounter++;
+					ScreenBattleController.Instance.partAvatars.player.LoadArmPowerEffect ();
+					StartCoroutine (ShowAwesomeIndicatorCoroutine(true));
+				}
 			} else {
 				ScreenBattleController.Instance.partAvatars.player.LoadHitEffect ();
+				//load power effect in arms for every awesome count
+				if (i < GameManager.enemyAnswerParam.speedyAwesomeCount) {
+					awesomeCounter++;
+					ScreenBattleController.Instance.partAvatars.enemy.LoadArmPowerEffect ();
+					StartCoroutine (ShowAwesomeIndicatorCoroutine(false));
+				}
 			}
-
+				
 			hitComboCount = (i + 1) + " HIT COMBO";
 			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 
@@ -249,18 +273,33 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 
 		action ();
+		awesomeCount = awesomeCounter + " AWESOME";
 		totalDamageCount = attackDamage + " DAMAGE";
 	
 		if (isPLayer) {
 			playerHitComboCountText.text = hitComboCount;
 			playerTotalDamageText.text = totalDamageCount;
+			playerAwesomeTotalDamageText.text = awesomeCount;
 		} else {
 			enemyHitComboCountText.text = hitComboCount;
 			enemyTotalDamageText.text = totalDamageCount;
+			enemyAwesomeTotalDamageText.text = awesomeCount;
 		}
 
 		yield return new WaitForSeconds (1);
 
+	}
+
+	IEnumerator ShowAwesomeIndicatorCoroutine(bool isPlayer){
+		if (isPlayer) {
+			playerAwesomeIndicator.enabled = true;
+			yield return new WaitForSeconds (1);
+			playerAwesomeIndicator.enabled = false;
+		} else {
+			enemyAwesomeIndicator.enabled = true;
+			yield return new WaitForSeconds (1);
+			enemyAwesomeIndicator.enabled = false;
+		}
 	}
 
 	private void StartPhase1 ()
@@ -270,7 +309,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	private void ResetPlayerDamage ()
 	{
-		player.playerBaseDamage = GameManager.player.playerBaseDamage;
+		player.playerTD = 0;
 	}
 
 	#endregion

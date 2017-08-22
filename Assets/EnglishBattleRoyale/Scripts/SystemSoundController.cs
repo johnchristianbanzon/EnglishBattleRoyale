@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
 using System;
 
 public class SystemSoundController: SingletonMonoBehaviour<SystemSoundController>
 {
 	private AudioSource bgmPlayer;
-	private AudioSource sfxPlayer;
 	private bool isBGMMute;
 	private bool isSFXMute;
 
@@ -30,12 +28,14 @@ public class SystemSoundController: SingletonMonoBehaviour<SystemSoundController
 		bgmPlayer.loop = true;
 		bgmPlayer.mute = isBGMMute;
 
+		TweenFacade.TweenVolume (bgmPlayer);
 		bgmPlayer.Play ();
 	}
 
 	public void PlaySFX (string sfxName)
 	{
-		sfxPlayer = this.gameObject.AddComponent<AudioSource> ();	
+
+		AudioSource sfxPlayer = this.gameObject.AddComponent<AudioSource> ();	
 		sfxPlayer.clip = SystemResourceController.Instance.LoadAudio (sfxName);
 		sfxPlayer.mute = isBGMMute;
 

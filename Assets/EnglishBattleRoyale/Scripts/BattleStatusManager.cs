@@ -60,14 +60,7 @@ public class BattleStatusManager: IRPCDicObserver
 							GameManager.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString ());
 						}
 					}
-
-					if (GameManager.playerAnswerParam.speedyAwesomeCount > 0) {
-						ScreenBattleController.Instance.partAvatars.player.LoadArmPowerEffect ();
-					}
-
-					if (GameManager.enemyAnswerParam.speedyAwesomeCount > 0) {
-						ScreenBattleController.Instance.partAvatars.enemy.LoadArmPowerEffect ();
-					}
+						
 
 					CheckBattleCount (battleCount, delegate() {
 						if (GameManager.isHost) {
