@@ -54,21 +54,20 @@ public class CharacterLogic
 				Replace ("EnemyAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
 		}
 		Expression e = new Expression (character.characterSkillCalculation);
-
-		Queue<Action> characterQueue = new Queue<Action> ();
+		float calculatedChar = float.Parse (e.Evaluate ().ToString ());
+	
+		Queue<CharacterComputeModel> characterQueue = new Queue<CharacterComputeModel> ();
 		//Depending on turn, add to queue
 		for (int i = 0; i < character.characterTurn; i++) {
-			characterQueue.Enqueue (delegate() {
-				CharacterCompute (isPlayer, character, float.Parse (e.Evaluate ().ToString ()));
-			});
+		characterQueue.Enqueue (new CharacterComputeModel(isPlayer, character, calculatedChar));
 		}
 		characterQueueList.Add (characterQueue);
 
 		CheckTurns ();
-
 	}
 
-	static List<Queue<Action>> characterQueueList = new List<Queue<Action>> ();
+
+	static List<Queue<CharacterComputeModel>> characterQueueList = new List<Queue<CharacterComputeModel>> ();
 
 	//activate character if turn is existing
 	private static void CheckTurns ()
@@ -77,26 +76,39 @@ public class CharacterLogic
 			//remove item in list if no queues
 			if (characterQueueList [i].Count == 0) {
 				characterQueueList.RemoveAt (i);
+				return;
 			}
-			characterQueueList [i].Dequeue ();
+
+			CharacterComputeModel characterCompute = characterQueueList [i].Dequeue ();
+			CharacterCompute (
+				characterCompute.isPlayer,
+				characterCompute.character,
+				characterCompute.calculatedChar
+			);
 		}
 		
 	}
 		
 
 	//activates the character and calculate the respective skills
-	private static void CharacterCompute (bool isPlayer, CharacterModel character, float calculateCharAmount)
+	private static void CharacterCompute (bool isPlayer, CharacterModel character, float calculatedChar)
 	{
+		if (isPlayer) {
+			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
+		} else {
+			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
+		}
+
 		switch ((CharacterEnums.SkillType)character.characterSkillType) {
 
 		case CharacterEnums.SkillType.PlayerHP:
 			if (isPlayer) {
 				ScreenBattleController.Instance.partState.player.playerHP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerHP, calculateCharAmount);
+					ScreenBattleController.Instance.partState.player.playerHP, calculatedChar);
 
 			} else {
 				ScreenBattleController.Instance.partState.enemy.playerHP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerHP, calculateCharAmount);
+					ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar);
 			}
 			break;
 
@@ -105,22 +117,22 @@ public class CharacterLogic
 			if (isPlayer) {
 				//Skill damage to enemy
 				ScreenBattleController.Instance.partState.enemy.playerHP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerHP, calculateCharAmount) * ScreenBattleController.Instance.partState.enemy.playerSD;
+					ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar) * ScreenBattleController.Instance.partState.enemy.playerSD;
 			} else {
 				//Skill damage from enemy
 
 				ScreenBattleController.Instance.partState.player.playerHP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerHP, calculateCharAmount) * ScreenBattleController.Instance.partState.player.playerSD;
+					ScreenBattleController.Instance.partState.player.playerHP, calculatedChar) * ScreenBattleController.Instance.partState.player.playerSD;
 			}
 			break;
 
 		case CharacterEnums.SkillType.PlayerBD:
 			if (isPlayer) {
 				ScreenBattleController.Instance.partState.player.playerBD = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerBD, calculateCharAmount);
+					ScreenBattleController.Instance.partState.player.playerBD, calculatedChar);
 			} else {
 				ScreenBattleController.Instance.partState.enemy.playerBD = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerBD, calculateCharAmount);
+					ScreenBattleController.Instance.partState.enemy.playerBD, calculatedChar);
 			}
 
 			break;
@@ -128,10 +140,10 @@ public class CharacterLogic
 		case CharacterEnums.SkillType.EnemyBD:
 			if (isPlayer) {
 				ScreenBattleController.Instance.partState.enemy.playerBD = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerBD, calculateCharAmount);
+					ScreenBattleController.Instance.partState.enemy.playerBD, calculatedChar);
 			} else {
 				ScreenBattleController.Instance.partState.player.playerBD = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerBD, calculateCharAmount);
+					ScreenBattleController.Instance.partState.player.playerBD, calculatedChar);
 			}
 
 			break;
@@ -139,10 +151,10 @@ public class CharacterLogic
 		case CharacterEnums.SkillType.PlayerTD:
 			if (isPlayer) {
 				ScreenBattleController.Instance.partState.player.playerTD = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerTD, calculateCharAmount);
+					ScreenBattleController.Instance.partState.player.playerTD, calculatedChar);
 			} else {
 				ScreenBattleController.Instance.partState.enemy.playerTD = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerTD, calculateCharAmount);
+					ScreenBattleController.Instance.partState.enemy.playerTD, calculatedChar);
 			}
 
 			break;
@@ -150,28 +162,28 @@ public class CharacterLogic
 		case CharacterEnums.SkillType.EnemyTD:
 			if (isPlayer) {
 				ScreenBattleController.Instance.partState.enemy.playerTD = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerTD, calculateCharAmount);
+					ScreenBattleController.Instance.partState.enemy.playerTD, calculatedChar);
 			} else {
 				ScreenBattleController.Instance.partState.player.playerTD = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerTD, calculateCharAmount);
+					ScreenBattleController.Instance.partState.player.playerTD, calculatedChar);
 			}
 
 			break;
 
 		case CharacterEnums.SkillType.PlayerSD:
 			if (isPlayer) {
-				ScreenBattleController.Instance.partState.player.playerSD = calculateCharAmount;
+				ScreenBattleController.Instance.partState.player.playerSD = calculatedChar;
 			} else {
-				ScreenBattleController.Instance.partState.enemy.playerSD = calculateCharAmount;
+				ScreenBattleController.Instance.partState.enemy.playerSD = calculatedChar;
 			}
 
 			break;
 
 		case CharacterEnums.SkillType.EnemySD:
 			if (isPlayer) {
-				ScreenBattleController.Instance.partState.enemy.playerSD = calculateCharAmount;
+				ScreenBattleController.Instance.partState.enemy.playerSD = calculatedChar;
 			} else {
-				ScreenBattleController.Instance.partState.player.playerSD = calculateCharAmount;
+				ScreenBattleController.Instance.partState.player.playerSD = calculatedChar;
 			}
 
 			break;
@@ -179,10 +191,10 @@ public class CharacterLogic
 		case CharacterEnums.SkillType.PlayerGP:
 			if (isPlayer) {
 				ScreenBattleController.Instance.partState.player.playerGP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerGP, calculateCharAmount);
+					ScreenBattleController.Instance.partState.player.playerGP, calculatedChar);
 			} else {
 				ScreenBattleController.Instance.partState.enemy.playerGP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerGP, calculateCharAmount);
+					ScreenBattleController.Instance.partState.enemy.playerGP, calculatedChar);
 			}
 
 			break;
@@ -190,10 +202,10 @@ public class CharacterLogic
 		case CharacterEnums.SkillType.EnemyGP:
 			if (isPlayer) {
 				ScreenBattleController.Instance.partState.enemy.playerGP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerGP, calculateCharAmount);
+					ScreenBattleController.Instance.partState.enemy.playerGP, calculatedChar);
 			} else {
 				ScreenBattleController.Instance.partState.player.playerGP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerGP, calculateCharAmount);
+					ScreenBattleController.Instance.partState.player.playerGP, calculatedChar);
 			}
 
 			break;
