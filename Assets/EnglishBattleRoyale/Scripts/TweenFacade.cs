@@ -39,6 +39,11 @@ public static class TweenFacade{
 		mySequence.Append(obj.DOScale(new Vector3(1.2f,1.2f,1.2f), 0.5f).SetEase(Ease.Linear));
 		mySequence.Append(obj.DOScale(Vector3.one,0.5f).SetEase(Ease.Linear));
 	}
+
+	public static void TweenVolume(AudioSource obj){
+		obj.volume = 0;
+		obj.DOFade (1,10);
+	}
 		
 
 	public static void TweenTextScale(Transform text, Vector3 endValue, float duration){

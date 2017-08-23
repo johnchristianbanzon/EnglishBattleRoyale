@@ -105,11 +105,11 @@ public class CharacterManager: IRPCDicObserver
 
 	public static void CharacterActivate (bool isPlayer)
 	{
+		
 		//TO-DO REFACTOR THIS CODE
 		CharacterModel character = null;
 		if (isPlayer) {
 			character = playerCharacterQueue.Dequeue ();
-			ScreenBattleController.Instance.partAvatars.player.LoadSkillAuraEffect (character.characterSkillID);
 
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
 				                         ScreenBattleController.Instance.partState.playerCardContainer);
@@ -117,22 +117,23 @@ public class CharacterManager: IRPCDicObserver
 
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.characterID);
 
-			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
+			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (true, character.characterID);
+
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
-			ScreenBattleController.Instance.partAvatars.enemy.LoadSkillAuraEffect (character.characterSkillID);
 
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
 				ScreenBattleController.Instance.partState.enemyCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.enemyCardContainer.transform.position;
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.characterID);
 
-	
-			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
+			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (false, character.characterID);
+		
 		}
 
-	
+
 			
+		SystemSoundController.Instance.PlaySFX ("SFX_SKILLACTIVATE");
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "skill1");
 		CharacterLogic.CharacterActivate (isPlayer, character);
 	}

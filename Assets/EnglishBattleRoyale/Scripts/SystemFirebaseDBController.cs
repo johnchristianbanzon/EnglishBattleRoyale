@@ -28,24 +28,24 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	private void Init ()
 	{
-		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
-			dependencyStatus = FirebaseApp.CheckDependencies ();
-			if (dependencyStatus != DependencyStatus.Available) {
-				FirebaseApp.FixDependenciesAsync ().ContinueWith (task => {
-					dependencyStatus = FirebaseApp.CheckDependencies ();
-					if (dependencyStatus == DependencyStatus.Available) {
-						InitializeFirebase ();
-					} else {
-						SystemLoadScreenController.Instance.StopLoadingScreen ();
-						Debug.LogError (
-							"Could not resolve all Firebase dependencies: " + dependencyStatus);
-					}
-				});
-			} else {
-
+//		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
+//			dependencyStatus = FirebaseApp.CheckDependencies ();
+//			if (dependencyStatus != DependencyStatus.Available) {
+//				FirebaseApp.FixDependenciesAsync ().ContinueWith (task => {
+//					dependencyStatus = FirebaseApp.CheckDependencies ();
+//					if (dependencyStatus == DependencyStatus.Available) {
+//						InitializeFirebase ();
+//					} else {
+//						SystemLoadScreenController.Instance.StopLoadingScreen ();
+//						Debug.LogError (
+//							"Could not resolve all Firebase dependencies: " + dependencyStatus);
+//					}
+//				});
+//			} else {
+//
 				InitializeFirebase ();
-			}
-		});
+//			}
+//		});
 	}
 
 	private void InitializeFirebase ()
@@ -202,7 +202,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		RPCListener ();
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result [MyConst.RPC_DATA_PLAYER] = JsonUtility.ToJson (GameManager.player);
+		result [MyConst.RPC_DATA_PLAYER] = JsonUtility.ToJson (MyConst.player);
 		Dictionary<string, System.Object> entryValues = result;
 
 		string directory = MyConst.GAMEROOM_ROOM + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_INITITAL_STATE + "/" + userPlace + "/" + MyConst.RPC_DATA_PARAM + "/";

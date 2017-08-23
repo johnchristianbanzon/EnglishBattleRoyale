@@ -36,56 +36,26 @@ public class PartQuestionController: MonoBehaviour
 	public void OnStartPhase ()
 	{
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
-
+		Debug.Log ("But its True!");
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-		if (questionSystem.Equals(null)) {
+		Debug.Log ("Got Obs");
+		if (questionSystem == null) {
+			Debug.Log("NO QUESTION SYSTEM!");
 			questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
+			Debug.Log(questionSystem.name);
 		} else {
+			Debug.Log ("whoops its else dude");
 			questionSystem.SetActive (true);
 		}
-
-
-		string[] questionTypes = new string[6]{ "select", "typing", "change", "word", "slot", "letter" };
-		questionType = QuestionBuilder.GetQuestionType (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)]);
-
-		string popUpName = "";
-		switch (questionType.selectionType.GetType().Name) {
-		case "WordChoice":
-			popUpName = "PopUpWordChoice";
-			break;
-		case "SelectLetter":
-			popUpName = "PopUpSelectLetter";
-			break;
-		case "ChangeOrderController":
-			popUpName = "PopUpChangeOrder";
-			break;
-		case "Typing":
-			popUpName = "PopUpTyping";
-			break;
-		case "SlotMachine":
-			popUpName = "PopUpSlotMachine";
-			break;
-		case "LetterLink":
-			popUpName = "PopUpLetterLink";
-			break;
-		}
-		questionSystemController = QuestionSystemController.Instance;
-		questionSystemController.popUpSelectionIndicator = SystemResourceController.Instance.LoadPrefab (popUpName, SystemPopupController.Instance.popUp);
-		TweenFacade.TweenScaleToLarge (questionSystemController.popUpSelectionIndicator.transform, Vector3.one, 0.3f);
-		questionSystemController.popUpSelectionIndicator.transform.position = Vector3.zero;
-//		questionSystemController.scrollBody.transform.position = new Vector2 (transform.position.x,transform.position.y + 920f);
-
-		TweenFacade.TweenMoveTo (transform, Vector3.zero, 0.5f);
-		TweenFacade.TweenMoveTo (questionSystemController.scrollBody.transform,Vector3.zero,1.0f);
+		Debug.Log ("Yeahyeahyeah, LOVE YOU BYE.");
+		string[] questionTypes = new string[6]{ "SelectLetter", "Typing", "ChangeOrderController", "WordChoice", "SlotMachine", "LetterLink" };
+		QuestionSystemController.Instance.ShowPopUP (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)]);
 
 		Invoke("StartQuestion",2.0f);
-
-
-
 	}
 
 	private void StartQuestion(){
-		
+		Debug.Log ("Oh Come on Man!");
 		QuestionSystemController.Instance.StartQuestionRound (
 			questionType
 			, delegate(List<QuestionResultModel> resultList) {
@@ -99,19 +69,18 @@ public class PartQuestionController: MonoBehaviour
 				int rottenSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Rotten);
 				//:TO-DO count speedyawesome and speedygood and include in computation
 				//bonus get from answers
-				float correctGPBonus = correctCount * GameManager.gameSettings.correctGPBonus;
-				float correctDamageBonus = correctCount * GameManager.gameSettings.correctDamageBonus;
-				float speedyAwesomeGPBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeGPBonus;
-				float speedyAwesomeDamageBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeDamageBonus;
-				float speedyGoodGPBonus = correctCount * GameManager.gameSettings.speedyGoodGPBonus;
-				float speedyGoodDamageBonus = correctCount * GameManager.gameSettings.speedyGoodDamageBonus;
+				float correctGPBonus = correctCount * MyConst.gameSettings.correctGPBonus;
+				float correctDamageBonus = correctCount * MyConst.gameSettings.correctDamageBonus;
+				float speedyAwesomeGPBonus = awesomeSpeedyCount * MyConst.gameSettings.speedyAwesomeGPBonus;
+				float speedyAwesomeDamageBonus = awesomeSpeedyCount * MyConst.gameSettings.speedyAwesomeDamageBonus;
+				float speedyGoodGPBonus = correctCount * MyConst.gameSettings.speedyGoodGPBonus;
+				float speedyGoodDamageBonus = correctCount * MyConst.gameSettings.speedyGoodDamageBonus;
 
 				ScreenBattleController.Instance.partState.player.playerGP += correctGPBonus + speedyAwesomeGPBonus + speedyGoodGPBonus;
 				Debug.Log ("GP GAINED A TOTAL OF " + (correctGPBonus + speedyAwesomeGPBonus));
 
-				ScreenBattleController.Instance.partState.player.playerBaseDamage += correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus;
+				ScreenBattleController.Instance.partState.player.playerTD = ScreenBattleController.Instance.partState.player.playerBD + correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus;
 				Debug.Log ("BONUS PLAYER DAMAGE ADDED " + (correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus));
-				//
 
 
 				//send answer results to firebase
@@ -124,9 +93,10 @@ public class PartQuestionController: MonoBehaviour
 	}
 
 	public void QuestionSystemReturnCallback(){
+		/*
 		TweenFacade.TweenMoveTo (questionSystemController.scrollBody.transform,new Vector2(questionSystemController.scrollBody.transform.position.x,questionSystemController.scrollBody.transform.position.y + 924f),0.5f);
 		questionSystemController.HideQuestionParts();
-		Invoke("hideScrollUI",0.5f);
+		Invoke("hideScrollUI",0.5f);*/
 	}
 	public void OnEndPhase ()
 	{

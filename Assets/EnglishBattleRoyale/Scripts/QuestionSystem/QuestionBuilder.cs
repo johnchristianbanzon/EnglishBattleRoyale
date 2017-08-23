@@ -38,9 +38,16 @@ public static class QuestionBuilder
 				string questionType = questionTypeModel.selectionType.GetType().Name;
 				questions.Add (GetQuestion (GetQuestionType(questionType)));
 			} else {
-				questions.Add (GetQuestion (GetQuestionType (selectionFromRandom)));
+				QuestionModel questionType = GetQuestion (GetQuestionType (selectionFromRandom));
+				if (i < 3) {
+					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Easy;
+				} else if (i < 7) {
+					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Normal;
+				} else {
+					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Hard;
+				}
+				questions.Add (questionType);
 			}
-
 		}
 		return questions;
 	}
@@ -92,9 +99,9 @@ public static class QuestionBuilder
 
 			case QuestionSystemEnums.TargetType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
-						answersList.Add (questionList [randomize].answer);
-						question = questionList [randomize].definition;
-						questionViable = true;
+					answersList.Add (questionList [randomize].answer);
+					question = questionList [randomize].definition;
+					questionViable = true;
 				}
 				break;
 
@@ -190,7 +197,7 @@ public static class QuestionBuilder
 		switch(selection){
 		case "SelectLetter":
 			typeModel = new QuestionTypeModel (
-//				QuestionSystemEnums.TargetType.Definition,
+				//				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
@@ -199,7 +206,7 @@ public static class QuestionBuilder
 			break;
 		case "Typing":
 			typeModel = new QuestionTypeModel (
-//				QuestionSystemEnums.TargetType.Definition,
+				//				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
@@ -208,7 +215,7 @@ public static class QuestionBuilder
 			break;
 		case "ChangeOrderController":
 			typeModel = new QuestionTypeModel (
-//				QuestionSystemEnums.TargetType.Synonym,
+				//				QuestionSystemEnums.TargetType.Synonym,
 				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
@@ -219,7 +226,7 @@ public static class QuestionBuilder
 			targetDictionary.Remove (QuestionSystemEnums.TargetType.Definition);
 			targetDictionary.Remove (QuestionSystemEnums.TargetType.Association);
 			typeModel = new QuestionTypeModel (
-//				QuestionSystemEnums.TargetType.Synonym,
+				//				QuestionSystemEnums.TargetType.Synonym,
 				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.noAnswer,
@@ -228,7 +235,7 @@ public static class QuestionBuilder
 			break;
 		case "SlotMachine":
 			typeModel = new QuestionTypeModel (
-//				QuestionSystemEnums.TargetType.Definition,
+				//				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
@@ -237,7 +244,7 @@ public static class QuestionBuilder
 			break;
 		case "LetterLink":
 			typeModel = new QuestionTypeModel (
-//				QuestionSystemEnums.TargetType.Association,
+				//				QuestionSystemEnums.TargetType.Association,
 				QuestionGenerator.GetTargetWay(targetDictionary),
 				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.showAnswer,

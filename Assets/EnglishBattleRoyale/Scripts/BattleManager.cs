@@ -38,7 +38,7 @@ public class BattleManager: IRPCDicObserver
 	//send attack to firebase
 	public static void SendAttack ()
 	{
-		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (ScreenBattleController.Instance.partState.player.playerBaseDamage));
+		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (ScreenBattleController.Instance.partState.player.playerTD));
 		Debug.Log ("SENDING ATTACK");
 	}
 
@@ -123,8 +123,8 @@ public class BattleManager: IRPCDicObserver
 					} else if (playerAnswerParam.speedyRottenCount < enemyAnswerParam.speedyRottenCount) {
 						battleOrder = 1;
 					} else {
-						//RANDOM IF BOTH RESULTS ARE THE SAME
-						battleOrder = UnityEngine.Random.Range (0, 2);
+						//TO-DO CHANGE TO RANDOM IN FUTURE ONLY 1 WILL CALCULATE NOT TWO DEVICES
+						battleOrder = 1;
 					}
 				}
 			}
