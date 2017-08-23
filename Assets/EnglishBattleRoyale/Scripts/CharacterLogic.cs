@@ -15,7 +15,7 @@ public class CharacterLogic
 			if (isPlayer) {
 				for (int i = 0; i < characterQueueList.Count; i++) {
 					if (characterQueueList [i].Count > 0) {
-						CharacterComputeModel charCompute = characterQueueList [i].Peek;
+						CharacterComputeModel charCompute = characterQueueList [i].Peek();
 						if (!charCompute.isPlayer) {
 							if ((CharacterEnums.Target)charCompute.character.characterTarget == CharacterEnums.Target.Enemy) {
 								characterQueueList [i].Clear ();
