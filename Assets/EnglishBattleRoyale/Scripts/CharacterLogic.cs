@@ -21,7 +21,6 @@ public class CharacterLogic
 							if ((CharacterEnums.Target)charCompute.character.characterTarget == CharacterEnums.Target.Enemy) {
 								characterQueueList [i].Clear ();
 							}
-							break;
 						}
 					}
 				}
