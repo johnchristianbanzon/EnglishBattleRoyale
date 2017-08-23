@@ -43,6 +43,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public InputField timerInput;
 	public GameObject debugUI;
 	public bool isDebug = false;
+	public Dropdown difficultyDrop;
 	//DEBUG FIELDS ENDS HERE
 
 	public GameObject scrollBody;

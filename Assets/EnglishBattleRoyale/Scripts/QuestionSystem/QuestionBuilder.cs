@@ -35,12 +35,10 @@ public static class QuestionBuilder
 		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		for (int i = 0; i < numberOfQuestions; i++) {
 			if (QuestionSystemController.Instance.isDebug) {
-//				questions.Add (GetQuestion (questionTypeModel));
 				string questionType = questionTypeModel.selectionType.GetType().Name;
 				questions.Add (GetQuestion (GetQuestionType(questionType)));
 			} else {
 				questions.Add (GetQuestion (GetQuestionType (selectionFromRandom)));
-//				selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 			}
 
 		}
@@ -94,11 +92,9 @@ public static class QuestionBuilder
 
 			case QuestionSystemEnums.TargetType.Definition:
 				if (questionList [randomize].hasDefinition.ToString()=="1") {
-					 
 						answersList.Add (questionList [randomize].answer);
 						question = questionList [randomize].definition;
 						questionViable = true;
-
 				}
 				break;
 
@@ -108,6 +104,24 @@ public static class QuestionBuilder
 					question = questionList [randomize].clues1 + "/"+questionList [randomize].clues2
 						+"/"+questionList [randomize].clues3+"/"+questionList [randomize].clues4;
 					questionViable = true;
+				}
+				break;
+			}
+
+			switch(questionType.contentLevel){
+			case QuestionSystemEnums.ContentLevel.Easy:
+				if (!(questionList [randomize].levelId < 4) ) {
+					questionViable = false;
+				}
+				break;
+			case QuestionSystemEnums.ContentLevel.Normal:
+				if (!(questionList [randomize].levelId < 7) && !(questionList [randomize].levelId>=4)) {
+					questionViable = false;
+				}
+				break;
+			case QuestionSystemEnums.ContentLevel.Hard:
+				if (questionList [randomize].levelId < 7) {
+					questionViable = false;
 				}
 				break;
 			}
@@ -147,7 +161,6 @@ public static class QuestionBuilder
 			idealTime += 1;
 			break;
 		}
-
 		QuestionModel questionGot = new QuestionModel (questionType,question, answersList.ToArray (),idealTime);
 		questionsDone.Add (question);
 		return questionGot;
@@ -168,7 +181,6 @@ public static class QuestionBuilder
 	}
 
 	public static QuestionTypeModel GetQuestionType(string selection){
-
 		Dictionary<QuestionSystemEnums.TargetType,int> targetDictionary = new Dictionary<QuestionSystemEnums.TargetType,int> ();
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Definition, 1);
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Synonym, 1);
@@ -180,6 +192,7 @@ public static class QuestionBuilder
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
+				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
 				QuestionSystemController.Instance.partSelection.selectLetter
 			);
@@ -188,6 +201,7 @@ public static class QuestionBuilder
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
+				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.fillAnswer,
 				QuestionSystemController.Instance.partSelection.typing
 			);
@@ -196,6 +210,7 @@ public static class QuestionBuilder
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Synonym,
 				QuestionGenerator.GetTargetWay(targetDictionary),
+				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.changeOrder
 			);
@@ -206,6 +221,7 @@ public static class QuestionBuilder
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Synonym,
 				QuestionGenerator.GetTargetWay(targetDictionary),
+				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.noAnswer,
 				QuestionSystemController.Instance.partSelection.wordChoice
 			);
@@ -214,6 +230,7 @@ public static class QuestionBuilder
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Definition,
 				QuestionGenerator.GetTargetWay(targetDictionary),
+				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.slotMachine
 			);
@@ -222,10 +239,24 @@ public static class QuestionBuilder
 			typeModel = new QuestionTypeModel (
 //				QuestionSystemEnums.TargetType.Association,
 				QuestionGenerator.GetTargetWay(targetDictionary),
+				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.letterLink
 			);
 			break;
+		}
+
+		if (QuestionSystemController.Instance.isDebug) {
+			switch(QuestionSystemController.Instance.difficultyDrop.value){
+			case 0:typeModel.contentLevel = QuestionSystemEnums.ContentLevel.Easy;
+				break;
+			case 1:
+				typeModel.contentLevel = QuestionSystemEnums.ContentLevel.Normal;
+				break;
+			case 2:
+				typeModel.contentLevel = QuestionSystemEnums.ContentLevel.Hard;
+				break;
+			}
 		}
 		return typeModel;
 	}

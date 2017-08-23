@@ -34,7 +34,7 @@ public static partial class MyConst {
 			questionList.Add (new QuestionRowModel (
 				0,
 				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "answer")[i].ToString (),
-				0,
+				int.Parse(CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "levelId")[i].ToString()),
 				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "definition")[i].ToString (),
 				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "synonym1")[i].ToString (),
 				CSVParserUtility.GetValueArrayFromKey(csvQuestionList, "synonym2")[i].ToString (),
