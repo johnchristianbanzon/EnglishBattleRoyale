@@ -28,24 +28,24 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	private void Init ()
 	{
-		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
-			dependencyStatus = FirebaseApp.CheckDependencies ();
-			if (dependencyStatus != DependencyStatus.Available) {
-				FirebaseApp.FixDependenciesAsync ().ContinueWith (task => {
-					dependencyStatus = FirebaseApp.CheckDependencies ();
-					if (dependencyStatus == DependencyStatus.Available) {
-						InitializeFirebase ();
-					} else {
-						SystemLoadScreenController.Instance.StopLoadingScreen ();
-						Debug.LogError (
-							"Could not resolve all Firebase dependencies: " + dependencyStatus);
-					}
-				});
-			} else {
-
+//		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
+//			dependencyStatus = FirebaseApp.CheckDependencies ();
+//			if (dependencyStatus != DependencyStatus.Available) {
+//				FirebaseApp.FixDependenciesAsync ().ContinueWith (task => {
+//					dependencyStatus = FirebaseApp.CheckDependencies ();
+//					if (dependencyStatus == DependencyStatus.Available) {
+//						InitializeFirebase ();
+//					} else {
+//						SystemLoadScreenController.Instance.StopLoadingScreen ();
+//						Debug.LogError (
+//							"Could not resolve all Firebase dependencies: " + dependencyStatus);
+//					}
+//				});
+//			} else {
+//
 				InitializeFirebase ();
-			}
-		});
+//			}
+//		});
 	}
 
 	private void InitializeFirebase ()
