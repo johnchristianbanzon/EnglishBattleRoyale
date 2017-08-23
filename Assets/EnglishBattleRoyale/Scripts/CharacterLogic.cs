@@ -2,15 +2,29 @@
 using System;
 using System.Collections.Generic;
 using NCalc;
+using System.Linq;
+
 
 public class CharacterLogic
 {
 	public static void CharacterActivate (bool isPlayer, CharacterModel character)
 	{
-		if (character.characterSkillCalculation.Contains ("PlayerNerf")) {
+
+		//REMOVES CHARACTER SKILLS TARGET TO THE PLAYER FROM ENEMY
+		if (character.characterSkillCalculation.Contains ("Debuff")) {
 			//nerf code here
 			if (isPlayer) {
-				
+				for (int i = 0; i < characterQueueList.Count; i++) {
+					for (int j = 0; j < characterQueueList [i].Count; j++) {
+						CharacterComputeModel charCompute = characterQueueList [i].ElementAt (j);
+						if (!charCompute.isPlayer) {
+							if ((CharacterEnums.Target)charCompute.character.characterTarget == CharacterEnums.Target.Enemy) {
+								characterQueueList [i].Clear ();
+							}
+							break;
+						}
+					}
+				}
 				Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
 			} else {
 				Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
@@ -38,7 +52,7 @@ public class CharacterLogic
 				Replace ("PlayerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
 				Replace ("PlayerGP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
 				Replace ("PlayerBD", ScreenBattleController.Instance.partState.player.playerBD.ToString ()).
-				Replace ("PlayerSD", ScreenBattleController.Instance.partState.player.playerSD.ToString ()).
+				Replace ("PlayerSD", ScreenBattleController.Instance.partState.player.playerSDM.ToString ()).
 				Replace ("PlayerTD", ScreenBattleController.Instance.partState.player.playerTD.ToString ()).
 				Replace ("PlayerRotten", GameManager.playerAnswerParam.speedyRottenCount.ToString ()).
 				Replace ("PlayerAwesome", GameManager.playerAnswerParam.speedyAwesomeCount.ToString ());
@@ -47,7 +61,7 @@ public class CharacterLogic
 				Replace ("EnemyHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString ()).
 				Replace ("EnemyHP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString ()).
 				Replace ("EnemyBD", ScreenBattleController.Instance.partState.enemy.playerBD.ToString ()).
-				Replace ("EnemySD", ScreenBattleController.Instance.partState.enemy.playerSD.ToString ()).
+				Replace ("EnemySD", ScreenBattleController.Instance.partState.enemy.playerSDM.ToString ()).
 				Replace ("EnemyTD", ScreenBattleController.Instance.partState.enemy.playerTD.ToString ()).
 				Replace ("EnemyRotten", GameManager.enemyAnswerParam.speedyRottenCount.ToString ()).
 				Replace ("EnemyAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
@@ -58,13 +72,13 @@ public class CharacterLogic
 		Queue<CharacterComputeModel> characterQueue = new Queue<CharacterComputeModel> ();
 		//Depending on turn, add to queue
 		for (int i = 0; i < character.characterTurn; i++) {
-		characterQueue.Enqueue (new CharacterComputeModel(isPlayer, character, calculatedChar));
+			characterQueue.Enqueue (new CharacterComputeModel (isPlayer, character, calculatedChar));
 		}
 		characterQueueList.Add (characterQueue);
 
 		CheckTurns ();
 	}
-		
+
 	static List<Queue<CharacterComputeModel>> characterQueueList = new List<Queue<CharacterComputeModel>> ();
 
 	//activate character if turn is existing
@@ -76,15 +90,80 @@ public class CharacterLogic
 				characterQueueList.RemoveAt (i);
 				return;
 			}
-
+				
 			CharacterComputeModel characterCompute = characterQueueList [i].Dequeue ();
 			CharacterCompute (
 				characterCompute.isPlayer,
 				characterCompute.character,
 				characterCompute.calculatedChar
 			);
+
+			//RESET BACK TO ORIGINAL VALUE
+			if (characterQueueList [i].Count == 0) {
+				ResetPlayer(characterCompute.isPlayer, characterCompute.character.characterSkillType);
+			}
 		}
 		
+	}
+
+	//RESET VALUE OF PLAYER AFTER TURN IS DONE
+	private static void ResetPlayer (bool isPLayer, int skillType)
+	{
+		CharacterEnums.SkillType skillTypeEnum = (CharacterEnums.SkillType)skillType;
+
+		switch (skillTypeEnum) {
+		case CharacterEnums.SkillType.PlayerSD:
+			if (isPLayer) {
+				ScreenBattleController.Instance.partState.player.playerSDM = MyConst.player.playerSDM;
+				ScreenBattleController.Instance.partState.player.playerSDB = false;
+			} else {
+				ScreenBattleController.Instance.partState.enemy.playerSDM = MyConst.player.playerSDM;
+				ScreenBattleController.Instance.partState.enemy.playerSDB = false;
+			}
+			break;
+
+		case CharacterEnums.SkillType.EnemySD:
+			if (isPLayer) {
+				ScreenBattleController.Instance.partState.enemy.playerSDM = MyConst.player.playerSDM;
+				ScreenBattleController.Instance.partState.enemy.playerSDB = false;
+			} else {
+				ScreenBattleController.Instance.partState.player.playerSDM = MyConst.player.playerSDM;
+				ScreenBattleController.Instance.partState.player.playerSDB = false;
+			}
+			break;
+
+		case CharacterEnums.SkillType.PlayerBD:
+			if (isPLayer) {
+				ScreenBattleController.Instance.partState.player.playerBD = MyConst.player.playerBD;
+			} else {
+				ScreenBattleController.Instance.partState.enemy.playerBD = MyConst.player.playerBD;
+			}
+			break;
+
+		case CharacterEnums.SkillType.EnemyBD:
+			if (isPLayer) {
+				ScreenBattleController.Instance.partState.enemy.playerBD = MyConst.player.playerBD;
+			} else {
+				ScreenBattleController.Instance.partState.player.playerBD = MyConst.player.playerBD;
+			}
+			break;
+
+		case CharacterEnums.SkillType.PlayerTD:
+			if (isPLayer) {
+				ScreenBattleController.Instance.partState.player.playerTD = MyConst.player.playerTD;
+			} else {
+				ScreenBattleController.Instance.partState.enemy.playerTD = MyConst.player.playerTD;
+			}
+			break;
+
+		case CharacterEnums.SkillType.EnemyTD:
+			if (isPLayer) {
+				ScreenBattleController.Instance.partState.enemy.playerTD = MyConst.player.playerTD;
+			} else {
+				ScreenBattleController.Instance.partState.player.playerTD = MyConst.player.playerTD;
+			}
+			break;
+		}
 	}
 		
 
@@ -114,13 +193,25 @@ public class CharacterLogic
 		case CharacterEnums.SkillType.EnemyHP:
 			if (isPlayer) {
 				//Skill damage to enemy
-				ScreenBattleController.Instance.partState.enemy.playerHP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar) * ScreenBattleController.Instance.partState.enemy.playerSD;
+				if (ScreenBattleController.Instance.partState.player.playerSDB) {
+					ScreenBattleController.Instance.partState.enemy.playerHP = OperatorCalculator (character.characterSkillOperator, 
+						ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar) + (calculatedChar * ScreenBattleController.Instance.partState.enemy.playerSDM);
+				} else {
+					ScreenBattleController.Instance.partState.enemy.playerHP = OperatorCalculator (character.characterSkillOperator, 
+						ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar);
+				}
+
+
 			} else {
 				//Skill damage from enemy
+				if (ScreenBattleController.Instance.partState.enemy.playerSDB) {
+					ScreenBattleController.Instance.partState.player.playerHP = OperatorCalculator (character.characterSkillOperator, 
+						ScreenBattleController.Instance.partState.player.playerHP, calculatedChar) + (calculatedChar * ScreenBattleController.Instance.partState.player.playerSDM);
+				} else {
+					ScreenBattleController.Instance.partState.player.playerHP = OperatorCalculator (character.characterSkillOperator, 
+						ScreenBattleController.Instance.partState.player.playerHP, calculatedChar);
+				}
 
-				ScreenBattleController.Instance.partState.player.playerHP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerHP, calculatedChar) * ScreenBattleController.Instance.partState.player.playerSD;
 			}
 			break;
 
@@ -170,18 +261,22 @@ public class CharacterLogic
 
 		case CharacterEnums.SkillType.PlayerSD:
 			if (isPlayer) {
-				ScreenBattleController.Instance.partState.player.playerSD = calculatedChar;
+				ScreenBattleController.Instance.partState.player.playerSDM = calculatedChar;
+				ScreenBattleController.Instance.partState.player.playerSDB = true;
 			} else {
-				ScreenBattleController.Instance.partState.enemy.playerSD = calculatedChar;
+				ScreenBattleController.Instance.partState.enemy.playerSDM = calculatedChar;
+				ScreenBattleController.Instance.partState.enemy.playerSDB = true;
 			}
 
 			break;
 
 		case CharacterEnums.SkillType.EnemySD:
 			if (isPlayer) {
-				ScreenBattleController.Instance.partState.enemy.playerSD = calculatedChar;
+				ScreenBattleController.Instance.partState.enemy.playerSDM = calculatedChar;
+				ScreenBattleController.Instance.partState.enemy.playerSDB = true;
 			} else {
-				ScreenBattleController.Instance.partState.player.playerSD = calculatedChar;
+				ScreenBattleController.Instance.partState.player.playerSDM = calculatedChar;
+				ScreenBattleController.Instance.partState.player.playerSDB = true;
 			}
 
 			break;

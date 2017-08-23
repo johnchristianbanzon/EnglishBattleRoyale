@@ -202,7 +202,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 		RPCListener ();
 
 		Dictionary<string, System.Object> result = new Dictionary<string, System.Object> ();
-		result [MyConst.RPC_DATA_PLAYER] = JsonUtility.ToJson (GameManager.player);
+		result [MyConst.RPC_DATA_PLAYER] = JsonUtility.ToJson (MyConst.player);
 		Dictionary<string, System.Object> entryValues = result;
 
 		string directory = MyConst.GAMEROOM_ROOM + "/" + gameRoomKey + "/" + MyConst.GAMEROOM_INITITAL_STATE + "/" + userPlace + "/" + MyConst.RPC_DATA_PARAM + "/";

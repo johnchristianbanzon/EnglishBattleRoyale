@@ -12,6 +12,7 @@ public class CharacterModel
 	public int characterSkillType;
 	public int characterSkillOperator;
 	public string characterSkillCalculation;
+	public int characterTarget;
 	public string characterSacrificeCalculation;
 	public int characterSacrificeType;
 	public int characterType;
@@ -26,6 +27,7 @@ public class CharacterModel
 		int characterSkillType,
 		int characterSkillOperator,
 		string characterSkillCalculation,
+		int characterTarget,
 		string characterSacrificeCalculation,
 		int characterSacrificeType, 
 		int characterType,
@@ -41,6 +43,7 @@ public class CharacterModel
 		this.characterSkillType = characterSkillType;
 		this.characterSkillOperator = characterSkillOperator;
 		this.characterSkillCalculation = characterSkillCalculation;
+		this.characterTarget = characterTarget;
 		this.characterSacrificeType = characterSacrificeType;
 		this.characterTurn = characterTurn;
 		this.characterType = characterType;

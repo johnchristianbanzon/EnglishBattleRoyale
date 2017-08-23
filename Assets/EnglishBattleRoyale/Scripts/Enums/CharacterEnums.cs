@@ -49,4 +49,9 @@
 		SkillPoison,
 		SkillMagnify
 	}
+
+	public enum Target{
+		Player,
+		Enemy
+	}
 }

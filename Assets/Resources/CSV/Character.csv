@@ -1,69 +1,69 @@
-ID,Name,Description ,AlternateName,GPCost,SkillType,SkillOperator,SkillCalculation,"Sacrifice
+ID,Name,Description ,AlternateName,GPCost,SkillType,SkillOperator,SkillCalculation,Target,"Sacrifice
 Calculation","Sacrifice
 Type",Type,Turn
 1,Mango Man,"Heals a certain amount of HP
 
-PlayerHP + 15",Healing potion,9,1,1,15,0,0,2,1
+PlayerHP + 15",Healing potion,9,1,1,15,1,0,0,2,1
 2,Bic the Boxer,"Deals a certain amount of damage
 
-EnemyHP - 11",Knuckle Duster,3,2,1,-11,0,0,1,1
+EnemyHP - 11",Knuckle Duster,3,2,1,-11,2,0,0,1,1
 3,The Wise Edz,"Doubles GP gain for 4 turns
 
-GP x 2 for 4 turns",Energy Potion,7,9,2,2,0,0,3,4
+GP x 2 for 4 turns",Energy Potion,7,9,2,2,1,0,0,3,4
 4,Thick Skin Tom,"Half the enemy damage for 5 turns
 
-EnemyTotalDamage x 0.5 for 5 turns",Heavy Shield,21,6,2,0.5,0,0,4,5
+EnemyTotalDamage x 0.5 for 5 turns",Heavy Shield,21,6,2,0.5,2,0,0,4,5
 5,Vitamin Vivi,"Base damage + 2 for 5 turns
 
-PlayerBD + 2 for 5 turns",Dagger,6,3,1,2,0,0,3,5
+PlayerBD + 2 for 5 turns",Dagger,6,3,1,2,1,0,0,3,5
 6,Sugoi Sensei,"Sensei teaches a damaging lesson to opponent
 
-4 x (Base Damage+Awesome Answer) ",Bomb,15,2,1,- ( 4 * ( PlayerBD + PlayerAwesome ) ),0,0,1,1
+4 x (Base Damage+Awesome Answer) ",Bomb,15,2,1,- ( 4 * ( PlayerBD + PlayerAwesome ) ),2,0,0,1,1
 7,Strict Sensei,"Every 'rotten' question of opponent deals -5 HP in the entire battle
 
-EnemyHP - 5 every Rotten",Poison Vial,18,2,1,- ( 5 * EnemyRotten ),0,0,4,99
+EnemyHP - 5 every Rotten",Poison Vial,18,2,1,- ( 5 * EnemyRotten ),2,0,0,4,99
 8,Nightshift Nurse,"Heal any ailment enemy inflicted on Player
 
-Remove Nerf on Player",Magnifying Glass,7,11,0,PlayerNerf,0,0,2,1
+Remove Nerf on Player",Magnifying Glass,7,11,0,Debuff,1,0,0,2,1
 9,Combo Man,"Deals 25% to enemy's remaining HP
 
-EnemyHp - 25%",Dual Swords,12,2,2,-0.25,0,0,1,1
+EnemyHp - 25%",Dual Swords,12,2,2,-0.25,2,0,0,1,1
 10,The Silencer,"Disable 1 skill slot of enemy for the next 3 turns
 
-1 EnemyCharacter = Not Available",Mask of Silence,9,11,0,EnemyCharacterSlot,0,0,4,3
+1 EnemyCharacter = Not Available",Mask of Silence,9,11,0,EnemyCharacterSlot,2,0,0,4,3
 11,The Wise Josh,"Heal HP based on ""Awesome"" speedy answer for 3 turns
 
-10HP + 2*(Awesome) for 3 turns",Reliable Health Vial,17,1,1,10 + 2 * PlayerAwesome,0,0,2,3
+10HP + 2*(Awesome) for 3 turns",Reliable Health Vial,17,1,1,10 + 2 * PlayerAwesome,1,0,0,2,3
 12,GP Genie,"Sacrifice 20 HP for 10 GP
 
-PlayerHP - 20, Player GP + 10",Not so reliable Energy Vial,1,9,1,10,20,1,3,1
+PlayerHP - 20, Player GP + 10",Not so reliable Energy Vial,1,9,1,10,1,20,1,3,1
 13,Dope Darna,"Reduce Damage of enemy to half for 3 turns
 
-EnemyTotalDamage x 0.5 for 3 turns",Round Shield,11,6,2,0.5,0,0,4,3
+EnemyTotalDamage x 0.5 for 3 turns",Round Shield,11,6,2,0.5,2,0,0,4,3
 14,Echi Jo,"Sacrifice 15 HP to increase Base damage by 10 for the next 2 turns
 
-PlayerHP - 15; PlayerBD + 10 (2 turns)",Rage Vial,10,3,1,10,15,1,1,2
+PlayerHP - 15; PlayerBD + 10 (2 turns)",Rage Vial,10,3,1,10,1,15,1,1,2
 15,Brainhubber,"Half the GP gain of enemy for 3 turns
 
-PlayerGP Gain X 0.5 for 3 turns",Sleep Vial,11,10,2,-0.5,0,0,4,3
+PlayerGP Gain X 0.5 for 3 turns",Sleep Vial,11,10,2,-0.5,2,0,0,4,3
 16,IchiGong,"Once activated, player cannot attack on this turn. But player will deliver big damage on the next turn based on Awesome answers 
 
-13* (Awesome Answers next turn)",Timed Bomb,15,2,1,13 * PlayerAwesome,0,5,1,2
+13* (Awesome Answers next turn)",Timed Bomb,15,2,1,- ( 13 * PlayerAwesome ),2,0,5,1,2
 17,"Grammar
 Grandma","Reduce Base Damage by 5 and in exchange, add +3 Gp gain for the next 5 turns
 
 PlayerBD - 5 for entire battle;
-Player Gains 3 GP at the end of Answer Phase for the next 5 turns",Holy Potion,13,9,1,3,5,7,3,5
+Player Gains 3 GP at the end of Answer Phase for the next 5 turns",Holy Potion,13,9,1,3,1,5,7,3,5
 18,TullyBun,"If enemy has Character effect that is ongoing for more than 3 turns, deal 45 damage
 
 
-EnemyHp - 45",Hunter's Bow,10,2,1,-45,0,0,1,1
+EnemyHp - 45",Hunter's Bow,10,2,1,-45,2,0,0,1,1
 19,Shinigami Cow,"The cow deals higher damage the higher the BD of player
 
-BD * 4",Great Sword,11,2,1,- ( PlayerBD * 4 ),0,0,1,1
+BD * 4",Great Sword,11,2,1,- ( PlayerBD * 4 ),2,0,0,1,1
 20,Quickie Hoe,"Activate this character right away if GP is enough and if equipped by player regardless if he is first or second turn. Deal small amount of damage
 
-EnemyHP - 10",Ninja Shuriken,11,2,1,-10,0,0,1,1
-21,Shiva the Brute,Attack damage is double for the next three turns,,14,5,2,2,0,0,3,3
-22,Elite Amazon,Attack Damage is Doubled for the next 5 turns,,16,5,2,2,0,0,3,5
-23,Rufina,Reduce Any skill damage by 70% for the next 3 turns,,11,8,2,-0.7,0,0,4,3
+EnemyHP - 10",Ninja Shuriken,11,2,1,-10,2,0,0,1,1
+21,Shiva the Brute,Attack damage is double for the next three turns,Warhammer,14,5,2,2,1,0,0,3,3
+22,Elite Amazon,Attack Damage is Doubled for the next 5 turns,Spear,16,5,2,2,1,0,0,3,5
+23,Rufina,Reduce Any skill damage by 70% for the next 3 turns,,11,8,2,0.7,1,0,0,4,3

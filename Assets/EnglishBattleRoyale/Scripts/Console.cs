@@ -8,8 +8,6 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class Console : MonoBehaviour
 {
-	public GameObject consoleButton;
-
 	struct Log
 	{
 		public string message;
@@ -69,14 +67,7 @@ public class Console : MonoBehaviour
 		QuestionSystemController.Instance.questionHint.InitCooldown ();
 	}
 
-	public void OnDrag ()
-	{
-		Vector2 pos = new Vector2(0,0);
-		Canvas myCanvas = SystemGlobalDataController.Instance.gameCanvas; 
-		RectTransformUtility.ScreenPointToLocalPointInRectangle(myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
 
-		consoleButton.transform.position = myCanvas.transform.TransformPoint(pos);
-	}
 
 	void OnGUI ()
 	{
