@@ -124,7 +124,11 @@ public class BattleManager: IRPCDicObserver
 						battleOrder = 1;
 					} else {
 						//TO-DO CHANGE TO RANDOM IN FUTURE ONLY 1 WILL CALCULATE NOT TWO DEVICES
-						battleOrder = 1;
+						if (GameManager.isHost) {
+							battleOrder = 0;
+						} else {
+							battleOrder = 1;
+						}
 					}
 				}
 			}

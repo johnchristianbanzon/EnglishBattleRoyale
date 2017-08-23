@@ -68,6 +68,14 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 				player.playerGP = 0;
 			}
 
+			if (enemy.playerGP > enemy.playerMaxGP) {
+				enemy.playerGP = enemy.playerMaxGP;
+			}
+
+			if (enemy.playerGP < 0) {
+				enemy.playerGP = 0;
+			}
+
 			playerHPText.text = player.playerHP.ToString ();
 			playerHPBar.value = player.playerHP;
 
@@ -280,10 +288,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			playerHitComboCountText.text = hitComboCount;
 			playerTotalDamageText.text = totalDamageCount;
 			playerAwesomeTotalDamageText.text = awesomeCount;
+
 		} else {
 			enemyHitComboCountText.text = hitComboCount;
 			enemyTotalDamageText.text = totalDamageCount;
 			enemyAwesomeTotalDamageText.text = awesomeCount;
+
 		}
 
 		yield return new WaitForSeconds (1);

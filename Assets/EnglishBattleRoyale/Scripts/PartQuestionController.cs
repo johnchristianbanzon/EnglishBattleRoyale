@@ -6,7 +6,6 @@ using System.Linq;
 
 public class PartQuestionController: MonoBehaviour
 {
-	private List<QuestionResultModel> questionResultList;
 	public GameObject questionSystem = null;
 	public GameObject questionTypePopUp;
 	public QuestionTypeModel questionType;
@@ -30,24 +29,17 @@ public class PartQuestionController: MonoBehaviour
 		TweenFacade.TweenMoveTo(transform,new Vector2(transform.position.x+800f,transform.position.y),0.6f);
 		Invoke ("ReturnQuestionSystemPosition", 0.7f);
 	}
-
-
-
+		
 	public void OnStartPhase ()
 	{
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
-		Debug.Log ("But its True!");
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-		Debug.Log ("Got Obs");
 		if (questionSystem == null) {
-			Debug.Log("NO QUESTION SYSTEM!");
 			questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
 			Debug.Log(questionSystem.name);
 		} else {
-			Debug.Log ("whoops its else dude");
 			questionSystem.SetActive (true);
 		}
-		Debug.Log ("Yeahyeahyeah, LOVE YOU BYE.");
 		string[] questionTypes = new string[6]{ "SelectLetter", "Typing", "ChangeOrderController", "WordChoice", "SlotMachine", "LetterLink" };
 		QuestionSystemController.Instance.ShowPopUP (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)]);
 
@@ -55,18 +47,16 @@ public class PartQuestionController: MonoBehaviour
 	}
 
 	private void StartQuestion(){
-		Debug.Log ("Oh Come on Man!");
 		QuestionSystemController.Instance.StartQuestionRound (
 			questionType
 			, delegate(List<QuestionResultModel> resultList) {
 				//
 				//callback here
-				questionResultList = resultList;
 
-				int correctCount = questionResultList.Count (p => p.isCorrect == true);
-				int awesomeSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Awesome);
-				int goodSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Good);
-				int rottenSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Rotten);
+				int correctCount = resultList.Count (p => p.isCorrect == true);
+				int awesomeSpeedyCount = resultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Awesome);
+				int goodSpeedyCount = resultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Good);
+				int rottenSpeedyCount = resultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Rotten);
 				//:TO-DO count speedyawesome and speedygood and include in computation
 				//bonus get from answers
 				float correctGPBonus = correctCount * MyConst.gameSettings.correctGPBonus;
