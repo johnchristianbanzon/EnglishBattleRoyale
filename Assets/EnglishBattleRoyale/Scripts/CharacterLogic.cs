@@ -68,27 +68,24 @@ public class CharacterLogic
 		}
 		Expression e = new Expression (calculateString);
 
-		Debug.Log ("PlayerHP " + ScreenBattleController.Instance.partState.player.playerHP.ToString ());
-		Debug.Log ("PlayerGP " + ScreenBattleController.Instance.partState.player.playerGP.ToString ());
-		Debug.Log ("PlayerBD " + ScreenBattleController.Instance.partState.player.playerBD.ToString ());
-		Debug.Log ("PlayerSDM " + ScreenBattleController.Instance.partState.player.playerSDM.ToString ());
-		Debug.Log ("PlayerTD " + ScreenBattleController.Instance.partState.player.playerTD.ToString ());
-		Debug.Log ("PlayerRotten " + GameManager.playerAnswerParam.speedyRottenCount.ToString ());
-		Debug.Log ("PlayerAwesome " +  GameManager.playerAnswerParam.speedyAwesomeCount.ToString ());
-
-		Debug.Log ("EnemyHP " + ScreenBattleController.Instance.partState.enemy.playerHP.ToString ());
-		Debug.Log ("EnemyGP " + ScreenBattleController.Instance.partState.enemy.playerGP.ToString ());
-		Debug.Log ("EnemyBD " + ScreenBattleController.Instance.partState.enemy.playerBD.ToString ());
-		Debug.Log ("EnemySDM " + ScreenBattleController.Instance.partState.enemy.playerSDM.ToString ());
-		Debug.Log ("EnemyTD " + ScreenBattleController.Instance.partState.enemy.playerTD.ToString ());
-		Debug.Log ("EnemyRotten " + GameManager.enemyAnswerParam.speedyRottenCount.ToString ());
-		Debug.Log ("EnemyAwesome " +  GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
-
+//		Debug.Log ("PlayerHP " + ScreenBattleController.Instance.partState.player.playerHP.ToString ());
+//		Debug.Log ("PlayerGP " + ScreenBattleController.Instance.partState.player.playerGP.ToString ());
+//		Debug.Log ("PlayerBD " + ScreenBattleController.Instance.partState.player.playerBD.ToString ());
+//		Debug.Log ("PlayerSDM " + ScreenBattleController.Instance.partState.player.playerSDM.ToString ());
+//		Debug.Log ("PlayerTD " + ScreenBattleController.Instance.partState.player.playerTD.ToString ());
+//		Debug.Log ("PlayerRotten " + GameManager.playerAnswerParam.speedyRottenCount.ToString ());
+//		Debug.Log ("PlayerAwesome " +  GameManager.playerAnswerParam.speedyAwesomeCount.ToString ());
+//
+//		Debug.Log ("EnemyHP " + ScreenBattleController.Instance.partState.enemy.playerHP.ToString ());
+//		Debug.Log ("EnemyGP " + ScreenBattleController.Instance.partState.enemy.playerGP.ToString ());
+//		Debug.Log ("EnemyBD " + ScreenBattleController.Instance.partState.enemy.playerBD.ToString ());
+//		Debug.Log ("EnemySDM " + ScreenBattleController.Instance.partState.enemy.playerSDM.ToString ());
+//		Debug.Log ("EnemyTD " + ScreenBattleController.Instance.partState.enemy.playerTD.ToString ());
+//		Debug.Log ("EnemyRotten " + GameManager.enemyAnswerParam.speedyRottenCount.ToString ());
+//		Debug.Log ("EnemyAwesome " +  GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
 
 		Debug.Log ("CALCULATION = " + calculateString);
 		float calculatedChar = float.Parse (e.Evaluate ().ToString ());
-
-
 
 	
 		Queue<CharacterComputeModel> characterQueue = new Queue<CharacterComputeModel> ();
