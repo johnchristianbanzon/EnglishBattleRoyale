@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using NCalc;
-using System.Linq;
 
 
 public class CharacterLogic
@@ -15,8 +14,8 @@ public class CharacterLogic
 			//nerf code here
 			if (isPlayer) {
 				for (int i = 0; i < characterQueueList.Count; i++) {
-					for (int j = 0; j < characterQueueList [i].Count; j++) {
-						CharacterComputeModel charCompute = characterQueueList [i].ElementAt (j);
+					if (characterQueueList [i].Count > 0) {
+						CharacterComputeModel charCompute = characterQueueList [i].Peek;
 						if (!charCompute.isPlayer) {
 							if ((CharacterEnums.Target)charCompute.character.characterTarget == CharacterEnums.Target.Enemy) {
 								characterQueueList [i].Clear ();
