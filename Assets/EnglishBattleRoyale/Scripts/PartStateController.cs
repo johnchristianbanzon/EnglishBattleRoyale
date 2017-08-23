@@ -288,10 +288,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			playerHitComboCountText.text = hitComboCount;
 			playerTotalDamageText.text = totalDamageCount;
 			playerAwesomeTotalDamageText.text = awesomeCount;
+
 		} else {
 			enemyHitComboCountText.text = hitComboCount;
 			enemyTotalDamageText.text = totalDamageCount;
 			enemyAwesomeTotalDamageText.text = awesomeCount;
+
 		}
 
 		yield return new WaitForSeconds (1);
