@@ -36,12 +36,12 @@ public class PartQuestionController: MonoBehaviour
 			int rottenSpeedyCount = questionResultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Rotten);
 			//:TO-DO count speedyawesome and speedygood and include in computation
 			//bonus get from answers
-			float correctGPBonus = correctCount * GameManager.gameSettings.correctGPBonus;
-			float correctDamageBonus = correctCount * GameManager.gameSettings.correctDamageBonus;
-			float speedyAwesomeGPBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeGPBonus;
-			float speedyAwesomeDamageBonus = awesomeSpeedyCount * GameManager.gameSettings.speedyAwesomeDamageBonus;
-			float speedyGoodGPBonus = correctCount * GameManager.gameSettings.speedyGoodGPBonus;
-			float speedyGoodDamageBonus = correctCount * GameManager.gameSettings.speedyGoodDamageBonus;
+				float correctGPBonus = correctCount *  MyConst.gameSettings.correctGPBonus;
+				float correctDamageBonus = correctCount * MyConst.gameSettings.correctDamageBonus;
+				float speedyAwesomeGPBonus = awesomeSpeedyCount * MyConst.gameSettings.speedyAwesomeGPBonus;
+				float speedyAwesomeDamageBonus = awesomeSpeedyCount * MyConst.gameSettings.speedyAwesomeDamageBonus;
+				float speedyGoodGPBonus = correctCount * MyConst.gameSettings.speedyGoodGPBonus;
+				float speedyGoodDamageBonus = correctCount * MyConst.gameSettings.speedyGoodDamageBonus;
 
 			ScreenBattleController.Instance.partState.player.playerGP += correctGPBonus + speedyAwesomeGPBonus + speedyGoodGPBonus;
 			Debug.Log ("GP GAINED A TOTAL OF " + (correctGPBonus + speedyAwesomeGPBonus));

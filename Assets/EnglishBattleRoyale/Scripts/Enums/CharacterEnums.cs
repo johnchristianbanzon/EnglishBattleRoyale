@@ -37,4 +37,21 @@
 		Add,
 		Multiply
 	}
+
+	public enum SkillEffect{
+		SkillNone,
+		SkillHeal,
+		SkillPunch,
+		SkillEnergy,
+		SkillShield,
+		SkillSlash,
+		SkillBomb,
+		SkillPoison,
+		SkillMagnify
+	}
+
+	public enum Target{
+		Player,
+		Enemy
+	}
 }

@@ -8,14 +8,14 @@ public class ScreenSettingController : MonoBehaviour {
 	void Start(){
 		MyConst.Init ();
 		playerName.text = PlayerPrefs.GetString ("PlayerInputName", "");
+		MyConst.SetPlayerName (playerName.text);
 	}
 
 	public void StartButton(){
-		GameManager.SetPLayerName (playerName.text);
+		MyConst.SetPlayerName (playerName.text);
 		PlayerPrefs.SetString ("PlayerInputName", playerName.text);
 		SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
 
-		GameManager.SetSettings ();
 	}
 
 
