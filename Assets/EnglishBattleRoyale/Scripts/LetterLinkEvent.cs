@@ -8,7 +8,8 @@ public class LetterLinkEvent : MonoBehaviour
 	private static bool startSelection = false;
 	private static string writtenAnswer;
 	private Color selectedColor = new Color (36f / 255, 189f / 255f, 88f / 255f);
-	private Color defaultColor = new Color (94f / 255, 255f / 255f, 148f / 255f);
+	private Color defaultColor = new Color32 (255,255,255,255);
+
 
 	public void OnBeginDrag (GameObject currentSelectedLetter)
 	{
@@ -16,6 +17,18 @@ public class LetterLinkEvent : MonoBehaviour
 		writtenAnswer = "";
 		OnDragSelection (currentSelectedLetter);
 
+	}
+
+	public void ShowCorrectAnswer(bool isAnswerCorrect){
+		Color containerColor = new Color ();
+		if (isAnswerCorrect) {
+			containerColor = new Color32 (36, 189, 88, 255);
+		} else {
+			containerColor = new Color32 (255, 100, 100, 255);
+		}
+		if (letterlink.questionAnswer.Contains (GetComponentInChildren<Text>().text)) {
+			GetComponent<Image> ().color = containerColor;
+		}
 	}
 
 	public void OnDragSelection (GameObject currentSelectedLetter)
@@ -26,6 +39,7 @@ public class LetterLinkEvent : MonoBehaviour
 			currentSelectedLetter.GetComponent<Image> ().color = selectedColor;
 		}
 	}
+
 
 	public void OnEndDrag ()
 	{

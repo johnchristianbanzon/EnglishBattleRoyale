@@ -72,8 +72,8 @@ public static class TweenFacade{
 	public static void StopTweens(){
 		DOTween.Clear ();
 	}
-	public static void TweenJumpTo(Transform obj, Vector3 endValue, float jumpPower,int numJumps,float duration){
-		obj.transform.DOLocalJump (endValue,jumpPower,numJumps,1,true);
+	public static void TweenJumpTo(Transform obj, Vector3 endValue, float jumpPower,int numJumps,float duration,float delay){
+		obj.transform.DOLocalJump (endValue, jumpPower, numJumps, 1, true).SetDelay (delay);
 	}
 
 	public static void TweenMoveTo(Transform obj, Vector3 endValue,float duration){
@@ -100,5 +100,7 @@ public static class TweenFacade{
 		obj.DOScale (Vector3.zero, 1).SetEase (Ease.InOutElastic);
 	}
 
-
+	public static void RotateObject(GameObject obj, Vector3 rotationValue, float duration){
+		obj.transform.DORotate (rotationValue,duration);
+	}
 }

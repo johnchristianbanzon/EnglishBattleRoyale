@@ -24,4 +24,10 @@
 		Awesome
 	}
 
+	public enum ContentLevel{
+		Easy,
+		Normal,
+		Hard
+	}
+
 }

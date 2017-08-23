@@ -30,7 +30,8 @@ public class SelectLetterEvent : MonoBehaviour
 		}
 		Destroy (containerReplacement);
 		containerIndex = transform.GetSiblingIndex ();
-		gameObject.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+//		gameObject.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+		gameObject.GetComponent<Image> ().color = Color.white;
 		isSelected = false;
 		gameObject.GetComponent<Button> ().interactable = true;
 		gameObject.GetComponent<EventTrigger> ().enabled = true;
@@ -70,12 +71,17 @@ public class SelectLetterEvent : MonoBehaviour
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
-		if (isCorrect) {
-			if (isAnswerCorrect) {
-				GetComponent<Image> ().color = new Color32 (255, 223, 0, 255);
-			} else {
-				GetComponent<Image> ().color = new Color32 (255, 255, 148, 255);
-			}
+		Color selectionColor = new Color ();
+		if (isAnswerCorrect) {
+			selectionColor = new Color32 (255, 223, 0, 255);
+		} else {
+			
+			selectionColor = new Color32 (255, 100, 100, 255);
 		}
+		GetComponent<Image> ().color = selectionColor;
+		GameObject answerContainer = selectLetter.fillAnswer.answerContainers [correctAnswerIndex];
+		answerContainer.GetComponent<Image> ().color = selectionColor;
+//		answerContainer.GetComponent<Text> ().text = GetComponentInChildren<Text>().text;
 	}
+
 }

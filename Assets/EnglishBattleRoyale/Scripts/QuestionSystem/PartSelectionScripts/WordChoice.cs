@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
+using System.Collections;
 
 public class WordChoice : MonoBehaviour, ISelection
 {
@@ -51,6 +52,54 @@ public class WordChoice : MonoBehaviour, ISelection
 		Invoke ("CheckIfCorrect", 0.3f);
 	}
 
+	List<GameObject> popUpSelectionList = new List<GameObject> ();
+
+	public void ShowSelectionPopUp (GameObject selectionPopUp)
+	{
+		gameObject.SetActive (true);
+		popUpSelectionList = new List<GameObject> ();
+		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
+			popUpSelectionList.Add (selectionPopUp.transform.GetChild (i).gameObject);
+		}
+		if (popUpSelectionList.Count > 1) {
+			TweenFacade.TweenJumpTo (popUpSelectionList [0].transform, popUpSelectionList [0].transform.localPosition
+			, 30f, 1, 0.5f, 0);
+			TweenFacade.TweenJumpTo (popUpSelectionList [1].transform, popUpSelectionList [1].transform.localPosition
+				, 30f, 1, 0.5f, 0.5f);
+			InvokeRepeating ("ChangeSelectionColor",0.5f,0.5f);
+//			StartCoroutine (ChangeSelectionColor (popUpSelectionList));
+		}
+	}
+
+	private int indexer = 0;
+
+	private void ChangeSelectionColor ()
+	{
+		if (indexer < 2) {
+			if (indexer.Equals (0)) {
+				popUpSelectionList [indexer].GetComponent<Image> ().color = new Color32 (255, 223, 0, 255);
+			} else {
+				popUpSelectionList [indexer].GetComponent<Image> ().color = new Color32 (255, 100, 100, 255);
+			}
+		} else {
+			popUpSelectionList [0].GetComponent<Image> ().color = new Color32 (255, 223, 0, 255);
+			popUpSelectionList [1].GetComponent<Image> ().color = new Color32 (255, 223, 0, 255);
+			CancelInvoke ();
+		}
+		indexer++;
+	}
+
+	/*
+	IEnumerator ChangeSelectionColor(List<GameObject> popUpSelectionList){
+		Debug.Log ("Hey1");
+		yield return new WaitForSeconds (0.4f);
+		Debug.Log ("Hey2");
+		popUpSelectionList[0].GetComponent<Image>().color = new Color32 (255, 223, 0, 255);
+		yield return new WaitForSeconds (0.4f);
+		popUpSelectionList[1].GetComponent<Image>().color = new Color32 (255, 100, 100, 255);
+		Debug.Log ("Hey3");
+	}*/
+
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
 		Color answerColor = new Color ();
@@ -78,7 +127,7 @@ public class WordChoice : MonoBehaviour, ISelection
 		if (hintIndex < numberOfCorrectAnswer) {
 			for (int i = 0; i < answerButtons.Count; i++) {
 				if (answerButtons [i].GetComponent<Image> ().color != Color.gray &&
-				   answerString.Contains (answerButtons [i].GetComponentInChildren<Text> ().text)) {
+				    answerString.Contains (answerButtons [i].GetComponentInChildren<Text> ().text)) {
 					answerButtons [i].GetComponent<Button> ().interactable = false;
 					OnClickSelection (answerButtons [i].gameObject);
 					break;
@@ -110,7 +159,7 @@ public class WordChoice : MonoBehaviour, ISelection
 					}
 				}
 			}
-			if (hintIndex.Equals(0)) {
+			if (hintIndex.Equals (0)) {
 				answerClicked.Clear ();
 			}
 			/*

@@ -15,15 +15,26 @@ public class SlotMachineEvent : MonoBehaviour
 		new Color (81 / 255, 255f / 255f, 241 / 255f)
 	};
 	private float dragStartingPosition;
+	public bool isDraggable = true;
 	public static int overAllHintContainersLeft = 0;
 
 	public int getOverAllHintLeft(){
 		return overAllHintContainersLeft;
 	}
 
+	private void GetSlots(){
+		topSlotPosition = slotContent.transform.GetChild (0).localPosition;
+		middleSlotPosition = slotContent.transform.GetChild (1).localPosition;
+		bottomSlotPosition = slotContent.transform.GetChild (2).localPosition;
+		topSlot = slotContent.transform.GetChild (0).gameObject;
+		middleSlot = slotContent.transform.GetChild (1).gameObject;
+		bottomSlot = slotContent.transform.GetChild (2).gameObject;
+	}
 	public void OnBeginDrag(){
-		dragStartingPosition = Input.mousePosition.y;
-		isDragging = true;
+		if (isDraggable) {
+			dragStartingPosition = Input.mousePosition.y;
+			isDragging = true;
+		}
 	}
 
 	public void OnDrag ()
@@ -63,9 +74,11 @@ public class SlotMachineEvent : MonoBehaviour
 				overAllHintContainersLeft++;
 			}
 			slot.GetComponent<Image> ().color = slotColor [slotIndex];
+			slot.GetComponent<Image> ().enabled = false;
 			slotIndex++;
 		}
 		hintContainersLeft = wrongContainer.Count;
+		isDraggable = true;
 	}
 
 	public int hintContainersLeft = 0;
@@ -74,20 +87,58 @@ public class SlotMachineEvent : MonoBehaviour
 		hintContainersLeft--;
 		overAllHintContainersLeft--;
 		wrongContainer [randomizeContainer].GetComponentInChildren<Text> ().text = "";
-		wrongContainer [randomizeContainer].GetComponent<Image> ().color = Color.black;
+		wrongContainer [randomizeContainer].GetComponent<Image> ().enabled = true;
+		wrongContainer [randomizeContainer].GetComponent<Image> ().color = Color.gray;
 		wrongContainer.RemoveAt (randomizeContainer);
 	}
 
+	private Vector3 topSlotPosition;
+	private Vector3 middleSlotPosition;
+	private Vector3 bottomSlotPosition;
+	private GameObject topSlot;
+	private GameObject middleSlot;
+	private GameObject bottomSlot;
+	private static float scrollDelay = 0.5f;
+
 	public void OnClickDownButton ()
 	{
-		slotContent.transform.GetChild (0).SetAsLastSibling ();
-	
-		QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
+		GetSlots ();
+		TweenFacade.RotateObject (topSlot,new Vector3(-50,0,0),scrollDelay);
+		topSlot.transform.localPosition = new Vector2(topSlot.transform.localPosition.x,bottomSlot.transform.localPosition.y - 80f);
+		TweenFacade.TweenMoveTo (topSlot.transform, bottomSlotPosition,scrollDelay);
+		topSlot.transform.SetAsLastSibling ();
+		TweenFacade.TweenMoveTo (middleSlot.transform, topSlotPosition,scrollDelay);
+		TweenFacade.RotateObject (middleSlot,new Vector3(-50,0,0),scrollDelay);
+		TweenFacade.TweenMoveTo (bottomSlot.transform, middleSlotPosition,scrollDelay);
+		TweenFacade.RotateObject (bottomSlot,new Vector3(0,0,0),scrollDelay);
+		isDraggable = false;
+		if (QuestionSystemController.Instance.questionRoundHasStarted) {
+			QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
+		}
+		Invoke ("DraggingDone", scrollDelay);
+	}
+
+	public void DraggingDone(){
+		isDraggable = true;
 	}
 
 	public void OnClickUpButton ()
 	{
-		slotContent.transform.GetChild (2).SetAsFirstSibling ();
-		QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
+		GetSlots ();
+		TweenFacade.RotateObject (topSlot,new Vector3(0,0,0),scrollDelay);
+		TweenFacade.TweenMoveTo (topSlot.transform, middleSlotPosition,scrollDelay);
+
+		TweenFacade.RotateObject (middleSlot,new Vector3(50,0,0),scrollDelay);
+		TweenFacade.TweenMoveTo (middleSlot.transform, bottomSlotPosition,scrollDelay);
+
+		bottomSlot.transform.localPosition = new Vector2(bottomSlot.transform.localPosition.x,topSlot.transform.localPosition.y + 80f);
+		TweenFacade.TweenMoveTo (bottomSlot.transform, topSlotPosition,scrollDelay);
+		TweenFacade.RotateObject (bottomSlot,new Vector3(-50,0,0),0.1f);
+		bottomSlot.transform.SetAsFirstSibling ();
+		isDraggable = false;
+		if (QuestionSystemController.Instance.questionRoundHasStarted) {
+			QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
+		}
+		Invoke ("DraggingDone", scrollDelay);
 	}
 }

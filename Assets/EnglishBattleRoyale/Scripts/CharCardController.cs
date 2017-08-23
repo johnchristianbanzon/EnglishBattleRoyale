@@ -115,6 +115,7 @@ public class CharCardController : MonoBehaviour
 				ClearSelectedCards ();
 			}
 		}
+
 	}
 
 	public void HideCardSettings(){

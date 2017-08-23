@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Linq;
-
+using UnityEngine.EventSystems;
 public class SlotMachine : MonoBehaviour,ISelection
 {
 	public SlotMachineEvent[] slots = new SlotMachineEvent[6];
@@ -14,14 +14,37 @@ public class SlotMachine : MonoBehaviour,ISelection
 	{
 		Color answerColor = new Color();
 		if (isAnswerCorrect) {
-			answerColor = new Color32 (255, 223, 0, 255);
+			answerColor = new Color32 (255, 223, 0, 255);	
 		} else {
 			answerColor = new Color32 (255, 100, 100, 255);
 		}
 		for (int i = 0; i < correctAnswerSlots.Count; i++) {
 			correctAnswerSlots [i].GetComponent<Image> ().color = answerColor;
+			slots [i].isDraggable = false;
 		}
 
+	}
+	List<GameObject> popUpSelectionList= new List<GameObject> ();
+	public void ShowSelectionPopUp(GameObject selectionPopUp){
+		for (int i = 0; i < selectionPopUp.transform.GetChild(0).childCount; i++) {
+			popUpSelectionList.Add(selectionPopUp.transform.GetChild(0).GetChild(i).gameObject);
+		}
+		if (popUpSelectionList.Count > 0) {
+			InvokeRepeating ("PopUpMoveSelection", 0, 0.7f);
+		}
+	}
+
+	int popUpSelectionCounter = 0;
+	private void PopUpMoveSelection(){
+		if (popUpSelectionCounter < 3) {
+			popUpSelectionList [0].GetComponent<SlotMachineEvent> ().OnClickDownButton ();
+			popUpSelectionList [1].GetComponent<SlotMachineEvent> ().OnClickUpButton ();
+			popUpSelectionList [2].GetComponent<SlotMachineEvent> ().OnClickDownButton ();
+			popUpSelectionList [3].GetComponent<SlotMachineEvent> ().OnClickUpButton ();
+		} else {
+			CancelInvoke ();
+		}
+		popUpSelectionCounter++;
 	}
 
 	public void HideSelectionType ()

@@ -15,6 +15,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 	{
 		this.gameObject.SetActive (true);
 		hintContainers.Clear ();
+		selectedIndex = 0;
 		hasInitHints = false;
 		questionAnswer = QuestionSystemController.Instance.questionAnswer;
 	}
@@ -23,6 +24,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 	{
 		if (selectedAnswer.Equals (questionAnswer)) {
 			QuestionSystemController.Instance.CheckAnswer (true);
+			QuestionSystemController.Instance.selectionType.ShowCorrectAnswer (true);
 			onHintResult.Invoke (true);
 			ClearLettersInView ();
 		}
@@ -36,12 +38,13 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, hintContainers [hintIndex]);
 	}
 
-	private void InitHints ()
+	public void InitHints ()
 	{
 		if (!hasInitHints) {
 			hasInitHints = true;
 			for (int i = 0; i < QuestionSystemController.Instance.correctAnswerButtons.Count; i++) {
 				GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", QuestionSystemController.Instance.partAnswer.showAnswer.showLetterView);
+				letterPrefab.GetComponentInChildren<Image> ().color = new Color32 (80,135,223,255);
 				letterPrefab.GetComponentInChildren<Text> ().text = "_";
 				hintContainers.Add (letterPrefab);
 			}
@@ -55,6 +58,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 			if (selectedIndex < questionAnswer.Length) {
 				if (hintContainers[selectedIndex].GetComponent<Button>().interactable) {
 					hintContainers [selectedIndex].GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text>().text;
+					hintContainers [selectedIndex].GetComponentInChildren<Image> ().color = new Color32 (255,255,255,255);
 					TweenFacade.TweenScaleToLarge (hintContainers [selectedIndex].transform, Vector3.one, 0.3f);
 				}
 			}
@@ -81,7 +85,8 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 				GameObject.Destroy (letter.gameObject);
 			} else {
 				if (letter.GetComponent<Button> ().interactable) {
-					letter.GetComponentInChildren<Text> ().text = "";
+					letter.GetComponentInChildren<Image> ().color = new Color32 (80,135,223,255);
+					letter.GetComponentInChildren<Text> ().text = "_";
 				}
 			}
 		}

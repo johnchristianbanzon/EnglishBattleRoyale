@@ -46,8 +46,6 @@ public class CharacterLogic
 		string calculateString = "";
 
 		//parses the string formula from csv
-		if (isPlayer) {
-			
 			calculateString = character.characterSkillCalculation.
 				Replace ("PlayerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
 				Replace ("PlayerGP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
@@ -55,9 +53,7 @@ public class CharacterLogic
 				Replace ("PlayerSDM", ScreenBattleController.Instance.partState.player.playerSDM.ToString ()).
 				Replace ("PlayerTD", ScreenBattleController.Instance.partState.player.playerTD.ToString ()).
 				Replace ("PlayerRotten", GameManager.playerAnswerParam.speedyRottenCount.ToString ()).
-				Replace ("PlayerAwesome", GameManager.playerAnswerParam.speedyAwesomeCount.ToString ());
-		} else {
-			calculateString = character.characterSkillCalculation.
+				Replace ("PlayerAwesome", GameManager.playerAnswerParam.speedyAwesomeCount.ToString ()).
 				Replace ("EnemyHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString ()).
 				Replace ("EnemyGP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString ()).
 				Replace ("EnemyBD", ScreenBattleController.Instance.partState.enemy.playerBD.ToString ()).
@@ -65,7 +61,7 @@ public class CharacterLogic
 				Replace ("EnemyTD", ScreenBattleController.Instance.partState.enemy.playerTD.ToString ()).
 				Replace ("EnemyRotten", GameManager.enemyAnswerParam.speedyRottenCount.ToString ()).
 				Replace ("EnemyAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
-		}
+		
 		Expression e = new Expression (calculateString);
 
 //		Debug.Log ("PlayerHP " + ScreenBattleController.Instance.partState.player.playerHP.ToString ());
@@ -199,12 +195,11 @@ public class CharacterLogic
 
 		case CharacterEnums.SkillType.PlayerHP:
 			if (isPlayer) {
-				ScreenBattleController.Instance.partState.player.playerHP = OperatorCalculator (character.characterSkillOperator, 
-					ScreenBattleController.Instance.partState.player.playerHP, calculatedChar);
-
-			} else {
 				ScreenBattleController.Instance.partState.enemy.playerHP = OperatorCalculator (character.characterSkillOperator, 
 					ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar);
+			} else {
+				ScreenBattleController.Instance.partState.player.playerHP = OperatorCalculator (character.characterSkillOperator, 
+					ScreenBattleController.Instance.partState.player.playerHP, calculatedChar);
 			}
 			break;
 

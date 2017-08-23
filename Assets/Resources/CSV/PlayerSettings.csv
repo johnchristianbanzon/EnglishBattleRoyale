@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+Key,Value
+PlayerHP,100
+PlayerGP,0
+PlayerMaxGP,30
+PlayerBaseDamage,4
+PlayerGuardDamage,1
+PlayerCriticalDamageRate,1
+=======
 Key,Value
 PlayerHP,100
 PlayerGP,30
@@ -6,3 +15,4 @@ PlayerBD,4
 PlayerSD,1
 PlayerTD,0
 PlayerSDB,0
+>>>>>>> acc9d8c34de281a6a28037a486119f01459abdf3
