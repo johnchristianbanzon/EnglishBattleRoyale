@@ -65,7 +65,7 @@ public class CharacterLogic
 				Replace ("EnemyAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
 		}
 		Expression e = new Expression (character.characterSkillCalculation);
-		Debug.Log ("CALCULATION = " + e.ToString());
+		Debug.Log ("CALCULATION = " + character.characterSkillCalculation);
 		float calculatedChar = float.Parse (e.Evaluate ().ToString ());
 	
 		Queue<CharacterComputeModel> characterQueue = new Queue<CharacterComputeModel> ();
