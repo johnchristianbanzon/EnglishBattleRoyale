@@ -43,10 +43,12 @@ public class CharacterLogic
 
 		}
 
+		string calculateString = "";
+
 		//parses the string formula from csv
 		if (isPlayer) {
 			
-			character.characterSkillCalculation = character.characterSkillCalculation.
+			calculateString = character.characterSkillCalculation.
 				Replace ("PlayerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
 				Replace ("PlayerGP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
 				Replace ("PlayerBD", ScreenBattleController.Instance.partState.player.playerBD.ToString ()).
@@ -55,7 +57,7 @@ public class CharacterLogic
 				Replace ("PlayerRotten", GameManager.playerAnswerParam.speedyRottenCount.ToString ()).
 				Replace ("PlayerAwesome", GameManager.playerAnswerParam.speedyAwesomeCount.ToString ());
 		} else {
-			character.characterSkillCalculation = character.characterSkillCalculation.
+			calculateString = character.characterSkillCalculation.
 				Replace ("EnemyHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString ()).
 				Replace ("EnemyGP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString ()).
 				Replace ("EnemyBD", ScreenBattleController.Instance.partState.enemy.playerBD.ToString ()).
@@ -64,7 +66,7 @@ public class CharacterLogic
 				Replace ("EnemyRotten", GameManager.enemyAnswerParam.speedyRottenCount.ToString ()).
 				Replace ("EnemyAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
 		}
-		Expression e = new Expression (character.characterSkillCalculation);
+		Expression e = new Expression (calculateString);
 
 		Debug.Log ("PlayerHP " + ScreenBattleController.Instance.partState.player.playerHP.ToString ());
 		Debug.Log ("PlayerGP " + ScreenBattleController.Instance.partState.player.playerGP.ToString ());
@@ -83,7 +85,7 @@ public class CharacterLogic
 		Debug.Log ("EnemyAwesome " +  GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
 
 
-		Debug.Log ("CALCULATION = " + character.characterSkillCalculation);
+		Debug.Log ("CALCULATION = " + calculateString);
 		float calculatedChar = float.Parse (e.Evaluate ().ToString ());
 
 
