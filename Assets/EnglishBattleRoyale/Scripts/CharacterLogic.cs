@@ -183,14 +183,16 @@ public class CharacterLogic
 		case CharacterEnums.SkillType.PlayerHP:
 			if (isPlayer) {
 				float calculation = OperatorCalculator (character.characterSkillOperator, 
-					                    ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar);
-				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "HP " + (calculation - ScreenBattleController.Instance.partState.enemy.playerHP));
-				ScreenBattleController.Instance.partState.enemy.playerHP = calculation;
-			} else {
-				float calculation = OperatorCalculator (character.characterSkillOperator, 
-					                    ScreenBattleController.Instance.partState.player.playerHP, calculatedChar);
+					ScreenBattleController.Instance.partState.player.playerHP, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "HP " + (calculation - ScreenBattleController.Instance.partState.player.playerHP));
 				ScreenBattleController.Instance.partState.player.playerHP = calculation;
+				Debug.Log ("Player HP = " + (calculation - ScreenBattleController.Instance.partState.player.playerHP));
+			} else {
+				float calculation = OperatorCalculator (character.characterSkillOperator, 
+					ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar);
+				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "HP " + (calculation - ScreenBattleController.Instance.partState.enemy.playerHP));
+				ScreenBattleController.Instance.partState.enemy.playerHP = calculation;
+				Debug.Log ("Enemy HP = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerHP));
 			}
 			break;
 
@@ -203,11 +205,13 @@ public class CharacterLogic
 						                    ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar) + (calculatedChar * ScreenBattleController.Instance.partState.enemy.playerSDM);
 					ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "HP " + (calculation - ScreenBattleController.Instance.partState.enemy.playerHP));
 					ScreenBattleController.Instance.partState.enemy.playerHP = calculation;
+					Debug.Log ("Enemy HP = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerHP));
 				} else {
 					float calculation = OperatorCalculator (character.characterSkillOperator, 
 						                    ScreenBattleController.Instance.partState.enemy.playerHP, calculatedChar);
 					ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "HP " + (calculation - ScreenBattleController.Instance.partState.enemy.playerHP));
 					ScreenBattleController.Instance.partState.enemy.playerHP = calculation;
+					Debug.Log ("Enemy HP = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerHP));
 				}
 
 
@@ -218,11 +222,13 @@ public class CharacterLogic
 						                    ScreenBattleController.Instance.partState.player.playerHP, calculatedChar) + (calculatedChar * ScreenBattleController.Instance.partState.player.playerSDM);
 					ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "HP " + (calculation - ScreenBattleController.Instance.partState.player.playerHP));
 					ScreenBattleController.Instance.partState.player.playerHP = calculation;
+					Debug.Log ("Player HP = " + (calculation - ScreenBattleController.Instance.partState.player.playerHP));
 				} else {
 					float calculation = OperatorCalculator (character.characterSkillOperator, 
 						                    ScreenBattleController.Instance.partState.player.playerHP, calculatedChar);
 					ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "HP " + (calculation - ScreenBattleController.Instance.partState.player.playerHP));
 					ScreenBattleController.Instance.partState.player.playerHP = calculation;
+					Debug.Log ("Player HP = " + (calculation - ScreenBattleController.Instance.partState.player.playerHP));
 				}
 
 			}
@@ -234,11 +240,13 @@ public class CharacterLogic
 					                    ScreenBattleController.Instance.partState.player.playerBD, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "Base Damage " + (calculation - ScreenBattleController.Instance.partState.player.playerBD));
 				ScreenBattleController.Instance.partState.player.playerBD = calculation;
+				Debug.Log ("Player BD = " + (calculation - ScreenBattleController.Instance.partState.player.playerBD));
 			} else {
 				float calculation = OperatorCalculator (character.characterSkillOperator, 
 					                    ScreenBattleController.Instance.partState.enemy.playerBD, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "Base Damage " + (calculation - ScreenBattleController.Instance.partState.enemy.playerBD));
 				ScreenBattleController.Instance.partState.enemy.playerBD = calculation;
+				Debug.Log ("Enemy BD = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerBD));
 			}
 
 			break;
@@ -249,11 +257,14 @@ public class CharacterLogic
 					                    ScreenBattleController.Instance.partState.enemy.playerBD, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "Base Damage " + (calculation - ScreenBattleController.Instance.partState.enemy.playerBD));
 				ScreenBattleController.Instance.partState.enemy.playerBD = calculation;
+				Debug.Log ("Enemy BD = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerBD));
+
 			} else {
 				float calculation = OperatorCalculator (character.characterSkillOperator, 
 					                    ScreenBattleController.Instance.partState.player.playerBD, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "Base Damage " + (calculation - ScreenBattleController.Instance.partState.player.playerBD));
 				ScreenBattleController.Instance.partState.player.playerBD = calculation;
+				Debug.Log ("Player BD = " + (calculation - ScreenBattleController.Instance.partState.player.playerBD));
 			}
 
 			break;
@@ -264,11 +275,13 @@ public class CharacterLogic
 					                    ScreenBattleController.Instance.partState.player.playerTD, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "Total Damage " + (calculation - ScreenBattleController.Instance.partState.player.playerTD));
 				ScreenBattleController.Instance.partState.player.playerTD = calculation;
+				Debug.Log ("Player TD = " + (calculation - ScreenBattleController.Instance.partState.player.playerTD));
 			} else {
 				float calculation = OperatorCalculator (character.characterSkillOperator, 
 					                    ScreenBattleController.Instance.partState.enemy.playerTD, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "Total Damage " + (calculation - ScreenBattleController.Instance.partState.enemy.playerTD));
 				ScreenBattleController.Instance.partState.enemy.playerTD = calculation;
+				Debug.Log ("Enemy TD = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerTD));
 			}
 
 			break;
@@ -279,11 +292,13 @@ public class CharacterLogic
 					                    ScreenBattleController.Instance.partState.enemy.playerTD, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "Total Damage " + (calculation - ScreenBattleController.Instance.partState.enemy.playerTD));
 				ScreenBattleController.Instance.partState.enemy.playerTD = calculation;
+				Debug.Log ("Enemy TD = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerTD));
 			} else {
 				float calculation = OperatorCalculator (character.characterSkillOperator, 
 					                    ScreenBattleController.Instance.partState.player.playerTD, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "Total Damage " + (calculation - ScreenBattleController.Instance.partState.player.playerTD));
 				ScreenBattleController.Instance.partState.player.playerTD = calculation;
+				Debug.Log ("Player TD = " + (calculation - ScreenBattleController.Instance.partState.player.playerTD));
 			}
 
 			break;
@@ -293,10 +308,12 @@ public class CharacterLogic
 				ScreenBattleController.Instance.partState.player.playerSDM = calculatedChar;
 				ScreenBattleController.Instance.partState.player.playerSDB = true;
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "Skill Damage " + (calculatedChar));
+				Debug.Log ("Player SD = " + (calculatedChar));
 			} else {
 				ScreenBattleController.Instance.partState.enemy.playerSDM = calculatedChar;
 				ScreenBattleController.Instance.partState.enemy.playerSDB = true;
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "Skill Damage " + (calculatedChar));
+				Debug.Log ("Enemy SD = " + (calculatedChar));
 			}
 
 			break;
@@ -306,10 +323,12 @@ public class CharacterLogic
 				ScreenBattleController.Instance.partState.enemy.playerSDM = calculatedChar;
 				ScreenBattleController.Instance.partState.enemy.playerSDB = true;
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "Skill Damage " + (calculatedChar));
+				Debug.Log ("Enemy SD = " + (calculatedChar));
 			} else {
 				ScreenBattleController.Instance.partState.player.playerSDM = calculatedChar;
 				ScreenBattleController.Instance.partState.player.playerSDB = true;
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "Skill Damage " + (calculatedChar));
+				Debug.Log ("Player SD = " + (calculatedChar));
 			}
 
 			break;
@@ -320,11 +339,13 @@ public class CharacterLogic
 					                    ScreenBattleController.Instance.partState.player.playerGP, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "GP " + (calculation - ScreenBattleController.Instance.partState.player.playerGP));
 				ScreenBattleController.Instance.partState.player.playerGP = calculation;
+				Debug.Log ("Player GP = " + (calculation - ScreenBattleController.Instance.partState.player.playerGP));
 			} else {
 				float calculation = OperatorCalculator (character.characterSkillOperator, 
 					                    ScreenBattleController.Instance.partState.enemy.playerGP, calculatedChar); 
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "GP " + (calculation - ScreenBattleController.Instance.partState.enemy.playerGP));
 				ScreenBattleController.Instance.partState.enemy.playerGP = calculation;
+				Debug.Log ("Enemy GP = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerGP));
 			}
 
 			break;
@@ -333,13 +354,16 @@ public class CharacterLogic
 			if (isPlayer) {
 				float calculation = OperatorCalculator (character.characterSkillOperator, 
 					                    ScreenBattleController.Instance.partState.enemy.playerGP, calculatedChar);
-				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "GP " + (calculation - ScreenBattleController.Instance.partState.player.playerGP));
+				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "GP " + (calculation - ScreenBattleController.Instance.partState.enemy.playerGP));
 				ScreenBattleController.Instance.partState.enemy.playerGP = calculation;
+				Debug.Log ("Enemy GP = " + (calculation - ScreenBattleController.Instance.partState.enemy.playerGP));
+
 			} else {
 				float calculation = OperatorCalculator (character.characterSkillOperator, 
 					                    ScreenBattleController.Instance.partState.player.playerGP, calculatedChar);
 				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "GP " + (calculation - ScreenBattleController.Instance.partState.player.playerGP));
 				ScreenBattleController.Instance.partState.player.playerGP = calculation;
+				Debug.Log ("Player GP = " + (calculation - ScreenBattleController.Instance.partState.player.playerGP));
 			}
 
 			break;
