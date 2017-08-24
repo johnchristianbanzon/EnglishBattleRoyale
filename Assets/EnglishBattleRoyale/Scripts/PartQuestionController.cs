@@ -76,6 +76,7 @@ public class PartQuestionController: MonoBehaviour
 				QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, awesomeSpeedyCount, goodSpeedyCount, rottenSpeedyCount);
 				string param = JsonUtility.ToJson (questionResultCount);
 				SystemFirebaseDBController.Instance.AnswerPhase (param);
+				QuestionSystemController.Instance.HideQuestionParts();
 				QuestionSystemReturnCallback();
 			}
 		);

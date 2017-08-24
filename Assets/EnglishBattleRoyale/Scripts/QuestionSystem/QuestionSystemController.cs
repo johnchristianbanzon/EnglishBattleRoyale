@@ -112,7 +112,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		questionHint.disableHintButton ();
 	}
 
-	private void OnQuestionRoundFinish(){
+	public void OnQuestionRoundFinish(){
 		debugUI.SetActive (false);
 		questionRoundHasStarted = false;
 		TweenFacade.TweenScaleYT0Zero(0.5f,partScrollImage,1);
@@ -311,6 +311,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public void HideScrollUI(){
 		scrollBody.SetActive(false);
+		questionHint.disableHintButton ();
 		TweenFacade.TweenMoveTo(scrollHeader.transform,new Vector2(800f,scrollHeader.transform.localPosition.y),0.6f);
 		HideQuestionParts();
 		if (isDebug) {

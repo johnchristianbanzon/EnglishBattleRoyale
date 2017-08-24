@@ -67,6 +67,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
 	{
 		gameObject.SetActive (true);
+
 		this.questionAnswer = questionAnswer;
 		for (int i = 0; i < slots.Length; i++) {
 			if (i >= questionAnswer.Length) {

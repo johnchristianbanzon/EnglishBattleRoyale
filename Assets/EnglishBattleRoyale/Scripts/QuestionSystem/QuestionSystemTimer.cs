@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 public class QuestionSystemTimer : IQuestionTimeObserver {
 
 	public int timePassed = 0;
@@ -35,6 +36,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		
 	public void OnStartQuestionTimer (Action<int> action, int timer)
 	{
+		QuestionSystemController.Instance.timerSlider.fillRect.GetComponent<Image>().color = new Color32 (159, 204, 62, 255);
 		questionSystemController.StartCoroutine (StartQuestionTimer (action, timer));
 	}
 
@@ -54,7 +56,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 	}
 
 	public void ReduceTimeLeftCallBack(int timeLeft){
-		TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft);
+		TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft-1);
 		questionSystemController.questionHint.OnTimeInterval ();
 		if (timeLeft <= 0) {
 			TimerEnded ();
@@ -67,7 +69,6 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		if (questionSystemController.isDebug) {
 			questionSystemController.debugUI.transform.GetChild(0).gameObject.SetActive (true);
 		} else {
-			questionSystemController.HideQuestionParts();
 			questionSystemController.gameObject.SetActive (false);
 		}
 	}
@@ -75,12 +76,13 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 	public IEnumerator StartQuestionTimer (Action<int> action, int timer)
 	{
 		timeLeft = timer;
-		while (timeLeft > 0) {
+		while (timeLeft > -1) {
 			if (isTimerOn) {
 				timeLeft--;
 				timePassed++;
 				action (timeLeft);
 				if (timeLeft<=3) {
+					QuestionSystemController.Instance.timerSlider.fillRect.GetComponent<Image>().color = new Color32 (255, 100, 100, 255);
 					QuestionSystemController.Instance.hasNextQuestion = false;
 				}
 			}
