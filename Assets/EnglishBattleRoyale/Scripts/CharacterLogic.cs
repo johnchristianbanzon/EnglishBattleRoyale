@@ -68,7 +68,6 @@ public class CharacterLogic
 		
 		Expression e = new Expression (calculateString);
 
-		Debug.Log ("CALCULATION = " + calculateString);
 		float calculatedChar = float.Parse (e.Evaluate ().ToString ());
 
 	

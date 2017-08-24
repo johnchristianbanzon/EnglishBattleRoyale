@@ -56,7 +56,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
 		roundResultList.Clear ();
-		questionRoundHasStarted = true;
+
 		questionRoundTimer = new QuestionSystemTimer ();
 		questionRoundTimer.InitQuestionSystemTimer (true);
 		this.onRoundResult = onRoundResult;
@@ -294,6 +294,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		yield return new WaitForSeconds (2f);
 		yield return (StartCoroutine(TweenCoroutine()));
 		partScrollContent.SetActive (true);
+		questionRoundHasStarted = true;
 		if (isDebug) {
 			StartQuestionRound (questionTypeModel, delegate(List<QuestionResultModel> result) {
 				OnQuestionRoundFinish ();
