@@ -293,7 +293,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		yield return new WaitForSeconds (2f);
 		yield return (StartCoroutine(TweenCoroutine()));
 		partScrollContent.SetActive (true);
-		questionRoundHasStarted = true;
+
 		if (isDebug) {
 			StartQuestionRound (questionTypeModel, delegate(List<QuestionResultModel> result) {
 				OnQuestionRoundFinish ();
