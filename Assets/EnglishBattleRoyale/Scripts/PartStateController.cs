@@ -255,7 +255,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		int awesomeCounter = 0;
 		for (int i = 0; i <= answerParam.correctCount; i++) {
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack1");
+
+			//random animation
+			int randomNumber = UnityEngine.Random.Range (1, 4);
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack" + randomNumber);
+
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 
 			if (isPLayer) {
