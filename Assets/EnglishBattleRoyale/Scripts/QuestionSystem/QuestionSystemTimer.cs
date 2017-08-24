@@ -56,7 +56,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 	}
 
 	public void ReduceTimeLeftCallBack(int timeLeft){
-		TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft);
+		TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft-1);
 		questionSystemController.questionHint.OnTimeInterval ();
 		if (timeLeft <= 0) {
 			TimerEnded ();
