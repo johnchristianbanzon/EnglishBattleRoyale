@@ -57,10 +57,10 @@ Grandma",13,9,1,3,1,5,7,3,5
 18,Hunter's Bow,"If enemy has Character effect that is ongoing for more than 3 turns, deal 45 damage
 
 
-EnemyHp - 45",TullyBun,10,2,3,-45,2,0,0,1,1
+EnemyHp - 45",TullyBun,10,2,1,-45,2,0,0,1,1
 19,Great Sword,"The cow deals higher damage the higher the BD of player
 
-BD * 4",Shinigami Cow,11,2,3,- ( PlayerBD * 4 ),2,0,0,1,1
+BD * 4",Shinigami Cow,11,2,1,- ( PlayerBD * 4 ),2,0,0,1,1
 20,Shuriken,"Activate this character right away if GP is enough and if equipped by player regardless if he is first or second turn. Deal small amount of damage
 
 EnemyHP - 10",Quickie Hoe,11,2,1,-10,2,0,0,1,1
