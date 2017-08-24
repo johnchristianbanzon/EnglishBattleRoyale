@@ -350,10 +350,17 @@ public class CharacterLogic
 	private static float OperatorCalculator (int operatorType, float destinationVariable, float calculateCharAmount)
 	{
 		float finalCalculation = 0;
-		if (operatorType == 1) {
+
+		switch(operatorType){
+		case 1:
 			finalCalculation = destinationVariable + calculateCharAmount;
-		} else if (operatorType == 2) {
+			break;
+		case 2:
 			finalCalculation = destinationVariable * calculateCharAmount;
+			break;
+		case 3:
+			finalCalculation = destinationVariable +  (destinationVariable * calculateCharAmount);
+			break;
 		}
 
 		return finalCalculation;
