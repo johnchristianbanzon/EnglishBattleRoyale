@@ -74,7 +74,7 @@ public class SlotMachineEvent : MonoBehaviour
 				overAllHintContainersLeft++;
 			}
 			slot.GetComponent<Image> ().color = slotColor [slotIndex];
-			slot.GetComponent<Image> ().enabled = false;
+			slot.GetComponentInChildren<Text> ().color = new Color32 (0,0,0,255);
 			slotIndex++;
 		}
 		hintContainersLeft = wrongContainer.Count;
@@ -86,9 +86,7 @@ public class SlotMachineEvent : MonoBehaviour
 		int randomizeContainer = Random.Range (0, wrongContainer.Count);
 		hintContainersLeft--;
 		overAllHintContainersLeft--;
-		wrongContainer [randomizeContainer].GetComponentInChildren<Text> ().text = "";
-		wrongContainer [randomizeContainer].GetComponent<Image> ().enabled = true;
-		wrongContainer [randomizeContainer].GetComponent<Image> ().color = Color.gray;
+		wrongContainer [randomizeContainer].GetComponentInChildren<Text> ().color = new Color32 (0,0,0,60);
 		wrongContainer.RemoveAt (randomizeContainer);
 	}
 
