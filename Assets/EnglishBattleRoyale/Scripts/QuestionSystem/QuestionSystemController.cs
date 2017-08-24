@@ -180,7 +180,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		questionHint.enableHintButton ();
 		hasSkippedQuestion = false;
 		if (hasNextQuestion) {
-
 			GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 				roundResultList.Add (onQuestionResult);
 				if (onQuestionResult.isCorrect && !isDebug) {

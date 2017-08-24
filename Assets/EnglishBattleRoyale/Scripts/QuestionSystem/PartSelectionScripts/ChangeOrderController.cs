@@ -118,6 +118,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 			selectionContainers [i].transform.SetSiblingIndex (UnityEngine.Random.Range (0, selectionContainers.Length));
 		}
 		if (GetSelectedAnswer ().Equals (questionAnswer)) {
+			Debug.Log (GetSelectedAnswer () + "/" + questionAnswer);
 			ShuffleSelection ();
 		}
 	}
