@@ -46,13 +46,14 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	{
 		clearButton.SetActive (false);
 		for (int i = 0; i < answerContainers.Count; i++) {
-			if (answerContainers [i].transform.childCount > 0) {
-				if (answerContainers [i].GetComponentInChildren<SelectLetterEvent> () != null) {
-					answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().ReturnSelectedLetter (answerContainers [i]);
-
-				}
-			} 
+			if (answerContainers [i] != null) {
+				if (answerContainers [i].transform.childCount > 0) {
+					if (answerContainers [i].GetComponentInChildren<SelectLetterEvent> () != null) {
+						answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().ReturnSelectedLetter (answerContainers [i]);
+					}
+				} 
 				Destroy (answerContainers [i]);	
+			}
 		}
 	}
 
