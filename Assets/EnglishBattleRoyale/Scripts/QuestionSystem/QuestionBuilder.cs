@@ -46,6 +46,7 @@ public static class QuestionBuilder
 				} else {
 					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Hard;
 				}
+				Debug.Log (questionType.questionType.contentLevel);
 				questions.Add (questionType);
 			}
 		}

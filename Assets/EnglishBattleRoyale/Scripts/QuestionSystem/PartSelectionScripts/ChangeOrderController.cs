@@ -97,6 +97,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 			selectionViewContent.GetComponent<HorizontalLayoutGroup> ().enabled = false;
 		    showAnswerPrefab = SystemResourceController.Instance.LoadPrefab ("CluePrefab", selectionViewContent);
 			showAnswerPrefab.transform.position = transform.position;
+			showAnswerPrefab.GetComponent<RectTransform> ().sizeDelta = new Vector2 (600,125);
 			showAnswerPrefab.GetComponentInChildren<Text> ().text = questionAnswer;
 			TweenFacade.TweenScaleToLarge (showAnswerPrefab.transform, Vector3.one, 0.3f);
 			for (int i = 0; i < selectionContainers.Length; i++) {
