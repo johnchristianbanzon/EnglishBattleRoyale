@@ -56,7 +56,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
 		roundResultList.Clear ();
-
 		questionRoundTimer = new QuestionSystemTimer ();
 		questionRoundTimer.InitQuestionSystemTimer (true);
 		this.onRoundResult = onRoundResult;
