@@ -61,7 +61,6 @@ public class CharacterManager: IRPCDicObserver
 							characterReceiveQueue.Enqueue (characterList.list [i]);
 						}
 					}
-					Debug.Log ("CHARACTER COUNT " + characterReceiveQueue.Count);
 
 				
 					if (characterReceiveQueue.Count > 0) {
