@@ -18,7 +18,6 @@ public class BattleManager: IRPCDicObserver
 	public static void CountCharacters ()
 	{
 		characterActionCounter++;
-		Debug.Log ("CHARACTER SENT COUNT " + characterActionCounter);
 
 		//Reminders: Change to 2 if not testing
 		if (characterActionCounter == 2) {

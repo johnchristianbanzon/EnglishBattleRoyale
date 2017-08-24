@@ -65,11 +65,9 @@ public class CharacterManager: IRPCDicObserver
 				
 					if (characterReceiveQueue.Count > 0) {
 						if (userHome.Equals (GameManager.isHost)) {
-							Debug.Log ("RECEIVE PLAYER CHARACTERS " + characterReceiveQueue.Count);
 							playerCharacterQueue = characterReceiveQueue;
 
 						} else {
-							Debug.Log ("RECEIVE ENEMY CHARACTERS " + characterReceiveQueue.Count);
 							enemyCharacterQueue = characterReceiveQueue;
 						}
 					}
