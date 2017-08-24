@@ -89,17 +89,6 @@ public class WordChoice : MonoBehaviour, ISelection
 		indexer++;
 	}
 
-	/*
-	IEnumerator ChangeSelectionColor(List<GameObject> popUpSelectionList){
-		Debug.Log ("Hey1");
-		yield return new WaitForSeconds (0.4f);
-		Debug.Log ("Hey2");
-		popUpSelectionList[0].GetComponent<Image>().color = new Color32 (255, 223, 0, 255);
-		yield return new WaitForSeconds (0.4f);
-		popUpSelectionList[1].GetComponent<Image>().color = new Color32 (255, 100, 100, 255);
-		Debug.Log ("Hey3");
-	}*/
-
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
 		Color answerColor = new Color ();

@@ -54,7 +54,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void HideSelectionHint ()
 	{
-		if (slots [0].getOverAllHintLeft() > 1) {
+		if (slots [0].getOverAllHintLeft() > 0) {
 			int randomSlot = UnityEngine.Random.Range (0, slots.Length-(slots.Length-correctAnswerSlots.Count));
 
 			while (slots [randomSlot].hintContainersLeft <= 0) {
@@ -102,6 +102,7 @@ public class SlotMachine : MonoBehaviour,ISelection
 	}
 
 	public void CheckAnswer(){
+		Debug.Log (QuestionSystemController.Instance.questionRoundHasStarted);
 		if (GetAnswer () == questionAnswer) {
 			ShowCorrectAnswer (true);
 			QuestionSystemController.Instance.CheckAnswer (true);

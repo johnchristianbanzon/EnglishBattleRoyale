@@ -49,9 +49,10 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 			if (answerContainers [i].transform.childCount > 0) {
 				if (answerContainers [i].GetComponentInChildren<SelectLetterEvent> () != null) {
 					answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().ReturnSelectedLetter (answerContainers [i]);
+
 				}
 			} 
-			Destroy (answerContainers [i]);
+				Destroy (answerContainers [i]);	
 		}
 	}
 

@@ -55,6 +55,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
+		roundResultList.Clear ();
 		questionRoundHasStarted = true;
 		questionRoundTimer = new QuestionSystemTimer ();
 		questionRoundTimer.InitQuestionSystemTimer (true);
@@ -120,19 +121,11 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		Invoke("HideScrollUI",3.0f);
 	}
 
-	private void StopAllAudio(){
-		AudioSource[] allAudioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
-		foreach( AudioSource audioS in allAudioSources) {
-			audioS.Stop();
-		}
-	}
-
 	/// <summary>
 	/// Instantiates Speed Effect Prefab
 	/// </summary>
 	/// <param name="speedyType">Speedy type.</param>
 	public void ShowSpeedyEffect(QuestionSystemEnums.SpeedyType speedyType){
-		StopAllAudio ();
 		switch (speedyType) {
 		case QuestionSystemEnums.SpeedyType.Awesome:
 			speedyEffect = SystemResourceController.Instance.LoadPrefab ("AwesomeEffect",SystemPopupController.Instance.popUp);
@@ -269,7 +262,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		CancelInvoke ();
 		currentQuestionNumber = 0;
 		isQuestionRoundOver = false;
-
 
 		if (questionList.Count > 0) {
 			hasNextQuestion = true;

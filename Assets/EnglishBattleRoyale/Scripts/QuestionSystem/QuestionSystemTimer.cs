@@ -45,7 +45,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		for (int i = 0; i < questionSystemController.questionList.Count; i++) {
 			averageTime += questionSystemController.questionList [i].idealTime;
 		}
-		double totalTime = (averageTime / questionSystemController.questionList.Count) * 7.5;
+		double totalTime = (averageTime / questionSystemController.questionList.Count) * 10.5;
 		questionSystemController.timerSlider.maxValue = (float)totalTime;
 		TimeManager.StartQuestionTimer (delegate(int timeLeft) {
 			ReduceTimeLeftCallBack(timeLeft);
