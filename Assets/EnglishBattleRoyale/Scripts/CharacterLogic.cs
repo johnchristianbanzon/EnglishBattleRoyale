@@ -50,7 +50,9 @@ public class CharacterLogic
 		string calculateString = "";
 
 		//parses the string formula from csv
-		calculateString = character.characterSkillCalculation.
+
+		if (isPlayer) {
+			calculateString = character.characterSkillCalculation.
 				Replace ("PlayerHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
 				Replace ("PlayerGP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
 				Replace ("PlayerBD", ScreenBattleController.Instance.partState.player.playerBD.ToString ()).
@@ -65,6 +67,23 @@ public class CharacterLogic
 				Replace ("EnemyTD", ScreenBattleController.Instance.partState.enemy.playerTD.ToString ()).
 				Replace ("EnemyRotten", GameManager.enemyAnswerParam.speedyRottenCount.ToString ()).
 				Replace ("EnemyAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ());
+		} else {
+			calculateString = character.characterSkillCalculation.
+				Replace ("PlayerHP", ScreenBattleController.Instance.partState.enemy.playerHP.ToString ()).
+				Replace ("PlayerGP", ScreenBattleController.Instance.partState.enemy.playerGP.ToString ()).
+				Replace ("PlayerBD", ScreenBattleController.Instance.partState.enemy.playerBD.ToString ()).
+				Replace ("PlayerSDM", ScreenBattleController.Instance.partState.enemy.playerSDM.ToString ()).
+				Replace ("PlayerTD", ScreenBattleController.Instance.partState.enemy.playerTD.ToString ()).
+				Replace ("PlayerRotten", GameManager.enemyAnswerParam.speedyRottenCount.ToString ()).
+				Replace ("PlayerAwesome", GameManager.enemyAnswerParam.speedyAwesomeCount.ToString ()).
+				Replace ("EnemyHP", ScreenBattleController.Instance.partState.player.playerHP.ToString ()).
+				Replace ("EnemyGP", ScreenBattleController.Instance.partState.player.playerGP.ToString ()).
+				Replace ("EnemyBD", ScreenBattleController.Instance.partState.player.playerBD.ToString ()).
+				Replace ("EnemySDM", ScreenBattleController.Instance.partState.player.playerSDM.ToString ()).
+				Replace ("EnemyTD", ScreenBattleController.Instance.partState.player.playerTD.ToString ()).
+				Replace ("EnemyRotten", GameManager.playerAnswerParam.speedyRottenCount.ToString ()).
+				Replace ("EnemyAwesome", GameManager.playerAnswerParam.speedyAwesomeCount.ToString ());
+		}
 		
 		Expression e = new Expression (calculateString);
 
