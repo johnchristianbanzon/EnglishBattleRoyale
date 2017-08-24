@@ -19,6 +19,7 @@
 	}
 
 	public enum SkillType{
+		None,
 		PlayerHP,
 		EnemyHP,
 		PlayerBD,
@@ -39,7 +40,7 @@
 	}
 
 	public enum SkillEffect{
-		SkillNone,
+		None,
 		SkillHeal,
 		SkillPunch,
 		SkillEnergy,
@@ -51,6 +52,7 @@
 	}
 
 	public enum Target{
+		None,
 		Player,
 		Enemy
 	}
