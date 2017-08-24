@@ -23,10 +23,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public Text playerHitComboCountText;
 	public Text playerTotalDamageText;
 	public Text playerAwesomeTotalDamageText;
+	public Text playerSkillText;
 
 	public Text enemyHitComboCountText;
 	public Text enemyTotalDamageText;
 	public Text enemyAwesomeTotalDamageText;
+	public Text enemySkillText;
 
 	public Image playerAwesomeIndicator;
 	public Image enemyAwesomeIndicator;
@@ -293,7 +295,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			enemyHitComboCountText.text = hitComboCount;
 			enemyTotalDamageText.text = totalDamageCount;
 			enemyAwesomeTotalDamageText.text = awesomeCount;
-
+	
 		}
 
 		yield return new WaitForSeconds (1);
@@ -310,6 +312,24 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			enemyAwesomeIndicator.enabled = true;
 			yield return new WaitForSeconds (1);
 			enemyAwesomeIndicator.enabled = false;
+		}
+	}
+
+	public void ShowSkillIndicator (bool isPlayer, string skillText)
+	{
+		StartCoroutine (ShowSkillIndicatorCoroutine (isPlayer, skillText));
+	}
+
+	IEnumerator ShowSkillIndicatorCoroutine (bool isPlayer, string skillText)
+	{
+		if (isPlayer) {
+			playerSkillText.text = skillText;
+			yield return new WaitForSeconds (1);
+			playerSkillText.text = "";
+		} else {
+			enemySkillText.text = skillText;
+			yield return new WaitForSeconds (1);
+			enemySkillText.text = "";
 		}
 	}
 
