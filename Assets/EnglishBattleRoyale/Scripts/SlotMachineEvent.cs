@@ -114,7 +114,7 @@ public class SlotMachineEvent : MonoBehaviour
 		isDraggable = false;
 		if (QuestionSystemController.Instance.questionRoundHasStarted) {
 			QuestionSystemController.Instance.partSelection.slotMachine.CheckAnswer ();
-		}
+		} 
 		Invoke ("DraggingDone", scrollDelay);
 	}
 

@@ -50,13 +50,12 @@ public class PartQuestionController: MonoBehaviour
 		QuestionSystemController.Instance.StartQuestionRound (
 			questionType
 			, delegate(List<QuestionResultModel> resultList) {
-				//
-				//callback here
-
+				
 				int correctCount = resultList.Count (p => p.isCorrect == true);
 				int awesomeSpeedyCount = resultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Awesome);
 				int goodSpeedyCount = resultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Good);
 				int rottenSpeedyCount = resultList.Count (p => p.speedyType == QuestionSystemEnums.SpeedyType.Rotten);
+
 				//:TO-DO count speedyawesome and speedygood and include in computation
 				//bonus get from answers
 				float correctGPBonus = correctCount * MyConst.gameSettings.correctGPBonus;
