@@ -7,7 +7,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 
 	public int timePassed = 0;
 	public bool isTimerOn = false;
-	private int timeLeft = 0;
+	public int timeLeft = 0;
 	private QuestionSystemController questionSystemController;
 
 	public void InitQuestionSystemTimer(bool isTimerOn){
@@ -81,7 +81,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 				timeLeft--;
 				timePassed++;
 				action (timeLeft);
-				if (timeLeft<=3) {
+				if (timeLeft<=1) {
 					QuestionSystemController.Instance.timerSlider.fillRect.GetComponent<Image>().color = new Color32 (255, 100, 100, 255);
 					QuestionSystemController.Instance.hasNextQuestion = false;
 				}
