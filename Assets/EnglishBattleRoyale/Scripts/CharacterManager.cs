@@ -178,10 +178,6 @@ public class CharacterManager: IRPCDicObserver
 	public static void SetCharacterOrder (CharacterModel[] indexArray)
 	{
 		Array.Copy (indexArray, currentCharacterInEquip, 3);
-
-		for (int i = 0; i < currentCharacterInEquip.Length; i++) {
-			Debug.Log (currentCharacterInEquip [i].characterName);
-		}
 	}
 		
 
