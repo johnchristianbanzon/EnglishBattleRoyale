@@ -261,6 +261,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 
+			yield return new WaitForSeconds (0.1f);
 			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 
 			if (isPLayer) {
@@ -290,7 +291,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			}
 
 
-			yield return new WaitForSeconds (0.2f);
+			yield return new WaitForSeconds (0.3f);
 		}
 
 		action ();
@@ -307,6 +308,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		yield return new WaitForSeconds (1);
 
 	}
+
+
 
 	IEnumerator ShowAwesomeIndicatorCoroutine (bool isPlayer)
 	{
