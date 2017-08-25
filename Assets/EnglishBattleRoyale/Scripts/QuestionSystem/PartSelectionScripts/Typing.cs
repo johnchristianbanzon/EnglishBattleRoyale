@@ -23,6 +23,13 @@ public class Typing : MonoBehaviour, ISelection
 	public void ShowSelectionPopUp(GameObject selectionPopUp){
 		this.selectionPopUp = selectionPopUp;
 		InvokeRepeating ("TypeLetterPopUp", 0,0.4f);
+		if (typePopUpIndex > 4) {
+			string typingString = "TYPING";
+			selectionPopUp.transform.GetChild(3).GetComponentInChildren<Text> ().text = typingString [3].ToString ();
+			selectionPopUp.transform.GetChild(4).GetComponentInChildren<Text> ().text = typingString [4].ToString ();
+			selectionPopUp.transform.GetChild(5).GetComponentInChildren<Text> ().text = typingString [5].ToString ();
+
+		}
 	}
 	private int typePopUpIndex = 2;
 	private void TypeLetterPopUp(){
