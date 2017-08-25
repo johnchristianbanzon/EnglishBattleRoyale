@@ -45,7 +45,6 @@ public class LetterLinkEvent : MonoBehaviour
 	{
 		if (letterlink.questionAnswer == writtenAnswer) {
 			startSelection = false;
-
 			QuestionSystemController.Instance.CheckAnswer (true);
 		} else {
 			ClearSelection ();
