@@ -19,9 +19,23 @@ public class Typing : MonoBehaviour, ISelection
 			selectionButtons [i].GetComponent<Button> ().interactable = true;
 		}
 	}
-
+	GameObject selectionPopUp;
 	public void ShowSelectionPopUp(GameObject selectionPopUp){
-
+		this.selectionPopUp = selectionPopUp;
+		InvokeRepeating ("TypeLetterPopUp", 0,0.4f);
+	}
+	private int typePopUpIndex = 2;
+	private void TypeLetterPopUp(){
+		if (typePopUpIndex < 5) {
+			typePopUpIndex++;
+			string typingString = "TYPING";
+			GameObject letterPointer = selectionPopUp.transform.GetChild (typePopUpIndex).gameObject;
+			letterPointer.GetComponentInChildren<Text> ().text = typingString [typePopUpIndex].ToString ();
+			selectionPopUp.transform.GetChild (6).position = letterPointer.transform.position;
+		} else {
+			Destroy (selectionPopUp.transform.GetChild (6).gameObject);
+			CancelInvoke ();
+		}
 	}
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
