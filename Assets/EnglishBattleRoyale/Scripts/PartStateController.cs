@@ -257,10 +257,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		for (int i = 0; i <= answerParam.correctCount; i++) {
 
 			//random animation
-			int randomNumber = UnityEngine.Random.Range (1, 4);
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack" + randomNumber);
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack" + (i % 3));
 
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+
+			yield return new WaitForSeconds (0.1f);
+			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 
 			if (isPLayer) {
 				ScreenBattleController.Instance.partAvatars.LoadHitEffect (false);
@@ -268,43 +270,46 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 				if (i < GameManager.playerAnswerParam.speedyAwesomeCount) {
 					awesomeCounter++;
 					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (true);
+
+					playerAwesomeTotalDamageText.text = awesomeCounter + " AWESOME";
 					StartCoroutine (ShowAwesomeIndicatorCoroutine (true));
 				}
+				playerHitComboCountText.text = (i + 1) + " HIT COMBO";
+				;
 			} else {
 				ScreenBattleController.Instance.partAvatars.LoadHitEffect (true);
 				//load power effect in arms for every awesome count
 				if (i < GameManager.enemyAnswerParam.speedyAwesomeCount) {
 					awesomeCounter++;
 					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (false);
+
+					enemyAwesomeTotalDamageText.text = awesomeCounter + " AWESOME";
 					StartCoroutine (ShowAwesomeIndicatorCoroutine (false));
 				}
-			}
-				
-			hitComboCount = (i + 1) + " HIT COMBO";
-			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 
-			yield return new WaitForSeconds (1);
+				enemyHitComboCountText.text = (i + 1) + " HIT COMBO";
+			}
+
+
+			yield return new WaitForSeconds (0.3f);
 		}
 
 		action ();
-		awesomeCount = awesomeCounter + " AWESOME";
 		totalDamageCount = attackDamage + " DAMAGE";
 	
 		if (isPLayer) {
-			playerHitComboCountText.text = hitComboCount;
 			playerTotalDamageText.text = totalDamageCount;
-			playerAwesomeTotalDamageText.text = awesomeCount;
 
 		} else {
-			enemyHitComboCountText.text = hitComboCount;
 			enemyTotalDamageText.text = totalDamageCount;
-			enemyAwesomeTotalDamageText.text = awesomeCount;
 	
 		}
 
 		yield return new WaitForSeconds (1);
 
 	}
+
+
 
 	IEnumerator ShowAwesomeIndicatorCoroutine (bool isPlayer)
 	{
