@@ -59,6 +59,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft-1);
 		questionSystemController.questionHint.OnTimeInterval ();
 		if (timeLeft <= 0) {
+			QuestionSystemController.Instance.questionHint.disableHintButton ();
 			TimerEnded ();
 		}
 	}
@@ -81,7 +82,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 				timeLeft--;
 				timePassed++;
 				action (timeLeft);
-				if (timeLeft<=1) {
+				if (timeLeft<=3) {
 					QuestionSystemController.Instance.timerSlider.fillRect.GetComponent<Image>().color = new Color32 (255, 100, 100, 255);
 					QuestionSystemController.Instance.hasNextQuestion = false;
 				}
