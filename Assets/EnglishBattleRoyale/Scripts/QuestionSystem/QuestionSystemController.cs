@@ -180,19 +180,22 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		Destroy (speedyEffect);
 		questionHint.enableHintButton ();
 		hasSkippedQuestion = false;
-		if (!hasNextQuestion) {
+		if (hasNextQuestion) {
+			/*
 			if (!hasGivenGraceTime) {
 			questionRoundTimer.timeLeft += 3;
 			hasGivenGraceTime = true;
 			}
+			*/
+			GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
+				roundResultList.Add (onQuestionResult);
+				if (onQuestionResult.isCorrect && !isDebug) {
+					SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_ANSWER_INDICATOR, "isCorrect");
+				}
+				Invoke ("HideQuestionParts", 1.0f);
+			});
 		}
-		GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
-			roundResultList.Add (onQuestionResult);
-			if (onQuestionResult.isCorrect && !isDebug) {
-				SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_ANSWER_INDICATOR, "isCorrect");
-			}
-			Invoke ("HideQuestionParts", 1.0f);
-		});
+
 	}
 
 	public QuestionModel LoadQuestion ()
