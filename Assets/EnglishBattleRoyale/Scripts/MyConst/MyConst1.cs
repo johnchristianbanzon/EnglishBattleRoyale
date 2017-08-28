@@ -26,7 +26,7 @@ public static partial class MyConst {
 	}
 		
 	public static void SetPlayerName(string playerName){
-		player.playerName = playerName;
+		player.name = playerName;
 	}
 
 	private static void InitGameSettings(){

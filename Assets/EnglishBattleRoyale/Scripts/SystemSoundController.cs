@@ -37,7 +37,7 @@ public class SystemSoundController: SingletonMonoBehaviour<SystemSoundController
 
 		AudioSource sfxPlayer = this.gameObject.AddComponent<AudioSource> ();	
 		sfxPlayer.clip = SystemResourceController.Instance.LoadAudio (sfxName);
-		sfxPlayer.mute = isBGMMute;
+		sfxPlayer.mute = isSFXMute;
 
 		sfxPlayer.Play ();
 

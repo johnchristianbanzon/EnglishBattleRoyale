@@ -7,9 +7,7 @@ public static class GameManager
 {
 	public static bool isHost{ get; set; }
 
-	public static QuestionResultCountModel playerAnswerParam{ get; set; }
 
-	public static QuestionResultCountModel enemyAnswerParam{ get; set; }
 
 	public static Dictionary<Firebase.Database.DataSnapshot, bool> initialState{ get; set; }
 }

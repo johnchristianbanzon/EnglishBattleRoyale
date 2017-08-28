@@ -37,7 +37,7 @@ public class BattleManager: IRPCDicObserver
 	//send attack to firebase
 	public static void SendAttack ()
 	{
-		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (ScreenBattleController.Instance.partState.player.playerTD));
+		SystemFirebaseDBController.Instance.AttackPhase (new AttackModel (PlayerManager.GetPlayer(true).td));
 		Debug.Log ("SENDING ATTACK");
 	}
 
@@ -98,8 +98,8 @@ public class BattleManager: IRPCDicObserver
 	public static int GetBattleOrder ()
 	{
 		int battleOrder = 0;
-		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
-		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
+		QuestionResultCountModel playerAnswerParam = PlayerManager.GetQuestionResultCount (true);
+		QuestionResultCountModel enemyAnswerParam = PlayerManager.GetQuestionResultCount (false);
 
 		//TO-DO: REFACTOR THIS CODE IF POSSIBLE
 		if (playerAnswerParam.correctCount > enemyAnswerParam.correctCount) {

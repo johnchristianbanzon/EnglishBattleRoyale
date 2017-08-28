@@ -24,10 +24,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 		partCameraWorks.StartIntroCamera ();
 		TimeManager.StartPreBattleTimer (3);
 
-		//get initial state for enemy and player stored in GameManager
-		foreach (KeyValuePair<Firebase.Database.DataSnapshot, bool> initialState in GameManager.initialState) {
-			partState.SetStateParam (initialState.Key, initialState.Value);
-		}
+		PlayerManager.Init ();
 	}
 
 	public void StartPhase1 ()
