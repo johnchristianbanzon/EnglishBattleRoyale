@@ -20,9 +20,10 @@ public class CharacterManager: IRPCDicObserver
 		List<CharacterModel> charactersToSend = new List<CharacterModel> ();
 		for (int i = 0; i < currentCharacterInEquip.Length; i++) {
 			//if gp is enough, send character to firebase and remove from equip
-			if (ScreenBattleController.Instance.partState.player.playerGP >= currentCharacterInEquip [i].characterGPCost) {
+			PlayerManager.SetIsPlayer(true);
+			if (PlayerManager.Player.gp >= currentCharacterInEquip [i].characterGPCost) {
 				Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [i].characterName);
-				ScreenBattleController.Instance.partState.player.playerGP -= currentCharacterInEquip [i].characterGPCost;
+				PlayerManager.Player.gp -= currentCharacterInEquip [i].characterGPCost;
 				charactersToSend.Add (currentCharacterInEquip [i]);
 				ActivateCharacterUI (i);
 

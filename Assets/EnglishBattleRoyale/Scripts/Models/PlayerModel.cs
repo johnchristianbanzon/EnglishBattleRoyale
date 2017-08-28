@@ -3,35 +3,36 @@
 /* Player Object*/
 public class PlayerModel
 {
-	public string playerName;
+	public string name;
 
-	public float playerHP;
+	public float hp;
 
-	public float playerGP;
+	public float gp;
 
-	public float playerMaxGP;
+	public float maxGP;
 
-	public float playerBD;
+	public float bd;
 
 	//player has skill damage multiplier
-	public float playerSDM;
+	public float sdm;
 
-	public float playerTD;
+	public float td;
 
 	//player has skill damage buff
-	public bool playerSDB;
+	public bool sdb;
 
 
 
-	public PlayerModel (string playerName, float[] playerParam, bool playerSDB)
+
+	public PlayerModel (string name, float[] playerParam, bool sdb)
 	{
-		this.playerName = playerName;
-		this.playerHP = playerParam [0];
-		this.playerGP = playerParam [1];
-		this.playerMaxGP = playerParam [2];
-		this.playerBD = playerParam [3];
-		this.playerSDM = playerParam [4];
-		this.playerTD = playerParam [5];
-		this.playerSDB = playerSDB;
+		this.name = name;
+		hp = playerParam [0];
+		gp = playerParam [1];
+		maxGP = playerParam [2];
+		bd = playerParam [3];
+		sdm = playerParam [4];
+		td = playerParam [5];
+		this.sdb = sdb;
 	}
 }

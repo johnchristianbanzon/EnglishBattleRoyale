@@ -11,7 +11,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public Text playerNameText;
 
-	public Slider playerHPBar;
+	public Slider playerHPBar ;
 	public Text playerHPText;
 	public Text playerGPText;
 	public Slider playerGPBar;
@@ -33,113 +33,32 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public Image playerAwesomeIndicator;
 	public Image enemyAwesomeIndicator;
 
-	public PlayerModel player{ get; set; }
-
-	public PlayerModel enemy{ get; set; }
-
 	void Start ()
 	{
 		playerAwesomeIndicator.enabled = false;
 		enemyAwesomeIndicator.enabled = false;
 	}
 
-	void Update ()
+
+	#region UPDATE PLAYER UI
+
+	public void UpdatePlayerUI (bool isPlayer, PlayerModel player)
 	{
-		if (player != null && enemy != null) {
-			if (player.playerHP > 100) {
-				player.playerHP = 100;
-			}
-
-			if (enemy.playerHP > 100) {
-				enemy.playerHP = 100;
-			}
-
-			if (player.playerHP < 0) {
-				player.playerHP = 0;
-			}
-
-			if (enemy.playerHP < 0) {
-				enemy.playerHP = 0;
-			}
-
-			if (player.playerGP > player.playerMaxGP) {
-				player.playerGP = player.playerMaxGP;
-			}
-
-			if (player.playerGP < 0) {
-				player.playerGP = 0;
-			}
-
-			if (enemy.playerGP > enemy.playerMaxGP) {
-				enemy.playerGP = enemy.playerMaxGP;
-			}
-
-			if (enemy.playerGP < 0) {
-				enemy.playerGP = 0;
-			}
-
-			playerHPText.text = player.playerHP.ToString ();
-			playerHPBar.value = player.playerHP;
-
-			playerGPText.text = player.playerGP.ToString ();
-			playerGPBar.value = player.playerGP;
-
-			enemyHPText.text = enemy.playerHP.ToString ();
-			enemyHPBar.value = enemy.playerHP;
-		}
-	}
-
-
-	#region INITIAL STATE
-
-	public void SetStateParam (Firebase.Database.DataSnapshot dataSnapShot, bool isHome)
-	{
-		Dictionary<string, System.Object> rpcReceive = (Dictionary<string, System.Object>)dataSnapShot.Value;
-		if (rpcReceive.ContainsKey (MyConst.RPC_DATA_PARAM)) {
-			Dictionary<string, System.Object> param = (Dictionary<string, System.Object>)rpcReceive [MyConst.RPC_DATA_PARAM];
-
-			ReceiveInitialState (param, isHome);
-		}
-	}
-
-	private void ReceiveInitialState (Dictionary<string, System.Object> initialState, bool isHome)
-	{
-		PlayerModel player = JsonUtility.FromJson<PlayerModel> (initialState [MyConst.RPC_DATA_PLAYER].ToString ());
-
-		if (isHome) {
-			
-			SetInitialPlayerUI (player);
+		if (isPlayer) {
+			playerNameText.text = player.name;
+			playerHPText.text = player.hp.ToString ();
+			playerHPBar.maxValue = player.hp;
+			playerHPBar.value = player.hp;
+			playerGPText.text = player.gp.ToString ();
+			playerGPBar.maxValue = player.maxGP;
+			playerGPBar.value = player.gp;
 		} else {
-			SetInitialEnemyUI (player);
+			enemyNameText.text = player.name;
+			enemyHPText.text = player.hp.ToString ();
+			enemyHPBar.maxValue = player.hp;
+			enemyHPBar.value = player.hp;
 		}
 	}
-
-	public void SetInitialPlayerUI (PlayerModel player)
-	{
-		this.player = player;
-		playerNameText.text = player.playerName;
-
-		playerHPText.text = player.playerHP.ToString ();
-		playerHPBar.maxValue = player.playerHP;
-		playerHPBar.value = player.playerHP;
-
-
-		playerGPText.text = player.playerGP.ToString ();
-		playerGPBar.maxValue = player.playerMaxGP;
-		playerGPBar.value = player.playerGP;
-	
-	}
-
-	public void SetInitialEnemyUI (PlayerModel enemy)
-	{
-		this.enemy = enemy;
-		enemyNameText.text = enemy.playerName;
-		enemyHPText.text = enemy.playerHP.ToString ();
-		enemyHPBar.maxValue = enemy.playerHP;
-		enemyHPBar.value = enemy.playerHP;
-
-	}
-
 	#endregion
 
 	#region COROUTINES
@@ -186,12 +105,15 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	//check HP of each player, if there is winner, stop battle
 	private void CheckHP (bool isSecondCheck)
 	{
-		if (enemy.playerHP <= 0 || player.playerHP <= 0) {
+		PlayerModel player = PlayerManager.GetPlayer (true);
+		PlayerModel enemy = PlayerManager.GetPlayer (false);
 
-			if (enemy.playerHP > 0 && player.playerHP <= 0) {
+		if (player.hp <= 0 || enemy.hp <= 0) {
+
+			if (enemy.hp > 0 && player.hp <= 0) {
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "lose");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
-			} else if (player.playerHP > 0 && enemy.playerHP <= 0) {
+			} else if (player.hp > 0 && enemy.hp <= 0) {
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "lose");
 			} else {
@@ -243,8 +165,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		string hitComboCount = "";
 		string totalDamageCount = "";
 		string awesomeCount = "";
-		QuestionResultCountModel playerAnswerParam = GameManager.playerAnswerParam;
-		QuestionResultCountModel enemyAnswerParam = GameManager.enemyAnswerParam;
+		QuestionResultCountModel playerAnswerParam = PlayerManager.GetQuestionResultCount (true);
+		QuestionResultCountModel enemyAnswerParam = PlayerManager.GetQuestionResultCount (false);
 
 		QuestionResultCountModel answerParam = null;
 		if (isPLayer) {
@@ -267,7 +189,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			if (isPLayer) {
 				ScreenBattleController.Instance.partAvatars.LoadHitEffect (false);
 				//load power effect in arms for every awesome count
-				if (i < GameManager.playerAnswerParam.speedyAwesomeCount) {
+				if (i < PlayerManager.GetQuestionResultCount(true).speedyAwesomeCount) {
 					awesomeCounter++;
 					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (true);
 
@@ -279,7 +201,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			} else {
 				ScreenBattleController.Instance.partAvatars.LoadHitEffect (true);
 				//load power effect in arms for every awesome count
-				if (i < GameManager.enemyAnswerParam.speedyAwesomeCount) {
+				if (i < PlayerManager.GetQuestionResultCount(false).speedyAwesomeCount) {
 					awesomeCounter++;
 					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (false);
 
@@ -349,7 +271,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	private void ResetPlayerDamage ()
 	{
-		player.playerTD = 0;
+		PlayerManager.SetIsPlayer (true);
+		PlayerManager.Player.td = 0;
 	}
 
 	#endregion

@@ -65,10 +65,12 @@ public class PartQuestionController: MonoBehaviour
 				float speedyGoodGPBonus = correctCount * MyConst.gameSettings.speedyGoodGPBonus;
 				float speedyGoodDamageBonus = correctCount * MyConst.gameSettings.speedyGoodDamageBonus;
 
-				ScreenBattleController.Instance.partState.player.playerGP += correctGPBonus + speedyAwesomeGPBonus + speedyGoodGPBonus;
+
+				PlayerManager.SetIsPlayer(true);
+				PlayerManager.Player.gp += correctGPBonus + speedyAwesomeGPBonus + speedyGoodGPBonus;
 				Debug.Log ("GP GAINED A TOTAL OF " + (correctGPBonus + speedyAwesomeGPBonus));
 
-				ScreenBattleController.Instance.partState.player.playerTD = ScreenBattleController.Instance.partState.player.playerBD + correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus;
+				PlayerManager.Player.td = PlayerManager.Player.bd + correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus;
 				Debug.Log ("BONUS PLAYER DAMAGE ADDED " + (correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus));
 
 

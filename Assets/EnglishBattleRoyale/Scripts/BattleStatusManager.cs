@@ -45,19 +45,27 @@ public class BattleStatusManager: IRPCDicObserver
 				case MyConst.BATTLE_STATUS_ANSWER:
 					if (GameManager.isHost) {
 						if (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString () != "0") {
-							GameManager.playerAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString ());
+							PlayerManager.SetIsPlayer (true);
+							PlayerManager.QuestionResultCount = JsonUtility.FromJson<QuestionResultCountModel> 
+								(newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString ());
 						}
 
 						if (newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString () != "0") {
-							GameManager.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString ());
+							PlayerManager.SetIsPlayer (false);
+							PlayerManager.QuestionResultCount = JsonUtility.FromJson<QuestionResultCountModel> 
+								(newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString ());
 						}
 					} else {
 						if (newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString () != "0") {
-							GameManager.playerAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString ());
+							PlayerManager.SetIsPlayer (true);
+							PlayerManager.QuestionResultCount = JsonUtility.FromJson<QuestionResultCountModel> 
+								(newBattleStatus [MyConst.RPC_DATA_ENEMY_ANSWER_PARAM].ToString ());
 						}
 
 						if (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString () != "0") {
-							GameManager.enemyAnswerParam = JsonUtility.FromJson<QuestionResultCountModel> (newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString ());
+							PlayerManager.SetIsPlayer (false);
+							PlayerManager.QuestionResultCount = JsonUtility.FromJson<QuestionResultCountModel> 
+								(newBattleStatus [MyConst.RPC_DATA_PLAYER_ANSWER_PARAM].ToString ());
 						}
 					}
 						
