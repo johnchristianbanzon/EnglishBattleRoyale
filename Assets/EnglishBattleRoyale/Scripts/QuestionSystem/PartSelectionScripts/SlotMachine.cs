@@ -88,7 +88,7 @@ using UnityEngine.EventSystems;
 				selectionIndex.Add (i);
 			}
 		}
-		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
+//		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponentInChildren<Text> ().text = questionAnswer[selectionIndex[0]].ToString();
 		showAnswer.hintContainers [selectionIndex [0]].GetComponent<Button> ().interactable = false;
 	}

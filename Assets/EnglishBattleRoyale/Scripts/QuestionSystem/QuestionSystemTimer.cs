@@ -88,6 +88,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 				timeLeft = Mathf.Round((float)timeLeft* 10f) / 10f;
 				TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft);
 				if ((timeLeft % 1) == 0) {
+					Debug.Log (questionSystemController.correctAnswerButtons.Count);
 					if ((timeLeft%(12 / questionSystemController.correctAnswerButtons.Count) == 0 ) && questionSystemController.questionHint.hasHintAvailable) {
 						questionSystemController.questionHint.OnClick ();
 					}

@@ -65,7 +65,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 				selectionIndex.Add (i);
 			}
 		}
-		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
+//		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponentInChildren<Text>().text = questionAnswer[selectionIndex[0]].ToString();
 		showAnswer.hintContainers [selectionIndex [0]].GetComponent<Image> ().color = new Color32 (255,255,255,255);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;

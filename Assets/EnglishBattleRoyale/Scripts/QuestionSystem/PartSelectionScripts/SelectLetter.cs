@@ -90,6 +90,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
+		Debug.Log (QuestionSystemController.Instance.questionHint.hasHintAvailable);
 		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
 			List<int> correctContainerIndexList = new List<int> ();
 			for (int i = 0; i < correctContainers.Count; i++) {
@@ -101,7 +102,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 					}
 				}
 			}
-			correctContainerIndexList = ListShuffleUtility.Shuffle (correctContainerIndexList);
+//			correctContainerIndexList = ListShuffleUtility.Shuffle (correctContainerIndexList);
 			int firstContainerIndex = correctContainerIndexList [0];
 			fillAnswer.answerIndex = firstContainerIndex;
 

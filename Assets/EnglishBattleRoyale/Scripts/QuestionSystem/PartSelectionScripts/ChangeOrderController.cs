@@ -137,7 +137,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 				selectionIndex.Add (i);
 			}
 		}
-		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
+//		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		TweenFacade.TweenScaleToLarge (showAnswer.hintContainers[selectionIndex[0]].transform,Vector3.one,0.3f);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;
 		showAnswer.hintContainers [selectionIndex [0]].GetComponentInChildren<Text> ().text = letterArray [selectionIndex [0]].ToString();
