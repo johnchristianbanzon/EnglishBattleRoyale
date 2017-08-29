@@ -32,10 +32,12 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 
 	public void OnClickHint (int hintIndex, Action<bool> onHintResult)
 	{
-		selectedIndex = 0;
-		this.onHintResult = onHintResult;
-		InitHints ();
-		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, hintContainers [hintIndex]);
+		if (QuestionSystemController.Instance.questionHint.hasHintAvailable) {
+			selectedIndex = 0;
+			this.onHintResult = onHintResult;
+			InitHints ();
+			QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, hintContainers [hintIndex]);
+		}
 	}
 
 	public void InitHints ()

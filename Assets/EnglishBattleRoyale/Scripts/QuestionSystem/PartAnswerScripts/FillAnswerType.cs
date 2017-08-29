@@ -5,7 +5,7 @@ using System;
 
 public class FillAnswerType : MonoBehaviour,IAnswer
 {
-
+	private Action<bool> onHintResult;
 	public List<GameObject> answerContainers = new List<GameObject> ();
 	public GameObject[] selectionIdentifier = new GameObject[12];
 	public GameObject outviewContent;
@@ -60,6 +60,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void OnClickHint (int hintIndex, Action<bool> onHintResult)
 	{
 		CheckAnswerHolder ();
+		this.onHintResult = onHintResult;
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, answerContainers [answerIndex]);
 		CheckAnswer ();
 	}
@@ -118,6 +119,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 			if (questionAnswer.Length > answerIndex) {
 				selectedObject.transform.SetParent(answerContainers [answerIndex].transform);
 				CheckAnswer ();
+
 			}
 		}
 	}
@@ -137,6 +139,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void CheckAnswer ()
 	{
 		GetAnswerWritten ();
+		onHintResult.Invoke (true);
 		string answerWrote = GetAnswerWritten ();
 		if (answerWrote.Length.Equals (questionAnswer.Length)) {
 			if (answerWrote.ToUpper ().Equals (questionAnswer.ToUpper ())) {

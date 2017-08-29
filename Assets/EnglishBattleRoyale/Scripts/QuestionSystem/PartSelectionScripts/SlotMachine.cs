@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UnityEngine.EventSystems;
-public class SlotMachine : MonoBehaviour,ISelection
+ public class SlotMachine : MonoBehaviour,ISelection
 {
 	public SlotMachineEvent[] slots = new SlotMachineEvent[6];
 	private string questionAnswer = "";
