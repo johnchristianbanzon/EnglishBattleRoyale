@@ -23,7 +23,8 @@ public class LetterLink : MonoBehaviour ,ISelection
 
 	private List<GameObject> popUpSelectionList = new List<GameObject>();
 	private GameObject handCursor;
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpLetterLink", SystemPopupController.Instance.popUp);
 		popUpSelectionList.Clear ();
 		popUpSelectIndex = 0;
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
@@ -39,8 +40,8 @@ public class LetterLink : MonoBehaviour ,ISelection
 				,handCursor.transform.localPosition.y), popUpDelay);
 			Destroy (handCursor, popUpDelay+0.1f);
 			InvokeRepeating ("PopUpSelect", 0, (popUpDelay/4));
-
 		}
+		return selectionPopUp;
 	}
 	private int popUpSelectIndex = 0;
 	public void PopUpSelect(){

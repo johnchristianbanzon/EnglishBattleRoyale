@@ -37,6 +37,7 @@ public class LetterLinkEvent : MonoBehaviour
 			writtenAnswer += currentSelectedLetter.GetComponentInChildren<Text> ().text;
 			QuestionSystemController.Instance.partAnswer.showAnswer.ShowLetterInView (currentSelectedLetter);
 			currentSelectedLetter.GetComponent<Image> ().color = selectedColor;
+			SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		}
 	}
 

@@ -41,7 +41,7 @@ public class PartQuestionController: MonoBehaviour
 			questionSystem.SetActive (true);
 		}
 		string[] questionTypes = new string[6]{ "SelectLetter", "Typing", "ChangeOrderController", "WordChoice", "SlotMachine", "LetterLink" };
-		QuestionSystemController.Instance.ShowPopUP (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)]);
+//		QuestionSystemController.Instance.ShowPopUP (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)]);
 
 		Invoke("StartQuestion",2.0f);
 	}

@@ -20,16 +20,18 @@ public class Typing : MonoBehaviour, ISelection
 		}
 	}
 	GameObject selectionPopUp;
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpTyping", SystemPopupController.Instance.popUp);
 		this.selectionPopUp = selectionPopUp;
 		InvokeRepeating ("TypeLetterPopUp", 0,0.4f);
 		if (typePopUpIndex > 4) {
 			string typingString = "TYPING";
-			selectionPopUp.transform.GetChild(3).GetComponentInChildren<Text> ().text = typingString [3].ToString ();
-			selectionPopUp.transform.GetChild(4).GetComponentInChildren<Text> ().text = typingString [4].ToString ();
-			selectionPopUp.transform.GetChild(5).GetComponentInChildren<Text> ().text = typingString [5].ToString ();
+			selectionPopUp.transform.GetChild (3).GetComponentInChildren<Text> ().text = typingString [3].ToString ();
+			selectionPopUp.transform.GetChild (4).GetComponentInChildren<Text> ().text = typingString [4].ToString ();
+			selectionPopUp.transform.GetChild (5).GetComponentInChildren<Text> ().text = typingString [5].ToString ();
 
 		}
+		return selectionPopUp;
 	}
 	private int typePopUpIndex = 2;
 	private void TypeLetterPopUp(){
@@ -131,6 +133,7 @@ public class Typing : MonoBehaviour, ISelection
 
 	public void OnSelect ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		QuestionSystemController.Instance.partAnswer.fillAnswer.
 		SelectionLetterGot (EventSystem.current.currentSelectedGameObject);
 	}

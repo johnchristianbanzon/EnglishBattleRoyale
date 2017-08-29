@@ -25,13 +25,15 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	}
 	List<GameObject> popUpSelectionList= new List<GameObject> ();
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpSlotMachine", SystemPopupController.Instance.popUp);
 		for (int i = 0; i < selectionPopUp.transform.GetChild(0).childCount; i++) {
 			popUpSelectionList.Add(selectionPopUp.transform.GetChild(0).GetChild(i).gameObject);
 		}
 		if (popUpSelectionList.Count > 0) {
 			InvokeRepeating ("PopUpMoveSelection", 0, 0.7f);
 		}
+		return selectionPopUp;
 	}
 
 	int popUpSelectionCounter = 0;

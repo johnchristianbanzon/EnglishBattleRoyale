@@ -21,7 +21,8 @@ public class SelectLetter : MonoBehaviour, ISelection
 		}
 	}
 
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUPSelectLetter", SystemPopupController.Instance.popUp);
 		List<GameObject> popUpSelectionList = new List<GameObject> ();
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
 			popUpSelectionList.Add(selectionPopUp.transform.GetChild(i).gameObject);
@@ -39,6 +40,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 				}
 			}
 		}
+		return selectionPopUp;
 	}
 
 	public void HideSelectionType ()

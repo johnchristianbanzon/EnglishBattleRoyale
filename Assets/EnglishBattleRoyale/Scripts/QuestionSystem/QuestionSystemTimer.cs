@@ -7,7 +7,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 
 	public int timePassed = 0;
 	public bool isTimerOn = false;
-	public int timeLeft = 0;
+	public float timeLeft = 0;
 	private QuestionSystemController questionSystemController;
 
 	public void InitQuestionSystemTimer(bool isTimerOn){
@@ -34,10 +34,10 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		questionSystemController.isQuestionRoundOver = true;
 	}
 		
-	public void OnStartQuestionTimer (Action<int> action, int timer)
+	public void OnStartQuestionTimer (Action<float> action, float timer)
 	{
 		QuestionSystemController.Instance.timerSlider.fillRect.GetComponent<Image>().color = new Color32 (159, 204, 62, 255);
-		questionSystemController.StartCoroutine (StartQuestionTimer (action, timer));
+		questionSystemController.StartCoroutine(StartQuestionTimer (action, timer));
 	}
 
 	public void StartTimer(){
@@ -48,23 +48,25 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 			averageTime += questionSystemController.questionList [i].idealTime;
 		}
 		double totalTime = (averageTime / questionSystemController.questionList.Count) * 7.5;
+		totalTime = Mathf.Round((float)totalTime* 10f) / 10f;
 		questionSystemController.timerSlider.maxValue = (float)totalTime;
-		TimeManager.StartQuestionTimer (delegate(int timeLeft) {
+		TimeManager.StartQuestionTimer (delegate(float timeLeft) {
 			ReduceTimeLeftCallBack(timeLeft);
-		}, (int)totalTime);	
+		}, (float)totalTime);	
 
 	}
 
-	public void ReduceTimeLeftCallBack(int timeLeft){
-		TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft-1);
+	public void ReduceTimeLeftCallBack(float timeLeft){
+		
 		questionSystemController.questionHint.OnTimeInterval ();
-		if (timeLeft <= 0) {
+		if (timeLeft < 0.1) {
 			QuestionSystemController.Instance.questionHint.disableHintButton ();
 			TimerEnded ();
 		}
 	}
 
 	private void TimerEnded(){
+		isTimerOn = false;
 		questionSystemController.CheckAnswer (false);
 		questionSystemController.onRoundResult (questionSystemController.roundResultList);
 		if (questionSystemController.isDebug) {
@@ -74,28 +76,35 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		}
 	}
 
-	public IEnumerator StartQuestionTimer (Action<int> action, int timer)
+
+	public IEnumerator StartQuestionTimer (Action<float> action, float timer)
 	{
 		timeLeft = timer;
-		while (timeLeft > -1) {
+		float timeInterval = 0.1f;
+		Debug.Log (timeLeft);
+		while (timeLeft > -0.1) {
 			if (isTimerOn) {
-				timeLeft--;
-				timePassed++;
-				action (timeLeft);
-				if (timeLeft<=3) {
-					QuestionSystemController.Instance.timerSlider.fillRect.GetComponent<Image>().color = new Color32 (255, 100, 100, 255);
-					QuestionSystemController.Instance.hasNextQuestion = false;
+				timeLeft -= timeInterval;
+				timeLeft = Mathf.Round((float)timeLeft* 10f) / 10f;
+				TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft);
+				if ((timeLeft % 1) == 0) {
+					if ((timeLeft%(12 / questionSystemController.correctAnswerButtons.Count) == 0 )) {
+						questionSystemController.questionHint.OnClick ();
+					}
+					timePassed++;
+					action (timeLeft);
+					if (timeLeft<=3) {
+						QuestionSystemController.Instance.timerSlider.fillRect.GetComponent<Image>().color = new Color32 (255, 100, 100, 255);
+						QuestionSystemController.Instance.hasNextQuestion = false;
+					}
 				}
+
 			}
 			if (questionSystemController.isQuestionRoundOver) {
 				yield break;
 			} else {
-				yield return new WaitForSeconds (1);
+				yield return new WaitForSeconds (timeInterval);
 			}
-
 		}
-
 	}
-
-
 }

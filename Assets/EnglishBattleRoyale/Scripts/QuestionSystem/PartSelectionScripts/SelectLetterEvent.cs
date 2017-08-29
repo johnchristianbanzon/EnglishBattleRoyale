@@ -39,6 +39,7 @@ public class SelectLetterEvent : MonoBehaviour
 
 	public void OnSelectLetter (GameObject selectedLetter)
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		selectLetter.fillAnswer.CheckAnswerHolder ();
 		if (!isSelected) {
 			if (!selectLetter.fillAnswer.isFull) {
@@ -81,7 +82,6 @@ public class SelectLetterEvent : MonoBehaviour
 		GetComponent<Image> ().color = selectionColor;
 		GameObject answerContainer = selectLetter.fillAnswer.answerContainers [correctAnswerIndex];
 		answerContainer.GetComponent<Image> ().color = selectionColor;
-//		answerContainer.GetComponent<Text> ().text = GetComponentInChildren<Text>().text;
 	}
 
 }

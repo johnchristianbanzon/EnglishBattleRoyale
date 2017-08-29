@@ -181,12 +181,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		questionHint.enableHintButton ();
 		hasSkippedQuestion = false;
 		if (hasNextQuestion) {
-			/*
-			if (!hasGivenGraceTime) {
-			questionRoundTimer.timeLeft += 3;
-			hasGivenGraceTime = true;
-			}
-			*/
 			GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 				roundResultList.Add (onQuestionResult);
 				if (onQuestionResult.isCorrect && !isDebug) {
@@ -234,37 +228,13 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void OnDebugClick (Button button)
 	{
 		questionTypeModel = QuestionBuilder.GetQuestionType (button.name);
-		ShowPopUP (button.name);
+		InitQuestionSystem ();
 	}
 
-	public void ShowPopUP(string name){
-		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
-		string popUpName = "";
-		switch (questionList[0].questionType.selectionType.GetType().Name) {
-		case "WordChoice":
-			popUpName = "PopUpWordChoice";
-			break;
-		case "SelectLetter":
-			popUpName = "PopUpSelectLetter";
-			break;
-		case "ChangeOrderController":
-			popUpName = "PopUpChangeOrder";
-			break;
-		case "Typing":
-			popUpName = "PopUpTyping";
-			break;
-		case "SlotMachine":
-			popUpName = "PopUpSlotMachine";
-			break;
-		case "LetterLink":
-			popUpName = "PopUpLetterLink";
-			break;
-		}
-		InitQuestionSystem (popUpName);
-	}
 
 	private Vector2 scrollHeaderPos = new Vector2();
-	public void InitQuestionSystem(string popUpName){
+	public void InitQuestionSystem(){
+		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
 		CancelInvoke ();
 		currentQuestionNumber = 0;
 		isQuestionRoundOver = false;
@@ -275,21 +245,21 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		scrollHeaderPos = new Vector2 (0, scrollHeader.transform.localPosition.y);
 		scrollHeader.transform.localPosition = new Vector2 (0, 240);
 		targetTypeUI.text = questionList [0].questionType.questionCategory.ToString();
-		popUpSelectionIndicator = SystemResourceController.Instance.LoadPrefab (popUpName, SystemPopupController.Instance.popUp);
 		selectionType = questionList [currentQuestionNumber].questionType.selectionType;
-		selectionType.ShowSelectionPopUp (popUpSelectionIndicator);
+		popUpSelectionIndicator = selectionType.ShowSelectionPopUp ();
 		TweenFacade.TweenScaleToLarge (popUpSelectionIndicator.transform, Vector3.one, 0.3f);
 		popUpSelectionIndicator.transform.position = Vector3.zero;
 		QuestionUIEntry ();
-		partScrollImage.transform.localScale = new Vector2 (partScrollImage.transform.localScale.x, 0);
-		partScrollContent.SetActive (false);
-		debugUI.SetActive (false);
-		TweenFacade.TweenMoveTo (scrollBody.transform,Vector3.zero,1.0f);
 		StartCoroutine (DebugStartQuestionCoroutine ());
 
 	}
 
 	public void QuestionUIEntry(){
+		partScrollImage.transform.localScale = new Vector2 (partScrollImage.transform.localScale.x, 0);
+		partScrollContent.SetActive (false);
+		debugUI.SetActive (false);
+		TweenFacade.TweenMoveTo (scrollBody.transform,Vector3.zero,1.0f);
+
 		scrollBody.SetActive(true);
 		transform.localPosition = new Vector2 (- 720f,transform.localPosition.y);
 		TweenFacade.TweenMoveTo (transform,Vector3.zero,0.5f);

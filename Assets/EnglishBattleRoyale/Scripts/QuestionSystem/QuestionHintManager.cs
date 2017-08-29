@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class QuestionHintManager :MonoBehaviour{
 	public Button hintButton;
-	private int hintLimit = MyConst.HINT_SHOW_LIMIT;
+	private int hintLimit = 100;
 	private int hintIndex = 0;
 	public int hintUsed = 0;
 	private int hintRemovalRate = MyConst.HINT_REMOVE_TIME;
@@ -16,7 +16,7 @@ public class QuestionHintManager :MonoBehaviour{
 	public void OnClick(){
 		hintButton.interactable = false;
 		int questionAnswerLength = QuestionSystemController.Instance.questionAnswer.Length;
-		if (hintUsed < hintLimit && QuestionSystemController.Instance.correctAnswerButtons.Count > hintIndex) {
+		if (hintUsed < hintLimit && QuestionSystemController.Instance.correctAnswerButtons.Count >= hintIndex) {
 			QuestionSystemController.Instance.answerType.OnClickHint (hintIndex,delegate(bool onHintResult) {
 				if(onHintResult){
 					InitHints();

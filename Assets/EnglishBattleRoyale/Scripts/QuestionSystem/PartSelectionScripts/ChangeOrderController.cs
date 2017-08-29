@@ -46,7 +46,8 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		ShuffleSelection ();
 	}
 		
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpChangeOrder", SystemPopupController.Instance.popUp);
 		List<GameObject> popUpSelectionList = new List<GameObject> ();
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
 			popUpSelectionList.Add(selectionPopUp.transform.GetChild(i).gameObject);
@@ -63,6 +64,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 			TweenFacade.TweenJumpTo (selectionToBeSwitched2.transform
 				,selectionToBeSwitched1.transform.localPosition,180f,1,0.5f,0);
 		}
+		return selectionPopUp;
 	}
 
 
@@ -118,7 +120,6 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 			selectionContainers [i].transform.SetSiblingIndex (UnityEngine.Random.Range (0, selectionContainers.Length));
 		}
 		if (GetSelectedAnswer ().Equals (questionAnswer)) {
-			Debug.Log (GetSelectedAnswer () + "/" + questionAnswer);
 			ShuffleSelection ();
 		}
 	}

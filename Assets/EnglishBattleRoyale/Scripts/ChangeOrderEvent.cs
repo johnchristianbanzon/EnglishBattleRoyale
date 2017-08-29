@@ -22,6 +22,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	/// </summary>
 	public void OnSelectionBeginDrag ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		duplicateContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI",selectionContent);
 		duplicateContainer.transform.SetSiblingIndex (this.transform.GetSiblingIndex ());
 		selectedIndex = transform.GetSiblingIndex ();
@@ -52,6 +53,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	/// </summary>
 	public void OnSelectionEndDrag ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		this.transform.SetParent (selectionContent.transform);
 		this.GetComponent<Image> ().raycastTarget = true;
 		transform.SetSiblingIndex (selectedIndex);
@@ -66,6 +68,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	public void OnDetectDraggedSelection ()
 	{
 		if (isDragging) {
+			
 			selectedIndex = this.transform.GetSiblingIndex ();
 			duplicateContainer.transform.SetSiblingIndex (selectedIndex);
 		}	
