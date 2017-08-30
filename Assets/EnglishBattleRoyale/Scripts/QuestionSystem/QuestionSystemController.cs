@@ -142,7 +142,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 			break;
 		case QuestionSystemEnums.SpeedyType.Rotten:
 			speedyEffect = SystemResourceController.Instance.LoadPrefab ("RottenEffect",SystemPopupController.Instance.popUp);
-			speedyEffect.GetComponent<Text>().text = "ROTTEN";
+			speedyEffect.GetComponent<Text>().text = "NOT BAD";
 			SystemSoundController.Instance.PlaySFX ("SFX_rotten");
 			break;
 		}
