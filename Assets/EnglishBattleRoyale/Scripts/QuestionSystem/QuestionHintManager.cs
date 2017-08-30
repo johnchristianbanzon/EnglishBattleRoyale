@@ -25,11 +25,10 @@ public class QuestionHintManager :MonoBehaviour{
 				});
 				hintIndex++;
 				hintUsed++;
-
 		} else {
 			hasHintAvailable = false;
 		}
-			InitCooldown ();		
+			InitCooldown ();
 	}
 		
 	public void disableHintButton(){

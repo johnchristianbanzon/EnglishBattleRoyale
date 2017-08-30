@@ -36,7 +36,6 @@ public static class QuestionBuilder
 			if (QuestionSystemController.Instance.isDebug) {
 				string questionType = questionTypeModel.selectionType.GetType().Name;
 				QuestionTypeModel questionModel = GetQuestionType(questionType);
-				Debug.Log (questionModel.contentLevel);
 				questions.Add (GetQuestion (questionModel));
 			} else {
 				QuestionModel questionType = GetQuestion (GetQuestionType (selectionFromRandom));
@@ -53,7 +52,6 @@ public static class QuestionBuilder
 		}
 		return questions;
 	}
-
 
 	public static QuestionModel GetQuestion (QuestionTypeModel questionType)
 	{
@@ -119,7 +117,7 @@ public static class QuestionBuilder
 
 			switch(questionType.contentLevel){
 			case QuestionSystemEnums.ContentLevel.Easy:
-				if (!(questionList [randomize].levelId < 4) ) {
+				if (!(questionList [randomize].levelId < 3) ) {
 					questionViable = false;
 				}
 				break;

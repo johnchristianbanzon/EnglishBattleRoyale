@@ -127,6 +127,7 @@ public class Typing : MonoBehaviour, ISelection
 			} else {
 				answerContainer = fillAnswer.answerContainers [randomizedIndexList [0]].transform.GetChild(0).gameObject;
 			}
+			answerContainer.GetComponentInChildren<Text> ().color = new Color32 (0, 0, 0, 255);
 			answerContainer.GetComponentInChildren<Text> ().text = questionAnswer [randomizedIndexList [0]].ToString ();
 			answerContainer.GetComponentInChildren<Button> ().interactable = false;
 		}
