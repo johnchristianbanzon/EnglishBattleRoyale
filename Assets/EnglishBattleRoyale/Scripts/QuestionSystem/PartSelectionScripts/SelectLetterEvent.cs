@@ -90,7 +90,6 @@ public class SelectLetterEvent : MonoBehaviour
 	public void ShowEachLetter(){
 //		OnSelectLetter (gameObject);
 //		selectLetter.ShowSelectionHint(0,null);
-		Debug.Log(letter.text);
 		QuestionSystemController.Instance.questionHint.OnClick();
 
 	}

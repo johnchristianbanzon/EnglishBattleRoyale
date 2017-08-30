@@ -93,7 +93,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-//		if (QuestionSystemController.Instance.questionHint.hasHintAvailable) {
+		if (!QuestionSystemController.Instance.isQuestionRoundOver) {
 			if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
 				List<int> correctContainerIndexList = new List<int> ();
 				for (int i = 0; i < correctContainers.Count; i++) {
@@ -128,7 +128,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 				}
 				Destroy (answerContainer);
 			}
-//		}
+		}
 	}
 
 

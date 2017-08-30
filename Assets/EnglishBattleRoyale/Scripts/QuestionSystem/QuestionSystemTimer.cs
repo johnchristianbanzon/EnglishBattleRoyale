@@ -105,7 +105,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 					}
 					timePassed++;
 					action (timeLeft);
-					if (timeLeft<=3) {
+					if (timeLeft<=1) {
 						QuestionSystemController.Instance.timerSlider.fillRect.GetComponent<Image>().color = new Color32 (255, 100, 100, 255);
 						QuestionSystemController.Instance.hasNextQuestion = false;
 					}

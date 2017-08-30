@@ -24,7 +24,6 @@ public static class QuestionBuilder
 
 	public static List<QuestionModel> GetQuestionList(int numberOfQuestions,QuestionTypeModel questionTypeModel){
 		List<QuestionModel> questions =  new List<QuestionModel>();
-
 		Dictionary<string,int> dictionary = new Dictionary<string,int> ();
 		dictionary.Add ("SelectLetter", 1);
 		dictionary.Add ("Typing", 1);
@@ -39,9 +38,9 @@ public static class QuestionBuilder
 				questions.Add (GetQuestion (GetQuestionType(questionType)));
 			} else {
 				QuestionModel questionType = GetQuestion (GetQuestionType (selectionFromRandom));
-				if (i < 3) {
+				if (i < 2) {
 					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Easy;
-				} else if (i < 7) {
+				} else if (i < 5) {
 					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Normal;
 				} else {
 					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Hard;
