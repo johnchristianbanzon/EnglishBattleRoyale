@@ -53,7 +53,7 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 		}
 	}
 
-	private int selectedIndex = 0;
+	public int selectedIndex = 0;
 	public void ShowLetterInView (GameObject selectedLetter)
 	{
 		if (hasInitHints) {

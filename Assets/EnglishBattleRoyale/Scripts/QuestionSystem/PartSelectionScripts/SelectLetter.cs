@@ -107,6 +107,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 				}
 	//			correctContainerIndexList = ListShuffleUtility.Shuffle (correctContainerIndexList);
 				int firstContainerIndex = correctContainerIndexList [0];
+				fillAnswer.hintIndex = firstContainerIndex;
 				fillAnswer.answerIndex = firstContainerIndex;
 
 				GameObject answerContainer = null;

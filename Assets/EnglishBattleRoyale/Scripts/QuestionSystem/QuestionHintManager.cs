@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class QuestionHintManager :MonoBehaviour{
 	public Button hintButton;
 	private int hintLimit = 100;
-	private int hintIndex = 0;
+	public int hintIndex = 0;
 	public bool hasHintAvailable = true;
 	public int hintUsed = 0;
 	private int hintRemovalRate = MyConst.HINT_REMOVE_TIME;

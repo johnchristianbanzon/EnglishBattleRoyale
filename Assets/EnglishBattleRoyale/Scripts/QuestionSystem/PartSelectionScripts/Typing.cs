@@ -120,6 +120,7 @@ public class Typing : MonoBehaviour, ISelection
 				}
 			}
 //			ListShuffleUtility.Shuffle (randomizedIndexList);
+			fillAnswer.hintIndex = randomizedIndexList[0];
 			GameObject answerContainer;
 			if (fillAnswer.answerContainers [randomizedIndexList [0]].transform.childCount.Equals (0)) {
 				answerContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI", fillAnswer.answerContainers [randomizedIndexList [0]].gameObject);

@@ -14,6 +14,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	List <int> hintIndexRandomList = new List<int> ();
 	public GameObject clearButton;
 	public bool isFull = false;
+	public int hintIndex = 0;
 
 	public void DeployAnswerType ()
 	{
@@ -142,7 +143,9 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void CheckAnswer ()
 	{
 		GetAnswerWritten ();
-		onHintResult.Invoke (true);
+		if (!(onHintResult == null)) {
+			onHintResult.Invoke (true);
+		}
 		string answerWrote = GetAnswerWritten ();
 		if (answerWrote.Length.Equals (questionAnswer.Length)) {
 			if (answerWrote.ToUpper ().Equals (questionAnswer.ToUpper ())) {

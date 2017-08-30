@@ -16,7 +16,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 	}
 
 	public QuestionSystemEnums.SpeedyType GetSpeedyType(double idealTime){
-		hintInterval = 0;
+		hintInterval = 5;
 		QuestionSystemEnums.SpeedyType speedyType = QuestionSystemEnums.SpeedyType.Good;
 		if (timePassed < idealTime) {
 			speedyType = QuestionSystemEnums.SpeedyType.Awesome;
@@ -77,7 +77,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		}
 	}
 
-	private float hintInterval =0;
+	private float hintInterval =5;
 	public IEnumerator StartQuestionTimer (Action<float> action, float timer)
 	{
 		timeLeft = timer;
@@ -88,11 +88,20 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 				timeLeft = Mathf.Round((float)timeLeft* 10f) / 10f;
 				TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft);
 				if ((timeLeft % 1) == 0) {
-					hintInterval++;
+					hintInterval--;
 //					if ((timeLeft%(14 / questionSystemController.correctAnswerButtons.Count) == 0 ) && questionSystemController.questionHint.hasHintAvailable) {
-					if(hintInterval==5){
-					questionSystemController.questionHint.OnClick ();
-						hintInterval = 0;
+					if (hintInterval == 0) {
+						questionSystemController.questionHint.OnClick ();
+						hintInterval = 5;
+					}
+					if (hintInterval <= 3) {
+						GameObject hintTimer = SystemResourceController.Instance.LoadPrefab ("Input-UI",SystemPopupController.Instance.popUp);
+						hintTimer.GetComponent<Image> ().enabled = false;
+						hintTimer.transform.position = questionSystemController.partAnswer.transform.position;
+						hintTimer.GetComponentInChildren<Text> ().text = ""+hintInterval;
+						TweenFacade.TweenScaleToLarge (hintTimer.transform, Vector3.one, 0.5f);
+						TweenFacade.TweenJumpTo (hintTimer.transform, Vector3.one, 120f,1,0.5f,0);
+						MonoBehaviour.Destroy (hintTimer, 0.5f);
 					}
 					timePassed++;
 					action (timeLeft);
