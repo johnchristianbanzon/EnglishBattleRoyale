@@ -35,7 +35,9 @@ public static class QuestionBuilder
 		for (int i = 0; i < numberOfQuestions; i++) {
 			if (QuestionSystemController.Instance.isDebug) {
 				string questionType = questionTypeModel.selectionType.GetType().Name;
-				questions.Add (GetQuestion (GetQuestionType(questionType)));
+				QuestionTypeModel questionModel = GetQuestionType(questionType);
+				Debug.Log (questionModel.contentLevel);
+				questions.Add (GetQuestion (questionModel));
 			} else {
 				QuestionModel questionType = GetQuestion (GetQuestionType (selectionFromRandom));
 				if (i < 2) {
@@ -45,6 +47,7 @@ public static class QuestionBuilder
 				} else {
 					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Hard;
 				}
+
 				questions.Add (questionType);
 			}
 		}

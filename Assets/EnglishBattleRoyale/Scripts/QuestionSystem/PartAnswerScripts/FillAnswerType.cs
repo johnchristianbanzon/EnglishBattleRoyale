@@ -75,7 +75,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		for (int i = 0; i < questionAnswer.Length; i++) {
 			GameObject answerPrefab = SystemResourceController.Instance.LoadPrefab ("AnswerContainer", outviewContent);
-			answerPrefab.name = "output" + (i + 1);
+			answerPrefab.name = "output" + (i + 1);	
 			answerContainers.Add (answerPrefab);
 			answerPrefab.GetComponent<Button> ().onClick.AddListener (() => {
 				OnAnswerClick (answerPrefab.GetComponent<Button> ());
@@ -108,6 +108,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 				GameObject container = SystemResourceController.Instance.LoadPrefab ("Input-UI", answerContainers [answerIndex]);
 				selectionIdentifier [answerIndex] = selectedObject.gameObject;
 				hintIndexRandomList.Add (answerIndex);
+				container.GetComponentInChildren<Text> ().color = new Color32 (0,0,0,255);
 				container.GetComponentInChildren<Text> ().text = selectedObject.GetComponentInChildren<Text> ().text;
 				container.GetComponent<Image> ().raycastTarget = false;
 				CheckAnswer ();
