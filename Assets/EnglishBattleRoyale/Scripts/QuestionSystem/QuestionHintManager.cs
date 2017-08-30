@@ -17,15 +17,15 @@ public class QuestionHintManager :MonoBehaviour{
 	public void OnClick(){
 		hintButton.interactable = false;
 		int questionAnswerLength = QuestionSystemController.Instance.questionAnswer.Length;
-		Debug.Log ((QuestionSystemController.Instance.correctAnswerButtons.Count > hintIndex)+"//"+QuestionSystemController.Instance.correctAnswerButtons.Count + "/" + hintIndex);
 		if (hintUsed < hintLimit && QuestionSystemController.Instance.correctAnswerButtons.Count-1 >= hintIndex) {
-			QuestionSystemController.Instance.answerType.OnClickHint (hintIndex, delegate(bool onHintResult) {
-				if (onHintResult) {
-					InitHints ();
-				}
-			});
-			hintIndex++;
-			hintUsed++;
+				QuestionSystemController.Instance.answerType.OnClickHint (hintIndex, delegate(bool onHintResult) {
+					if (onHintResult) {
+						InitHints ();
+					}
+				});
+				hintIndex++;
+				hintUsed++;
+
 		} else {
 			hasHintAvailable = false;
 		}

@@ -59,10 +59,13 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void OnClickHint (int hintIndex, Action<bool> onHintResult)
 	{
-		CheckAnswerHolder ();
 		this.onHintResult = onHintResult;
+		CheckAnswerHolder ();
+
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, answerContainers [answerIndex]);
-		CheckAnswer ();
+		if (!QuestionSystemController.Instance.isQuestionRoundOver) {
+			CheckAnswer ();
+		}
 	}
 
 	public void PopulateContainer ()

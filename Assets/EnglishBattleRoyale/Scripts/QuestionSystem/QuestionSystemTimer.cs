@@ -16,6 +16,7 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 	}
 
 	public QuestionSystemEnums.SpeedyType GetSpeedyType(double idealTime){
+		hintInterval = 0;
 		QuestionSystemEnums.SpeedyType speedyType = QuestionSystemEnums.SpeedyType.Good;
 		if (timePassed < idealTime) {
 			speedyType = QuestionSystemEnums.SpeedyType.Awesome;
@@ -76,21 +77,22 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 		}
 	}
 
-
+	private float hintInterval =0;
 	public IEnumerator StartQuestionTimer (Action<float> action, float timer)
 	{
 		timeLeft = timer;
 		float timeInterval = 0.1f;
-		Debug.Log (timeLeft);
 		while (timeLeft > -0.1) {
 			if (isTimerOn) {
 				timeLeft -= timeInterval;
 				timeLeft = Mathf.Round((float)timeLeft* 10f) / 10f;
 				TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft);
 				if ((timeLeft % 1) == 0) {
-					Debug.Log (questionSystemController.correctAnswerButtons.Count);
-					if ((timeLeft%(12 / questionSystemController.correctAnswerButtons.Count) == 0 ) && questionSystemController.questionHint.hasHintAvailable) {
-						questionSystemController.questionHint.OnClick ();
+					hintInterval++;
+//					if ((timeLeft%(14 / questionSystemController.correctAnswerButtons.Count) == 0 ) && questionSystemController.questionHint.hasHintAvailable) {
+					if(hintInterval==5){
+					questionSystemController.questionHint.OnClick ();
+						hintInterval = 0;
 					}
 					timePassed++;
 					action (timeLeft);

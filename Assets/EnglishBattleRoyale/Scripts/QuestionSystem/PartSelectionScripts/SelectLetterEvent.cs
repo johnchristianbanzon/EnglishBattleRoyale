@@ -76,12 +76,22 @@ public class SelectLetterEvent : MonoBehaviour
 		if (isAnswerCorrect) {
 			selectionColor = new Color32 (255, 223, 0, 255);
 		} else {
-			
 			selectionColor = new Color32 (255, 100, 100, 255);
+			if (!isSelected && isCorrect) {
+//				Invoke ("ShowEachLetter", (float)((0.2) + (0.1 * correctAnswerIndex)));
+				ShowEachLetter();
+			} 
 		}
 		GetComponent<Image> ().color = selectionColor;
 		GameObject answerContainer = selectLetter.fillAnswer.answerContainers [correctAnswerIndex];
 		answerContainer.GetComponent<Image> ().color = selectionColor;
 	}
 
+	public void ShowEachLetter(){
+//		OnSelectLetter (gameObject);
+//		selectLetter.ShowSelectionHint(0,null);
+		Debug.Log(letter.text);
+		QuestionSystemController.Instance.questionHint.OnClick();
+
+	}
 }

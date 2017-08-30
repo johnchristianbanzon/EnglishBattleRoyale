@@ -167,6 +167,9 @@ public static class QuestionBuilder
 		case "SlotMachine":
 			idealTime += 1;
 			break;
+		case "WordChoice":
+			idealTime += 0.5;
+			break;
 		}
 		QuestionModel questionGot = new QuestionModel (questionType,question, answersList.ToArray (),idealTime);
 		questionsDone.Add (question);

@@ -81,16 +81,18 @@ using UnityEngine.EventSystems;
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
-		List<int> selectionIndex = new List<int>();
-		for (int i = 0; i < showAnswer.hintContainers.Count; i++) {
-			if(showAnswer.hintContainers[i].GetComponent<Button>().interactable){
-				selectionIndex.Add (i);
+		if (QuestionSystemController.Instance.questionHint.hasHintAvailable) {
+			ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
+			List<int> selectionIndex = new List<int> ();
+			for (int i = 0; i < showAnswer.hintContainers.Count; i++) {
+				if (showAnswer.hintContainers [i].GetComponent<Button> ().interactable) {
+					selectionIndex.Add (i);
+				}
 			}
-		}
 //		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
-		showAnswer.hintContainers[selectionIndex[0]].GetComponentInChildren<Text> ().text = questionAnswer[selectionIndex[0]].ToString();
-		showAnswer.hintContainers [selectionIndex [0]].GetComponent<Button> ().interactable = false;
+			showAnswer.hintContainers [selectionIndex [0]].GetComponentInChildren<Text> ().text = questionAnswer [selectionIndex [0]].ToString ();
+			showAnswer.hintContainers [selectionIndex [0]].GetComponent<Button> ().interactable = false;
+		}
 	}
 
 	private string GetAnswer(){

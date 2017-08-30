@@ -52,6 +52,8 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public Slider timerSlider;
 	public List<QuestionModel> questionList = new List<QuestionModel> ();
 	public QuestionSystemTimer questionRoundTimer;
+
+
 	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
@@ -93,8 +95,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	/// <param name="isCorrect">If set to <c>true</c> is correct.</param>
 	public void CheckAnswer (bool isCorrect)
 	{
+		questionHint.hasHintAvailable = false;
 		idealTime = questionList [currentQuestionNumber].idealTime;
-		questionHint.InitHints ();
+
 		if (isCorrect) {
 			QuestionSystemEnums.SpeedyType speedyType = questionRoundTimer.GetSpeedyType(idealTime);
 			ShowSpeedyEffect (speedyType);
@@ -115,6 +118,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void OnQuestionRoundFinish(){
 		debugUI.SetActive (false);
 		questionRoundHasStarted = false;
+		isQuestionRoundOver = true;
 		TweenFacade.TweenScaleYT0Zero(0.5f,partScrollImage,1);
 		selectionType.ShowCorrectAnswer(false);
 		Invoke("HideScrollUI",3.0f);
@@ -151,6 +155,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public void HideQuestionParts ()
 	{
+		questionHint.InitHints ();
 		int questionNumber = currentQuestionNumber;
 		if (questionNumber>0) {
 			questionNumber = questionNumber - 1;
@@ -189,7 +194,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 				Invoke ("HideQuestionParts", 1.0f);
 			});
 		}
-
 	}
 
 	public QuestionModel LoadQuestion ()
@@ -245,6 +249,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		scrollHeaderPos = new Vector2 (0, scrollHeader.transform.localPosition.y);
 		scrollHeader.transform.localPosition = new Vector2 (0, 240);
 		targetTypeUI.text = questionList [0].questionType.questionCategory.ToString();
+		partTarget.ChangeTargetColor (questionList [0].questionType.questionCategory);
 		selectionType = questionList [currentQuestionNumber].questionType.selectionType;
 		popUpSelectionIndicator = selectionType.ShowSelectionPopUp ();
 		TweenFacade.TweenScaleToLarge (popUpSelectionIndicator.transform, Vector3.one, 0.3f);
@@ -255,11 +260,11 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	}
 
 	public void QuestionUIEntry(){
+		
 		partScrollImage.transform.localScale = new Vector2 (partScrollImage.transform.localScale.x, 0);
 		partScrollContent.SetActive (false);
 		debugUI.SetActive (false);
 		TweenFacade.TweenMoveTo (scrollBody.transform,Vector3.zero,1.0f);
-
 		scrollBody.SetActive(true);
 		transform.localPosition = new Vector2 (- 720f,transform.localPosition.y);
 		TweenFacade.TweenMoveTo (transform,Vector3.zero,0.5f);

@@ -58,11 +58,12 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 	{
 		if (hasInitHints) {
 			if (selectedIndex < questionAnswer.Length) {
-				if (hintContainers[selectedIndex].GetComponent<Button>().interactable) {
-					hintContainers [selectedIndex].GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text>().text;
-					hintContainers [selectedIndex].GetComponentInChildren<Image> ().color = new Color32 (255,255,255,255);
-					TweenFacade.TweenScaleToLarge (hintContainers [selectedIndex].transform, Vector3.one, 0.3f);
-				}
+				if (hintContainers [selectedIndex].GetComponent<Button> ().interactable) {
+					hintContainers [selectedIndex].GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text> ().text;
+					hintContainers [selectedIndex].GetComponentInChildren<Image> ().color = new Color32 (255, 255, 255, 255);
+
+				} 
+				TweenFacade.TweenScaleToLarge (hintContainers [selectedIndex].transform, Vector3.one, 0.3f);
 			}
 		} else {
 			GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", showLetterView);
