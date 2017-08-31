@@ -55,15 +55,16 @@ public class Typing : MonoBehaviour, ISelection
 		} else {
 			answerColor = new Color32 (255, 100, 100, 255);
 		}
-		/*
+
 		List<GameObject> answerContainers = QuestionSystemController.Instance.partAnswer.fillAnswer.answerContainers;
 		for (int i = 0; i < answerContainers.Count; i++) {
 			if (answerContainers [i].transform.childCount > 0) {
 				answerContainers [i].transform.GetComponentInChildren<Image> ().color = answerColor;
+//				QuestionSystemController.Instance.questionHint.OnClick ();
 			} else {
 				answerContainers [i].transform.GetComponent<Image> ().color = answerColor;
 			}
-		}*/
+		}
 	}
 
 	private bool initHideHint = false;

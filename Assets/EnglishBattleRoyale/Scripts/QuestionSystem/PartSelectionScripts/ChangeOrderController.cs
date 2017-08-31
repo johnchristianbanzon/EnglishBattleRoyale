@@ -125,7 +125,11 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 	}
 
 	public void ShowCorrectAnswer(bool isAnswerCorrect){
-
+		ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
+		for (int i = 0; i < selectionContainers.Length; i++) {
+			selectionContainers [i].transform.SetSiblingIndex (selectionContainers[i].containerIndex);
+			selectionContainers [i].GetComponent<Image> ().color = new Color32 (255, 100, 100, 255);
+		}
 	}
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)

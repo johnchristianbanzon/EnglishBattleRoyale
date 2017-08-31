@@ -52,7 +52,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public Slider timerSlider;
 	public List<QuestionModel> questionList = new List<QuestionModel> ();
 	public QuestionSystemTimer questionRoundTimer;
-
+	public GameObject hintInterval;
 
 	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)

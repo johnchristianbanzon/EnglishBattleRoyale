@@ -10,11 +10,13 @@ public class ChangeOrderEvent : MonoBehaviour
 	public static bool isDragging;
 	public Text letterText;
 	private static GameObject duplicateContainer;
+	public int containerIndex;
 
 	public void Init(string letter){
 		letterText.text = letter;
 		gameObject.SetActive (true);
 		gameObject.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+		containerIndex = transform.GetSiblingIndex ();
 	}
 
 	/// <summary>

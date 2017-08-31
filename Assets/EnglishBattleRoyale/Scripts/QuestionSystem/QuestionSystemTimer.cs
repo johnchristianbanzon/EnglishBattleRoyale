@@ -92,15 +92,18 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 //					if ((timeLeft%(14 / questionSystemController.correctAnswerButtons.Count) == 0 ) && questionSystemController.questionHint.hasHintAvailable) {
 					if (hintInterval == 0) {
 						questionSystemController.questionHint.OnClick ();
+						questionSystemController.hintInterval.SetActive (false);
 						hintInterval = 5;
 					}
 					if (hintInterval <= 3) {
+						questionSystemController.hintInterval.SetActive (true);
 						GameObject hintTimer = SystemResourceController.Instance.LoadPrefab ("Input-UI",SystemPopupController.Instance.popUp);
 						hintTimer.GetComponent<Image> ().enabled = false;
-						hintTimer.transform.position = questionSystemController.partAnswer.transform.position;
+						hintTimer.transform.position = new Vector2(questionSystemController.hintInterval.transform.transform.position.x+0.45f,
+							questionSystemController.hintInterval.transform.transform.position.y);
 						hintTimer.GetComponentInChildren<Text> ().text = ""+hintInterval;
 						TweenFacade.TweenScaleToLarge (hintTimer.transform, Vector3.one, 0.5f);
-						TweenFacade.TweenJumpTo (hintTimer.transform, Vector3.one, 120f,1,0.5f,0);
+//						TweenFacade.TweenJumpTo (hintTimer.transform, Vector3.one, 120f,1,0.5f,0);
 						MonoBehaviour.Destroy (hintTimer, 0.5f);
 					}
 					timePassed++;
