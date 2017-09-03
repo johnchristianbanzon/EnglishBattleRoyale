@@ -9,6 +9,16 @@
 		SkillSlash,
 		SkillBomb,
 		SkillPoison,
-		SkillMagnify
+		SkillMagnify,
+		SkillFreeze,
+		SkillRage,
+		SkillSleep,
+		SkillHoly,
+		SkillHunterBow,
+		SkillGreatSword,
+		SkillShuriken,
+		SkillWarhammer,
+		SkillSpear,
+		SkillEvasion
 	}
 }
