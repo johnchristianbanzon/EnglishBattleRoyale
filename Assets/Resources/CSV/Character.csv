@@ -1,69 +1,27 @@
-ID,Name,Description ,AlternateName,GPCost,SkillType,SkillOperator,SkillCalculation,Target,"Sacrifice
-Calculation","Sacrifice
-Type",Type,Turn
-1,Healing potion,"Heals a certain amount of HP
-
-PlayerHP + 15",Mango Man,9,1,1,15,1,0,0,2,1
-2,Knuckle Duster,"Deals a certain amount of damage
-
-EnemyHP - 11",Bic the Boxer,3,2,1,-11,2,0,0,1,1
-3,Energy Potion,"Doubles GP gain for 4 turns
-
-GP x 2 for 4 turns",The Wise Edz,7,9,2,2,1,0,0,3,4
-4,Heavy Shield,"Half the enemy damage for 5 turns
-
-EnemyTotalDamage x 0.5 for 5 turns",Thick Skin Tom,21,6,2,0.5,2,0,0,4,5
-5,Dagger,"Base damage + 2 for 5 turns
-
-PlayerBD + 2 for 5 turns",Vitamin Vivi,6,3,1,2,1,0,0,3,5
-6,Bomb,"Sensei teaches a damaging lesson to opponent
-
-4 x (Base Damage+Awesome Answer) ",Sugoi Sensei,15,2,1,- ( 4 * ( PlayerBD + PlayerAwesome ) ),2,0,0,1,1
-7,Poison Vial,"Every 'rotten' question of opponent deals -5 HP in the entire battle
-
-EnemyHP - 5 every Rotten",Strict Sensei,18,2,1,- ( 5 * EnemyRotten ),2,0,0,4,99
-8,Magnifying Glass,"Heal any ailment enemy inflicted on Player
-
-Remove Nerf on Player",Nightshift Nurse,7,11,0,Debuff,1,0,0,2,1
-9,Dual Swords,"Deals 25% to enemy's remaining HP
-
-EnemyHp - 25%",Combo Man,12,2,3,-0.25,2,0,0,1,1
-10,Mask of Silence,"Disable 1 skill slot of enemy for the next 3 turns
-
-1 EnemyCharacter = Not Available",The Silencer,9,11,0,EnemyCharacterSlot,2,0,0,4,3
-11,Unfinished Health Potion,"Heal HP based on ""Awesome"" speedy answer for 3 turns
-
-10HP + 2*(Awesome) for 3 turns",The Wise Josh,17,1,1,10 + 2 * PlayerAwesome,1,0,0,2,3
-12,Unfinished Energy Potion,"Sacrifice 20 HP for 10 GP
-
-PlayerHP - 20, Player GP + 10",GP Genie,1,9,1,10,1,20,1,3,1
-13,Round Shield,"Reduce Damage of enemy to half for 3 turns
-
-EnemyTotalDamage x 0.5 for 3 turns",Dope Darna,11,6,2,0.5,2,0,0,4,3
-14,Rage Potion,"Sacrifice 15 HP to increase Base damage by 10 for the next 2 turns
-
-PlayerHP - 15; PlayerBD + 10 (2 turns)",Echi Jo,10,3,1,10,1,15,1,1,2
-15,Sleep Potion,"Half the GP gain of enemy for 3 turns
-
-PlayerGP Gain X 0.5 for 3 turns",Brainhubber,11,10,3,-0.5,2,0,0,4,3
-16,Timed Bomb,"Once activated, player cannot attack on this turn. But player will deliver big damage on the next turn based on Awesome answers 
-
-13* (Awesome Answers next turn)",IchiGong,15,2,1,- ( 13 * PlayerAwesome ),2,0,5,1,2
-17,Holy Potion,"Reduce Base Damage by 5 and in exchange, add +3 Gp gain for the next 5 turns
-
-PlayerBD - 5 for entire battle;
-Player Gains 3 GP at the end of Answer Phase for the next 5 turns","Grammar
-Grandma",13,9,1,3,1,5,7,3,5
-18,Hunter's Bow,"If enemy has Character effect that is ongoing for more than 3 turns, deal 45 damage
-
-
-EnemyHp - 45",TullyBun,10,2,1,-45,2,0,0,1,1
-19,Great Sword,"The cow deals higher damage the higher the BD of player
-
-BD * 4",Shinigami Cow,11,2,1,- ( PlayerBD * 4 ),2,0,0,1,1
-20,Shuriken,"Activate this character right away if GP is enough and if equipped by player regardless if he is first or second turn. Deal small amount of damage
-
-EnemyHP - 10",Quickie Hoe,11,2,1,-10,2,0,0,1,1
-21,Warhammer,Attack damage is double for the next three turns,Shiva the Brute,14,5,2,2,1,0,0,3,3
-22,Spear,Attack Damage is Doubled for the next 5 turns,Elite Amazon,16,5,2,2,1,0,0,3,5
-23,Potion of Evasion,Reduce Any skill damage by 70% for the next 3 turns,Rufina,11,8,2,0.7,1,0,0,4,3
+ID,Name,EffectDescription,ConditionDescription,TurnDescription,GPCost,ParticleID,SkillCalculation
+1,Healing Potion,PlayerHP + 15,None,1,9,1,"AddPlayerHP ( 15 , 1 ); "
+2,Knuckle Duster,EnemyHP - 11,None,1,3,2,"AddEnemyHP ( -11 , 1 );"
+3,Energy Potion,Player Gauge Points * 2,None,4,7,3,"MultiplyPlayerGP ( 2 , 4 );"
+4,Heavy Shield,Enemy Damage * 0.5,None,5,21,4,"MultiplyEnemyTD ( 0.5f , 5 );"
+5,Dagger,Player Base Damage + 2,None,5,6,5,"AddPlayerBD ( 2 , 5 );"
+6,Bomb,4 * (Player Base Damage + Player Awesome) ,None,1,15,6,"AddEnemyHP ( -( 4 * PlayerBD + PlayerAwesome ) , 1 );"
+7,Poison Vial,EnemyHP - ( 5 * Enemy Rotten ),Enemy has Rotten answers,Infinite,18,7,"if ( EnemyRotten > 0 , AddEnemyHP ( -5 * EnemyRotten , 0 ) , AddEnemyHP ( 0 , 1 ) );"
+8,Magnifying Glass,Debuff Player,None,1,7,8,PlayerDebuff ( 1 );
+9,Dual Swords,Enemy Hit Points - ( 0.25 * Enemy Hit Points),None,1,12,5,"AddEnemyHP ( -( 0.25f  * EnemyHP ) , 1 );"
+10,Freezing Potion,Disable 1 Enemy Skill Slot,None,3,9,9,EnemySlot ( 3 );
+11,Unfinished Health Potion,Player HP + ( 10 + 2 * ( Player Awesome) ),None,3,17,1,"AddPlayerHP ( ( 10 + 2 * PlayerAwesome ) , 3 );"
+12,Unfinished Energy Potion,"Player Hit Points - 20, 
+Player Gauge Points + 10",None,1,1,2,"AddPlayerHP ( -20 , 1 ); AddPlayerGP ( 10 , 1 );"
+13,Round Shield,Enemy Damage * 0.5,None,3,11,4,"MultiplyEnemyTD ( 0.5f , 3 );"
+14,Rage Potion,"Player Hit Points - 15 
+Player Base Damage + 10",None,"PlayerHP: 1 , PlayerBD: 2 ",10,10,"AddPlayerHP ( -15 , 1 ); AddPlayerBD ( 10 , 2 );"
+15,Sleeping Potion,Enemy Gauge Points * 0.5,None,3,11,11,"MultiplyEnemyGP ( 0.5f , 3 );"
+16,Timed Bomb,13* Player Awesome,Activates on next turn,1,12,6,"AddEnemyHP ( -( 13 * PlayerAwesome ) , 1 , 2 );"
+17,Holy Potion,"Player Base Damage - 5
+Player Gauge Points + 3",None,"PlayerBD: Infinite , PlayerGP: 5",13,12,"AddPlayerBD ( -5 , 0 ); AddPlayerGP ( 3 , 5 );"
+18,Hunter's Bow,Enemy Hit Points - 45,Enemy is activating skill that has more than 3 turns effect,1,10,13,"if ( EnemySkillTurn > 3 , AddEnemyHP ( -45 , 1) , AddEnemyHP ( 0 , 1 ) );"
+19,GreatSword,Player Base Damage * 4,None,1,11,14,"AddEnemyHP ( -( PlayerBD * 4 ) , 1 );"
+20,Shuriken,Enemy Hit Points - 8,None,1,2,15,"AddEnemyHP ( -8 , 1 );"
+21,Warhammer,Player Damage * 2,None,3,14,16,"MultiplyPlayerTD ( 2 , 3 );"
+22,Spear,Player Damage * 2,None,5,16,17,"MultiplyPlayerTD ( 2 , 5 );"
+23,Potion of Evasion,Enemy Skill Damage - (.7 * Enemy Skill Damage),None,3,18,11,"AddEnemySD ( -( 0.7f * EnemySD ) , 3 );"

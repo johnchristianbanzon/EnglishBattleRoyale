@@ -16,7 +16,7 @@ public class UnlockedSkillController : MonoBehaviour
 			bool hasCardInEquip = false;
 
 			for (int j = 0; j < equipCardList.Count; j++) {
-				if (equipCardList [j].characterName.Equals (charCardList [i].characterName)) {
+				if (equipCardList [j].name.Equals (charCardList [i].name)) {
 					hasCardInEquip = true;
 					break;
 				} 

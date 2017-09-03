@@ -21,14 +21,14 @@ public class CharacterManager: IRPCDicObserver
 		for (int i = 0; i < currentCharacterInEquip.Length; i++) {
 			//if gp is enough, send character to firebase and remove from equip
 			PlayerManager.SetIsPlayer(true);
-			if (PlayerManager.Player.gp >= currentCharacterInEquip [i].characterGPCost) {
-				Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [i].characterName);
-				PlayerManager.Player.gp -= currentCharacterInEquip [i].characterGPCost;
+			if (PlayerManager.Player.gp >= currentCharacterInEquip [i].gpCost) {
+				Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [i].name);
+				PlayerManager.Player.gp -= currentCharacterInEquip [i].gpCost;
 				charactersToSend.Add (currentCharacterInEquip [i]);
 				ActivateCharacterUI (i);
 
 			} else {
-				Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [i].characterName);
+				Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [i].name);
 				break;
 			}
 		}
@@ -58,7 +58,7 @@ public class CharacterManager: IRPCDicObserver
 					Queue<CharacterModel> characterReceiveQueue = new Queue<CharacterModel> ();
 				
 					for (int i = 0; i < characterList.list.Count; i++) {
-						if (characterList.list [i].characterID != 0) {
+						if (characterList.list [i].iD != 0) {
 							characterReceiveQueue.Enqueue (characterList.list [i]);
 						}
 					}
@@ -113,9 +113,9 @@ public class CharacterManager: IRPCDicObserver
 				                         ScreenBattleController.Instance.partState.playerCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.playerCardContainer.transform.position;
 
-			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.characterID);
+			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
 
-			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (true, character.characterID);
+			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (true, character.particleID);
 
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
@@ -123,9 +123,9 @@ public class CharacterManager: IRPCDicObserver
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
 				ScreenBattleController.Instance.partState.enemyCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.enemyCardContainer.transform.position;
-			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.characterID);
+			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
 
-			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (false, character.characterID);
+			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (false, character.particleID);
 		
 		}
 
