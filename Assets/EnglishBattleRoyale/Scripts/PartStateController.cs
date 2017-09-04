@@ -179,11 +179,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		int awesomeCounter = 0;
 		for (int i = 0; i <= answerParam.correctCount; i++) {
 
+			string attackAnimName = "attack" + (i % 3);
 			//random animation
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack" + (i % 3));
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, attackAnimName);
 
 			//wait for attack animation to finish
-			yield return StartCoroutine (AttackWaitAnimationCoroutine (isPLayer));
+			yield return StartCoroutine (AttackWaitAnimationCoroutine (isPLayer, attackAnimName));
 
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
@@ -231,14 +232,16 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	}
 
-	IEnumerator AttackWaitAnimationCoroutine (bool isPlayer)
+	IEnumerator AttackWaitAnimationCoroutine (bool isPlayer, string attackAnimName)
 	{
 		Animator anim = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPlayer);
 		while (true) {
-			if (anim.GetCurrentAnimatorStateInfo (0).normalizedTime > 1 && !anim.IsInTransition (0)) {
-				yield break;
+			if (!anim.GetCurrentAnimatorStateInfo(0).IsName(attackAnimName))
+			{
+				break;
 			}
 		}
+		yield break;
 	}
 
 
