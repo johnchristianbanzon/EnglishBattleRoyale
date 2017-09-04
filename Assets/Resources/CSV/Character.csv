@@ -4,24 +4,24 @@ ID,Name,EffectDescription,ConditionDescription,TurnDescription,GPCost,ParticleID
 3,Energy Potion,Player Gauge Points * 2,None,4,7,3,"MultiplyPlayerGP ( 2 , 4 );"
 4,Heavy Shield,Enemy Damage * 0.5,None,5,21,4,"MultiplyEnemyTD ( 0.5f , 5 );"
 5,Dagger,Player Base Damage + 2,None,5,6,5,"AddPlayerBD ( 2 , 5 );"
-6,Bomb,4 * (Player Base Damage + Player Awesome) ,None,1,15,6,"AddEnemyHP ( -( 4 * PlayerBD + PlayerAwesome ) , 1 );"
-7,Poison Vial,EnemyHP - ( 5 * Enemy Rotten ),Enemy has Rotten answers,Infinite,18,7,"if ( EnemyRotten > 0 , AddEnemyHP ( -5 * EnemyRotten , 99 ) , AddEnemyHP ( 0 , 1 ) );"
+6,Bomb,4 * (Player Base Damage + Player Awesome) ,None,1,15,6,"AddEnemyHP ( -( 4 * PBD + PAwesome ) , 1 );"
+7,Poison Vial,EnemyHP - ( 5 * Enemy Rotten ),Enemy has Rotten answers,Infinite,18,7,"if ( ERotten > 0 , AddEnemyHP ( -5 * ERotten , 99 ) , AddEnemyHP ( 0 , 1 ) );"
 8,Magnifying Glass,Debuff Player,None,1,7,8,PlayerDebuff ( 1 );
-9,Dual Swords,Enemy Hit Points - ( 0.25 * Enemy Hit Points),None,1,12,5,"AddEnemyHP ( -( 0.25f  * EnemyHP ) , 1 );"
+9,Dual Swords,Enemy Hit Points - ( 0.25 * Enemy Hit Points),None,1,12,5,"AddEnemyHP ( -( 0.25f  * EHP ) , 1 );"
 10,Freezing Potion,Disable 1 Enemy Skill Slot,None,3,9,9,EnemySlot ( 3 );
-11,Unfinished Health Potion,Player HP + ( 10 + 2 * ( Player Awesome) ),None,3,17,1,"AddPlayerHP ( ( 10 + 2 * PlayerAwesome ) , 3 );"
+11,Unfinished Health Potion,Player HP + ( 10 + 2 * ( Player Awesome) ),None,3,17,1,"AddPlayerHP ( ( 10 + 2 * PAwesome ) , 3 );"
 12,Unfinished Energy Potion,"Player Hit Points - 20, 
 Player Gauge Points + 10",None,1,1,2,"AddPlayerHP ( -20 , 1 ); AddPlayerGP ( 10 , 1 );"
 13,Round Shield,Enemy Damage * 0.5,None,3,11,4,"MultiplyEnemyTD ( 0.5f , 3 );"
 14,Rage Potion,"Player Hit Points - 15 
 Player Base Damage + 10",None,"PlayerHP: 1 , PlayerBD: 2 ",10,10,"AddPlayerHP ( -15 , 1 ); AddPlayerBD ( 10 , 2 );"
 15,Sleeping Potion,Enemy Gauge Points * 0.5,None,3,11,11,"MultiplyEnemyGP ( 0.5f , 3 );"
-16,Timed Bomb,13* Player Awesome,Activates on next turn,1,12,6,"AddEnemyHP ( -( 13 * PlayerAwesome ) , 1 , 2 );"
+16,Timed Bomb,13* Player Awesome,Activates on next turn,1,12,6,"AddEnemyHP ( -( 13 * PAwesome ) , 1 , 2 );"
 17,Holy Potion,"Player Base Damage - 5
 Player Gauge Points + 3",None,"PlayerBD: Infinite , PlayerGP: 5",13,12,"AddPlayerBD ( -5 , 99 ); AddPlayerGP ( 3 , 5 );"
-18,Hunter's Bow,Enemy Hit Points - 45,Enemy is activating skill that has more than 3 turns effect,1,10,13,"if ( EnemySkillTurn > 3 , AddEnemyHP ( -45 , 1) , AddEnemyHP ( 0 , 1 ) );"
-19,GreatSword,Player Base Damage * 4,None,1,11,14,"AddEnemyHP ( -( PlayerBD * 4 ) , 1 );"
+18,Hunter's Bow,Enemy Hit Points - 45,Enemy is activating skill that has more than 3 turns effect,1,10,13,"if ( ESkillTurn > 3 , AddEnemyHP ( -45 , 1) , AddEnemyHP ( 0 , 1 ) );"
+19,GreatSword,Player Base Damage * 4,None,1,11,14,"AddEnemyHP ( -( PBD * 4 ) , 1 );"
 20,Shuriken,Enemy Hit Points - 8,None,1,2,15,"AddEnemyHP ( -8 , 1 );"
 21,Warhammer,Player Damage * 2,None,3,14,16,"MultiplyPlayerTD ( 2 , 3 );"
 22,Spear,Player Damage * 2,None,5,16,17,"MultiplyPlayerTD ( 2 , 5 );"
-23,Potion of Evasion,Enemy Skill Damage - (.7 * Enemy Skill Damage),None,3,18,11,"AddEnemySD ( -( 0.7f * EnemySD ) , 3 );"
+23,Potion of Evasion,Enemy Skill Damage - (.7 * Enemy Skill Damage),None,3,18,11,"AddEnemySD ( -( 0.7f * ESD ) , 3 );"

@@ -104,8 +104,6 @@ public class CharacterManager: IRPCDicObserver
 	//TO-DO REFACTOR THIS CODE
 	public static void CharacterActivate (bool isPlayer)
 	{
-		
-
 		CharacterModel character = null;
 		if (isPlayer) {
 			character = playerCharacterQueue.Dequeue ();

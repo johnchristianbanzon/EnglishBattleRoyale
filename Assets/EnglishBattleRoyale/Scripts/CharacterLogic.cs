@@ -18,22 +18,21 @@ public class CharacterLogic
 
 		//replace variables from string
 		calculateString = character.skillCalculation.
-			Replace ("PlayerHP", PlayerManager.GetPlayer (isPlayer).hp.ToString ()).
-			Replace ("PlayerGP", PlayerManager.GetPlayer (isPlayer).gp.ToString ()).
-			Replace ("PlayerBD", PlayerManager.GetPlayer (isPlayer).bd.ToString ()).
-			Replace ("PlayerSDM", PlayerManager.GetPlayer (isPlayer).sdm.ToString ()).
-			Replace ("PlayerTD", PlayerManager.GetPlayer (isPlayer).td.ToString ()).
-			Replace ("PlayerRotten", PlayerManager.GetQuestionResultCount (isPlayer).speedyRottenCount.ToString ()).
-			Replace ("PlayerAwesome", PlayerManager.GetQuestionResultCount (isPlayer).speedyAwesomeCount.ToString ()).
+			Replace ("PHP", PlayerManager.GetPlayer (isPlayer).hp.ToString ()).
+			Replace ("PGP", PlayerManager.GetPlayer (isPlayer).gp.ToString ()).
+			Replace ("PBD", PlayerManager.GetPlayer (isPlayer).bd.ToString ()).
+			Replace ("PSD", PlayerManager.GetPlayer (isPlayer).sdm.ToString ()).
+			Replace ("PTD", PlayerManager.GetPlayer (isPlayer).td.ToString ()).
+			Replace ("PRotten", PlayerManager.GetQuestionResultCount (isPlayer).speedyRottenCount.ToString ()).
+			Replace ("PAwesome", PlayerManager.GetQuestionResultCount (isPlayer).speedyAwesomeCount.ToString ()).
 
-
-			Replace ("EnemyHP", PlayerManager.GetPlayer (!isPlayer).hp.ToString ()).
-			Replace ("EnemyGP", PlayerManager.GetPlayer (!isPlayer).gp.ToString ()).
-			Replace ("EnemyBD", PlayerManager.GetPlayer (!isPlayer).bd.ToString ()).
-			Replace ("EnemySDM", PlayerManager.GetPlayer (!isPlayer).sdm.ToString ()).
-			Replace ("EnemyTD", PlayerManager.GetPlayer (!isPlayer).td.ToString ()).
-			Replace ("EnemyRotten", PlayerManager.GetQuestionResultCount (!isPlayer).speedyRottenCount.ToString ()).
-			Replace ("EnemyAwesome", PlayerManager.GetQuestionResultCount (!isPlayer).speedyAwesomeCount.ToString ());
+			Replace ("EHP", PlayerManager.GetPlayer (!isPlayer).hp.ToString ()).
+			Replace ("EyGP", PlayerManager.GetPlayer (!isPlayer).gp.ToString ()).
+			Replace ("EBD", PlayerManager.GetPlayer (!isPlayer).bd.ToString ()).
+			Replace ("ESD", PlayerManager.GetPlayer (!isPlayer).sdm.ToString ()).
+			Replace ("ETD", PlayerManager.GetPlayer (!isPlayer).td.ToString ()).
+			Replace ("ERotten", PlayerManager.GetQuestionResultCount (!isPlayer).speedyRottenCount.ToString ()).
+			Replace ("EAwesome", PlayerManager.GetQuestionResultCount (!isPlayer).speedyAwesomeCount.ToString ());
 		
 		Debug.Log ("CHARACTER FROM CSV: " + calculateString);
 
@@ -164,6 +163,7 @@ public class CharacterLogic
 			//not yet implemented
 			break;
 		}
+
 	}
 		
 
@@ -281,6 +281,8 @@ public class CharacterLogic
 			playerQueueList.Clear ();
 			break;
 		}
+
+		PlayerManager.UpdateStateUI(isPlayer);
 	}
 
 	//set which player to affect the character skill
