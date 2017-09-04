@@ -31,6 +31,7 @@ public static class QuestionBuilder
 		dictionary.Add ("WordChoice", 1);
 		dictionary.Add ("SlotMachine", 1);
 		dictionary.Add ("LetterLink", 1);
+//		dictionary.Add ("StackSwipe", 1);
 		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		for (int i = 0; i < numberOfQuestions; i++) {
 			if (QuestionSystemController.Instance.isDebug) {
@@ -197,6 +198,7 @@ public static class QuestionBuilder
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Antonym, 1);
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Association, 1);
 		QuestionTypeModel typeModel = null;
+		Debug.Log (selection);
 		switch(selection){
 		case "SelectLetter":
 			typeModel = new QuestionTypeModel (
@@ -252,6 +254,15 @@ public static class QuestionBuilder
 				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.letterLink
+			);
+			break;
+		case "StackSwipeController":
+			typeModel = new QuestionTypeModel (
+				//				QuestionSystemEnums.TargetType.Association,
+				QuestionGenerator.GetTargetWay (targetDictionary),
+				QuestionSystemEnums.ContentLevel.Normal,
+				QuestionSystemController.Instance.partAnswer.showAnswer,
+				QuestionSystemController.Instance.partSelection.stackSwipe
 			);
 			break;
 		}

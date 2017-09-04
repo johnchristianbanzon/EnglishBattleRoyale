@@ -238,6 +238,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	private Vector2 scrollHeaderPos = new Vector2();
 	public void InitQuestionSystem(){
+		Debug.Log (questionTypeModel.selectionType.GetType().Name);
 		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
 		CancelInvoke ();
 		currentQuestionNumber = 0;
