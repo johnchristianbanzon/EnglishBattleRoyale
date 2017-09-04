@@ -9,6 +9,8 @@ public class PartAvatarsController :  MonoBehaviour
 	public PlayerController player;
 	public PlayerController enemy;
 
+	#region Animation
+
 	public void SetTriggerAnim (bool isPLayer, string param)
 	{
 		if (isPLayer) {
@@ -17,6 +19,17 @@ public class PartAvatarsController :  MonoBehaviour
 			enemyAnim.SetTrigger (param);
 		}
 	}
+
+	public Animator GetPlayerAnimator (bool isPLayer)
+	{
+		if (isPLayer) {
+			return playerAnim;
+		} else {
+			return enemyAnim;
+		}
+	}
+
+	#endregion
 
 	#region Player particle effects
 

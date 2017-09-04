@@ -180,9 +180,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			//random animation
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack" + (i % 3));
 
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+			float playerAttackAnimationTime = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPLayer).
+				GetCurrentAnimatorStateInfo (0).normalizedTime;
 
-			yield return new WaitForSeconds (0.1f);
+			yield return new WaitForSeconds (playerAttackAnimationTime);
+
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 
 			if (isPLayer) {
