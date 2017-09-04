@@ -3,9 +3,9 @@ using UnityEngine;
 
 public static class PlayerManager
 {
-	private static PlayerModel player;
+	private static PlayerModel player{ get; set; }
 
-	private static PlayerModel enemy;
+	private static PlayerModel enemy{ get; set; }
 
 	private static QuestionResultCountModel playerAnswerParam;
 
@@ -31,11 +31,9 @@ public static class PlayerManager
 			if (isPlayer) {
 				player = value;
 				ScreenBattleController.Instance.partState.UpdatePlayerUI (true, player);
-				Debug.Log ("NEW PLAYER HP: " +player.hp);
 			} else {
 				enemy = value;
 				ScreenBattleController.Instance.partState.UpdatePlayerUI (false, enemy);
-				Debug.Log ("NEW ENEMY HP: " +enemy.hp);
 			}
 
 			CheckPlayerState ();
