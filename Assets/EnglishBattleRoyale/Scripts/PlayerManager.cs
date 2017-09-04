@@ -34,7 +34,6 @@ public static class PlayerManager
 				enemy = value;
 			}
 
-			CheckPlayerState ();
 		}
 	}
 
@@ -108,6 +107,8 @@ public static class PlayerManager
 		} else {
 			ScreenBattleController.Instance.partState.UpdatePlayerUI (false, enemy);
 		}
+
+		CheckPlayerState ();
 
 	}
 

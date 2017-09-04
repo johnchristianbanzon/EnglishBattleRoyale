@@ -185,7 +185,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 			//wait for attack animation to finish
-			yield return new WaitForSeconds(0.5f);
+			yield return StartCoroutine (AttackWaitAnimationCoroutine (isPLayer, attackAnimName));
 
 
 			if (isPLayer) {
@@ -231,24 +231,23 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	}
 
-//	//wait for current attack animation to end before proceeding to next attack
-//	IEnumerator AttackWaitAnimationCoroutine (bool isPlayer, string attackAnimName)
-//	{
-//		Animator anim = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPlayer);
-//		while (true) {
-//
-//			if (anim.GetCurrentAnimatorStateInfo (0).IsName (attackAnimName) &&
-//			    anim.IsInTransition (0) &&
-//			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 2f) {
-//				
-//				Debug.Log ("waiting for animation to finish");
-//				break;
-//			}
-//			yield return null;
-//		}
-//		Debug.Log ("current animation finished!");
-//		yield break;
-//	}
+	//wait for current attack animation to end before proceeding to next attack
+	IEnumerator AttackWaitAnimationCoroutine (bool isPlayer, string attackAnimName)
+	{
+		Animator anim = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPlayer);
+		while (true) {
+
+			if (anim.GetCurrentAnimatorStateInfo (0).IsName (attackAnimName) &&
+			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 0.8f) {
+				
+				Debug.Log ("waiting for animation to finish");
+				break;
+			}
+			yield return null;
+		}
+		Debug.Log ("current animation finished!");
+		yield break;
+	}
 
 
 	IEnumerator ShowAwesomeIndicatorCoroutine (bool isPlayer)
