@@ -140,8 +140,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	IEnumerator CharacterActivateCoroutine (bool isPlayer)
 	{
+		//character skill interval
 		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
-			yield return new WaitForSeconds (1);
+			yield return new WaitForSeconds (2);
 			CharacterManager.CharacterActivate (isPlayer);
 		}
 
@@ -232,7 +233,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		yield return new WaitForSeconds (1);
 
 	}
-
 
 
 	IEnumerator ShowAwesomeIndicatorCoroutine (bool isPlayer)

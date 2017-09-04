@@ -73,7 +73,12 @@ public class PartAvatarsController :  MonoBehaviour
 		if (skillEffect == CharacterEnums.SkillEffect.SkillSlash ||
 		    skillEffect == CharacterEnums.SkillEffect.SkillPunch ||
 		    skillEffect == CharacterEnums.SkillEffect.SkillPoison ||
-		    skillEffect == CharacterEnums.SkillEffect.SkillBomb) {
+		    skillEffect == CharacterEnums.SkillEffect.SkillBomb ||
+			skillEffect == CharacterEnums.SkillEffect.SkillWarhammer ||
+			skillEffect == CharacterEnums.SkillEffect.SkillSleep ||
+			skillEffect == CharacterEnums.SkillEffect.SkillGreatSword ||
+		
+		) {
 
 			isPlayer = !isPlayer;
 		}
