@@ -184,7 +184,7 @@ public static class QuestionBuilder
 	public static string GetRandomChoices ()
 	{
 		int randomnum = UnityEngine.Random.Range (0, wrongChoices.Count);
-		while (wrongChoicesDone.Contains (randomnum)) {
+		while (wrongChoicesDone.Contains (randomnum) || (wrongChoices [randomnum].Length==1)) {
 			randomnum = UnityEngine.Random.Range (0, wrongChoices.Count);
 		}
 		string wrongChoice = wrongChoices [randomnum];
@@ -198,7 +198,6 @@ public static class QuestionBuilder
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Antonym, 1);
 		targetDictionary.Add (QuestionSystemEnums.TargetType.Association, 1);
 		QuestionTypeModel typeModel = null;
-		Debug.Log (selection);
 		switch(selection){
 		case "SelectLetter":
 			typeModel = new QuestionTypeModel (
@@ -261,7 +260,7 @@ public static class QuestionBuilder
 				//				QuestionSystemEnums.TargetType.Association,
 				QuestionGenerator.GetTargetWay (targetDictionary),
 				QuestionSystemEnums.ContentLevel.Normal,
-				QuestionSystemController.Instance.partAnswer.showAnswer,
+				QuestionSystemController.Instance.partAnswer.noAnswer,
 				QuestionSystemController.Instance.partSelection.stackSwipe
 			);
 			break;

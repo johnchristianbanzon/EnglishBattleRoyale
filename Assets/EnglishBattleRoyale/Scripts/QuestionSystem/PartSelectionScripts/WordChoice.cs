@@ -56,6 +56,7 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	public GameObject ShowSelectionPopUp ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_WordChoice");
 		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpWordChoice", SystemPopupController.Instance.popUp);
 		gameObject.SetActive (true);
 		popUpSelectionList = new List<GameObject> ();

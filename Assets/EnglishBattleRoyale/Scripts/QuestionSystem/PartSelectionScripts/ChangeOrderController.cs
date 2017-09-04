@@ -47,6 +47,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 	}
 		
 	public GameObject ShowSelectionPopUp(){
+		SystemSoundController.Instance.PlaySFX ("SFX_ChangeOrder");
 		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpChangeOrder", SystemPopupController.Instance.popUp);
 		List<GameObject> popUpSelectionList = new List<GameObject> ();
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {

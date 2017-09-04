@@ -23,6 +23,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public GameObject ShowSelectionPopUp ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_SelectLetter");
 		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUPSelectLetter", SystemPopupController.Instance.popUp);
 		List<GameObject> popUpSelectionList = new List<GameObject> ();
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {

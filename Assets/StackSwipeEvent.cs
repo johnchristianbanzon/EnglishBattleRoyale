@@ -7,8 +7,24 @@ public class StackSwipeEvent : MonoBehaviour {
 	public StackSwipeController stackSwipeParent;
 	public int selectedIndex;
 	public bool isDragging = false;
+	private bool isCorrect;
 	private GameObject duplicateContainer;
 	private static float yMovement;
+	private static int numberOfRemovedContainers = 0;
+	private static GameObject correctObject;
+
+	public void Init(bool isCorrect){
+		string answer = "";
+		if (isCorrect) {
+			answer = stackSwipeParent.questionAnswer;
+			correctObject = gameObject;
+		} else {
+			answer = QuestionBuilder.GetRandomChoices ().Split('/')[0];
+		}
+		GetComponentInChildren<Text> ().text = answer.ToUpper();
+		gameObject.SetActive (true);
+		transform.SetSiblingIndex (UnityEngine.Random.Range (0,stackSwipeParent.stackSwipeContainers.Length));
+	}
 
 	public void OnSelectionBeginDrag ()
 	{
@@ -17,7 +33,6 @@ public class StackSwipeEvent : MonoBehaviour {
 		duplicateContainer = SystemResourceController.Instance.LoadPrefab ("WordSwipeContainer",stackSwipeParent.stackSwipeContent);
 		duplicateContainer.transform.SetSiblingIndex (this.transform.GetSiblingIndex ());
 		selectedIndex = transform.GetSiblingIndex ();
-//		transform.parent.GetComponent<VerticalLayoutGroup> ().enabled = false;
 		duplicateContainer.GetComponent<Image> ().color = new Color (81f / 255, 134f / 255f, 221f / 255f);
 		duplicateContainer.transform.position = transform.position;
 		yMovement = this.transform.position.y;
@@ -38,7 +53,6 @@ public class StackSwipeEvent : MonoBehaviour {
 		RectTransformUtility.ScreenPointToLocalPointInRectangle (myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
 		this.transform.position = myCanvas.transform.TransformPoint (pos);
 		this.transform.position = new Vector2(this.transform.position.x,yMovement);
-		Debug.Log (duplicateContainer.transform.localPosition.y);
 	}
 
 	/// <summary>
@@ -49,7 +63,6 @@ public class StackSwipeEvent : MonoBehaviour {
 	/// </summary>
 	public void OnSelectionEndDrag ()
 	{
-		Debug.Log (stackSwipeParent.isPointerInside);
 		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		duplicateContainer.transform.parent.GetComponent<VerticalLayoutGroup> ().enabled = true;
 		this.transform.SetParent (stackSwipeParent.stackSwipeContent.transform);
@@ -57,6 +70,26 @@ public class StackSwipeEvent : MonoBehaviour {
 		transform.SetSiblingIndex (selectedIndex);
 		QuestionSystemController.Instance.partSelection.changeOrder.OnChangeOrder ();
 		Destroy (duplicateContainer);
+		RemoveContainer ();
 		isDragging = false;
+	}
+
+	public void RemoveContainer(){
+		if (!stackSwipeParent.isPointerInside) {
+			if (numberOfRemovedContainers < 3) {
+				gameObject.SetActive (false);
+			}
+			numberOfRemovedContainers++;
+			if (numberOfRemovedContainers > 2) {
+				if (correctObject.activeInHierarchy) {
+					QuestionSystemController.Instance.CheckAnswer (true);
+				} else {
+					stackSwipeParent.ResetSelections ();
+					QuestionSystemController.Instance.CheckAnswer (false);
+				}
+
+				numberOfRemovedContainers = 0;
+			}
+		}
 	}
 }

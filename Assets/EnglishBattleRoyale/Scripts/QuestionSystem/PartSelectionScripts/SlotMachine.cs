@@ -26,6 +26,7 @@ using UnityEngine.EventSystems;
 	}
 	List<GameObject> popUpSelectionList= new List<GameObject> ();
 	public GameObject ShowSelectionPopUp(){
+		SystemSoundController.Instance.PlaySFX ("SFX_SlotMachine");
 		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpSlotMachine", SystemPopupController.Instance.popUp);
 		for (int i = 0; i < selectionPopUp.transform.GetChild(0).childCount; i++) {
 			popUpSelectionList.Add(selectionPopUp.transform.GetChild(0).GetChild(i).gameObject);

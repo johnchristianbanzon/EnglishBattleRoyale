@@ -21,6 +21,7 @@ public class Typing : MonoBehaviour, ISelection
 	}
 	GameObject selectionPopUp;
 	public GameObject ShowSelectionPopUp(){
+		SystemSoundController.Instance.PlaySFX ("SFX_Typing");
 		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpTyping", SystemPopupController.Instance.popUp);
 		this.selectionPopUp = selectionPopUp;
 		InvokeRepeating ("TypeLetterPopUp", 0,0.4f);
