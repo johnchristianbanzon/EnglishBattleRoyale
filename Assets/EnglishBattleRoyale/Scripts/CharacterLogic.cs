@@ -35,10 +35,14 @@ public class CharacterLogic
 			Replace ("EnemyRotten", PlayerManager.GetQuestionResultCount (!isPlayer).speedyRottenCount.ToString ()).
 			Replace ("EnemyAwesome", PlayerManager.GetQuestionResultCount (!isPlayer).speedyAwesomeCount.ToString ());
 		
+		Debug.Log ("CHARACTER FROM CSV: " +calculateString);
+
 		//split multiple skill in character
 		string[] calculateStringArray = StringSplitToArray (calculateString);
 
 		for (int i = 0; i < calculateStringArray.Length; i++) {
+			Debug.Log ("CHARACTER FROM CSV SPLIT: " +calculateStringArray[i]);
+
 			Expression e = new Expression (calculateStringArray [i]);
 
 			e.EvaluateFunction += NCalcExtensionFunctions;
