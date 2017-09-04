@@ -124,11 +124,13 @@ public class CharacterLogic
 		if (name.Contains ("PlayerSD")) {
 			SetPlayerTarget (true);
 			PlayerManager.Player.sdm = MyConst.player.sdm;
+			PlayerManager.Player.sdb = false;
 		}
 
 		if (name.Contains ("EnemySD")) {
 			SetPlayerTarget (false);
 			PlayerManager.Player.sdm = MyConst.player.sdm;
+			PlayerManager.Player.sdb = false;
 		}
 
 		if (name.Contains ("PlayerBD")) {
@@ -171,11 +173,23 @@ public class CharacterLogic
 		switch (name) {
 		case "AddPlayerHP":
 			SetPlayerTarget (true);
-			PlayerManager.Player.hp += value;
+			//if has skill damage multiplier
+			if (PlayerManager.Player.sdb) {
+				PlayerManager.Player.hp += value * PlayerManager.Player.sdb;
+			} else {
+				PlayerManager.Player.hp += value;
+			}
+
 			break;
 		case "AddEnemyHP":
 			SetPlayerTarget (false);
 			PlayerManager.Player.hp += value;
+			//if has skill damage multiplier
+			if (PlayerManager.Player.sdb) {
+				PlayerManager.Player.hp += value * PlayerManager.Player.sdb;
+			} else {
+				PlayerManager.Player.hp += value
+			}
 			break;
 		case "AddPlayerGP":
 			SetPlayerTarget (true);
@@ -188,10 +202,12 @@ public class CharacterLogic
 		case "AddPlayerSD":
 			SetPlayerTarget (true);
 			PlayerManager.Player.sdm += value;
+			PlayerManager.Player.sdb = true;
 			break;
 		case "AddEnemySD":
 			SetPlayerTarget (false);
 			PlayerManager.Player.sdm += value;
+			PlayerManager.Player.sdb = true;
 			break;
 		case "AddPlayerBD":
 			SetPlayerTarget (true);
@@ -228,10 +244,12 @@ public class CharacterLogic
 		case "MultiplyPlayerSD":
 			SetPlayerTarget (true);
 			PlayerManager.Player.sdm *= value;
+			PlayerManager.Player.sdb = true;
 			break;
 		case "MultiplyEnemySD":
 			SetPlayerTarget (false);
 			PlayerManager.Player.sdm *= value;
+			PlayerManager.Player.sdb = true;
 			break;
 		case "MultiplyPlayerBD":
 			SetPlayerTarget (true);
