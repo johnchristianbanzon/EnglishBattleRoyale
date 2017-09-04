@@ -140,8 +140,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	IEnumerator CharacterActivateCoroutine (bool isPlayer)
 	{
+		//character skill interval
 		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
-			yield return new WaitForSeconds (1);
+			yield return new WaitForSeconds (2);
 			CharacterManager.CharacterActivate (isPlayer);
 		}
 
@@ -180,9 +181,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			//random animation
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack" + (i % 3));
 
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
+			float playerAttackAnimationTime = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPLayer).
+				GetCurrentAnimatorStateInfo (0).normalizedTime;
 
-			yield return new WaitForSeconds (0.1f);
+			yield return new WaitForSeconds (playerAttackAnimationTime);
+
+			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 
 			if (isPLayer) {
@@ -229,7 +233,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		yield return new WaitForSeconds (1);
 
 	}
-
 
 
 	IEnumerator ShowAwesomeIndicatorCoroutine (bool isPlayer)

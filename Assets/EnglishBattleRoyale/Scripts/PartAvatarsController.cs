@@ -9,6 +9,8 @@ public class PartAvatarsController :  MonoBehaviour
 	public PlayerController player;
 	public PlayerController enemy;
 
+	#region Animation
+
 	public void SetTriggerAnim (bool isPLayer, string param)
 	{
 		if (isPLayer) {
@@ -17,6 +19,17 @@ public class PartAvatarsController :  MonoBehaviour
 			enemyAnim.SetTrigger (param);
 		}
 	}
+
+	public Animator GetPlayerAnimator (bool isPLayer)
+	{
+		if (isPLayer) {
+			return playerAnim;
+		} else {
+			return enemyAnim;
+		}
+	}
+
+	#endregion
 
 	#region Player particle effects
 
@@ -60,7 +73,12 @@ public class PartAvatarsController :  MonoBehaviour
 		if (skillEffect == CharacterEnums.SkillEffect.SkillSlash ||
 		    skillEffect == CharacterEnums.SkillEffect.SkillPunch ||
 		    skillEffect == CharacterEnums.SkillEffect.SkillPoison ||
-		    skillEffect == CharacterEnums.SkillEffect.SkillBomb) {
+		    skillEffect == CharacterEnums.SkillEffect.SkillBomb ||
+			skillEffect == CharacterEnums.SkillEffect.SkillWarhammer ||
+			skillEffect == CharacterEnums.SkillEffect.SkillSleep ||
+			skillEffect == CharacterEnums.SkillEffect.SkillGreatSword ||
+		
+		) {
 
 			isPlayer = !isPlayer;
 		}
