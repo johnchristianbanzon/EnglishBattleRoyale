@@ -11,7 +11,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public Text playerNameText;
 
-	public Slider playerHPBar ;
+	public Slider playerHPBar;
 	public Text playerHPText;
 	public Text playerGPText;
 	public Slider playerGPBar;
@@ -59,6 +59,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			enemyHPBar.value = player.hp;
 		}
 	}
+
 	#endregion
 
 	#region COROUTINES
@@ -181,10 +182,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			//random animation
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, "attack" + (i % 3));
 
-			float playerAttackAnimationTime = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPLayer).
-				GetCurrentAnimatorStateInfo (0).normalizedTime;
-
-			yield return new WaitForSeconds (playerAttackAnimationTime);
+			//wait for attack animation to finish
+			yield return StartCoroutine (AttackWaitAnimationCoroutine (isPLayer));
 
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
 			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
@@ -192,7 +191,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			if (isPLayer) {
 				ScreenBattleController.Instance.partAvatars.LoadHitEffect (false);
 				//load power effect in arms for every awesome count
-				if (i < PlayerManager.GetQuestionResultCount(true).speedyAwesomeCount) {
+				if (i < PlayerManager.GetQuestionResultCount (true).speedyAwesomeCount) {
 					awesomeCounter++;
 					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (true);
 
@@ -204,7 +203,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			} else {
 				ScreenBattleController.Instance.partAvatars.LoadHitEffect (true);
 				//load power effect in arms for every awesome count
-				if (i < PlayerManager.GetQuestionResultCount(false).speedyAwesomeCount) {
+				if (i < PlayerManager.GetQuestionResultCount (false).speedyAwesomeCount) {
 					awesomeCounter++;
 					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (false);
 
@@ -215,8 +214,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 				enemyHitComboCountText.text = (i + 1) + " HIT COMBO";
 			}
 
-
-			yield return new WaitForSeconds (0.3f);
 		}
 
 		action ();
@@ -232,6 +229,16 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		yield return new WaitForSeconds (1);
 
+	}
+
+	IEnumerator AttackWaitAnimationCoroutine (bool isPlayer)
+	{
+		Animator anim = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPlayer);
+		while (true) {
+			if (anim.GetCurrentAnimatorStateInfo (0).normalizedTime > 1 && !anim.IsInTransition (0)) {
+				yield break;
+			}
+		}
 	}
 
 
@@ -304,7 +311,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		while (timeLeft > 0) {
 			
-			preBattleTimerText.text = timeLeft.ToString();
+			preBattleTimerText.text = timeLeft.ToString ();
 
 			timeLeft--;
 			yield return new WaitForSeconds (1);
