@@ -175,7 +175,7 @@ public class CharacterLogic
 			SetPlayerTarget (true);
 			//if has skill damage multiplier
 			if (PlayerManager.Player.sdb) {
-				PlayerManager.Player.hp += value * PlayerManager.Player.sdb;
+				PlayerManager.Player.hp += value * PlayerManager.Player.sdm;
 			} else {
 				PlayerManager.Player.hp += value;
 			}
@@ -186,9 +186,9 @@ public class CharacterLogic
 			PlayerManager.Player.hp += value;
 			//if has skill damage multiplier
 			if (PlayerManager.Player.sdb) {
-				PlayerManager.Player.hp += value * PlayerManager.Player.sdb;
+				PlayerManager.Player.hp += value * PlayerManager.Player.sdm;
 			} else {
-				PlayerManager.Player.hp += value
+				PlayerManager.Player.hp += value;
 			}
 			break;
 		case "AddPlayerGP":
