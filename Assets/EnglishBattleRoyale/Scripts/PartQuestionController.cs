@@ -65,13 +65,13 @@ public class PartQuestionController: MonoBehaviour
 				float speedyGoodGPBonus = correctCount * MyConst.gameSettings.speedyGoodGPBonus;
 				float speedyGoodDamageBonus = correctCount * MyConst.gameSettings.speedyGoodDamageBonus;
 
-
+			
 				PlayerManager.SetIsPlayer(true);
+				Debug.Log("GP BEFORE :" + PlayerManager.Player.gp);
 				PlayerManager.Player.gp += correctGPBonus + speedyAwesomeGPBonus + speedyGoodGPBonus;
-				Debug.Log ("GP GAINED A TOTAL OF " + (correctGPBonus + speedyAwesomeGPBonus));
+				Debug.Log("GP NOW :" + PlayerManager.Player.gp);
 
 				PlayerManager.Player.td = PlayerManager.Player.bd + correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus;
-				Debug.Log ("BONUS PLAYER DAMAGE ADDED " + (correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus));
 
 
 				//send answer results to firebase

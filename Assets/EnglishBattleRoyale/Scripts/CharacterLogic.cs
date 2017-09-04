@@ -40,7 +40,7 @@ public class CharacterLogic
 		//split multiple skill in character
 		string[] calculateStringArray = StringSplitToArray (calculateString);
 
-		for (int i = 0; i < calculateStringArray.Length; i++) {
+		for (int i = 0; i < calculateStringArray.Length - 1; i++) {
 			Debug.Log ("CHARACTER FROM CSV SPLIT: " + calculateStringArray [i]);
 
 			Expression e = new Expression (calculateStringArray [i]);
