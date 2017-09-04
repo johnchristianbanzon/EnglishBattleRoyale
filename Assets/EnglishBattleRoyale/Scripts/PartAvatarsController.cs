@@ -76,7 +76,7 @@ public class PartAvatarsController :  MonoBehaviour
 		    skillEffect == CharacterEnums.SkillEffect.SkillBomb ||
 			skillEffect == CharacterEnums.SkillEffect.SkillWarhammer ||
 			skillEffect == CharacterEnums.SkillEffect.SkillSleep ||
-			skillEffect == CharacterEnums.SkillEffect.SkillGreatSword ||
+			skillEffect == CharacterEnums.SkillEffect.SkillGreatSword
 		
 		) {
 
