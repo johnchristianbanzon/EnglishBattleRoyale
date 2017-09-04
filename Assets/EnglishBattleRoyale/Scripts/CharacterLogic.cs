@@ -35,13 +35,13 @@ public class CharacterLogic
 			Replace ("EnemyRotten", PlayerManager.GetQuestionResultCount (!isPlayer).speedyRottenCount.ToString ()).
 			Replace ("EnemyAwesome", PlayerManager.GetQuestionResultCount (!isPlayer).speedyAwesomeCount.ToString ());
 		
-		Debug.Log ("CHARACTER FROM CSV: " +calculateString);
+		Debug.Log ("CHARACTER FROM CSV: " + calculateString);
 
 		//split multiple skill in character
 		string[] calculateStringArray = StringSplitToArray (calculateString);
 
 		for (int i = 0; i < calculateStringArray.Length; i++) {
-			Debug.Log ("CHARACTER FROM CSV SPLIT: " +calculateStringArray[i]);
+			Debug.Log ("CHARACTER FROM CSV SPLIT: " + calculateStringArray [i]);
 
 			Expression e = new Expression (calculateStringArray [i]);
 
@@ -123,7 +123,8 @@ public class CharacterLogic
 		}
 	}
 
-	private static void ResetPlayer(string name){
+	private static void ResetPlayer (string name)
+	{
 
 		if (name.Contains ("PlayerSD")) {
 			SetPlayerTarget (true);
@@ -303,7 +304,7 @@ public class CharacterLogic
 	private static string[] StringSplitToArray (string stringToSplit)
 	{
 		string[] newResult = stringToSplit.Split (';');
-		newResult = newResult.Skip (1).ToArray ();
+		newResult = newResult.ToArray ();
 
 		return newResult;
 	}
