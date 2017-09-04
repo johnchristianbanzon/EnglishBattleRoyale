@@ -101,38 +101,44 @@ public class CharacterManager: IRPCDicObserver
 		}
 	}
 
+	//TO-DO REFACTOR THIS CODE
 	public static void CharacterActivate (bool isPlayer)
 	{
 		
-		//TO-DO REFACTOR THIS CODE
+
 		CharacterModel character = null;
 		if (isPlayer) {
 			character = playerCharacterQueue.Dequeue ();
 
+			//Show activated card on top
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
 				                         ScreenBattleController.Instance.partState.playerCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.playerCardContainer.transform.position;
-
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
-
+		
+			//Show card skill effect
 			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (true, character.particleID);
 
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
 
+			//Show activated card on top
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
 				ScreenBattleController.Instance.partState.enemyCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.enemyCardContainer.transform.position;
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
 
+			//Show card skill effect
 			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (false, character.particleID);
 		
 		}
 
 
-			
+		//animation and sound
 		SystemSoundController.Instance.PlaySFX ("SFX_SKILLACTIVATE");
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "skill1");
+
+		//Do the calculation
 		CharacterLogic.CharacterActivate (isPlayer, character);
 	}
 
@@ -141,10 +147,7 @@ public class CharacterManager: IRPCDicObserver
 
 	#region get character list and assign to equip
 
-	/// <summary>
 	/// Load skill list from parsed CSV
-	/// </summary>
-	/// <returns>The skill list.</returns>
 	public static List<CharacterModel>  GetCharacterList ()
 	{
 		List<CharacterModel> characterList = MyConst.GetCharacterList ();
@@ -152,7 +155,7 @@ public class CharacterManager: IRPCDicObserver
 		return characterList;
 	}
 
-	//TO-DO: if characters already present in data, no need to generate
+	//TO-DO: store in data, use pantoyprefs or something, if characters already present in data, no need to generate, 
 	//Add 8 random characters to equip by default
 	public static List<CharacterModel>  GetEquipCharacterList ()
 	{
@@ -182,7 +185,7 @@ public class CharacterManager: IRPCDicObserver
 	}
 		
 
-	//receive skill list from prepare phase and shuffle for random skill in start and put in queue
+	//Receive skill list from prepare phase and shuffle for random skill in start and put in queue
 	public static void SetCharacterEnqueue (List<CharacterModel> characterList)
 	{
 		characterQueue.Clear ();
