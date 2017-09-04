@@ -20,11 +20,16 @@ public class PartCharacterController : MonoBehaviour
 
 	public void OnStartPhase ()
 	{
+		//Pick character time
+		TimeManager.StartCharacterSelectTimer (5, StartCharacterPhase);
+	}
+
+	private void StartCharacterPhase ()
+	{
 		//Check toggle on characters on start of the phase and send it
 		CharacterManager.StartCharacters ();
 		ShowAutoActivateButtons (false);
 		PartAnswerIndicatorController.Instance.ResetAnswer ();
-
 	}
 
 	//show skill buttons after attack phase is done
@@ -38,16 +43,17 @@ public class PartCharacterController : MonoBehaviour
 		charCards [characterNumber].SetCharacter (charCard);
 	
 	}
-		
+
 
 	public void ActivateCharacterUI (int characterNumber)
 	{
-		charCards [characterNumber].ActivateCardAnimation();
+		charCards [characterNumber].ActivateCardAnimation ();
 	}
 
-	public void SetCharacterOrder(){
+	public void SetCharacterOrder ()
+	{
 		for (int i = 0; i < charCards.Length; i++) {
-			charCards [i] = charCardsContainer.transform.GetChild (i).GetComponent<CharEquipCardController>();
+			charCards [i] = charCardsContainer.transform.GetChild (i).GetComponent<CharEquipCardController> ();
 		}
 	}
 
@@ -71,12 +77,14 @@ public class PartCharacterController : MonoBehaviour
 
 	#region COROUTINES
 
-	public void ChangeCharacterCard(Action removeCard, Action newCard){
-		StartCoroutine (ChangeCharacterCardCoroutine(removeCard,newCard));
+	public void ChangeCharacterCard (Action removeCard, Action newCard)
+	{
+		StartCoroutine (ChangeCharacterCardCoroutine (removeCard, newCard));
 		
 	}
 
-	IEnumerator ChangeCharacterCardCoroutine(Action removeCard, Action newCard){
+	IEnumerator ChangeCharacterCardCoroutine (Action removeCard, Action newCard)
+	{
 		removeCard ();
 		yield return new WaitForSeconds (1);
 		newCard ();

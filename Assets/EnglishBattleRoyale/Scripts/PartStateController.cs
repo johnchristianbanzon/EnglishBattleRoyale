@@ -151,7 +151,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	IEnumerator CheckAttackCoroutine (bool isPlayer)
 	{
 		if (BattleManager.CheckAttack (isPlayer)) {
-			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 			yield return BattleManager.ComputeAttack (isPlayer);
 		} else {
 			yield return new WaitForSeconds (1);
@@ -284,9 +283,15 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public void OnStartPreBattleTimer (int timer)
 	{
 		StartCoroutine (StartTimer (timer, delegate() {
-			preBattleTimerText.enabled = false;
 			ScreenBattleController.Instance.StartPhase1 ();
 		}));
+	}
+
+	public void OnStartCharacterSelectTimer (int timer, Action action)
+	{
+		preBattleTimerText.enabled = true;
+		preBattleTimerText.text = "";
+		StartCoroutine (StartTimer (timer, action));
 	}
 
 
@@ -296,7 +301,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		while (timeLeft > 0) {
 			
-			preBattleTimerText.text = "" + timeLeft;
+			preBattleTimerText.text = timeLeft.ToString();
 
 			timeLeft--;
 			yield return new WaitForSeconds (1);
@@ -304,6 +309,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 
 		action ();
+		preBattleTimerText.enabled = false;
 	}
 
 	#endregion
