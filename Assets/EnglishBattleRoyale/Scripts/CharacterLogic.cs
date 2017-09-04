@@ -2,56 +2,22 @@
 using System;
 using System.Collections.Generic;
 using NCalc;
-
+using System.Linq;
 
 public class CharacterLogic
 {
-	public static void CharacterActivate (bool isPlayer, CharacterModel character)
+	private static bool isPlayer;
+	private static List<Queue<NCalcFunctionModel>> playerQueueList = new List<Queue<NCalcFunctionModel>> ();
+	private static List<Queue<NCalcFunctionModel>> enemyQueueList = new List<Queue<NCalcFunctionModel>> ();
+
+
+	public static void CharacterActivate (bool _isPlayer, CharacterModel character)
 	{
-
-		//REMOVES CHARACTER SKILLS TARGET TO THE PLAYER FROM ENEMY
-		if (character.characterSkillCalculation.Contains ("Debuff")) {
-			//nerf code here
-			if (isPlayer) {
-				for (int i = 0; i < characterQueueList.Count; i++) {
-					if (characterQueueList [i].Count > 0) {
-						CharacterComputeModel charCompute = characterQueueList [i].Peek ();
-						if (!charCompute.isPlayer) {
-							if ((CharacterEnums.Target)charCompute.character.characterTarget == CharacterEnums.Target.Enemy) {
-								characterQueueList [i].Clear ();
-							}
-						}
-					}
-				}
-				Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
-				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "Debuff");
-			} else {
-				Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
-				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "Debuff");
-			}
-
-			return;
-			
-		}
-
-		if (character.characterSkillCalculation.Contains ("EnemyCharacterSlot")) {
-			//EnemyCharacterSlot code here
-			if (isPlayer) {
-				Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
-				ScreenBattleController.Instance.partState.ShowSkillIndicator (true, "Card Slot Disabled (Not yet implemented)");
-			} else {
-				Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
-				ScreenBattleController.Instance.partState.ShowSkillIndicator (false, "Card Slot Disabled (Not yet implemented)");
-			}
-			return;
-
-		}
-
+		isPlayer = _isPlayer;
 		string calculateString = "";
 
-		//parses the string formula from csv
-
-		calculateString = character.characterSkillCalculation.
+		//replace variables from string
+		calculateString = character.skillCalculation.
 			Replace ("PlayerHP", PlayerManager.GetPlayer (isPlayer).hp.ToString ()).
 			Replace ("PlayerGP", PlayerManager.GetPlayer (isPlayer).gp.ToString ()).
 			Replace ("PlayerBD", PlayerManager.GetPlayer (isPlayer).bd.ToString ()).
@@ -69,181 +35,284 @@ public class CharacterLogic
 			Replace ("EnemyRotten", PlayerManager.GetQuestionResultCount (!isPlayer).speedyRottenCount.ToString ()).
 			Replace ("EnemyAwesome", PlayerManager.GetQuestionResultCount (!isPlayer).speedyAwesomeCount.ToString ());
 		
-		Expression e = new Expression (calculateString);
+		//split multiple skill in character
+		string[] calculateStringArray = StringSplitToArray (calculateString);
 
-		float calculatedChar = float.Parse (e.Evaluate ().ToString ());
+		for (int i = 0; i < calculateStringArray.Length; i++) {
+			Expression e = new Expression (calculateStringArray [i]);
 
-	
-		Queue<CharacterComputeModel> characterQueue = new Queue<CharacterComputeModel> ();
-		//Depending on turn, add to queue
-		for (int i = 0; i < character.characterTurn; i++) {
-			characterQueue.Enqueue (new CharacterComputeModel (isPlayer, character, calculatedChar));
+			e.EvaluateFunction += NCalcExtensionFunctions;
 		}
-		characterQueueList.Add (characterQueue);
+	}
 
+
+
+	//Check turns
+	private static void NCalcExtensionFunctions (string name, FunctionArgs args)
+	{
+		int turns = 0;
+
+		if (args.Parameters.Length == 1) {
+			turns = int.Parse (args.Parameters [0].Evaluate ().ToString ());
+
+		}
+
+		if (args.Parameters.Length == 2) {
+			turns = int.Parse (args.Parameters [1].Evaluate ().ToString ());
+
+		}
+
+		if (args.Parameters.Length == 3) {
+			turns = int.Parse (args.Parameters [1].Evaluate ().ToString ());
+		}
+
+		NCalcFunctionModel nCalcFunction = new NCalcFunctionModel (name, args);
+		Queue<NCalcFunctionModel> characterQueue = new Queue<NCalcFunctionModel> ();
+
+		//Depending on turn, add to queue
+		for (int i = 0; i < turns; i++) {
+			characterQueue.Enqueue (nCalcFunction);
+		}
+		if (isPlayer) {
+			playerQueueList.Add (characterQueue);
+		} else {
+			enemyQueueList.Add (characterQueue);
+		}
 		CheckTurns ();
 	}
 
-	static List<Queue<CharacterComputeModel>> characterQueueList = new List<Queue<CharacterComputeModel>> ();
+
 
 	//activate character if turn is existing
 	private static void CheckTurns ()
 	{
-		for (int i = 0; i < characterQueueList.Count; i++) {
-			//remove item in list if no queues
-			if (characterQueueList [i].Count == 0) {
-				characterQueueList.RemoveAt (i);
-				return;
-			}
-				
-			CharacterComputeModel characterCompute = characterQueueList [i].Dequeue ();
-			CharacterCompute (
-				characterCompute.isPlayer,
-				characterCompute.character,
-				characterCompute.calculatedChar
-			);
+		if (isPlayer) {
+			for (int i = 0; i < playerQueueList.Count; i++) {
+				//remove item in list if no queues
+				if (playerQueueList [i].Count == 0) {
+					playerQueueList.RemoveAt (i);
+					return;
+				}
 
-			//RESET BACK TO ORIGINAL VALUE
-			if (characterQueueList [i].Count == 0) {
-				ResetPlayer (characterCompute.isPlayer, characterCompute.character.characterSkillType);
+				NCalcFunctionModel nCalcFunction = playerQueueList [i].Dequeue ();
+				CalculateCharacter (nCalcFunction.name, nCalcFunction.args);
+
+				if (playerQueueList [i].Count == 0) {
+					ResetPlayer (nCalcFunction.name);
+				}
+			}
+		} else {
+			for (int i = 0; i < enemyQueueList.Count; i++) {
+				//remove item in list if no queues
+				if (enemyQueueList [i].Count == 0) {
+					enemyQueueList.RemoveAt (i);
+					return;
+				}
+
+				NCalcFunctionModel nCalcFunction = enemyQueueList [i].Dequeue ();
+				CalculateCharacter (nCalcFunction.name, nCalcFunction.args);
+
+				if (enemyQueueList [i].Count == 0) {
+					ResetPlayer (nCalcFunction.name);
+				}
 			}
 		}
-		
 	}
 
-	//RESET VALUE OF PLAYER AFTER TURN IS DONE
-	private static void ResetPlayer (bool isPLayer, int skillType)
+	private static void ResetPlayer(string name){
+
+		if (name.Contains ("PlayerSD")) {
+			SetPlayerTarget (true);
+			PlayerManager.Player.sdm = MyConst.player.sdm;
+			PlayerManager.Player.sdb = false;
+		}
+
+		if (name.Contains ("EnemySD")) {
+			SetPlayerTarget (false);
+			PlayerManager.Player.sdm = MyConst.player.sdm;
+			PlayerManager.Player.sdb = false;
+		}
+
+		if (name.Contains ("PlayerBD")) {
+			SetPlayerTarget (true);
+			PlayerManager.Player.bd = MyConst.player.bd;
+		}
+
+		if (name.Contains ("EnemyBD")) {
+			SetPlayerTarget (false);
+			PlayerManager.Player.bd = MyConst.player.bd;
+		}
+
+		if (name.Contains ("PlayerTD")) {
+			SetPlayerTarget (true);
+			PlayerManager.Player.td = MyConst.player.td;
+		}
+
+		if (name.Contains ("EnemyTD")) {
+			SetPlayerTarget (false);
+			PlayerManager.Player.td = MyConst.player.td;
+		}
+
+		switch (name) {
+	
+		case "EnemySlot":
+			//not yet implemented
+			break;
+		}
+	}
+		
+
+	//calculation of skills done here
+	private static void CalculateCharacter (string name, FunctionArgs args)
 	{
-		
-		CharacterEnums.SkillType skillTypeEnum = (CharacterEnums.SkillType)skillType;
-
-		switch (skillTypeEnum) {
-		case CharacterEnums.SkillType.PlayerSD:
-			PlayerManager.SetIsPlayer (isPLayer);
-			PlayerManager.Player.sdm = MyConst.player.sdm;
-			PlayerManager.Player.sdb = false;
+		float value = 0;
+		if (args.Parameters.Length > 0) {
+			value = float.Parse (args.Parameters [0].Evaluate ().ToString ());
+		}
+			
+		switch (name) {
+		case "AddPlayerHP":
+			SetPlayerTarget (true);
+			//if has skill damage multiplier
+			if (PlayerManager.Player.sdb) {
+				PlayerManager.Player.hp += value * PlayerManager.Player.sdm;
+			} else {
+				PlayerManager.Player.hp += value;
+			}
 
 			break;
-
-		case CharacterEnums.SkillType.EnemySD:
-			PlayerManager.SetIsPlayer (!isPLayer);
-			PlayerManager.Player.sdm = MyConst.player.sdm;
-			PlayerManager.Player.sdb = false;
+		case "AddEnemyHP":
+			SetPlayerTarget (false);
+			PlayerManager.Player.hp += value;
+			//if has skill damage multiplier
+			if (PlayerManager.Player.sdb) {
+				PlayerManager.Player.hp += value * PlayerManager.Player.sdm;
+			} else {
+				PlayerManager.Player.hp += value;
+			}
+			break;
+		case "AddPlayerGP":
+			SetPlayerTarget (true);
+			PlayerManager.Player.gp += value;
+			break;
+		case "AddEnemyGP":
+			SetPlayerTarget (false);
+			PlayerManager.Player.gp += value;
+			break;
+		case "AddPlayerSD":
+			SetPlayerTarget (true);
+			PlayerManager.Player.sdm += value;
+			PlayerManager.Player.sdb = true;
+			break;
+		case "AddEnemySD":
+			SetPlayerTarget (false);
+			PlayerManager.Player.sdm += value;
+			PlayerManager.Player.sdb = true;
+			break;
+		case "AddPlayerBD":
+			SetPlayerTarget (true);
+			PlayerManager.Player.bd += value;
+			break;
+		case "AddEnemyBD":
+			SetPlayerTarget (false);
+			PlayerManager.Player.bd += value;
+			break;
+		case "AddPlayerTD":
+			SetPlayerTarget (true);
+			PlayerManager.Player.td += value;
+			break;
+		case "AddEnemyTD":
+			SetPlayerTarget (false);
+			PlayerManager.Player.td += value;
+			break;
+		case "MultiplyPlayerHP":
+			SetPlayerTarget (true);
+			PlayerManager.Player.hp *= value;
+			break;
+		case "MultiplyEnemyHP":
+			SetPlayerTarget (false);
+			PlayerManager.Player.hp *= value;
+			break;
+		case "MultiplyPlayerGP":
+			SetPlayerTarget (true);
+			PlayerManager.Player.gp *= value;
+			break;
+		case "MultiplyEnemyGP":
+			SetPlayerTarget (false);
+			PlayerManager.Player.gp *= value;
+			break;
+		case "MultiplyPlayerSD":
+			SetPlayerTarget (true);
+			PlayerManager.Player.sdm *= value;
+			PlayerManager.Player.sdb = true;
+			break;
+		case "MultiplyEnemySD":
+			SetPlayerTarget (false);
+			PlayerManager.Player.sdm *= value;
+			PlayerManager.Player.sdb = true;
+			break;
+		case "MultiplyPlayerBD":
+			SetPlayerTarget (true);
+			PlayerManager.Player.bd *= value;
+			break;
+		case "MultiplyEnemyBD":
+			SetPlayerTarget (false);
+			PlayerManager.Player.bd *= value;
+			break;
+		case "MultiplyPlayerTD":
+			SetPlayerTarget (true);
+			PlayerManager.Player.td *= value;
+			break;
+		case "MultiplyEnemyTD":
+			SetPlayerTarget (false);
+			PlayerManager.Player.td *= value;
+			break;
+		case "EnemySlot":
+			//not yet implemented
 			break;
 
-		case CharacterEnums.SkillType.PlayerBD:
-			PlayerManager.SetIsPlayer (isPLayer);
-			PlayerManager.Player.bd = MyConst.player.bd;
-			break;
-
-		case CharacterEnums.SkillType.EnemyBD:
-			PlayerManager.SetIsPlayer (!isPLayer);
-			PlayerManager.Player.bd = MyConst.player.bd;
-			break;
-
-		case CharacterEnums.SkillType.PlayerTD:
-			PlayerManager.SetIsPlayer (isPLayer);
-			PlayerManager.Player.td = MyConst.player.td;
-			break;
-
-		case CharacterEnums.SkillType.EnemyTD:
-			PlayerManager.SetIsPlayer (!isPLayer);
-			PlayerManager.Player.td = MyConst.player.td;
+		//TO-DO find a way for just ailments to debuff not own powerups
+		case "PlayerDebuff":
+			playerQueueList.Clear ();
 			break;
 		}
 	}
-		
 
-	//activates the character and calculate the respective skills
-	private static void CharacterCompute (bool isPlayer, CharacterModel character, float calculatedChar)
+	//set which player to affect the character skill
+	private static void SetPlayerTarget (bool isPlayerTarget)
 	{
 		if (isPlayer) {
-			Debug.Log ("ACTIVATING PLAYER CHARACTER - " + character.characterName);
-		} else {
-			Debug.Log ("ACTIVATING ENEMY CHARACTER - " + character.characterName);
-		}
-
-		Debug.Log ("Calculated Char = " + calculatedChar);
-
-		switch ((CharacterEnums.SkillType)character.characterSkillType) {
-
-		case CharacterEnums.SkillType.PlayerHP:
-			SkillCalculator (PlayerManager.Player.hp, character.characterSkillOperator, calculatedChar, isPlayer);	
-			break;
-
-		//DAMAGE
-		case CharacterEnums.SkillType.EnemyHP:
-			if (PlayerManager.Player.sdb) {
-				PlayerManager.SetIsPlayer (!isPlayer);
-				PlayerManager.Player.hp = OperatorCalculator (character.characterSkillOperator, 
-					PlayerManager.Player.hp, calculatedChar) + (calculatedChar * PlayerManager.Player.sdm);
-			
+			if (isPlayerTarget) {
+				PlayerManager.SetIsPlayer (true);
 			} else {
-				SkillCalculator (PlayerManager.Player.hp, character.characterSkillOperator, calculatedChar, !isPlayer);		
+				PlayerManager.SetIsPlayer (false);
 			}
-			break;
-
-		case CharacterEnums.SkillType.PlayerBD:
-			SkillCalculator (PlayerManager.Player.bd, character.characterSkillOperator, calculatedChar, isPlayer);
-			break;
-
-		case CharacterEnums.SkillType.EnemyBD:
-			SkillCalculator (PlayerManager.Player.bd, character.characterSkillOperator, calculatedChar, !isPlayer);
-			break;
-
-		case CharacterEnums.SkillType.PlayerTD:
-			SkillCalculator (PlayerManager.Player.td, character.characterSkillOperator, calculatedChar, isPlayer);
-			break;
-
-		case CharacterEnums.SkillType.EnemyTD:
-			SkillCalculator (PlayerManager.Player.td, character.characterSkillOperator, calculatedChar, !isPlayer);
-			break;
-
-		case CharacterEnums.SkillType.PlayerGP:
-			SkillCalculator (PlayerManager.Player.gp, character.characterSkillOperator, calculatedChar, isPlayer);
-			break;
-
-		case CharacterEnums.SkillType.EnemyGP:
-			SkillCalculator (PlayerManager.Player.gp, character.characterSkillOperator, calculatedChar, !isPlayer);
-			break;
-
-		case CharacterEnums.SkillType.PlayerSD:
-			PlayerManager.SetIsPlayer (isPlayer);
-			PlayerManager.Player.sdm = calculatedChar;
-			PlayerManager.Player.sdb = true;
-			break;
-
-		case CharacterEnums.SkillType.EnemySD:
-			PlayerManager.SetIsPlayer (!isPlayer);
-			PlayerManager.Player.sdm = calculatedChar;
-			PlayerManager.Player.sdb = true;
-			break;
+		} else {
+			if (!isPlayerTarget) {
+				PlayerManager.SetIsPlayer (true);
+			} else {
+				PlayerManager.SetIsPlayer (false);
+			}
 		}
 	}
 
-	private static void SkillCalculator (float calculation, int skillOperator, float calculatedChar, bool isPLayer)
+	private static string[] StringSplitToArray (string stringToSplit)
 	{
-		PlayerManager.SetIsPlayer (isPLayer);
-		calculation = OperatorCalculator (skillOperator, 
-			calculation, calculatedChar);
+		string[] newResult = stringToSplit.Split (';');
+		newResult = newResult.Skip (1).ToArray ();
+
+		return newResult;
 	}
+}
 
-	private static float OperatorCalculator (int operatorType, float destinationVariable, float calculateCharAmount)
+class NCalcFunctionModel
+{
+	public string name;
+	public FunctionArgs args;
+
+	public NCalcFunctionModel (string name, FunctionArgs args)
 	{
-		float finalCalculation = 0;
-
-		switch (operatorType) {
-		case 1:
-			finalCalculation = destinationVariable + calculateCharAmount;
-			break;
-		case 2:
-			finalCalculation = destinationVariable * calculateCharAmount;
-			break;
-		case 3:
-			finalCalculation = destinationVariable + (destinationVariable * calculateCharAmount);
-			break;
-		}
-
-		return finalCalculation;
+		this.name = name;
+		this.args = args;
 	}
 }

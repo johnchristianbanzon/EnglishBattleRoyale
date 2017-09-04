@@ -117,19 +117,14 @@ public static partial class MyConst {
 		List<CharacterModel> characterList = new List<CharacterModel>();
 		for (int i = 1; i < characterConst.Count; i++) {
 			CharacterModel character = new CharacterModel (
-				int.Parse(characterConst[i][0].ToString()), //Character ID
-				characterConst[i][1].ToString(), // Character Name
-				characterConst[i][2].ToString(), //Character Description
-				characterConst[i][3].ToString(), //Character Alternate name
-				int.Parse(characterConst[i][4].ToString()), //Character GP COST
-				int.Parse(characterConst[i][5].ToString()),  //Character SKillType
-				int.Parse(characterConst[i][6].ToString()),  //Character Skill Operator
-				characterConst[i][7].ToString(),  //Character Calculation
-				int.Parse(characterConst[i][8].ToString()), //Character Target
-				characterConst[i][9].ToString(),  //Character Sacrifice Calculation
-				int.Parse(characterConst[i][10].ToString()),  //Character Sacrifice type
-				int.Parse(characterConst[i][11].ToString()), //Character Type
-				int.Parse(characterConst[i][12].ToString())  //Character Turn
+				int.Parse(characterConst[i][0].ToString()), //ID
+				characterConst[i][1].ToString(), //Name
+				characterConst[i][2].ToString(), //Effect Description
+				characterConst[i][3].ToString(), //Condition Description
+				characterConst[i][4].ToString(), //Turn Description
+				int.Parse(characterConst[i][5].ToString()), //GP Cost
+				int.Parse(characterConst[i][6].ToString()), //Particle ID
+				characterConst[i][7].ToString() //Skill Calculation
 
 			);
 			characterList.Add(character);
@@ -137,18 +132,5 @@ public static partial class MyConst {
 		return characterList;
 	}
 
-	public static CharacterModel GetCharacterBySkillType (int skillID)
-	{
-		List<CharacterModel> characterList = GetCharacterList ();
-		CharacterModel character = characterList.Where(p => p.characterSkillType == skillID).FirstOrDefault();
-		return character;
-	}
-
-	public static CharacterModel GetCharacterByCharID (int charID)
-	{
-		List<CharacterModel> characterList = GetCharacterList ();
-		CharacterModel character = characterList.Where(p => p.characterID == charID).FirstOrDefault();
-		return character;
-	}
 }
 

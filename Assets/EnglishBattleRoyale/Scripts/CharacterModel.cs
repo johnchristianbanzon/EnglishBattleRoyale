@@ -4,50 +4,34 @@ using System;
 [Serializable]
 public class CharacterModel
 {
-	public int characterID;
-	public string characterName;
-	public string characterDescription;
-	public string characterAlternateName;
-	public int characterGPCost;
-	public int characterSkillType;
-	public int characterSkillOperator;
-	public string characterSkillCalculation;
-	public int characterTarget;
-	public string characterSacrificeCalculation;
-	public int characterSacrificeType;
-	public int characterType;
-	public int characterTurn;
+	public int iD;
+	public string name;
+	public string effectDescription;
+	public string conditionDescription;
+	public string turnDescription;
+	public int gpCost;
+	public int particleID;
+	public string skillCalculation;
 
 	public CharacterModel (
-		int characterID,
-		string characterName,
-		string characterDescription,
-		string characterAlternateName,
-		int characterGPCost,
-		int characterSkillType,
-		int characterSkillOperator,
-		string characterSkillCalculation,
-		int characterTarget,
-		string characterSacrificeCalculation,
-		int characterSacrificeType, 
-		int characterType,
-		int characterTurn
+		int iD,
+		string name,
+		string effectDescription,
+		string conditionDescription,
+		string turnDescription,
+		int gpCost,
+		int particleID,
+		string skillCalculation
 		)
 	{
-
-		this.characterID = characterID;
-		this.characterName = characterName;
-		this.characterDescription = characterDescription;
-		this.characterAlternateName = characterAlternateName;
-		this.characterGPCost = characterGPCost;
-		this.characterSkillType = characterSkillType;
-		this.characterSkillOperator = characterSkillOperator;
-		this.characterSkillCalculation = characterSkillCalculation;
-		this.characterTarget = characterTarget;
-		this.characterSacrificeType = characterSacrificeType;
-		this.characterTurn = characterTurn;
-		this.characterType = characterType;
-	
+		this.iD = iD;
+		this.name = name;
+		this.effectDescription = effectDescription;
+		this.conditionDescription = conditionDescription;
+		this.turnDescription = turnDescription;
+		this.gpCost = gpCost;
+		this.particleID = particleID;
+		this.skillCalculation = skillCalculation;
 	}
 
 }

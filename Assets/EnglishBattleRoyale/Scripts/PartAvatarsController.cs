@@ -20,7 +20,7 @@ public class PartAvatarsController :  MonoBehaviour
 
 	#region Player particle effects
 
-
+	//effect when player get awesome answers
 	public void LoadArmPowerEffect (bool isPlayer)
 	{
 		GameObject armPowerEffectL;
@@ -37,6 +37,7 @@ public class PartAvatarsController :  MonoBehaviour
 		Destroy (armPowerEffectR, 1);
 	}
 
+	//effect when player is hit
 	public void LoadHitEffect (bool isPlayer)
 	{
 		GameObject hitEffect;
@@ -53,11 +54,6 @@ public class PartAvatarsController :  MonoBehaviour
 
 	public void LoadCardSkillEffect (bool isPlayer, int charID)
 	{
-		//remove later if complete character effects
-		if (charID > 8) {
-			return;
-		}
-
 		CharacterEnums.SkillEffect skillEffect = (CharacterEnums.SkillEffect)charID;
 
 		//put effect to enemy if the effect is meant for enemy

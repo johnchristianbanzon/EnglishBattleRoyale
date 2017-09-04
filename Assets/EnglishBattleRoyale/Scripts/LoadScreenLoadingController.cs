@@ -7,6 +7,6 @@ public class LoadScreenLoadingController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		TweenFacade.TweenWaitOpponentText(loadingText.GetComponent<RectTransform>());
+		TweenFacade.TweenScaleEffect(loadingText.GetComponent<RectTransform>());
 	}
 }

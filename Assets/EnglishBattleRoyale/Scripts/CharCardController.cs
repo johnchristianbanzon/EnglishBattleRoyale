@@ -23,8 +23,8 @@ public class CharCardController : MonoBehaviour
 	public void SetCardParameter (CharacterModel charCard, bool isEquipped)
 	{
 		this.charCard = charCard;
-		this.gpCost.text = charCard.characterGPCost.ToString();
-		characterImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.characterID);
+		this.gpCost.text = charCard.gpCost.ToString();
+		characterImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.iD);
 		this.isEquipped = isEquipped;
 	}
 

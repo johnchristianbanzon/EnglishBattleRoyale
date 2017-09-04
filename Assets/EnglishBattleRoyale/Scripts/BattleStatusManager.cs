@@ -101,7 +101,6 @@ public class BattleStatusManager: IRPCDicObserver
 		//Reminders: change to 1 if not testing
 		if (battleCount > 1) {
 			action ();
-			SystemLoadScreenController.Instance.StopWaitOpponentScreen ();
 		}
 	}
 }
