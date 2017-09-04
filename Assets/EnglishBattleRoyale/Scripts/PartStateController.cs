@@ -235,19 +235,18 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	IEnumerator AttackWaitAnimationCoroutine (bool isPlayer, string attackAnimName)
 	{
 		Animator anim = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPlayer);
-//		if (anim.GetCurrentAnimatorStateInfo (0).IsName ("attackAnimName") &&
-//		    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 1.0f) {
-//			Debug.Log("hello");
-//			yield break;
-//		}
+		while (true){
 
-		while (anim.GetCurrentAnimatorStateInfo (0).IsName ("attackAnimName") && 
-			anim.GetCurrentAnimatorStateInfo (0).normalizedTime < 1.0f) {
-
-			Debug.Log ("waiting for animation to finish");
+			if (anim.GetCurrentAnimatorStateInfo (0).IsName (attackAnimName) &&
+			    anim.IsInTransition (0) &&
+			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 1.0f) {
+				
+				Debug.Log ("waiting for animation to finish");
+				break;
+			}
 			yield return null;
 		}
-		Debug.Log ("animation finished");
+
 		yield break;
 	}
 
