@@ -8,7 +8,7 @@ public class BattleLogic
 		yield return ScreenBattleController.Instance.partState.StartBattleAnimation (isPLayer, attack.attackDamage, delegate() {
 
 
-			PlayerManager.SetIsPlayer(isPLayer);
+			PlayerManager.SetIsPlayer(!isPLayer);
 			PlayerManager.Player.hp -= attack.attackDamage;
 
 

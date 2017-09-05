@@ -293,13 +293,13 @@ public class CharacterLogic
 	private static void SetPlayerTarget (bool isPlayerTarget)
 	{
 		if (isPlayer) {
-			if (isPlayerTarget) {
+			if (!isPlayerTarget) {
 				PlayerManager.SetIsPlayer (true);
 			} else {
 				PlayerManager.SetIsPlayer (false);
 			}
 		} else {
-			if (!isPlayerTarget) {
+			if (isPlayerTarget) {
 				PlayerManager.SetIsPlayer (true);
 			} else {
 				PlayerManager.SetIsPlayer (false);
