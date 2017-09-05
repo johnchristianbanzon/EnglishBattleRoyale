@@ -46,6 +46,12 @@ public class SystemSoundController: SingletonMonoBehaviour<SystemSoundController
 		}));
 	}
 
+	public void ResetAudio(){
+		if (bgmPlayer != null) {
+			Destroy (bgmPlayer);
+		}
+	}
+
 	private IEnumerator StartDestroyAfterPlay (float time, Action action)
 	{
 		yield return new WaitForSeconds (time);

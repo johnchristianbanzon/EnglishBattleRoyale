@@ -354,6 +354,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public void MainMenuButton(){
 		gameOverScreen.SetActive (false);
 		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
+			GameManager.ResetGame();
 			SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
 		});
 	}

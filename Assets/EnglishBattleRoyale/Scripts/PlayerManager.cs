@@ -11,7 +11,7 @@ public static class PlayerManager
 
 	private static QuestionResultCountModel enemyAnswerParam;
 
-	private static bool isPlayer = false;
+	private static bool isPlayer;
 
 	public static void SetIsPlayer (bool isPlayerBool)
 	{

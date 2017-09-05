@@ -174,6 +174,8 @@ public class CharacterLogic
 	//calculation of skills done here
 	private static void CalculateCharacter (string name, FunctionArgs args)
 	{
+		
+
 		float value = 0;
 		if (args.Parameters.Length > 0) {
 			value = float.Parse (args.Parameters [0].Evaluate ().ToString ());
@@ -181,7 +183,8 @@ public class CharacterLogic
 			
 		switch (name) {
 		case "AddPlayerHP":
-			SetPlayerTarget (true);
+			
+			PlayerManager.SetIsPlayer (isPlayer);
 			//if has skill damage multiplier
 			if (PlayerManager.Player.sdb) {
 				PlayerManager.Player.hp += value * PlayerManager.Player.sdm;
@@ -191,7 +194,7 @@ public class CharacterLogic
 
 			break;
 		case "AddEnemyHP":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.hp += value;
 			//if has skill damage multiplier
 			if (PlayerManager.Player.sdb) {
@@ -201,37 +204,37 @@ public class CharacterLogic
 			}
 			break;
 		case "AddPlayerGP":
-			SetPlayerTarget (true);
+			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.gp += value;
 			break;
 		case "AddEnemyGP":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.gp += value;
 			break;
 		case "AddPlayerSD":
-			SetPlayerTarget (true);
+			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.sdm += value;
 			PlayerManager.Player.sdb = true;
 			break;
 		case "AddEnemySD":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.sdm += value;
 			PlayerManager.Player.sdb = true;
 			break;
 		case "AddPlayerBD":
-			SetPlayerTarget (true);
+			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.bd += value;
 			break;
 		case "AddEnemyBD":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.bd += value;
 			break;
 		case "AddPlayerTD":
-			SetPlayerTarget (true);
+			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.td += value;
 			break;
 		case "AddEnemyTD":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.td += value;
 			break;
 		case "MultiplyPlayerHP":
@@ -239,11 +242,11 @@ public class CharacterLogic
 			PlayerManager.Player.hp *= value;
 			break;
 		case "MultiplyEnemyHP":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.hp *= value;
 			break;
 		case "MultiplyPlayerGP":
-			SetPlayerTarget (true);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.gp *= value;
 			break;
 		case "MultiplyEnemyGP":
@@ -251,29 +254,29 @@ public class CharacterLogic
 			PlayerManager.Player.gp *= value;
 			break;
 		case "MultiplyPlayerSD":
-			SetPlayerTarget (true);
+			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.sdm *= value;
 			PlayerManager.Player.sdb = true;
 			break;
 		case "MultiplyEnemySD":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.sdm *= value;
 			PlayerManager.Player.sdb = true;
 			break;
 		case "MultiplyPlayerBD":
-			SetPlayerTarget (true);
+			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.bd *= value;
 			break;
 		case "MultiplyEnemyBD":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.bd *= value;
 			break;
 		case "MultiplyPlayerTD":
-			SetPlayerTarget (true);
+			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.td *= value;
 			break;
 		case "MultiplyEnemyTD":
-			SetPlayerTarget (false);
+			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.td *= value;
 			break;
 		case "EnemySlot":
@@ -287,24 +290,6 @@ public class CharacterLogic
 		}
 
 		PlayerManager.UpdateStateUI (isPlayer);
-	}
-
-	//set which player to affect the character skill
-	private static void SetPlayerTarget (bool isPlayerTarget)
-	{
-		if (isPlayer) {
-			if (isPlayerTarget) {
-				PlayerManager.SetIsPlayer (true);
-			} else {
-				PlayerManager.SetIsPlayer (false);
-			}
-		} else {
-			if (!isPlayerTarget) {
-				PlayerManager.SetIsPlayer (true);
-			} else {
-				PlayerManager.SetIsPlayer (false);
-			}
-		}
 	}
 
 	private static string[] StringSplitToArray (string stringToSplit)
