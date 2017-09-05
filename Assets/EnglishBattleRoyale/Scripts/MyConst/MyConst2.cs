@@ -27,6 +27,7 @@ public static partial class MyConst {
 
 	public const double ANSWER_SPEED_BASETIME = 2.5;
 	public const double ANSWER_SPEED_ASSOCIATION = 1;
+	public const double ANSWER_SPEED_WORDCHOICE = 0.5;
 	public const double ANSWER_SPEED_DEFINITION = 0.5;
 	public const double ANSWER_SPEED_SELECTLETTER = 1;
 	public const double ANSWER_SPEED_TYPING = 1.5;

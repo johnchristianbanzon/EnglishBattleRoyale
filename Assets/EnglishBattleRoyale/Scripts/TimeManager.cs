@@ -19,7 +19,7 @@ public class TimeManager
 	//PANTOY END HERE
 
 	//JOCHRIS HERE
-	public static void StartQuestionTimer (Action<int> action, int timer)
+	public static void StartQuestionTimer (Action<float> action, float timer)
 	{	
 		questionTimeObserver.OnStartQuestionTimer (action, timer);
 	}

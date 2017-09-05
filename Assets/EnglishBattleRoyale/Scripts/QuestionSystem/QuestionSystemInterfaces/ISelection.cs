@@ -7,5 +7,5 @@ public interface ISelection {
 	void HideSelectionHint();
 	void HideSelectionType();
 	void ShowCorrectAnswer(bool isAnswerCorrect);
-	void ShowSelectionPopUp (GameObject selectionPopUp);
+	GameObject ShowSelectionPopUp ();
 }

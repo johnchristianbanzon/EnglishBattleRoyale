@@ -4,8 +4,9 @@ using UnityEngine.UI;
 
 public class QuestionHintManager :MonoBehaviour{
 	public Button hintButton;
-	private int hintLimit = MyConst.HINT_SHOW_LIMIT;
-	private int hintIndex = 0;
+	private int hintLimit = 100;
+	public int hintIndex = 0;
+	public bool hasHintAvailable = true;
 	public int hintUsed = 0;
 	private int hintRemovalRate = MyConst.HINT_REMOVE_TIME;
 	private int hintRemoveInterval = 3;
@@ -16,16 +17,18 @@ public class QuestionHintManager :MonoBehaviour{
 	public void OnClick(){
 		hintButton.interactable = false;
 		int questionAnswerLength = QuestionSystemController.Instance.questionAnswer.Length;
-		if (hintUsed < hintLimit && QuestionSystemController.Instance.correctAnswerButtons.Count > hintIndex) {
-			QuestionSystemController.Instance.answerType.OnClickHint (hintIndex,delegate(bool onHintResult) {
-				if(onHintResult){
-					InitHints();
-				}
-			});
-			hintIndex ++;
-			hintUsed ++;
+		if (hintUsed < hintLimit && QuestionSystemController.Instance.correctAnswerButtons.Count-1 >= hintIndex) {
+				QuestionSystemController.Instance.answerType.OnClickHint (hintIndex, delegate(bool onHintResult) {
+					if (onHintResult) {
+						InitHints ();
+					}
+				});
+				hintIndex++;
+				hintUsed++;
+		} else {
+			hasHintAvailable = false;
 		}
-			InitCooldown ();		
+			InitCooldown ();
 	}
 		
 	public void disableHintButton(){
@@ -38,6 +41,7 @@ public class QuestionHintManager :MonoBehaviour{
 	}
 
 	public void InitHints(){
+		hasHintAvailable = true;
 		hintRemoveInterval = hintRemovalRate;
 		hintIndex = 0;
 	}

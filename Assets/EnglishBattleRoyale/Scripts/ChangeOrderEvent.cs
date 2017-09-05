@@ -10,11 +10,13 @@ public class ChangeOrderEvent : MonoBehaviour
 	public static bool isDragging;
 	public Text letterText;
 	private static GameObject duplicateContainer;
+	public int containerIndex;
 
 	public void Init(string letter){
 		letterText.text = letter;
 		gameObject.SetActive (true);
 		gameObject.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
+		containerIndex = transform.GetSiblingIndex ();
 	}
 
 	/// <summary>
@@ -22,6 +24,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	/// </summary>
 	public void OnSelectionBeginDrag ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		duplicateContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI",selectionContent);
 		duplicateContainer.transform.SetSiblingIndex (this.transform.GetSiblingIndex ());
 		selectedIndex = transform.GetSiblingIndex ();
@@ -52,6 +55,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	/// </summary>
 	public void OnSelectionEndDrag ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		this.transform.SetParent (selectionContent.transform);
 		this.GetComponent<Image> ().raycastTarget = true;
 		transform.SetSiblingIndex (selectedIndex);
@@ -66,6 +70,7 @@ public class ChangeOrderEvent : MonoBehaviour
 	public void OnDetectDraggedSelection ()
 	{
 		if (isDragging) {
+			
 			selectedIndex = this.transform.GetSiblingIndex ();
 			duplicateContainer.transform.SetSiblingIndex (selectedIndex);
 		}	
