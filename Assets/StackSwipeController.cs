@@ -29,9 +29,10 @@ public class StackSwipeController : MonoBehaviour, ISelection
 		for (int i = 0; i < stackSwipeContainers.Length; i++) {
 			if (numberOfAnswers > i) {
 				stackSwipeContainers [i].Init (true);
-				correctAnswer.Add (stackSwipeContainers [i].gameObject);
+
 			} else {
 				stackSwipeContainers [i].Init (false);
+				correctAnswer.Add (stackSwipeContainers [i].gameObject);
 			}
 		}
 		QuestionSystemController.Instance.correctAnswerButtons = correctAnswer;
@@ -45,7 +46,7 @@ public class StackSwipeController : MonoBehaviour, ISelection
 		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpStackSwipe", SystemPopupController.Instance.popUp);
 		popUp = selectionPopUp;
 		popUpCounter = 0;
-		InvokeRepeating ("RemoveSelectionPopUp", 0, 0.3f);
+		InvokeRepeating ("RemoveSelectionPopUp", 0.2f, 0.4f);
 		return selectionPopUp;
 	}
 
@@ -91,8 +92,10 @@ public class StackSwipeController : MonoBehaviour, ISelection
 			if (stackSwipeContainers [i].isCorrect) {
 				stackSwipeContainers [i].gameObject.SetActive (true);
 				stackSwipeContainers [i].GetComponent<Image> ().color = selectionColor;
-				break;
+			} else {
+				stackSwipeContainers [i].GetComponent<Image> ().color = Color.white;
 			}
+			stackSwipeContainers [i].GetComponent<Image> ().raycastTarget = false;
 		}
 
 	}
@@ -101,17 +104,15 @@ public class StackSwipeController : MonoBehaviour, ISelection
 	{
 		//CHANGES HERE FOR FUTURE
 		//ONLY SELECTION CHANGE
-		Debug.Log ("showing hint");
 		List<GameObject> hintableContainer = new List<GameObject>(); 
 		for(int i =0;i<stackSwipeContainers.Length;i++){
 			if (!stackSwipeContainers [i].isCorrect && 
-					(stackSwipeContainers[i].GetComponent<Image>().raycastTarget == true)) {
+				(stackSwipeContainers[i].GetComponent<Image>().color == Color.white) && 
+				stackSwipeContainers[i].gameObject.activeInHierarchy) {
 				hintableContainer.Add (stackSwipeContainers [i].gameObject);
-
 			}
 		}
 		if (hintableContainer.Count > 0) {
-			hintableContainer [0].GetComponent<Image> ().raycastTarget = false;
 			hintableContainer [0].GetComponent<Image> ().color = new Color32 (255, 100, 100, 255);
 		}
 
@@ -119,7 +120,6 @@ public class StackSwipeController : MonoBehaviour, ISelection
 
 	public void HideSelectionHint ()
 	{
+		
 	}
-
-
 }

@@ -89,7 +89,6 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 				TweenFacade.SliderTimer (questionSystemController.timerSlider, timeLeft);
 				if ((timeLeft % 1) == 0) {
 					hintInterval--;
-//					if ((timeLeft%(14 / questionSystemController.correctAnswerButtons.Count) == 0 ) && questionSystemController.questionHint.hasHintAvailable) {
 					if (hintInterval == 0) {
 						questionSystemController.questionHint.OnClick ();
 						questionSystemController.hintInterval.SetActive (false);
@@ -103,7 +102,6 @@ public class QuestionSystemTimer : IQuestionTimeObserver {
 							questionSystemController.hintInterval.transform.transform.position.y);
 						hintTimer.GetComponentInChildren<Text> ().text = ""+hintInterval;
 						TweenFacade.TweenScaleToLarge (hintTimer.transform, Vector3.one, 0.5f);
-//						TweenFacade.TweenJumpTo (hintTimer.transform, Vector3.one, 120f,1,0.5f,0);
 						MonoBehaviour.Destroy (hintTimer, 0.5f);
 					}
 					timePassed++;

@@ -57,6 +57,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
+		if (!isDebug) {
+			InitQuestionSystem();
+		}
 		roundResultList.Clear ();
 		questionRoundTimer = new QuestionSystemTimer ();
 		questionRoundTimer.InitQuestionSystemTimer (true);
@@ -95,7 +98,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	/// <param name="isCorrect">If set to <c>true</c> is correct.</param>
 	public void CheckAnswer (bool isCorrect)
 	{
-		questionHint.hasHintAvailable = false;
+		
 		idealTime = questionList [currentQuestionNumber].idealTime;
 
 		if (isCorrect) {
@@ -103,6 +106,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 			ShowSpeedyEffect (speedyType);
 			onQuestionResult(new QuestionResultModel (00000, 13, 3, isCorrect, speedyType));
 			QuestionFinish ();
+			questionHint.hasHintAvailable = false;
 			Invoke ("NextQuestion", 1f);
 		} else {
 			SystemSoundController.Instance.PlaySFX ("SFX_mistake");
@@ -260,7 +264,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	}
 
 	public void QuestionUIEntry(){
-		
 		partScrollImage.transform.localScale = new Vector2 (partScrollImage.transform.localScale.x, 0);
 		partScrollContent.SetActive (false);
 		debugUI.SetActive (false);
