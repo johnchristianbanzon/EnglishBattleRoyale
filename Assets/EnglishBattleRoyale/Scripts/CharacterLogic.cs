@@ -18,27 +18,34 @@ public class CharacterLogic
 
 		//replace variables from string
 		calculateString = character.skillCalculation.
-			Replace ("PlayerHP", PlayerManager.GetPlayer (isPlayer).hp.ToString ()).
-			Replace ("PlayerGP", PlayerManager.GetPlayer (isPlayer).gp.ToString ()).
-			Replace ("PlayerBD", PlayerManager.GetPlayer (isPlayer).bd.ToString ()).
-			Replace ("PlayerSDM", PlayerManager.GetPlayer (isPlayer).sdm.ToString ()).
-			Replace ("PlayerTD", PlayerManager.GetPlayer (isPlayer).td.ToString ()).
-			Replace ("PlayerRotten", PlayerManager.GetQuestionResultCount (isPlayer).speedyRottenCount.ToString ()).
-			Replace ("PlayerAwesome", PlayerManager.GetQuestionResultCount (isPlayer).speedyAwesomeCount.ToString ()).
+			Replace ("PHP", PlayerManager.GetPlayer (isPlayer).hp.ToString ()).
+			Replace ("PGP", PlayerManager.GetPlayer (isPlayer).gp.ToString ()).
+			Replace ("PBD", PlayerManager.GetPlayer (isPlayer).bd.ToString ()).
+			Replace ("PSD", PlayerManager.GetPlayer (isPlayer).sdm.ToString ()).
+			Replace ("PTD", PlayerManager.GetPlayer (isPlayer).td.ToString ()).
+			Replace ("PRotten", PlayerManager.GetQuestionResultCount (isPlayer).speedyRottenCount.ToString ()).
+			Replace ("PAwesome", PlayerManager.GetQuestionResultCount (isPlayer).speedyAwesomeCount.ToString ()).
 
-
-			Replace ("EnemyHP", PlayerManager.GetPlayer (!isPlayer).hp.ToString ()).
-			Replace ("EnemyGP", PlayerManager.GetPlayer (!isPlayer).gp.ToString ()).
-			Replace ("EnemyBD", PlayerManager.GetPlayer (!isPlayer).bd.ToString ()).
-			Replace ("EnemySDM", PlayerManager.GetPlayer (!isPlayer).sdm.ToString ()).
-			Replace ("EnemyTD", PlayerManager.GetPlayer (!isPlayer).td.ToString ()).
-			Replace ("EnemyRotten", PlayerManager.GetQuestionResultCount (!isPlayer).speedyRottenCount.ToString ()).
-			Replace ("EnemyAwesome", PlayerManager.GetQuestionResultCount (!isPlayer).speedyAwesomeCount.ToString ());
+			Replace ("EHP", PlayerManager.GetPlayer (!isPlayer).hp.ToString ()).
+			Replace ("EyGP", PlayerManager.GetPlayer (!isPlayer).gp.ToString ()).
+			Replace ("EBD", PlayerManager.GetPlayer (!isPlayer).bd.ToString ()).
+			Replace ("ESD", PlayerManager.GetPlayer (!isPlayer).sdm.ToString ()).
+			Replace ("ETD", PlayerManager.GetPlayer (!isPlayer).td.ToString ()).
+			Replace ("ERotten", PlayerManager.GetQuestionResultCount (!isPlayer).speedyRottenCount.ToString ()).
+			Replace ("EAwesome", PlayerManager.GetQuestionResultCount (!isPlayer).speedyAwesomeCount.ToString ());
 		
+
 		//split multiple skill in character
 		string[] calculateStringArray = StringSplitToArray (calculateString);
 
-		for (int i = 0; i < calculateStringArray.Length; i++) {
+		for (int i = 0; i < calculateStringArray.Length - 1; i++) {
+
+			if (isPlayer) {
+				Debug.Log ("PLAYER CHARACTER FROM CSV: " + calculateStringArray [i]);
+			} else {
+				Debug.Log ("ENEMY CHARACTER FROM CSV: " + calculateStringArray [i]);
+			}
+
 			Expression e = new Expression (calculateStringArray [i]);
 
 			e.EvaluateFunction += NCalcExtensionFunctions;
@@ -119,7 +126,8 @@ public class CharacterLogic
 		}
 	}
 
-	private static void ResetPlayer(string name){
+	private static void ResetPlayer (string name)
+	{
 
 		if (name.Contains ("PlayerSD")) {
 			SetPlayerTarget (true);
@@ -159,6 +167,7 @@ public class CharacterLogic
 			//not yet implemented
 			break;
 		}
+
 	}
 		
 
@@ -276,6 +285,8 @@ public class CharacterLogic
 			playerQueueList.Clear ();
 			break;
 		}
+
+		PlayerManager.UpdateStateUI (isPlayer);
 	}
 
 	//set which player to affect the character skill
@@ -299,7 +310,7 @@ public class CharacterLogic
 	private static string[] StringSplitToArray (string stringToSplit)
 	{
 		string[] newResult = stringToSplit.Split (';');
-		newResult = newResult.Skip (1).ToArray ();
+		newResult = newResult.ToArray ();
 
 		return newResult;
 	}

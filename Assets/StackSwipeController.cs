@@ -46,7 +46,7 @@ public class StackSwipeController : MonoBehaviour, ISelection
 		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpStackSwipe", SystemPopupController.Instance.popUp);
 		popUp = selectionPopUp;
 		popUpCounter = 0;
-		InvokeRepeating ("RemoveSelectionPopUp", 0, 0.3f);
+		InvokeRepeating ("RemoveSelectionPopUp", 0.2f, 0.4f);
 		return selectionPopUp;
 	}
 
@@ -95,6 +95,7 @@ public class StackSwipeController : MonoBehaviour, ISelection
 			} else {
 				stackSwipeContainers [i].GetComponent<Image> ().color = Color.white;
 			}
+			stackSwipeContainers [i].GetComponent<Image> ().raycastTarget = false;
 		}
 
 	}

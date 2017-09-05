@@ -65,9 +65,9 @@ public class PartAvatarsController :  MonoBehaviour
 	}
 
 
-	public void LoadCardSkillEffect (bool isPlayer, int charID)
+	public void LoadCardSkillEffect (bool isPlayer, int particleID)
 	{
-		CharacterEnums.SkillEffect skillEffect = (CharacterEnums.SkillEffect)charID;
+		CharacterEnums.SkillEffect skillEffect = (CharacterEnums.SkillEffect)particleID;
 
 		//put effect to enemy if the effect is meant for enemy
 		if (skillEffect == CharacterEnums.SkillEffect.SkillSlash ||
@@ -92,7 +92,7 @@ public class PartAvatarsController :  MonoBehaviour
 			skillEffectObject = LoadEffect (skillEffect.ToString (), enemy.skillEffectContainer);
 		}
 
-		Destroy (skillEffectObject, 1);
+		Destroy (skillEffectObject, 2);
 	}
 
 

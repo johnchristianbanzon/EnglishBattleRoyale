@@ -34,12 +34,7 @@ public class PartQuestionController: MonoBehaviour
 	{
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-		if (questionSystem == null) {
-			questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
-			Debug.Log(questionSystem.name);
-		} else {
-			questionSystem.SetActive (true);
-		}
+
 		string[] questionTypes = new string[6]{ "SelectLetter", "Typing", "ChangeOrderController", "WordChoice", "SlotMachine", "LetterLink" };
 //		QuestionSystemController.Instance.ShowPopUP (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)]);
 
@@ -47,6 +42,12 @@ public class PartQuestionController: MonoBehaviour
 	}
 
 	private void StartQuestion(){
+		if (questionSystem == null) {
+			questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
+
+		} else {
+			questionSystem.SetActive (true);
+		}
 		QuestionSystemController.Instance.StartQuestionRound (
 			questionType
 			, delegate(List<QuestionResultModel> resultList) {
@@ -65,14 +66,12 @@ public class PartQuestionController: MonoBehaviour
 				float speedyGoodGPBonus = correctCount * MyConst.gameSettings.speedyGoodGPBonus;
 				float speedyGoodDamageBonus = correctCount * MyConst.gameSettings.speedyGoodDamageBonus;
 
-
+			
 				PlayerManager.SetIsPlayer(true);
 				PlayerManager.Player.gp += correctGPBonus + speedyAwesomeGPBonus + speedyGoodGPBonus;
-				Debug.Log ("GP GAINED A TOTAL OF " + (correctGPBonus + speedyAwesomeGPBonus));
-
 				PlayerManager.Player.td = PlayerManager.Player.bd + correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus;
-				Debug.Log ("BONUS PLAYER DAMAGE ADDED " + (correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus));
 
+				PlayerManager.UpdateStateUI(true);
 
 				//send answer results to firebase
 				QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, awesomeSpeedyCount, goodSpeedyCount, rottenSpeedyCount);
