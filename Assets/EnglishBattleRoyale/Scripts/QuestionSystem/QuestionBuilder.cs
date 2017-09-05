@@ -31,7 +31,7 @@ public static class QuestionBuilder
 		dictionary.Add ("WordChoice", 1);
 		dictionary.Add ("SlotMachine", 1);
 		dictionary.Add ("LetterLink", 1);
-//		dictionary.Add ("StackSwipe", 1);
+		dictionary.Add ("StackSwipeController", 1);
 		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		for (int i = 0; i < numberOfQuestions; i++) {
 			if (QuestionSystemController.Instance.isDebug) {
