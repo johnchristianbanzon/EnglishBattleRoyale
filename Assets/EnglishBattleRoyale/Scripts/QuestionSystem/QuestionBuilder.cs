@@ -24,7 +24,6 @@ public static class QuestionBuilder
 
 	public static List<QuestionModel> GetQuestionList(int numberOfQuestions,QuestionTypeModel questionTypeModel){
 		List<QuestionModel> questions =  new List<QuestionModel>();
-
 		Dictionary<string,int> dictionary = new Dictionary<string,int> ();
 		dictionary.Add ("SelectLetter", 1);
 		dictionary.Add ("Typing", 1);
@@ -32,26 +31,28 @@ public static class QuestionBuilder
 		dictionary.Add ("WordChoice", 1);
 		dictionary.Add ("SlotMachine", 1);
 		dictionary.Add ("LetterLink", 1);
+//		dictionary.Add ("StackSwipe", 1);
 		string selectionFromRandom = QuestionGenerator.GetPseudoRandomValue (dictionary);
 		for (int i = 0; i < numberOfQuestions; i++) {
 			if (QuestionSystemController.Instance.isDebug) {
 				string questionType = questionTypeModel.selectionType.GetType().Name;
-				questions.Add (GetQuestion (GetQuestionType(questionType)));
+				QuestionTypeModel questionModel = GetQuestionType(questionType);
+				questions.Add (GetQuestion (questionModel));
 			} else {
 				QuestionModel questionType = GetQuestion (GetQuestionType (selectionFromRandom));
-				if (i < 3) {
+				if (i < 2) {
 					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Easy;
-				} else if (i < 7) {
+				} else if (i < 5) {
 					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Normal;
 				} else {
 					questionType.questionType.contentLevel = QuestionSystemEnums.ContentLevel.Hard;
 				}
+
 				questions.Add (questionType);
 			}
 		}
 		return questions;
 	}
-
 
 	public static QuestionModel GetQuestion (QuestionTypeModel questionType)
 	{
@@ -117,7 +118,7 @@ public static class QuestionBuilder
 
 			switch(questionType.contentLevel){
 			case QuestionSystemEnums.ContentLevel.Easy:
-				if (!(questionList [randomize].levelId < 4) ) {
+				if (!(questionList [randomize].levelId < 3) ) {
 					questionViable = false;
 				}
 				break;
@@ -167,6 +168,9 @@ public static class QuestionBuilder
 		case "SlotMachine":
 			idealTime += 1;
 			break;
+		case "WordChoice":
+			idealTime += 0.5;
+			break;
 		}
 		QuestionModel questionGot = new QuestionModel (questionType,question, answersList.ToArray (),idealTime);
 		questionsDone.Add (question);
@@ -180,7 +184,7 @@ public static class QuestionBuilder
 	public static string GetRandomChoices ()
 	{
 		int randomnum = UnityEngine.Random.Range (0, wrongChoices.Count);
-		while (wrongChoicesDone.Contains (randomnum)) {
+		while (wrongChoicesDone.Contains (randomnum) || (wrongChoices [randomnum].Length==1)) {
 			randomnum = UnityEngine.Random.Range (0, wrongChoices.Count);
 		}
 		string wrongChoice = wrongChoices [randomnum];
@@ -249,6 +253,15 @@ public static class QuestionBuilder
 				QuestionSystemEnums.ContentLevel.Normal,
 				QuestionSystemController.Instance.partAnswer.showAnswer,
 				QuestionSystemController.Instance.partSelection.letterLink
+			);
+			break;
+		case "StackSwipeController":
+			typeModel = new QuestionTypeModel (
+				//				QuestionSystemEnums.TargetType.Association,
+				QuestionGenerator.GetTargetWay (targetDictionary),
+				QuestionSystemEnums.ContentLevel.Normal,
+				QuestionSystemController.Instance.partAnswer.noAnswer,
+				QuestionSystemController.Instance.partSelection.stackSwipe
 			);
 			break;
 		}

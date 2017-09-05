@@ -39,6 +39,7 @@ public class SelectLetterEvent : MonoBehaviour
 
 	public void OnSelectLetter (GameObject selectedLetter)
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		selectLetter.fillAnswer.CheckAnswerHolder ();
 		if (!isSelected) {
 			if (!selectLetter.fillAnswer.isFull) {
@@ -75,13 +76,21 @@ public class SelectLetterEvent : MonoBehaviour
 		if (isAnswerCorrect) {
 			selectionColor = new Color32 (255, 223, 0, 255);
 		} else {
-			
 			selectionColor = new Color32 (255, 100, 100, 255);
+			if (!isSelected && isCorrect) {
+//				Invoke ("ShowEachLetter", (float)((0.2) + (0.1 * correctAnswerIndex)));
+				ShowEachLetter();
+			} 
 		}
 		GetComponent<Image> ().color = selectionColor;
 		GameObject answerContainer = selectLetter.fillAnswer.answerContainers [correctAnswerIndex];
 		answerContainer.GetComponent<Image> ().color = selectionColor;
-//		answerContainer.GetComponent<Text> ().text = GetComponentInChildren<Text>().text;
 	}
 
+	public void ShowEachLetter(){
+//		OnSelectLetter (gameObject);
+//		selectLetter.ShowSelectionHint(0,null);
+		QuestionSystemController.Instance.questionHint.OnClick();
+
+	}
 }

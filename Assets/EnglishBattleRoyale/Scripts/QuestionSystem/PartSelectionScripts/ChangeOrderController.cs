@@ -46,7 +46,9 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		ShuffleSelection ();
 	}
 		
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		SystemSoundController.Instance.PlaySFX ("SFX_ChangeOrder");
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpChangeOrder", SystemPopupController.Instance.popUp);
 		List<GameObject> popUpSelectionList = new List<GameObject> ();
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
 			popUpSelectionList.Add(selectionPopUp.transform.GetChild(i).gameObject);
@@ -63,6 +65,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 			TweenFacade.TweenJumpTo (selectionToBeSwitched2.transform
 				,selectionToBeSwitched1.transform.localPosition,180f,1,0.5f,0);
 		}
+		return selectionPopUp;
 	}
 
 
@@ -118,13 +121,15 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 			selectionContainers [i].transform.SetSiblingIndex (UnityEngine.Random.Range (0, selectionContainers.Length));
 		}
 		if (GetSelectedAnswer ().Equals (questionAnswer)) {
-			Debug.Log (GetSelectedAnswer () + "/" + questionAnswer);
 			ShuffleSelection ();
 		}
 	}
 
 	public void ShowCorrectAnswer(bool isAnswerCorrect){
-
+		for (int i = 0; i < selectionContainers.Length; i++) {
+			selectionContainers [i].transform.SetSiblingIndex (selectionContainers[i].containerIndex);
+			selectionContainers [i].GetComponent<Image> ().color = new Color32 (255, 100, 100, 255);
+		}
 	}
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
@@ -136,7 +141,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 				selectionIndex.Add (i);
 			}
 		}
-		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
+//		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		TweenFacade.TweenScaleToLarge (showAnswer.hintContainers[selectionIndex[0]].transform,Vector3.one,0.3f);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;
 		showAnswer.hintContainers [selectionIndex [0]].GetComponentInChildren<Text> ().text = letterArray [selectionIndex [0]].ToString();

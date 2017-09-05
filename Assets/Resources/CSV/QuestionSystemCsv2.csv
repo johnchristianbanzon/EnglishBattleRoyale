@@ -1,54 +1,54 @@
 typeId,answer,levelId,definition,synonym1,synonym2,antonym1,antonym2,clue1,clue2,clue3,clue4,choice1,choice2,de,sy,an,cl
-1,bandage,8,A covering for your wound,plaster,gauze,,,,,,,cloth,bondage,1,1,0,0
-3,gain,2,To increase in something,increase,accumulate,lose,decrease,,,,,rice,time,1,1,1,0
+1,bandage,8,A covering for your wound,gauze,plaster,,,,,,,cloth,bondage,1,1,0,0
+3,gain,2,To increase in something,acquire,increase,lose,decrease,,,,,rice,time,1,1,1,0
 1,landlord,5,Owner of a property that is rented,,,,,,,,,,,1,0,0,0
 2,various,1,Many different things,diverse,assorted,,,,,,,colorful,records,1,1,0,0
 1,letter,1,A written or printed message to someone,mail,note,,,alphabet,mail,message,document,word,sentence,1,1,0,1
 1,sauce,3,A thick liquid that adds flavor to food,,,,,gravy,ketchup,salsa,marinara,,,1,0,0,1
-2,timely,3,Happening at the correct or useful time,well timed,opportune,untimely,inopportune,,,,,season,zone,1,1,1,0
-2,friendly,1,Acting very kind and helpful,cordial,warm,unfriendly,hostile,,,,,angry,sweet,1,1,1,0
+2,timely,3,Happening at the correct or useful time,well-timed,opportune,untimely,unopportune,,,,,season,zone,1,1,1,0
+2,friendly,1,Acting very kind and helpful,affable,warm,estranged,hostile,,,,,angry,sweet,1,1,1,0
 3,guard,3,To watch and protect something,protect,secure,,,safety,defend,sentry,patrol,fence,assist,1,1,0,1
-3,sell,1,To exchange something for money,,,buy,purchase,,,,,product,cheap,1,0,1,0
+3,sell,1,To exchange something for money,vend,trade,buy,purchase,,,,,product,cheap,1,1,1,0
 1,wrinkle,7,A line on the skin as you grow older,crease,furrow,,,skin,old,line,age,skin,blemish,1,1,0,1
 3,wonder,2,To have interest in knowing something,,,,,,,,,,,1,0,0,0
-3,clarify,4,To make something clear or understandable,explain,expound,,,,,,,,,1,1,0,0
-1,amateur,2,A person who is unskillful at a job,nonprofessional,inexperienced,expert,professional,,,,,unpaid,well-known,1,1,1,0
+3,clarify,4,To make something clear or clearer,,,,,,,,,,,1,0,0,0
+1,amateur,2,A person who is not skillful at a job,inexperienced,nonprofessional,expert,professional,,,,,unpaid,well-known,1,1,1,0
 2,huge,1,"Very great in size, amount or degree",big,enormous,tiny,small,big,enormous,giant,large,size,heavy,1,1,1,1
-1,home,1,The place where a person lives,residence,abode,,,family,place,house,residence,room,family,1,1,0,1
-5,under,1,Directly below something or someone,below,beneath,over,above,,,,,recent,after,1,1,1,0
-3,recover,3,To return to a normal state or health,heal,mend,weaken,deteriorate,,,,,manage,fail,1,1,1,0
+1,home,1,The place where a person lives,abode,residence,,,family,place,house,residence,room,family,1,1,0,1
+5,under,1,Directly below something or someone,beneath,below,above,over,,,,,recent,after,1,1,1,0
+3,recover,3,To return to a normal state or health,heal,mend,deteriorate,weaken,,,,,manage,fail,1,1,1,0
 1,fury,6,Wild or violent anger,rage,wrath,,,,,,,fierce,hatred,1,1,0,0
 3,emerge,4,To rise or appear into view,arise,surface,,,,,,,leak,burst,1,1,0,0
 1,slang,6,Words that are used informally,jargon,lingo,,,,,,,language,accent,1,1,0,0
 1,wage,3,Amount of money a worker is paid,salary,pay,,,work,pay,labor,salary,money,tax,1,1,0,1
-1,vision,2,The ability to see,sight,,,,,,,,,,1,0,0,0
-3,warn,4,To tell about possible danger,caution,alert,,,,,,,discourage,frighten,1,1,0,0
-3,ignore,3,To refuse to notice,disregard,overlook,notice,acknowledge,,,,,avoid,pretend,1,1,1,0
-2,toxic,3,Containing poisonous substance,poisonous,harmful,,,poison,harmful,deadly,waste,liquid,chemical,1,1,0,1
+1,vision,2,The ability to see,,,,,,,,,,,1,0,0,0
+3,warn,4,To tell about possible danger,alert,notify,,,,,,,discourage,frighten,1,1,0,0
+3,ignore,3,To refuse to notice,disregard,overlook,mind,tend to,,,,,avoid,pretend,1,1,1,0
+2,toxic,3,Containing poisonous substance,poisonous,noxious,,,poison,harmful,deadly,waste,liquid,chemical,1,1,0,1
 2,mild,4,"Gentle, not strong or harsh",gentle,soft,harsh,intense,,,,,low,easy,1,1,1,0
 1,itinerary,5,A travel plan or schedule,travel plan,schedule,,,,,,,travel,trip,1,1,0,0
 4,seldom,5,Not often or frequent,rarely,scarcely,often,frequently,,,,,clear,obviously,1,1,1,0
-2,serious,1,Not joking or funny,solemn,earnest,playful, joking,,,,,difficult,trouble,1,1,1,0
-3,travel,1,To go to a place,trip,journey,,,flight,luggage,place,trip,place,step,1,1,0,1
-2,dark,2,Having very little or no light,black,dim,bright,luminous,night,shadow,color,dim,white,evil,1,1,1,1
-2,lose,2,To fail to win,be defeated,fail,win,triumph,,,,,find,hope,1,1,1,0
+2,serious,1,Not joking or funny,solemn,earnest,lighthearted,cheerful,,,,,difficult,trouble,1,1,1,0
+3,travel,1,To go to a place,voyage,journey,,,flight,luggage,place,trip,place,step,1,1,0,1
+2,dark,2,Having very little or no light,dim,black,bright,luminous,night,shadow,color,dim,white,evil,1,1,1,1
+2,lose,2,To fail to win,defeated,beaten,win,victory,,,,,fail,hope,1,1,1,0
 1,odor,5,A particular smell,smell,scent,,,,,,,taste,stain,1,1,0,0
-3,quit,3,To leave (a job); to stop doing,give up,stop,continue,stay,,,,,drop,break,1,1,1,0
+3,quit,3,To leave (a job); to stop doing,give up,leave,continue,stay,,,,,drop,break,1,1,1,0
 1,pal,5,A close friend or buddy,friend,buddy,enemy,foe,,,,,person,hunk,1,1,1,0
 1,deaf,5,Not able to hear,,,,,,,,,,,1,0,0,0
-1,dawn,4,Time during the day when light first appears ,,,dusk,night,,,,,day,summer,1,0,1,0
+1,dawn,4,Time during the day when light first appears ,sunrise,morning,dusk,night,,,,,day,summer,1,1,1,0
 ,ability,1,Power or skill to do something,competence,capacity,disability,incapacity,,,,,strength,difficulty,1,1,1,0
-,lumber,5,Logs that have been cut for use,timber,wood,,,,,,,forest,brushwood,1,1,0,0
+,lumber,5,Logs that have been cut for use,wood,timber,,,,,,,forest,brushwood,1,1,0,0
 ,humble,5,The act of being modest; not proud,modest,down-to-earth,arrogant,haughty,,,,,broken,polite,1,1,1,0
 ,bias,3,One-sidedness or favoritism,favoritism,one-sidedness,neutrality,objectivity,,,,,taboo,idea,1,1,1,0
 ,butcher,7,Someone who cuts and sells meat,meat vendor,meat seller,,,,,,,knife,meat,1,1,0,0
 ,apply,1,To spread on a surface,,,,,,,,,,,1,0,0,0
 ,clinic,4,A health center or a doctor's office,health center,doctor's office,,,,,,,pharmacy,medicine,1,1,0,0
-,always,1,At all times,constantly,perpetually,seldom,always,,,,,really,anything,1,1,1,0
+,always,1,At all times,constantly,perpetually,never,seldom,,,,,really,anything,1,1,1,0
 ,conceal,6,To hide something or someone,hide,cover,show,reveal,,,,,shield,hood,1,1,1,0
 ,juvenile,4,Of or relating to a young person,young,adolescent,adult,old,,,,,jail,delinquent,1,1,1,0
-,prepare,2,To make something  ready,ready,prep,,,,,,,reform,deliver,1,1,0,0
-,narrow,3,To become less wide,,,wide,broad,,,,,wood,bone,1,0,1,0
+,prepare,2,To make something  ready,prep,ready,,,,,,,make,deliver,1,1,0,0
+,narrow,3,To become less wide,,,broad,wide,,,,,wood,bone,1,0,1,0
 ,lad,6,A boy or young man,boy,laddie,,,,,,,kid,youth,1,1,0,0
 ,hard,1,Difficult to understand or solve,difficult,tough,easy,simple,,,,,rocky,tall,1,1,1,0
 ,jolly,7,Happy and cheerful,happy,cheerful,gloomy,sad,,,,,rally,pug,1,1,1,0
@@ -56,41 +56,41 @@ typeId,answer,levelId,definition,synonym1,synonym2,antonym1,antonym2,clue1,clue2
 ,fancy,4,Not plain or ordinary,grand,extravagant,plain,ordinary,jewelry,restaurant,suit,elegant,puff,nice,1,1,1,1
 ,money,1,Coins or bills,cash,currency,,,coins,bills,cash,fund,buy,bank,1,1,0,1
 ,thief,6,A person who steals,robber,burglar,,,,,,,steal,criminal,1,1,0,0
-,house,1,A building for shelter,dwelling,residence,,,,,,,firm,hotel,1,1,0,0
-,joke,3,Something funny,,,,,laugh,gag,prank,comedy,laugh,smile,1,0,0,1
+,house,1,A building or shelter,abode,dwelling,,,,,,,firm,hotel,1,1,0,0
+,joke,3,Something funny,gag,jest,,,laugh,gag,prank,comedy,laugh,smile,1,1,0,1
 ,illegal,2,Not allowed by law,unlawful,criminal,legal,lawful,,,,,ban,dirty,1,1,1,0
 ,minor,2,Of lesser importance or significance,inferior,lesser,superior,important,,,,,silly,elf,1,1,1,0
-,movie,1,A motion picture,film,cinema,,,film,cinema,flick,picture,scene,picture,1,1,0,1
-,ugly,4,Not pretty or attractive,unattractive,horrible,beautiful,lovely,,,,,hate,good,1,1,1,0
-,error,1,State or condition of being wrong,mistake,blunder,correctness,accuracy,,,,,skip,crime,1,1,1,0
-,genuine,3,Not false or fake,real,authentic,fake,bogus,,,,,reality,meaningful,1,1,1,0
-,temporary,2,Not permanent,short-term,impermanent,permanent,long-term,,,,,require,irregular,1,1,1,0
-,pale,4,Complexion that is closer to white,ashen,pallid,,,,,,,color,poor,1,1,0,0
+,movie,1,A motion picture,film,cinema,,,film,cinema,flick,picture,scence,picture,1,1,0,1
+,ugly,4,Not pretty or attractive,hideous,unattractive,beautiful,lovely,,,,,hate,good,1,1,1,0
+,error,1,State or condition of being wrong,blunder,mistake,correctness,accuracy,,,,,skip,crime,1,1,1,0
+,genuine,3,Not false or fake,real,authentic,bogus,fake,,,,,reality,meaningful,1,1,1,0
+,temporary,2,Not permanent,short-term,interim,permanent,long-term,,,,,require,irregular,1,1,1,0
+,pale,4,Complexion that is closer to white,pallid,ashen,flush,blooming,,,,,color,poor,1,1,1,0
 ,apple,3,"A  round, red fruit with firm, white flesh",,,,,red,fruit,round,white flesh,,,1,0,0,1
 ,teacher,2,A person who teaches,educator,instructor,,,school,tutor,education,instructor,school,knowledge,1,1,0,1
 ,umbrella,5,Often used when raining,parasol,sunshade,,,rain,shade,cloth,handle,tent,panel,1,1,0,1
 ,ticket,2,A piece of paper you pay for to watch a show or sport,,,,,,,,,,,1,0,0,0
 ,pen,3,Often used to write or draw,,,,,write,draw,ink,marker,,,1,0,0,1
-,boat,2,A vehicle that floats on water,ship,vessel,,,vehicle,water,paddle,sail,paddle,board,1,1,0,1
-,eat,2,Process of taking in food,,,,,food,drink,feed,meal,cook,taste,1,0,0,1
+,boat,2,A vehicle that floats on water,vessel,ship,,,vehicle,water,paddle,sail,paddle,board,1,1,0,1
+,eat,2,Process of taking in food,devour,gobble,,,food,feed,drink,meal,cook,taste,1,1,0,1
 ,inhale,8,To move air into your lungs,,,exhale,breathe out,air,lungs,breathe,in,sniff,inspire,1,0,1,1
 ,breathe,5,To move air into and out of your lungs,,,,,,,,,,,1,0,0,0
 ,bath,3,The act of washing the body,,,,,soap,water,body,wash,,,1,0,0,1
 ,wash,3,To clean something with water and soap,,,,,,,,,,,1,0,0,0
-,clean,2,Not dirty,,,dirty,unclean,broom,scrub,spray,sponge,neat,clear,1,0,1,1
-1,food,1,Things that people and animals eat,cuisine,chow,,,meal,junk,nutritious,kitchen,nutrients,kitchen,1,1,0,1
-,dog,1,An animal that barks,canine,hound,,,animal,tail,canine,bark,cat,pet,1,1,0,1
+,clean,2,Not dirty,spotless,pristine,dirty,stained,broom,scrub,spray,sponge,neat,clear,1,1,1,1
+1,food,1,Things that people and animals eat,chow,meal,,,nutritious,junk,kitchen,meal,nutrients,kitchen,1,1,0,1
+,dog,1,An animal that barks,hound,pooch,,,animal,tail,canine,bark,cat,pet,1,1,0,1
 ,cat,2,Animal that hunts on rats,kitty,feline,,,pet,fur,purr,meow,carnivore,clavicle,1,1,0,1
-1,breakfast,2,First meal of the day,,,,,morning,pancake,bacon,meal,,,1,0,0,1
+1,breakfast,2,First meal of the day,,,,,bacon,pancake,morning,meal,,,1,0,0,1
 ,coffee,2,"A hot, bitter drink",,,,,hot,drink,bitter,black,,,1,0,0,1
 ,tea,3,A drink made from leaves,,,,,green,black,drink,herbal,,,1,0,0,1
 ,pancake,8,"A flat cake, fried on both sides",,,,,flat,syrup,breakfast,butter,,,1,0,0,1
-,ripe,5,Of fruit or vegetable that is ready to eaten,,,,,,,,,,,1,0,0,0
+,ripe,5,Fruit that is ready to eat,,,,,,,,,,,1,0,0,0
 ,fruit,2,Food that grows from a tree or bush,,,,,,,,,,,1,0,0,0
 ,sleep,2,To rest by closing your eyes,nap,slumber,,,bed,night,rest,nap,awake,rest,1,1,0,1
 ,ski,3,To move or slide over snow,,,,,snow,board,mountain,slope,,,1,0,0,1
 ,yawn,8,To open your mouth wide because you are sleepy or bored ,,,,,,,,,,,1,0,0,0
-,dance,2,To move body and feet with the music,,,,,move,disco,music,ballroom,music,perform,1,0,0,1
+,dance,2,To move body and feet with the music,ball,cotillion,,,move,disco,music,ballroom,music,perform,1,1,0,1
 ,run,1,"To move with the feet, faster than walking",sprint,jog,,,,,,,play,carry,1,1,0,0
 ,dive,4,To jump into water head or arms first,,,,,,,,,,,1,0,0,0
 ,cigarette,4,Rolled paper filled with tobacco and smoke,,,,,smoke,,,,,,1,0,0,0
@@ -99,61 +99,61 @@ typeId,answer,levelId,definition,synonym1,synonym2,antonym1,antonym2,clue1,clue2
 ,elevator,5,Transportation within a building that moves up and down,,,,,building,floor,up,down,,,1,0,0,1
 ,bicycle,4,A two-wheeled vehicle,,,,,,,,,,,1,0,0,0
 ,plane,2,A vehicle for air travel,aircraft,jet,,,hangar,wing,pilot,flight,craft,fly,1,1,0,1
-2,happy,1,Feeling pleasure and satisfaction,joyful,cheerful,sad,unhappy,,,,,proud,bright,1,1,1,0
+2,happy,1,Feeling pleasure and satisfaction,jolly,cheerful,sad,unhappy,,,,,proud,bright,1,1,1,0
 2,sad,3,Not happy,unhappy,gloomy,happy,jolly,,,,,sorry,wonderful,1,1,1,0
-2,big,1,Large in size or amount,large,huge,small,tiny,,,,,proud,super,1,1,1,0
-3,push,2,,,,pull,drag,,,,,button,progress,0,0,1,0
-3,hide,2,To put something where it cannot be seen or found,cover,conceal,expose,reveal,cover,conceal,disguise,skin,modify,rid,1,1,1,1
-2,long,1,Extending a great amount of time or distance,lengthy,stretched,short,brief,,,,,tall,far,1,1,1,0
-2,crowded,5,Of space with too many people or things,full,jam-packed,deserted,empty,,,,,occupy,gather,1,1,1,0
-2,eligible,4,Qualified or fit to be chosen for something,qualified,suited,ineligible,unfit,,,,,choose,vote,1,1,1,0
-3,defer,6,To do an action or event at a later time,postpone,stall,expedite,continue,,,,,define,reach,1,1,1,0
+2,big,1,Large in size or amount,large,huge,tiny,minute,,,,,proud,super,1,1,1,0
+3,push,2,,force,shove,pull,drag,,,,,button,progress,0,1,1,0
+3,hide,2,To put something where it cannot be seen or found,conceal,suppress,expose,reveal,cover,conceal,disguise,skin,modify,rid,1,1,1,1
+2,long,1,,lengthy,stretched,short,brief,,,,,tall,far,0,1,1,0
+2,crowded,5,Of space with too many people or things,packed,congested,deserted,empty,,,,,occupy,gather,1,1,1,0
+2,eligible,2,,suited,qualified,unfit,inapporopriate,,,,,choose,vote,0,1,1,0
+3,defer,6,,postpone,stall,expedite,continue,,,,,define,reach,0,1,1,0
 2,brave,4,,fearless,courageous,afraid,cowardly,hero,courage,battle,bold,venture,endure,0,1,1,1
-2,fast,1,Moving or able to move at high speed,quick,swift,slow,gradual,race,cheetah,rocket,speed,immobile,pace,1,1,1,1
+2,fast,1,moving or able to moveat high speed,agile,swift,slow,gradual,race,cheetah,rocket,speed,immobile,pace,1,1,1,1
 2,selfish,5,,greedy,self-centered,generous,benevolent,,,,,ego,dumb,0,1,1,0
-2,easy,1,Something that is not hard to do,simple,effortless,complicated,hard,,,,,slow,casual,1,1,1,0
-2,loud,3,Level of sound that can be easily heard,,,quiet,soft,shout,thunder,concert,firecrackers,sound,buzz,1,0,1,1
-1,work,1,To do tasks or do things as part of your job,job,task,leisure,rest,,,,,firm,form,1,1,1,0
-3,sink,4,To go downward below a surface,plunge,descend,rise,emerge,,,,,fall,spill,1,1,1,0
+2,easy,1,,simple,effortless,complicated,hard,,,,,slow,casual,0,1,1,0
+2,loud,3,,roaring,noisy,quiet,soft,shout,thunder,concert,firecrackers,sound,buzz,0,1,1,1
+1,work,1,,job,task,leisure,rest,,,,,firm,form,0,1,1,0
+3,sink,4,,plunge,submerge,emerge,float,,,,,fall,spill,0,1,1,0
 3,achieve,2,,accomplish,attain,fail,give up,,,,,aim,need,0,1,1,0
-2,safe,1,Not dangerous or harmful,secure,unharmed,unprotected,dangerous,,,,,virtual,still,1,1,1,0
+2,safe,1,,secure,okay,unprotected,dangerous,,,,,virtual,still,0,1,1,0
 2,colorful,4,Having bright colors,vibrant,vivid,dull,colorless,rainbow,parrot,flowers,crayons,quirky,art,1,1,1,1
-2,busy,2,Having a lot of work or things to do,occupied,absorbed,free,idle,,,,,fancy,tied,1,1,1,0
-2,cold,2,Of a very low temperature,freezing,icy,hot,warm,winter,icecream,ice,snow,intense,air,1,1,1,1
+2,busy,2,Having a lot of work or things to do,occupied,absorbed,idle,free,,,,,fancy,tied,1,1,1,0
+2,cold,2,Of a very low temperature,cool,frozen,warm,hot,winter,icecream,ice,snow,intense,air,1,1,1,1
 2,lost,1,,missing,gone,found,retained,,,,,insecure,suffer,0,1,1,0
-3,extend,2,,lengthen,stretch,shorten,cut back,,,,,draw,go,0,1,1,0
+3,extend,2,,lengthen,stretch,reduce,shrink,,,,,draw,go,0,1,1,0
 2,beautiful,1,,pretty,lovely,ugly,awful,,,,,looks,mischievous,0,1,1,0
 4,far,1,,distant,away,near,close,,,,,kingdom,thumb,0,1,1,0
 2,enough,1,,adequate,ample,lacking,insufficient,,,,,make,certain,0,1,1,0
 ,young,1,,adolescent,juvenile,old,adult,,,,,puppy,orphan,0,1,1,0
-,friend,1,,pal,fellow,enemy,foe,,,,,guy,classmate,0,1,1,0
+,friend,1,,fellow,pal,enemy,foe,,,,,guy,classmate,0,1,1,0
 ,wet,2,Covered in liquid,soaked,soggy,dry,arid,,,,,shower,pixel,1,1,1,0
 ,truth,2,,fact,correctness,lie,falsity,,,,,platoon,symbol,0,1,1,0
-,abandon,5,,leave,forsake,,,,,,,give,passive,0,1,0,0
-,correct,1,,right,accurate,wrong,incorrect,,,,,properly,reprimand,0,1,1,0
+,abandon,5,,leave,forsake,retain,save,,,,,give,passive,0,1,1,0
+,correct,1,,right,spot on,incorrect,wrong,,,,,properly,reprimand,0,1,1,0
 ,give,1,,provide,supply,take,receive,,,,,try,ask,0,1,1,0
 ,start,1,,begin,commence,end,finish,,,,,supply,demand,0,1,1,0
 ,smelly,4,,foul,stinky,fragrant,aromatic,,,,,perfume,oily,0,1,1,0
-,rough,3,Having an uneven texture or surface,coarse,uneven,smooth,even,,,,,rug,scale,1,1,1,0
+,rough,3,,coarse,uneven,smooth,even,,,,,rug,scale,0,1,1,0
 ,same,1,,identical,duplicate,different,distinct,,,,,defer,deter,0,1,1,0
 ,doubt,2,,distrust,uncertain,trust,assurance,,,,,hope,longing,0,1,1,0
-,comfort,4,,relief,solace,distress,torment,,,,,satisfaction,serene,0,1,1,0
+,comfort,2,,relief,solace,distress,torment,,,,,satisfaction,serene,0,1,1,0
 ,profit,2,,income,earning,loss,expense,money,business,income,finance,portion,market,0,1,1,1
 ,fat,1,,chubby,plump,slender,skinny,,,,,dump,sender,0,1,1,0
 ,sharp,3,,pointed,tipped,blunt,rounded,,,,,acid,acrid,0,1,1,0
 ,peace,2,The absence of war or violence,serenity,order,war,conflict,,,,,unity,fight,1,1,1,0
 ,high,1,,raised,elevated,low,flat,,,,,level,full,0,1,1,0
-,possible,1,Something that might happen or is able to be done,feasible,achievable,impossible,unattainable,,,,,specific,serious,1,1,1,0
-1,top,1,the uppermost part of something,peak,summit,bottom,abyss,,,,,best,height,1,1,1,0
+,possible,1,,feasible,achievable,impossible,unattainable,,,,,specific,serious,0,1,1,0
+1,top,1,,peak,summit,bottom,abyss,,,,,best,height,0,1,1,0
 2,illegible,8,,unreadable,unclear,decipherable,readable,,,,,foul,correct,0,1,1,0
 ,bed,1,,,,,,,,,,,,0,0,0,0
 ,belt,3,,,,,,,,,,,,0,0,0,0
 ,clock,2,A device that tells or measures time,,,,,time,hour,alarm,stopwatch,,,1,0,0,1
 ,church,2,,,,,,pray,mass,worship,faith,,,0,0,0,1
-,cloud,4,A white or gray mass in the sky,,,,,,,,,,,1,0,0,0
-,car,1,A four-wheeled vehicle used for carrying people,,,,,,,,,,,1,0,0,0
+,cloud,4,,,,,,,,,,,,0,0,0,0
+,car,1,,,,,,,,,,,,0,0,0,0
 ,college,1,,,,,,,,,,,,0,0,0,0
-,fire,1,Something that produces heat and light,flame,blaze,,,hot,flame,burn,light,excite,ignite,1,1,0,1
+,fire,1,Something that produces heat and light,blaze,flame,,,hot,flame,burn,light,excite,ignite,1,1,0,1
 ,gents,3,,,,,,,,,,,,0,0,0,0
 ,hat,3,A covering for the head usually with a brim,sombrero,cap,,,cap,sombrero,fedora,beanie,bag,leather,1,1,0,1
 ,ice,2,,,,,,,,,,,,0,0,0,0
@@ -182,7 +182,7 @@ typeId,answer,levelId,definition,synonym1,synonym2,antonym1,antonym2,clue1,clue2
 ,aware,2,,,,,,,,,,,,0,0,0,0
 ,bake,6,,,,,,,,,,,,0,0,0,0
 ,laundry,4,,,,,,,,,,,,0,0,0,0
-,battle,2,a fight between different people or groups to achieve success,,,,,,,,,,,1,0,0,0
+,battle,2,,,,,,,,,,,,0,0,0,0
 ,bend,5,,,,,,,,,,,,0,0,0,0
 ,benefit,1,,,,,,,,,,,,0,0,0,0
 ,best,1,,,,,,,,,,,,0,0,0,0

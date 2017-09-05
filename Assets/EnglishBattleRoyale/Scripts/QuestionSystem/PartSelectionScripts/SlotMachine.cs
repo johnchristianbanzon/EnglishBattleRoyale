@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UnityEngine.EventSystems;
-public class SlotMachine : MonoBehaviour,ISelection
+ public class SlotMachine : MonoBehaviour,ISelection
 {
 	public SlotMachineEvent[] slots = new SlotMachineEvent[6];
 	private string questionAnswer = "";
@@ -25,13 +25,16 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	}
 	List<GameObject> popUpSelectionList= new List<GameObject> ();
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		SystemSoundController.Instance.PlaySFX ("SFX_SlotMachine");
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpSlotMachine", SystemPopupController.Instance.popUp);
 		for (int i = 0; i < selectionPopUp.transform.GetChild(0).childCount; i++) {
 			popUpSelectionList.Add(selectionPopUp.transform.GetChild(0).GetChild(i).gameObject);
 		}
 		if (popUpSelectionList.Count > 0) {
 			InvokeRepeating ("PopUpMoveSelection", 0, 0.7f);
 		}
+		return selectionPopUp;
 	}
 
 	int popUpSelectionCounter = 0;
@@ -79,16 +82,18 @@ public class SlotMachine : MonoBehaviour,ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
-		ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
-		List<int> selectionIndex = new List<int>();
-		for (int i = 0; i < showAnswer.hintContainers.Count; i++) {
-			if(showAnswer.hintContainers[i].GetComponent<Button>().interactable){
-				selectionIndex.Add (i);
+		if (QuestionSystemController.Instance.questionHint.hasHintAvailable) {
+			ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
+			List<int> selectionIndex = new List<int> ();
+			for (int i = 0; i < showAnswer.hintContainers.Count; i++) {
+				if (showAnswer.hintContainers [i].GetComponent<Button> ().interactable) {
+					selectionIndex.Add (i);
+				}
 			}
+//		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
+			showAnswer.hintContainers [selectionIndex [0]].GetComponentInChildren<Text> ().text = questionAnswer [selectionIndex [0]].ToString ();
+			showAnswer.hintContainers [selectionIndex [0]].GetComponent<Button> ().interactable = false;
 		}
-		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
-		showAnswer.hintContainers[selectionIndex[0]].GetComponentInChildren<Text> ().text = questionAnswer[selectionIndex[0]].ToString();
-		showAnswer.hintContainers [selectionIndex [0]].GetComponent<Button> ().interactable = false;
 	}
 
 	private string GetAnswer(){

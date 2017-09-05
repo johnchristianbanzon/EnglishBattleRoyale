@@ -5,7 +5,7 @@ using System;
 
 public class FillAnswerType : MonoBehaviour,IAnswer
 {
-
+	private Action<bool> onHintResult;
 	public List<GameObject> answerContainers = new List<GameObject> ();
 	public GameObject[] selectionIdentifier = new GameObject[12];
 	public GameObject outviewContent;
@@ -14,6 +14,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	List <int> hintIndexRandomList = new List<int> ();
 	public GameObject clearButton;
 	public bool isFull = false;
+	public int hintIndex = 0;
 
 	public void DeployAnswerType ()
 	{
@@ -59,17 +60,22 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 
 	public void OnClickHint (int hintIndex, Action<bool> onHintResult)
 	{
+		this.onHintResult = onHintResult;
 		CheckAnswerHolder ();
+
 		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, answerContainers [answerIndex]);
-		CheckAnswer ();
+		if (!QuestionSystemController.Instance.isQuestionRoundOver) {
+			CheckAnswer ();
+		}
 	}
 
 	public void PopulateContainer ()
 	{
 		answerContainers.Clear ();
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		for (int i = 0; i < questionAnswer.Length; i++) {
 			GameObject answerPrefab = SystemResourceController.Instance.LoadPrefab ("AnswerContainer", outviewContent);
-			answerPrefab.name = "output" + (i + 1);
+			answerPrefab.name = "output" + (i + 1);	
 			answerContainers.Add (answerPrefab);
 			answerPrefab.GetComponent<Button> ().onClick.AddListener (() => {
 				OnAnswerClick (answerPrefab.GetComponent<Button> ());
@@ -81,7 +87,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void OnAnswerClick (Button answerButton)
 	{
 		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
-		if (string.IsNullOrEmpty (answerButton.transform.GetComponentInChildren<Text> ().text)) {
+		if (answerButton.transform.childCount==0) {
 			TweenFacade.TweenShakePosition (answerButton.transform, 0.5f, 15.0f, 50, 90f);
 		} else {
 			if (answerButton.transform.GetChild (0).GetComponent<Button> ().interactable) {
@@ -94,7 +100,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void SelectionLetterGot (GameObject selectedObject)
 	{
 		CheckAnswerHolder ();
-		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
+
 		if (string.IsNullOrEmpty (selectedObject.GetComponentInChildren<Text> ().text)) {
 			TweenFacade.TweenShakePosition (selectedObject.transform, 1.0f, 30.0f, 50, 90f);
 		} else {
@@ -102,6 +108,7 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 				GameObject container = SystemResourceController.Instance.LoadPrefab ("Input-UI", answerContainers [answerIndex]);
 				selectionIdentifier [answerIndex] = selectedObject.gameObject;
 				hintIndexRandomList.Add (answerIndex);
+				container.GetComponentInChildren<Text> ().color = new Color32 (0,0,0,255);
 				container.GetComponentInChildren<Text> ().text = selectedObject.GetComponentInChildren<Text> ().text;
 				container.GetComponent<Image> ().raycastTarget = false;
 				CheckAnswer ();
@@ -112,10 +119,12 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void ShowSelectedLetter (GameObject selectedObject)
 	{
 		CheckAnswerHolder ();
+
 		if (!isFull) {
 			if (questionAnswer.Length > answerIndex) {
-				selectedObject.transform.parent = answerContainers [answerIndex].transform;
+				selectedObject.transform.SetParent(answerContainers [answerIndex].transform);
 				CheckAnswer ();
+
 			}
 		}
 	}
@@ -135,6 +144,9 @@ public class FillAnswerType : MonoBehaviour,IAnswer
 	public void CheckAnswer ()
 	{
 		GetAnswerWritten ();
+		if (!(onHintResult == null)) {
+			onHintResult.Invoke (true);
+		}
 		string answerWrote = GetAnswerWritten ();
 		if (answerWrote.Length.Equals (questionAnswer.Length)) {
 			if (answerWrote.ToUpper ().Equals (questionAnswer.ToUpper ())) {

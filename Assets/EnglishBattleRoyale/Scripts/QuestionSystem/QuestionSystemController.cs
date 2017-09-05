@@ -52,6 +52,8 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public Slider timerSlider;
 	public List<QuestionModel> questionList = new List<QuestionModel> ();
 	public QuestionSystemTimer questionRoundTimer;
+	public GameObject hintInterval;
+
 	//
 	public void StartQuestionRound (QuestionTypeModel questionTypeModel, Action<List<QuestionResultModel>> onRoundResult)
 	{
@@ -93,8 +95,9 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	/// <param name="isCorrect">If set to <c>true</c> is correct.</param>
 	public void CheckAnswer (bool isCorrect)
 	{
+		questionHint.hasHintAvailable = false;
 		idealTime = questionList [currentQuestionNumber].idealTime;
-		questionHint.InitHints ();
+
 		if (isCorrect) {
 			QuestionSystemEnums.SpeedyType speedyType = questionRoundTimer.GetSpeedyType(idealTime);
 			ShowSpeedyEffect (speedyType);
@@ -102,6 +105,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 			QuestionFinish ();
 			Invoke ("NextQuestion", 1f);
 		} else {
+			SystemSoundController.Instance.PlaySFX ("SFX_mistake");
 			TweenFacade.TweenShakePosition (gameObject.transform, 1.0f, 30.0f, 50, 90f);
 		}
 
@@ -115,6 +119,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void OnQuestionRoundFinish(){
 		debugUI.SetActive (false);
 		questionRoundHasStarted = false;
+		isQuestionRoundOver = true;
 		TweenFacade.TweenScaleYT0Zero(0.5f,partScrollImage,1);
 		selectionType.ShowCorrectAnswer(false);
 		Invoke("HideScrollUI",3.0f);
@@ -138,7 +143,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 			break;
 		case QuestionSystemEnums.SpeedyType.Rotten:
 			speedyEffect = SystemResourceController.Instance.LoadPrefab ("RottenEffect",SystemPopupController.Instance.popUp);
-			speedyEffect.GetComponent<Text>().text = "ROTTEN";
+			speedyEffect.GetComponent<Text>().text = "NOT BAD";
 			SystemSoundController.Instance.PlaySFX ("SFX_rotten");
 			break;
 		}
@@ -151,6 +156,7 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 
 	public void HideQuestionParts ()
 	{
+		questionHint.InitHints ();
 		int questionNumber = currentQuestionNumber;
 		if (questionNumber>0) {
 			questionNumber = questionNumber - 1;
@@ -181,12 +187,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		questionHint.enableHintButton ();
 		hasSkippedQuestion = false;
 		if (hasNextQuestion) {
-			/*
-			if (!hasGivenGraceTime) {
-			questionRoundTimer.timeLeft += 3;
-			hasGivenGraceTime = true;
-			}
-			*/
 			GetNewQuestion (questionType, delegate(QuestionResultModel onQuestionResult) {
 				roundResultList.Add (onQuestionResult);
 				if (onQuestionResult.isCorrect && !isDebug) {
@@ -195,7 +195,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 				Invoke ("HideQuestionParts", 1.0f);
 			});
 		}
-
 	}
 
 	public QuestionModel LoadQuestion ()
@@ -234,62 +233,38 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 	public void OnDebugClick (Button button)
 	{
 		questionTypeModel = QuestionBuilder.GetQuestionType (button.name);
-		ShowPopUP (button.name);
+		InitQuestionSystem ();
 	}
 
-	public void ShowPopUP(string name){
-		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
-		string popUpName = "";
-		switch (questionList[0].questionType.selectionType.GetType().Name) {
-		case "WordChoice":
-			popUpName = "PopUpWordChoice";
-			break;
-		case "SelectLetter":
-			popUpName = "PopUpSelectLetter";
-			break;
-		case "ChangeOrderController":
-			popUpName = "PopUpChangeOrder";
-			break;
-		case "Typing":
-			popUpName = "PopUpTyping";
-			break;
-		case "SlotMachine":
-			popUpName = "PopUpSlotMachine";
-			break;
-		case "LetterLink":
-			popUpName = "PopUpLetterLink";
-			break;
-		}
-		InitQuestionSystem (popUpName);
-	}
 
 	private Vector2 scrollHeaderPos = new Vector2();
-	public void InitQuestionSystem(string popUpName){
+	public void InitQuestionSystem(){
+		questionList = QuestionBuilder.GetQuestionList (10, questionTypeModel);
 		CancelInvoke ();
 		currentQuestionNumber = 0;
 		isQuestionRoundOver = false;
-
 		if (questionList.Count > 0) {
 			hasNextQuestion = true;
 		}
 		scrollHeaderPos = new Vector2 (0, scrollHeader.transform.localPosition.y);
 		scrollHeader.transform.localPosition = new Vector2 (0, 240);
 		targetTypeUI.text = questionList [0].questionType.questionCategory.ToString();
-		popUpSelectionIndicator = SystemResourceController.Instance.LoadPrefab (popUpName, SystemPopupController.Instance.popUp);
+		partTarget.ChangeTargetColor (questionList [0].questionType.questionCategory);
 		selectionType = questionList [currentQuestionNumber].questionType.selectionType;
-		selectionType.ShowSelectionPopUp (popUpSelectionIndicator);
+		popUpSelectionIndicator = selectionType.ShowSelectionPopUp ();
 		TweenFacade.TweenScaleToLarge (popUpSelectionIndicator.transform, Vector3.one, 0.3f);
 		popUpSelectionIndicator.transform.position = Vector3.zero;
 		QuestionUIEntry ();
-		partScrollImage.transform.localScale = new Vector2 (partScrollImage.transform.localScale.x, 0);
-		partScrollContent.SetActive (false);
-		debugUI.SetActive (false);
-		TweenFacade.TweenMoveTo (scrollBody.transform,Vector3.zero,1.0f);
 		StartCoroutine (DebugStartQuestionCoroutine ());
 
 	}
 
 	public void QuestionUIEntry(){
+		
+		partScrollImage.transform.localScale = new Vector2 (partScrollImage.transform.localScale.x, 0);
+		partScrollContent.SetActive (false);
+		debugUI.SetActive (false);
+		TweenFacade.TweenMoveTo (scrollBody.transform,Vector3.zero,1.0f);
 		scrollBody.SetActive(true);
 		transform.localPosition = new Vector2 (- 720f,transform.localPosition.y);
 		TweenFacade.TweenMoveTo (transform,Vector3.zero,0.5f);

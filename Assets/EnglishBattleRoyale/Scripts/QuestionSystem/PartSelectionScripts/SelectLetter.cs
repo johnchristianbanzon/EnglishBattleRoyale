@@ -21,24 +21,28 @@ public class SelectLetter : MonoBehaviour, ISelection
 		}
 	}
 
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp ()
+	{
+		SystemSoundController.Instance.PlaySFX ("SFX_SelectLetter");
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUPSelectLetter", SystemPopupController.Instance.popUp);
 		List<GameObject> popUpSelectionList = new List<GameObject> ();
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
-			popUpSelectionList.Add(selectionPopUp.transform.GetChild(i).gameObject);
+			popUpSelectionList.Add (selectionPopUp.transform.GetChild (i).gameObject);
 		}
 		if (popUpSelectionList.Count > 0) {
 			for (int i = 0; i < popUpSelectionList.Count; i++) {
 				if (i % 2 == 0) {
 					TweenFacade.TweenJumpTo (
 						popUpSelectionList [i].transform, popUpSelectionList [i].transform.localPosition, 40f, 1, 0.1f
-					,0);
+					, 0);
 				} else {
 					TweenFacade.TweenJumpTo (
 						popUpSelectionList [i].transform, popUpSelectionList [i].transform.localPosition, 40f, 1, 0.1f
-						,0.5f);
+						, 0.5f);
 				}
 			}
 		}
+		return selectionPopUp;
 	}
 
 	public void HideSelectionType ()
@@ -51,15 +55,17 @@ public class SelectLetter : MonoBehaviour, ISelection
 		foreach (SelectLetterEvent container in correctContainers) {
 			container.ShowCorrectAnswer (isAnswerCorrect);
 		}
+
 	}
-		
+
 	private List<int> hideSelectionIndex = new List<int> ();
+
 	private List<int> InitHideHint ()
 	{
 		hideSelectionIndex.Clear ();
 		for (int i = 0; i < selectionButtons.Length; i++) {
-			if ((!questionAnswer.Contains (selectionButtons [i].GetComponentInChildren<Text> ().text) 
-				&& !selectionButtons [i].isSelected) && selectionButtons [i].GetComponent<Button>().interactable) {
+			if ((!questionAnswer.Contains (selectionButtons [i].GetComponentInChildren<Text> ().text)
+			    && !selectionButtons [i].isSelected) && selectionButtons [i].GetComponent<Button> ().interactable) {
 				hideSelectionIndex.Add (i);
 			}
 		}
@@ -88,19 +94,22 @@ public class SelectLetter : MonoBehaviour, ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
+//		if (!QuestionSystemController.Instance.isQuestionRoundOver) {
 		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
 			List<int> correctContainerIndexList = new List<int> ();
 			for (int i = 0; i < correctContainers.Count; i++) {
 				if (fillAnswer.answerContainers [i].transform.childCount.Equals (0)) {
 					correctContainerIndexList.Add (i);
 				} else {
-					if (!questionAnswer [i].ToString ().Equals (fillAnswer.answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().letter.text)) {
+					if (!questionAnswer [i].ToString ().Equals (fillAnswer.answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().letter.text)
+					     && !fillAnswer.answerContainers [i].GetComponentInChildren<SelectLetterEvent> ().isSelected) {
 						correctContainerIndexList.Add (i);
 					}
 				}
 			}
-			correctContainerIndexList = ListShuffleUtility.Shuffle (correctContainerIndexList);
+			//			correctContainerIndexList = ListShuffleUtility.Shuffle (correctContainerIndexList);
 			int firstContainerIndex = correctContainerIndexList [0];
+			fillAnswer.hintIndex = firstContainerIndex;
 			fillAnswer.answerIndex = firstContainerIndex;
 
 			GameObject answerContainer = null;
@@ -111,14 +120,15 @@ public class SelectLetter : MonoBehaviour, ISelection
 				chosenContainer.transform.SetSiblingIndex (chosenContainer.containerIndex);
 				chosenContainer.isSelected = false;
 			}
+			if (!correctContainers[firstContainerIndex].isSelected) {
+				correctContainers [firstContainerIndex].InstantiateHiddenContaner (correctContainers [firstContainerIndex].containerIndex);
+				Destroy (answerContainer);
+			}
 			correctContainers [firstContainerIndex].transform.SetParent (fillAnswer.answerContainers [correctContainers [firstContainerIndex].correctAnswerIndex].transform);
 			correctContainers [firstContainerIndex].transform.SetSiblingIndex (correctContainers [firstContainerIndex].containerIndex);
+			correctContainers [firstContainerIndex].isSelected = true;
 			correctContainers [firstContainerIndex].GetComponent<EventTrigger> ().enabled = false;
 			correctContainers [firstContainerIndex].GetComponent<Button> ().interactable = false;
-			if (!correctContainers [firstContainerIndex].isSelected) {
-				correctContainers [firstContainerIndex].InstantiateHiddenContaner (correctContainers [firstContainerIndex].containerIndex);
-			} 
-			Destroy (answerContainer);
 		}
 	}
 

@@ -32,10 +32,12 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 
 	public void OnClickHint (int hintIndex, Action<bool> onHintResult)
 	{
-		selectedIndex = 0;
-		this.onHintResult = onHintResult;
-		InitHints ();
-		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, hintContainers [hintIndex]);
+		if (QuestionSystemController.Instance.questionHint.hasHintAvailable) {
+			selectedIndex = 0;
+			this.onHintResult = onHintResult;
+			InitHints ();
+			QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex, hintContainers [hintIndex]);
+		}
 	}
 
 	public void InitHints ()
@@ -51,16 +53,17 @@ public class ShowAnswer : MonoBehaviour,IAnswer
 		}
 	}
 
-	private int selectedIndex = 0;
+	public int selectedIndex = 0;
 	public void ShowLetterInView (GameObject selectedLetter)
 	{
 		if (hasInitHints) {
 			if (selectedIndex < questionAnswer.Length) {
-				if (hintContainers[selectedIndex].GetComponent<Button>().interactable) {
-					hintContainers [selectedIndex].GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text>().text;
-					hintContainers [selectedIndex].GetComponentInChildren<Image> ().color = new Color32 (255,255,255,255);
-					TweenFacade.TweenScaleToLarge (hintContainers [selectedIndex].transform, Vector3.one, 0.3f);
-				}
+				if (hintContainers [selectedIndex].GetComponent<Button> ().interactable) {
+					hintContainers [selectedIndex].GetComponentInChildren<Text> ().text = selectedLetter.GetComponentInChildren<Text> ().text;
+					hintContainers [selectedIndex].GetComponentInChildren<Image> ().color = new Color32 (255, 255, 255, 255);
+
+				} 
+				TweenFacade.TweenScaleToLarge (hintContainers [selectedIndex].transform, Vector3.one, 0.3f);
 			}
 		} else {
 			GameObject letterPrefab = SystemResourceController.Instance.LoadPrefab ("Input-UI", showLetterView);

@@ -10,6 +10,7 @@ public class PartSelectionController : MonoBehaviour
 	public WordChoice wordChoice;
 	public SlotMachine slotMachine;
 	public LetterLink letterLink;
+	public StackSwipeController stackSwipe;
 
 	public void DeploySelectionType(ISelection selectionType, string questionAnswer,Action<List<GameObject>> onSelectCallBack){
 		selectionType.ShowSelectionType (questionAnswer,onSelectCallBack);

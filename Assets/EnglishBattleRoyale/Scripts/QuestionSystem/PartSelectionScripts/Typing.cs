@@ -20,16 +20,19 @@ public class Typing : MonoBehaviour, ISelection
 		}
 	}
 	GameObject selectionPopUp;
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		SystemSoundController.Instance.PlaySFX ("SFX_Typing");
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpTyping", SystemPopupController.Instance.popUp);
 		this.selectionPopUp = selectionPopUp;
 		InvokeRepeating ("TypeLetterPopUp", 0,0.4f);
 		if (typePopUpIndex > 4) {
 			string typingString = "TYPING";
-			selectionPopUp.transform.GetChild(3).GetComponentInChildren<Text> ().text = typingString [3].ToString ();
-			selectionPopUp.transform.GetChild(4).GetComponentInChildren<Text> ().text = typingString [4].ToString ();
-			selectionPopUp.transform.GetChild(5).GetComponentInChildren<Text> ().text = typingString [5].ToString ();
+			selectionPopUp.transform.GetChild (3).GetComponentInChildren<Text> ().text = typingString [3].ToString ();
+			selectionPopUp.transform.GetChild (4).GetComponentInChildren<Text> ().text = typingString [4].ToString ();
+			selectionPopUp.transform.GetChild (5).GetComponentInChildren<Text> ().text = typingString [5].ToString ();
 
 		}
+		return selectionPopUp;
 	}
 	private int typePopUpIndex = 2;
 	private void TypeLetterPopUp(){
@@ -53,7 +56,7 @@ public class Typing : MonoBehaviour, ISelection
 		} else {
 			answerColor = new Color32 (255, 100, 100, 255);
 		}
-		/*
+
 		List<GameObject> answerContainers = QuestionSystemController.Instance.partAnswer.fillAnswer.answerContainers;
 		for (int i = 0; i < answerContainers.Count; i++) {
 			if (answerContainers [i].transform.childCount > 0) {
@@ -61,7 +64,7 @@ public class Typing : MonoBehaviour, ISelection
 			} else {
 				answerContainers [i].transform.GetComponent<Image> ().color = answerColor;
 			}
-		}*/
+		}
 	}
 
 	private bool initHideHint = false;
@@ -117,13 +120,15 @@ public class Typing : MonoBehaviour, ISelection
 					}
 				}
 			}
-			ListShuffleUtility.Shuffle (randomizedIndexList);
+//			ListShuffleUtility.Shuffle (randomizedIndexList);
+			fillAnswer.hintIndex = randomizedIndexList[0];
 			GameObject answerContainer;
 			if (fillAnswer.answerContainers [randomizedIndexList [0]].transform.childCount.Equals (0)) {
 				answerContainer = SystemResourceController.Instance.LoadPrefab ("Input-UI", fillAnswer.answerContainers [randomizedIndexList [0]].gameObject);
 			} else {
 				answerContainer = fillAnswer.answerContainers [randomizedIndexList [0]].transform.GetChild(0).gameObject;
 			}
+			answerContainer.GetComponentInChildren<Text> ().color = new Color32 (0, 0, 0, 255);
 			answerContainer.GetComponentInChildren<Text> ().text = questionAnswer [randomizedIndexList [0]].ToString ();
 			answerContainer.GetComponentInChildren<Button> ().interactable = false;
 		}
@@ -131,6 +136,7 @@ public class Typing : MonoBehaviour, ISelection
 
 	public void OnSelect ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		QuestionSystemController.Instance.partAnswer.fillAnswer.
 		SelectionLetterGot (EventSystem.current.currentSelectedGameObject);
 	}

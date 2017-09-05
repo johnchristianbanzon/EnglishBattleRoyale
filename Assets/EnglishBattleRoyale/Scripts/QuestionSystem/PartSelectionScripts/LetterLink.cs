@@ -23,7 +23,8 @@ public class LetterLink : MonoBehaviour ,ISelection
 
 	private List<GameObject> popUpSelectionList = new List<GameObject>();
 	private GameObject handCursor;
-	public void ShowSelectionPopUp(GameObject selectionPopUp){
+	public GameObject ShowSelectionPopUp(){
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpLetterLink", SystemPopupController.Instance.popUp);
 		popUpSelectionList.Clear ();
 		popUpSelectIndex = 0;
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
@@ -39,8 +40,8 @@ public class LetterLink : MonoBehaviour ,ISelection
 				,handCursor.transform.localPosition.y), popUpDelay);
 			Destroy (handCursor, popUpDelay+0.1f);
 			InvokeRepeating ("PopUpSelect", 0, (popUpDelay/4));
-
 		}
+		return selectionPopUp;
 	}
 	private int popUpSelectIndex = 0;
 	public void PopUpSelect(){
@@ -64,7 +65,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 				selectionIndex.Add (i);
 			}
 		}
-		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
+//		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponentInChildren<Text>().text = questionAnswer[selectionIndex[0]].ToString();
 		showAnswer.hintContainers [selectionIndex [0]].GetComponent<Image> ().color = new Color32 (255,255,255,255);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;

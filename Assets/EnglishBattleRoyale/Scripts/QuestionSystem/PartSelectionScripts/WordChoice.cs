@@ -54,8 +54,10 @@ public class WordChoice : MonoBehaviour, ISelection
 
 	List<GameObject> popUpSelectionList = new List<GameObject> ();
 
-	public void ShowSelectionPopUp (GameObject selectionPopUp)
+	public GameObject ShowSelectionPopUp ()
 	{
+		SystemSoundController.Instance.PlaySFX ("SFX_WordChoice");
+		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpWordChoice", SystemPopupController.Instance.popUp);
 		gameObject.SetActive (true);
 		popUpSelectionList = new List<GameObject> ();
 		for (int i = 0; i < selectionPopUp.transform.childCount; i++) {
@@ -69,6 +71,7 @@ public class WordChoice : MonoBehaviour, ISelection
 			InvokeRepeating ("ChangeSelectionColor",0.5f,0.5f);
 //			StartCoroutine (ChangeSelectionColor (popUpSelectionList));
 		}
+		return selectionPopUp;
 	}
 
 	private int indexer = 0;
