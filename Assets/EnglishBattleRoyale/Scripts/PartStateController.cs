@@ -188,8 +188,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			string attackAnimName = "attack" + (i % 3);
 			//random animation
 			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, attackAnimName);
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPLayer, "hit1");
-			SystemSoundController.Instance.PlaySFX ("SFX_HIT");
+
 			//wait for attack animation to finish
 			yield return StartCoroutine (AttackWaitAnimationCoroutine (isPLayer, attackAnimName));
 
@@ -244,9 +243,11 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		while (true) {
 
 			if (anim.GetCurrentAnimatorStateInfo (0).IsName (attackAnimName) &&
-			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 0.8f) {
+			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 0.9f) {
 				
 				Debug.Log ("waiting for animation to finish");
+				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPlayer, "hit1");
+				SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 				break;
 			}
 			yield return null;

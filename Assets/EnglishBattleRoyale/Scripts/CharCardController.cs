@@ -31,7 +31,7 @@ public class CharCardController : MonoBehaviour
 	public void InfoButton(){
 		ClearSelectedCards ();
 		GameObject popUpSkillOverview = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
-		popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
+		popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard,true);
 	}
 
 	public void UseButton(){
