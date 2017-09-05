@@ -259,15 +259,13 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 			if (anim.GetCurrentAnimatorStateInfo (0).IsName (attackAnimName) &&
 			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 0.9f) {
-				
-				Debug.Log ("waiting for animation to finish");
+
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPlayer, "hit1");
 				SystemSoundController.Instance.PlaySFX ("SFX_HIT");
 				break;
 			}
 			yield return null;
 		}
-		Debug.Log ("current animation finished!");
 		yield break;
 	}
 
@@ -371,6 +369,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
 			GameManager.ResetGame();
 			SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
+			ScreenLobbyController.Instance.Init();
 		});
 	}
 

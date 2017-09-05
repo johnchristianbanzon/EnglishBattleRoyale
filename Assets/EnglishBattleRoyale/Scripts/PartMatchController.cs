@@ -57,6 +57,7 @@ public class PartMatchController : MonoBehaviour
 			battleStatusManager.Init ();
 
 			SystemScreenController.Instance.ShowScreen ("ScreenBattle");
+			ScreenBattleController.Instance.Init();
 		});
 	}
 
