@@ -108,7 +108,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 		int whileIndex = 0;
 
 		while (!letterLinkSuccess) {
-			if (whileIndex > 200) {
+			if (whileIndex > 300) {
 				Debug.Log ("Linking Failed");
 				break;
 			}
