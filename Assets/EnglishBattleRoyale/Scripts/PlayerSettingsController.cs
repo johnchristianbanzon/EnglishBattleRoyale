@@ -23,23 +23,23 @@ public class PlayerSettingsController : MonoBehaviour {
 	}
 
 	private void GetPlayerSettings(){
-		playerName.text = MyConst.player.playerName;
-		playerHP.text = MyConst.player.playerHP.ToString();
-		playerGP.text = MyConst.player.playerGP.ToString();
-		playerMaxGP.text = MyConst.player.playerMaxGP.ToString();
-		playerBD.text = MyConst.player.playerBD.ToString();
-		playerSD.text = MyConst.player.playerSDM.ToString();
-		playerTD.text = MyConst.player.playerTD.ToString();
+		playerName.text = MyConst.player.name;
+		playerHP.text = MyConst.player.hp.ToString();
+		playerGP.text = MyConst.player.gp.ToString();
+		playerMaxGP.text = MyConst.player.maxGP.ToString();
+		playerBD.text = MyConst.player.bd.ToString();
+		playerSD.text = MyConst.player.sdm.ToString();
+		playerTD.text = MyConst.player.td.ToString();
 	}
 
 	private void SetPlayerSettings(){
-		MyConst.player.playerName = playerName.text;
-		MyConst.player.playerHP = float.Parse(playerHP.text);
-		MyConst.player.playerGP = float.Parse(playerGP.text);
-		MyConst.player.playerMaxGP = float.Parse(playerMaxGP.text);
-		MyConst.player.playerBD = float.Parse(playerBD.text);
-		MyConst.player.playerSDM = float.Parse(playerSD.text);
-		MyConst.player.playerTD = float.Parse(playerTD.text);
+		MyConst.player.name = playerName.text;
+		MyConst.player.hp = float.Parse(playerHP.text);
+		MyConst.player.gp = float.Parse(playerGP.text);
+		MyConst.player.maxGP = float.Parse(playerMaxGP.text);
+		MyConst.player.bd = float.Parse(playerBD.text);
+		MyConst.player.sdm = float.Parse(playerSD.text);
+		MyConst.player.td = float.Parse(playerTD.text);
 	}
 	
 

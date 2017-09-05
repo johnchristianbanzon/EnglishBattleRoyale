@@ -28,16 +28,7 @@ public class SystemLoadScreenController : SingletonMonoBehaviour<SystemLoadScree
 		Destroy (loadingScreen, loadingScreenTweenTime);
 	}
 
-	public void StartWaitOpponentScreen(){
-		waitOpponent = SystemResourceController.Instance.LoadPrefab (WAIT_OPPONENT,loadScreen);
-		TweenFacade.TweenScaleYToCustom (waitOpponentTweenTime, waitOpponent,waitOpponent.transform.localScale.y);
-	}
 
-	public void StopWaitOpponentScreen(){
-//		TweenFacade.TweenStopWaitOpponent (waitOpponentTweenTime, waitOpponent);
-		Destroy (waitOpponent);
-
-	}
 
 
 

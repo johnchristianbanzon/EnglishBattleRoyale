@@ -33,7 +33,7 @@ public static class TweenFacade{
 		scaleObject.transform.DOScale(new Vector3(customScale,0,customScale), duration);
 	}
 
-	public static void TweenWaitOpponentText(RectTransform obj){
+	public static void TweenScaleEffect(RectTransform obj){
 		Sequence mySequence = DOTween.Sequence ();
 		mySequence.SetLoops (-1);
 		mySequence.Append(obj.DOScale(new Vector3(1.2f,1.2f,1.2f), 0.5f).SetEase(Ease.Linear));

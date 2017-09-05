@@ -9,6 +9,8 @@ public class PartAvatarsController :  MonoBehaviour
 	public PlayerController player;
 	public PlayerController enemy;
 
+	#region Animation
+
 	public void SetTriggerAnim (bool isPLayer, string param)
 	{
 		if (isPLayer) {
@@ -18,9 +20,20 @@ public class PartAvatarsController :  MonoBehaviour
 		}
 	}
 
+	public Animator GetPlayerAnimator (bool isPLayer)
+	{
+		if (isPLayer) {
+			return playerAnim;
+		} else {
+			return enemyAnim;
+		}
+	}
+
+	#endregion
+
 	#region Player particle effects
 
-
+	//effect when player get awesome answers
 	public void LoadArmPowerEffect (bool isPlayer)
 	{
 		GameObject armPowerEffectL;
@@ -37,6 +50,7 @@ public class PartAvatarsController :  MonoBehaviour
 		Destroy (armPowerEffectR, 1);
 	}
 
+	//effect when player is hit
 	public void LoadHitEffect (bool isPlayer)
 	{
 		GameObject hitEffect;
@@ -53,18 +67,18 @@ public class PartAvatarsController :  MonoBehaviour
 
 	public void LoadCardSkillEffect (bool isPlayer, int charID)
 	{
-		//remove later if complete character effects
-		if (charID > 8) {
-			return;
-		}
-
 		CharacterEnums.SkillEffect skillEffect = (CharacterEnums.SkillEffect)charID;
 
 		//put effect to enemy if the effect is meant for enemy
 		if (skillEffect == CharacterEnums.SkillEffect.SkillSlash ||
 		    skillEffect == CharacterEnums.SkillEffect.SkillPunch ||
 		    skillEffect == CharacterEnums.SkillEffect.SkillPoison ||
-		    skillEffect == CharacterEnums.SkillEffect.SkillBomb) {
+		    skillEffect == CharacterEnums.SkillEffect.SkillBomb ||
+			skillEffect == CharacterEnums.SkillEffect.SkillWarhammer ||
+			skillEffect == CharacterEnums.SkillEffect.SkillSleep ||
+			skillEffect == CharacterEnums.SkillEffect.SkillGreatSword
+		
+		) {
 
 			isPlayer = !isPlayer;
 		}

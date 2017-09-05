@@ -243,7 +243,6 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 		CancelInvoke ();
 		currentQuestionNumber = 0;
 		isQuestionRoundOver = false;
-
 		if (questionList.Count > 0) {
 			hasNextQuestion = true;
 		}

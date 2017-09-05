@@ -12,6 +12,10 @@ public class TimeManager
 		gameTimeObserver.OnStartPreBattleTimer (timer);
 	}
 
+	public static void StartCharacterSelectTimer(int timer, Action action){
+		gameTimeObserver.OnStartCharacterSelectTimer (timer, action);
+	}
+
 	//PANTOY END HERE
 
 	//JOCHRIS HERE

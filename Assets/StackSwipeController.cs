@@ -81,17 +81,44 @@ public class StackSwipeController : MonoBehaviour, ISelection
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
+		Color selectionColor = new Color ();
+		if (isAnswerCorrect) {
+			selectionColor = new Color32 (255, 223, 0, 255);
+		} else {
+			selectionColor = new Color32 (255, 100, 100, 255);
+		}
+		for (int i = 0; i < stackSwipeContainers.Length; i++) {
+			if (stackSwipeContainers [i].isCorrect) {
+				stackSwipeContainers [i].gameObject.SetActive (true);
+				stackSwipeContainers [i].GetComponent<Image> ().color = selectionColor;
+				break;
+			}
+		}
 
 	}
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
+		//CHANGES HERE FOR FUTURE
+		//ONLY SELECTION CHANGE
+		Debug.Log ("showing hint");
+		List<GameObject> hintableContainer = new List<GameObject>(); 
+		for(int i =0;i<stackSwipeContainers.Length;i++){
+			if (!stackSwipeContainers [i].isCorrect && 
+					(stackSwipeContainers[i].GetComponent<Image>().raycastTarget == true)) {
+				hintableContainer.Add (stackSwipeContainers [i].gameObject);
+
+			}
+		}
+		if (hintableContainer.Count > 0) {
+			hintableContainer [0].GetComponent<Image> ().raycastTarget = false;
+			hintableContainer [0].GetComponent<Image> ().color = new Color32 (255, 100, 100, 255);
+		}
 
 	}
 
 	public void HideSelectionHint ()
 	{
-
 	}
 
 

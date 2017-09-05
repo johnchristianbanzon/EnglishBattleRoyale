@@ -8,7 +8,7 @@ public class PartProfileController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		playerDamageText.text = MyConst.player.playerBD.ToString();
-		playerHPText.text = MyConst.player.playerHP.ToString();
+		playerDamageText.text = MyConst.player.bd.ToString();
+		playerHPText.text = MyConst.player.hp.ToString();
 	}
 }

@@ -18,7 +18,7 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 	string gameRoomKey = null;
 	string battleStatusKey = null;
 	private bool isMatchMakeSuccess = false;
-	private DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
+//	private DependencyStatus dependencyStatus = DependencyStatus.UnavailableOther;
 	private  Dictionary<DataSnapshot, bool> initialState = new Dictionary<DataSnapshot, bool> ();
 
 	void Start ()
@@ -291,7 +291,6 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	public void AnswerPhase (string param)
 	{
-		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
 		GetLatestKey (1, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {
 
@@ -309,7 +308,6 @@ public class SystemFirebaseDBController : SingletonMonoBehaviour<SystemFirebaseD
 
 	public void AttackPhase (AttackModel param)
 	{
-		SystemLoadScreenController.Instance.StartWaitOpponentScreen ();
 		SetParam (MyConst.RPC_DATA_ATTACK, (param));
 		GetLatestKey (2, delegate(string resultString) {
 			FirebaseDBFacade.RunTransaction (reference.Child (MyConst.GAMEROOM_ROOM).Child (gameRoomKey).Child (MyConst.GAMEROOM_BATTLE_STATUS).Child (resultString), delegate(MutableData mutableData) {

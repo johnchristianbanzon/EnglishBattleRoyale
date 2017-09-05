@@ -7,7 +7,7 @@ public class StackSwipeEvent : MonoBehaviour {
 	public StackSwipeController stackSwipeParent;
 	public int selectedIndex;
 	public bool isDragging = false;
-	private bool isCorrect;
+	public bool isCorrect = false;
 	private GameObject duplicateContainer;
 	private static float yMovement;
 	private static int numberOfRemovedContainers = 0;
@@ -18,10 +18,14 @@ public class StackSwipeEvent : MonoBehaviour {
 		if (isCorrect) {
 			answer = stackSwipeParent.questionAnswer;
 			correctObject = gameObject;
+			this.isCorrect = true;
 		} else {
 			answer = QuestionBuilder.GetRandomChoices ().Split('/')[0];
 		}
+	
 		GetComponentInChildren<Text> ().text = answer.ToUpper();
+		GetComponentInChildren<Image> ().color = Color.white;
+		GetComponentInChildren<Image> ().raycastTarget = true; 
 		gameObject.SetActive (true);
 		transform.SetSiblingIndex (UnityEngine.Random.Range (0,stackSwipeParent.stackSwipeContainers.Length));
 	}
