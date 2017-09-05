@@ -174,8 +174,6 @@ public class CharacterLogic
 	//calculation of skills done here
 	private static void CalculateCharacter (string name, FunctionArgs args)
 	{
-		
-
 		float value = 0;
 		if (args.Parameters.Length > 0) {
 			value = float.Parse (args.Parameters [0].Evaluate ().ToString ());

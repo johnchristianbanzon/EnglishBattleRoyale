@@ -12,11 +12,7 @@ public class ScreenBattleController: SingletonMonoBehaviour<ScreenBattleControll
 	public PartAvatarsController partAvatars;
 	private bool isPhase1 = false;
 
-	void Start(){
-		Init ();
-	}
-
-	private void Init(){
+	public void Init(){
 		TimeManager.AddGameTimeObserver (partState);
 		SystemSoundController.Instance.PlayBGM ("BGM_Battle");
 

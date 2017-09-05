@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class ScreenLobbyController : MonoBehaviour {
+public class ScreenLobbyController : SingletonMonoBehaviour<ScreenLobbyController> {
 
 	public GameObject partSkill;
 	public GameObject partProfile;
 	public GameObject partMatch;
 
-	void Start(){
+	public void Init(){
 		//initialize constants from csv
 		SystemLoadScreenController.Instance.StopLoadingScreen();
 	}
