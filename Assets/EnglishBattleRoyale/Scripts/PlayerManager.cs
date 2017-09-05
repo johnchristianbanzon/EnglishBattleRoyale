@@ -98,7 +98,7 @@ public static class PlayerManager
 
 		SetIsPlayer (isPlayer);
 		Player = playerModel;
-		ScreenBattleController.Instance.partState.UpdatePlayerUI (isPlayer, playerModel);
+		ScreenBattleController.Instance.partState.InitialUpdateUI (isPlayer, playerModel);
 	}
 
 	public static void UpdateStateUI(bool isPlayer){
@@ -108,7 +108,7 @@ public static class PlayerManager
 			ScreenBattleController.Instance.partState.UpdatePlayerUI (false, enemy);
 		}
 
-		CheckPlayerState ();
+	
 
 	}
 

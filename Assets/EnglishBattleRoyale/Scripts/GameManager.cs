@@ -9,8 +9,9 @@ public static class GameManager
 
 	public static Dictionary<Firebase.Database.DataSnapshot, bool> initialState{ get; set; }
 
-
 	public static void ResetGame(){
-		SystemSoundController.Instance.ResetAudio ();
+		SystemSoundController.Instance.ResetSystemSoundController ();
+		CharacterLogic.ResetCharacterLogic ();
+		CharacterManager.ResetCharacterManager ();
 	}
 }

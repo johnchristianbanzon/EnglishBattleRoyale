@@ -10,6 +10,12 @@ public class CharacterLogic
 	private static List<Queue<NCalcFunctionModel>> playerQueueList = new List<Queue<NCalcFunctionModel>> ();
 	private static List<Queue<NCalcFunctionModel>> enemyQueueList = new List<Queue<NCalcFunctionModel>> ();
 
+	public static void ResetCharacterLogic ()
+	{
+		playerQueueList.Clear ();
+		enemyQueueList.Clear ();
+	}
+
 
 	public static void CharacterActivate (bool _isPlayer, CharacterModel character)
 	{
@@ -39,12 +45,6 @@ public class CharacterLogic
 		string[] calculateStringArray = StringSplitToArray (calculateString);
 
 		for (int i = 0; i < calculateStringArray.Length - 1; i++) {
-
-			if (isPlayer) {
-				Debug.Log ("PLAYER CHARACTER FROM CSV: " + calculateStringArray [i]);
-			} else {
-				Debug.Log ("ENEMY CHARACTER FROM CSV: " + calculateStringArray [i]);
-			}
 
 			Expression e = new Expression (calculateStringArray [i]);
 
@@ -179,11 +179,22 @@ public class CharacterLogic
 		float value = 0;
 		if (args.Parameters.Length > 0) {
 			value = float.Parse (args.Parameters [0].Evaluate ().ToString ());
+
+		}
+
+		if (isPlayer) {
+			Debug.Log ("PLAYER SKILL EFFECT: " + name + " VALUE: " + value);
+		} else {
+			Debug.Log ("ENEMY SKILL EFFECT: " + name + " VALUE: " + value);
 		}
 			
+		//TEST ONLY REMOVE LATER
+		bool isTargetPlayer = isPlayer;
+
+
 		switch (name) {
 		case "AddPlayerHP":
-			
+
 			PlayerManager.SetIsPlayer (isPlayer);
 			//if has skill damage multiplier
 			if (PlayerManager.Player.sdb) {
@@ -191,6 +202,10 @@ public class CharacterLogic
 			} else {
 				PlayerManager.Player.hp += value;
 			}
+				
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
+		
 
 			break;
 		case "AddEnemyHP":
@@ -202,85 +217,125 @@ public class CharacterLogic
 			} else {
 				PlayerManager.Player.hp += value;
 			}
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "AddPlayerGP":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.gp += value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "AddEnemyGP":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.gp += value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "AddPlayerSD":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.sdm += value;
 			PlayerManager.Player.sdb = true;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "AddEnemySD":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.sdm += value;
 			PlayerManager.Player.sdb = true;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "AddPlayerBD":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.bd += value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "AddEnemyBD":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.bd += value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "AddPlayerTD":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.td += value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "AddEnemyTD":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.td += value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "MultiplyPlayerHP":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.hp *= value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "MultiplyEnemyHP":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.hp *= value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "MultiplyPlayerGP":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.gp *= value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "MultiplyEnemyGP":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.gp *= value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "MultiplyPlayerSD":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.sdm *= value;
 			PlayerManager.Player.sdb = true;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "MultiplyEnemySD":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.sdm *= value;
 			PlayerManager.Player.sdb = true;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "MultiplyPlayerBD":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.bd *= value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "MultiplyEnemyBD":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.bd *= value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "MultiplyPlayerTD":
 			PlayerManager.SetIsPlayer (isPlayer);
 			PlayerManager.Player.td *= value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
 		case "MultiplyEnemyTD":
 			PlayerManager.SetIsPlayer (!isPlayer);
 			PlayerManager.Player.td *= value;
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			break;
 		case "EnemySlot":
 			PlayerManager.SetIsPlayer (!isPlayer);
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = !isPlayer;
 			//not yet implemented
 			break;
 
@@ -288,7 +343,16 @@ public class CharacterLogic
 		case "PlayerDebuff":
 			PlayerManager.SetIsPlayer (isPlayer);
 			playerQueueList.Clear ();
+			//TEST ONLY REMOVE LATER
+			isTargetPlayer = isPlayer;
 			break;
+		}
+
+		//TEST ONLY REMOVE LATER
+		if (isTargetPlayer) {
+			Debug.Log ("TARGET: PLAYER");
+		} else {
+			Debug.Log ("TARGET: ENEMY");
 		}
 
 		PlayerManager.UpdateStateUI (isPlayer);
