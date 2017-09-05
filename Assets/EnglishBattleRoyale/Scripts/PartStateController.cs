@@ -43,9 +43,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 
 	#region UPDATE PLAYER UI
-
-	public void UpdatePlayerUI (bool isPlayer, PlayerModel player)
-	{
+	public void InitialUpdateUI (bool isPlayer, PlayerModel player){
 		if (isPlayer) {
 			playerNameText.text = player.name;
 			playerHPText.text = player.hp.ToString ();
@@ -60,6 +58,23 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			enemyHPBar.maxValue = player.hp;
 			enemyHPBar.value = player.hp;
 		}
+	}
+
+
+	public void UpdatePlayerUI (bool isPlayer, PlayerModel player)
+	{
+		if (isPlayer) {
+			playerNameText.text = player.name;
+			playerHPText.text = player.hp.ToString ();
+			playerHPBar.value = player.hp;
+			playerGPText.text = player.gp.ToString ();
+			playerGPBar.value = player.gp;
+		} else {
+			enemyNameText.text = player.name;
+			enemyHPText.text = player.hp.ToString ();
+			enemyHPBar.value = player.hp;
+		}
+		PlayerManager.CheckPlayerState ();
 	}
 
 	#endregion

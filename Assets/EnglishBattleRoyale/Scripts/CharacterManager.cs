@@ -6,6 +6,15 @@ public class CharacterManager: IRPCDicObserver
 {
 	private static CharacterModel[] currentCharacterInEquip = new CharacterModel[3];
 	private static Queue<CharacterModel> characterQueue = new Queue<CharacterModel> (8);
+	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
+	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
+
+	public static void ResetCharacterManager(){
+		characterQueue.Clear ();
+		playerCharacterQueue.Clear ();
+		enemyCharacterQueue.Clear ();
+		Array.Clear(currentCharacterInEquip, 0, currentCharacterInEquip.Length);
+	}
 
 	public void Init ()
 	{
@@ -89,8 +98,7 @@ public class CharacterManager: IRPCDicObserver
 
 	#region activate a character
 
-	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
-	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
+
 
 	public static int GetCharacterCount (bool isPlayer)
 	{

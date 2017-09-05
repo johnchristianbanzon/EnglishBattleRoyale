@@ -8,6 +8,12 @@ public class SystemSoundController: SingletonMonoBehaviour<SystemSoundController
 	private bool isBGMMute;
 	private bool isSFXMute;
 
+	public void ResetSystemSoundController(){
+		if (bgmPlayer != null) {
+			Destroy (bgmPlayer);
+		}
+	}
+
 	public void MuteBGMToggle (bool toggle)
 	{
 		isBGMMute = toggle;
@@ -46,11 +52,7 @@ public class SystemSoundController: SingletonMonoBehaviour<SystemSoundController
 		}));
 	}
 
-	public void ResetAudio(){
-		if (bgmPlayer != null) {
-			Destroy (bgmPlayer);
-		}
-	}
+
 
 	private IEnumerator StartDestroyAfterPlay (float time, Action action)
 	{
