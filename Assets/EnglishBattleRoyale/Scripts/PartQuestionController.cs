@@ -34,12 +34,7 @@ public class PartQuestionController: MonoBehaviour
 	{
 		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-		if (questionSystem == null) {
-			questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
-			Debug.Log(questionSystem.name);
-		} else {
-			questionSystem.SetActive (true);
-		}
+
 		string[] questionTypes = new string[6]{ "SelectLetter", "Typing", "ChangeOrderController", "WordChoice", "SlotMachine", "LetterLink" };
 //		QuestionSystemController.Instance.ShowPopUP (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)]);
 
@@ -47,6 +42,12 @@ public class PartQuestionController: MonoBehaviour
 	}
 
 	private void StartQuestion(){
+		if (questionSystem == null) {
+			questionSystem = SystemResourceController.Instance.LoadPrefab ("QuestionSystem", this.gameObject);
+
+		} else {
+			questionSystem.SetActive (true);
+		}
 		QuestionSystemController.Instance.StartQuestionRound (
 			questionType
 			, delegate(List<QuestionResultModel> resultList) {
