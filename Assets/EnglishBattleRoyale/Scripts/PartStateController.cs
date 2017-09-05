@@ -243,7 +243,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		while (true) {
 
 			if (anim.GetCurrentAnimatorStateInfo (0).IsName (attackAnimName) &&
-			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 0.8f) {
+			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 0.9f) {
 				
 				Debug.Log ("waiting for animation to finish");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPlayer, "hit1");
