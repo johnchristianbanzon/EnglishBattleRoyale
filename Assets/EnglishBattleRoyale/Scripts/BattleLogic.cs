@@ -18,7 +18,7 @@ public class BattleLogic
 			} else {
 				Debug.Log ("ENEMY DAMAGE: " + attack.attackDamage);
 			}
-
+				
 			PlayerManager.UpdateStateUI(isPLayer);
 		});
 	}
