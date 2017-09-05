@@ -41,7 +41,7 @@ public class CharEquipCardController : MonoBehaviour
 	public void ShowCharacterDescription (int skillNumber)
 	{
 		GameObject characterDescription = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
-		characterDescription.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
+		characterDescription.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard,false);
 	}
 
 	public void InfoButton ()
@@ -50,7 +50,7 @@ public class CharEquipCardController : MonoBehaviour
 
 		if (isShowInfo) {
 			popUpSkillOverview = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
-			popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
+			popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard,false);
 		} else {
 			Destroy (popUpSkillOverview);
 		}
