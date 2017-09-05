@@ -30,13 +30,10 @@ public static class PlayerManager
 		set {
 			if (isPlayer) {
 				player = value;
-				ScreenBattleController.Instance.partState.UpdatePlayerUI (true, player);
 			} else {
 				enemy = value;
-				ScreenBattleController.Instance.partState.UpdatePlayerUI (false, enemy);
 			}
 
-			CheckPlayerState ();
 		}
 	}
 
@@ -102,6 +99,17 @@ public static class PlayerManager
 		SetIsPlayer (isPlayer);
 		Player = playerModel;
 		ScreenBattleController.Instance.partState.UpdatePlayerUI (isPlayer, playerModel);
+	}
+
+	public static void UpdateStateUI(bool isPlayer){
+		if (isPlayer) {
+			ScreenBattleController.Instance.partState.UpdatePlayerUI (true, player);
+		} else {
+			ScreenBattleController.Instance.partState.UpdatePlayerUI (false, enemy);
+		}
+
+		CheckPlayerState ();
+
 	}
 
 

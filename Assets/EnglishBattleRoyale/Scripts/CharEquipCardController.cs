@@ -19,7 +19,8 @@ public class CharEquipCardController : MonoBehaviour
 	private static CharacterModel[] charArray = new CharacterModel[3];
 	private bool isTap = false;
 	private Coroutine checkTap;
-
+	private bool isShowInfo = false;
+	GameObject popUpSkillOverview;
 	#region CHARACTER DATA
 
 	public void SetCharacter (CharacterModel charCard)
@@ -32,7 +33,8 @@ public class CharEquipCardController : MonoBehaviour
 		NewCardAnimation ();
 	}
 
-	public CharacterModel GetCharacter(){
+	public CharacterModel GetCharacter ()
+	{
 		return charCard;
 	}
 
@@ -42,24 +44,34 @@ public class CharEquipCardController : MonoBehaviour
 		characterDescription.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
 	}
 
-	public void InfoButton(){
-		GameObject popUpSkillOverview = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
-		popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
+	public void InfoButton ()
+	{
+		isShowInfo = !isShowInfo;
+
+		if (isShowInfo) {
+			popUpSkillOverview = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
+			popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard);
+		} else {
+			Destroy (popUpSkillOverview);
+		}
 	}
 
-	public void OnPointerDown(){
-		checkTap = StartCoroutine (CheckTapTimeCoroutine());
+	public void OnPointerDown ()
+	{
+		checkTap = StartCoroutine (CheckTapTimeCoroutine ());
 
 	}
 
-	public void OnPointerUp(){
+	public void OnPointerUp ()
+	{
 		if (isTap) {
 			InfoButton ();
 		}
 		StopCoroutine (checkTap);
 	}
 
-	IEnumerator CheckTapTimeCoroutine(){
+	IEnumerator CheckTapTimeCoroutine ()
+	{
 		isTap = true;
 		yield return new WaitForSeconds (0.2f);
 		isTap = false;
@@ -81,10 +93,11 @@ public class CharEquipCardController : MonoBehaviour
 		Invoke ("SendNewCharOrder", 0.1f);
 	}
 
-	private CharacterModel[] EquipCards(){
-		CharacterModel[] charEquipCard =   new CharacterModel[3];
-		for (int i = charArray.Length-1; i >= 0; i--) {
-			charEquipCard[i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ().GetCharacter();
+	private CharacterModel[] EquipCards ()
+	{
+		CharacterModel[] charEquipCard = new CharacterModel[3];
+		for (int i = charArray.Length - 1; i >= 0; i--) {
+			charEquipCard [i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ().GetCharacter ();
 		}
 		return charEquipCard;
 	}
@@ -92,7 +105,7 @@ public class CharEquipCardController : MonoBehaviour
 	private void SendNewCharOrder ()
 	{
 		for (int i = 0; i < EquipCards ().Length; i++) {
-			charArray[i] = EquipCards () [i];
+			charArray [i] = EquipCards () [i];
 		}
 		CharacterManager.SetCharacterOrder (charArray);
 
@@ -136,12 +149,14 @@ public class CharEquipCardController : MonoBehaviour
 
 	#region CARD ANIMATION
 
-	public void NewCardAnimation(){
+	public void NewCardAnimation ()
+	{
 		this.transform.localScale = Vector3.zero;
 		TweenFacade.TweenNewCharacterCard (this.transform);
 	}
 
-	public void ActivateCardAnimation(){
+	public void ActivateCardAnimation ()
+	{
 		TweenFacade.TweenActivateCharacterCard (this.transform);
 	}
 

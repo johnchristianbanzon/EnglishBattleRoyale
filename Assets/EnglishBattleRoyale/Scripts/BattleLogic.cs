@@ -7,8 +7,10 @@ public class BattleLogic
 	{
 		yield return ScreenBattleController.Instance.partState.StartBattleAnimation (isPLayer, attack.attackDamage, delegate() {
 
+
 			PlayerManager.SetIsPlayer(isPLayer);
 			PlayerManager.Player.hp -= attack.attackDamage;
+
 
 			if (isPLayer) {
 				Debug.Log ("PLAYER DAMAGE: " + attack.attackDamage);
@@ -16,6 +18,8 @@ public class BattleLogic
 			} else {
 				Debug.Log ("ENEMY DAMAGE: " + attack.attackDamage);
 			}
+
+			PlayerManager.UpdateStateUI(isPLayer);
 		});
 	}
 
