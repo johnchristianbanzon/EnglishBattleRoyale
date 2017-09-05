@@ -19,6 +19,7 @@ public class QuestionHintManager :MonoBehaviour{
 		int questionAnswerLength = QuestionSystemController.Instance.questionAnswer.Length;
 		if (hintUsed < hintLimit && QuestionSystemController.Instance.correctAnswerButtons.Count-1 >= hintIndex) {
 				QuestionSystemController.Instance.answerType.OnClickHint (hintIndex, delegate(bool onHintResult) {
+				Debug.Log(QuestionSystemController.Instance.answerType.GetType().Name);
 					if (onHintResult) {
 						InitHints ();
 					}

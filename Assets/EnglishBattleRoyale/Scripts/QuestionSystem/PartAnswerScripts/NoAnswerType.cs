@@ -12,7 +12,9 @@ public class NoAnswerType : MonoBehaviour,IAnswer {
 	}
 
 	public void OnClickHint (int hintIndex,Action<bool> onHintResult){
-		QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex,null);
+		if (QuestionSystemController.Instance.questionHint.hasHintAvailable) {
+			QuestionSystemController.Instance.selectionType.ShowSelectionHint (hintIndex,null);
+		}
 
 	}
 

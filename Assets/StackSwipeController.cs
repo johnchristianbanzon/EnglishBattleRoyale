@@ -101,17 +101,17 @@ public class StackSwipeController : MonoBehaviour, ISelection
 	{
 		//CHANGES HERE FOR FUTURE
 		//ONLY SELECTION CHANGE
-		Debug.Log ("showing hint");
+		Debug.Log ("Show");
 		List<GameObject> hintableContainer = new List<GameObject>(); 
 		for(int i =0;i<stackSwipeContainers.Length;i++){
 			if (!stackSwipeContainers [i].isCorrect && 
-					(stackSwipeContainers[i].GetComponent<Image>().raycastTarget == true)) {
+				(stackSwipeContainers[i].GetComponent<Image>().color == Color.white) && 
+				stackSwipeContainers[i].gameObject.activeInHierarchy) {
 				hintableContainer.Add (stackSwipeContainers [i].gameObject);
-
+				Debug.Log (stackSwipeContainers [i].gameObject.name);
 			}
 		}
 		if (hintableContainer.Count > 0) {
-			hintableContainer [0].GetComponent<Image> ().raycastTarget = false;
 			hintableContainer [0].GetComponent<Image> ().color = new Color32 (255, 100, 100, 255);
 		}
 
@@ -119,7 +119,6 @@ public class StackSwipeController : MonoBehaviour, ISelection
 
 	public void HideSelectionHint ()
 	{
+		Debug.Log ("Hide");
 	}
-
-
 }

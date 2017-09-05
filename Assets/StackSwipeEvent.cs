@@ -14,6 +14,7 @@ public class StackSwipeEvent : MonoBehaviour {
 	private static GameObject correctObject;
 
 	public void Init(bool isCorrect){
+		numberOfRemovedContainers = 0;
 		string answer = "";
 		if (isCorrect) {
 			answer = stackSwipeParent.questionAnswer;
@@ -72,7 +73,7 @@ public class StackSwipeEvent : MonoBehaviour {
 		this.transform.SetParent (stackSwipeParent.stackSwipeContent.transform);
 		this.GetComponent<Image> ().raycastTarget = true;
 		transform.SetSiblingIndex (selectedIndex);
-		QuestionSystemController.Instance.partSelection.changeOrder.OnChangeOrder ();
+//		QuestionSystemController.Instance.partSelection.changeOrder.OnChangeOrder ();
 		Destroy (duplicateContainer);
 		RemoveContainer ();
 		isDragging = false;
