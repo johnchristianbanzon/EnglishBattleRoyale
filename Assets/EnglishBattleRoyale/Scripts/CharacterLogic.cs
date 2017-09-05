@@ -39,7 +39,12 @@ public class CharacterLogic
 		string[] calculateStringArray = StringSplitToArray (calculateString);
 
 		for (int i = 0; i < calculateStringArray.Length - 1; i++) {
-			Debug.Log ("CHARACTER FROM CSV: " + calculateStringArray [i]);
+
+			if (isPlayer) {
+				Debug.Log ("PLAYER CHARACTER FROM CSV: " + calculateStringArray [i]);
+			} else {
+				Debug.Log ("ENEMY CHARACTER FROM CSV: " + calculateStringArray [i]);
+			}
 
 			Expression e = new Expression (calculateStringArray [i]);
 
@@ -281,20 +286,20 @@ public class CharacterLogic
 			break;
 		}
 
-		PlayerManager.UpdateStateUI(isPlayer);
+		PlayerManager.UpdateStateUI (isPlayer);
 	}
 
 	//set which player to affect the character skill
 	private static void SetPlayerTarget (bool isPlayerTarget)
 	{
 		if (isPlayer) {
-			if (!isPlayerTarget) {
+			if (isPlayerTarget) {
 				PlayerManager.SetIsPlayer (true);
 			} else {
 				PlayerManager.SetIsPlayer (false);
 			}
 		} else {
-			if (isPlayerTarget) {
+			if (!isPlayerTarget) {
 				PlayerManager.SetIsPlayer (true);
 			} else {
 				PlayerManager.SetIsPlayer (false);

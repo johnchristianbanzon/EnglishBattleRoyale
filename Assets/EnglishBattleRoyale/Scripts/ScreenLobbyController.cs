@@ -8,7 +8,7 @@ public class ScreenLobbyController : MonoBehaviour {
 
 	void Start(){
 		//initialize constants from csv
-
+		SystemLoadScreenController.Instance.StopLoadingScreen();
 	}
 
 	public void NavigateProfile(){

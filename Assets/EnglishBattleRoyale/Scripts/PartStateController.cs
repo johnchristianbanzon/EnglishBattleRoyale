@@ -8,8 +8,10 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 {
 	public GameObject playerCardContainer;
 	public GameObject enemyCardContainer;
+	public GameObject gameOverScreen;
 
 	public Text playerNameText;
+	public Text battleResultText;
 
 	public Slider playerHPBar;
 	public Text playerHPText;
@@ -111,17 +113,21 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		if (player.hp <= 0 || enemy.hp <= 0) {
 
+			bool isPLayerWin = false;
+
 			if (enemy.hp > 0 && player.hp <= 0) {
+				isPLayerWin = false;
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "lose");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
-			} else if (player.hp > 0 && enemy.hp <= 0) {
+			} else{
+				isPLayerWin = true;
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "lose");
-			} else {
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
 			}
 			StopAllCoroutines ();
+
+			StartCoroutine (ShowGameOverScreenCoroutine (true, isPLayerWin));
+
 			return;
 		} 
 
@@ -328,6 +334,27 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 		action ();
 		preBattleTimerText.enabled = false;
+	}
+
+	#endregion
+
+	#region Game Over
+
+	IEnumerator ShowGameOverScreenCoroutine(bool isGameOver, bool isPLayerWin = false){
+		yield return new WaitForSeconds (1);
+		gameOverScreen.SetActive (isGameOver);
+		if (isPLayerWin) {
+			battleResultText.text = "WIN";
+		} else {
+			battleResultText.text = "LOSE";
+		}
+	}
+
+	public void MainMenuButton(){
+		gameOverScreen.SetActive (false);
+		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
+			SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
+		});
 	}
 
 	#endregion
