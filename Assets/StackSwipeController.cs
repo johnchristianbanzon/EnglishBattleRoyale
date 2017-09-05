@@ -29,9 +29,10 @@ public class StackSwipeController : MonoBehaviour, ISelection
 		for (int i = 0; i < stackSwipeContainers.Length; i++) {
 			if (numberOfAnswers > i) {
 				stackSwipeContainers [i].Init (true);
-				correctAnswer.Add (stackSwipeContainers [i].gameObject);
+
 			} else {
 				stackSwipeContainers [i].Init (false);
+				correctAnswer.Add (stackSwipeContainers [i].gameObject);
 			}
 		}
 		QuestionSystemController.Instance.correctAnswerButtons = correctAnswer;
@@ -91,7 +92,8 @@ public class StackSwipeController : MonoBehaviour, ISelection
 			if (stackSwipeContainers [i].isCorrect) {
 				stackSwipeContainers [i].gameObject.SetActive (true);
 				stackSwipeContainers [i].GetComponent<Image> ().color = selectionColor;
-				break;
+			} else {
+				stackSwipeContainers [i].GetComponent<Image> ().color = Color.white;
 			}
 		}
 
@@ -101,14 +103,12 @@ public class StackSwipeController : MonoBehaviour, ISelection
 	{
 		//CHANGES HERE FOR FUTURE
 		//ONLY SELECTION CHANGE
-		Debug.Log ("Show");
 		List<GameObject> hintableContainer = new List<GameObject>(); 
 		for(int i =0;i<stackSwipeContainers.Length;i++){
 			if (!stackSwipeContainers [i].isCorrect && 
 				(stackSwipeContainers[i].GetComponent<Image>().color == Color.white) && 
 				stackSwipeContainers[i].gameObject.activeInHierarchy) {
 				hintableContainer.Add (stackSwipeContainers [i].gameObject);
-				Debug.Log (stackSwipeContainers [i].gameObject.name);
 			}
 		}
 		if (hintableContainer.Count > 0) {
@@ -119,6 +119,6 @@ public class StackSwipeController : MonoBehaviour, ISelection
 
 	public void HideSelectionHint ()
 	{
-		Debug.Log ("Hide");
+		
 	}
 }
