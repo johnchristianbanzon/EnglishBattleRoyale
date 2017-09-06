@@ -65,7 +65,7 @@ public class PartAvatarsController :  MonoBehaviour
 	}
 
 
-	public void LoadCardSkillEffect (bool isPlayer, int particleID)
+	public float LoadCardSkillEffect (bool isPlayer, int particleID)
 	{
 		CharacterEnums.SkillEffect skillEffect = (CharacterEnums.SkillEffect)particleID;
 
@@ -87,12 +87,13 @@ public class PartAvatarsController :  MonoBehaviour
 		GameObject skillEffectObject;
 		if (isPlayer) {
 			skillEffectObject = LoadEffect (skillEffect.ToString (), player.skillEffectContainer);
+			return skillEffectObject.GetComponent<SkillEffectController> ().GetSkillDuration ();
 		} else {
 
 			skillEffectObject = LoadEffect (skillEffect.ToString (), enemy.skillEffectContainer);
+			return skillEffectObject.GetComponent<SkillEffectController> ().GetSkillDuration ();
 		}
 
-		Destroy (skillEffectObject, 2);
 	}
 
 

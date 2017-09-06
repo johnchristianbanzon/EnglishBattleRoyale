@@ -69,12 +69,20 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			playerHPBar.value = player.hp;
 			playerGPText.text = player.gp.ToString ();
 			playerGPBar.value = player.gp;
+
+			TweenFacade.TweenPlayerHPSlider (player.hp, 1, true, playerHPBar);
+			TweenFacade.TweenPlayerGPSlider (player.gp, 1, true, playerGPBar);
+
 		} else {
 			enemyNameText.text = player.name;
 			enemyHPText.text = player.hp.ToString ();
 			enemyHPBar.value = player.hp;
+
+			TweenFacade.TweenPlayerHPSlider (player.hp, 1, true, enemyHPBar);
 		}
-		PlayerManager.CheckPlayerState ();
+
+
+
 	}
 
 	#endregion
@@ -164,8 +172,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	{
 		//character skill interval
 		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
-			yield return new WaitForSeconds (2);
-			CharacterManager.CharacterActivate (isPlayer);
+			yield return new WaitForSeconds (CharacterManager.CharacterActivate (isPlayer));
 		}
 
 		yield return null;

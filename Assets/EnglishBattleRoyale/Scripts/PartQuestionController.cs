@@ -70,8 +70,8 @@ public class PartQuestionController: MonoBehaviour
 				PlayerManager.SetIsPlayer(true);
 				PlayerManager.Player.gp += correctGPBonus + speedyAwesomeGPBonus + speedyGoodGPBonus;
 				PlayerManager.Player.td = PlayerManager.Player.bd + correctDamageBonus + speedyAwesomeDamageBonus + speedyGoodDamageBonus;
-
 				PlayerManager.UpdateStateUI(true);
+
 
 				//send answer results to firebase
 				QuestionResultCountModel questionResultCount = new QuestionResultCountModel (correctCount, awesomeSpeedyCount, goodSpeedyCount, rottenSpeedyCount);

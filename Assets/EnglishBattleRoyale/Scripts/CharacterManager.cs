@@ -110,7 +110,7 @@ public class CharacterManager: IRPCDicObserver
 	}
 
 	//TO-DO REFACTOR THIS CODE
-	public static void CharacterActivate (bool isPlayer)
+	public static float CharacterActivate (bool isPlayer)
 	{
 		CharacterModel character = null;
 		if (isPlayer) {
@@ -123,7 +123,7 @@ public class CharacterManager: IRPCDicObserver
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
 		
 			//Show card skill effect
-			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (true, character.particleID);
+			return ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (true, character.particleID);
 
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
@@ -135,7 +135,7 @@ public class CharacterManager: IRPCDicObserver
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
 
 			//Show card skill effect
-			ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (false, character.particleID);
+			return ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (false, character.particleID);
 		
 		}
 
