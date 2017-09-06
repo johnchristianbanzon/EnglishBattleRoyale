@@ -172,8 +172,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	{
 		//character skill interval
 		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
-			yield return new WaitForSeconds (2);
-			CharacterManager.CharacterActivate (isPlayer);
+			yield return new WaitForSeconds (CharacterManager.CharacterActivate (isPlayer));
 		}
 
 		yield return null;
