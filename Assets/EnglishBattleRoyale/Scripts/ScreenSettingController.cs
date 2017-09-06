@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using NCalc;
 
 public class ScreenSettingController : MonoBehaviour {
 
@@ -10,6 +11,7 @@ public class ScreenSettingController : MonoBehaviour {
 		playerName.text = PlayerPrefs.GetString ("PlayerInputName", "");
 		MyConst.SetPlayerName (playerName.text);
 	}
+
 
 	public void StartButton(){
 		MyConst.SetPlayerName (playerName.text);

@@ -29,7 +29,6 @@ public class CharEquipCardController : MonoBehaviour
 		charImage.sprite = SystemResourceController.Instance.LoadCharacterCardSprite (charCard.iD);
 		charGpCost.text = charCard.gpCost.ToString ();
 
-		Debug.Log ("SETTING NEW CHARACTER");
 		NewCardAnimation ();
 	}
 

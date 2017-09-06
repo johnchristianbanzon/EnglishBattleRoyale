@@ -101,54 +101,80 @@ public static class PlayerManager
 		ScreenBattleController.Instance.partState.InitialUpdateUI (isPlayer, playerModel);
 	}
 
-	public static void UpdateStateUI(bool isPlayer){
+	public static void UpdateStateUI (bool isPlayer)
+	{
+		CheckPlayerState ();
 		if (isPlayer) {
 			ScreenBattleController.Instance.partState.UpdatePlayerUI (true, player);
 		} else {
 			ScreenBattleController.Instance.partState.UpdatePlayerUI (false, enemy);
 		}
-
-	
-
 	}
-
 
 	public static void CheckPlayerState ()
 	{
-		if (PlayerManager.GetPlayer (true) != null && PlayerManager.GetPlayer (false) != null) {
-			if (player.hp > 100) {
-				player.hp = 100;
-			}
-
-			if (enemy.hp > 100) {
-				enemy.hp = 100;
-			}
-
-			if (player.hp < 0) {
-				player.hp = 0;
-			}
-
-			if (enemy.hp < 0) {
-				enemy.hp = 0;
-			}
-
-			if (player.gp > player.maxGP) {
-				player.gp = player.maxGP;
-			}
-
-			if (player.gp < 0) {
-				player.gp = 0;
-			}
-
-			if (enemy.gp > enemy.maxGP) {
-				enemy.gp = enemy.gp;
-			}
-
-			if (enemy.gp < 0) {
-				enemy.gp = 0;
-			}
-
+		
+		if (player.hp > 75) {
+			player.hp = 75;
 		}
+
+		if (enemy.hp > 75) {
+			enemy.hp = 75;
+		}
+
+		if (player.hp < 0) {
+			player.hp = 0;
+		}
+
+		if (enemy.hp < 0) {
+			enemy.hp = 0;
+		}
+
+		if (player.gp > player.maxGP) {
+			player.gp = player.maxGP;
+		}
+
+		if (player.gp < 0) {
+			player.gp = 0;
+		}
+
+		if (enemy.gp > enemy.maxGP) {
+			enemy.gp = enemy.gp;
+		}
+
+		if (enemy.gp < 0) {
+			enemy.gp = 0;
+		}
+
+		if (player.bd < 0) {
+			player.bd = 0;
+		}
+
+		if (enemy.bd < 0) {
+			enemy.bd = 0;
+		}
+
+		if (player.td < 0) {
+			player.td = 0;
+		}
+
+		if (enemy.td < 0) {
+			enemy.td = 0;
+		}
+
+		if (player.sdm < 0) {
+			player.sdm = 0;
+		}
+
+		if (enemy.sdm < 0) {
+			enemy.sdm = 0;
+		}
+
+	
+
+
+
+
 	}
 
 
