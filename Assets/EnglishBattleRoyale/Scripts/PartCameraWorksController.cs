@@ -13,12 +13,5 @@ public class PartCameraWorksController: MonoBehaviour {
 //		introCamera.SetActive (false);
 //		winLoseCamera.SetActive (true);
 	}
-
-	public void ShowGestureCamera(){
-		gestureCamera.SetActive (true);
-	}
-
-	public void HideGestureCamera(){
-		gestureCamera.SetActive (false);
-	}
+		
 }

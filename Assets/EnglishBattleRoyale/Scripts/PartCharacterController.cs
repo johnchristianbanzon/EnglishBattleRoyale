@@ -8,14 +8,26 @@ public class PartCharacterController : MonoBehaviour
 {
 	public GameObject charCardsContainer;
 	private CharEquipCardController[] charCards = new CharEquipCardController[3];
-
+	public List<CharEquipCardController> priorityNumberList{ get; set; }
 	void Start ()
 	{
+		priorityNumberList = new List<CharEquipCardController>(3);
+		ShowCharacters (false);
 		SetCharacterOrder ();
 		 
 		//Set starting skills during start of battle
 		CharacterManager.SetStartCharacters ();
 
+	}
+
+	public void UpdateCharCardPriority(){
+		for (int i = 0; i < charCards.Length; i++) {
+			charCards [i].UpdatePriorityNumber ();
+		}
+	}
+
+	public CharEquipCardController[] GetCharCards(){
+		return charCards;
 	}
 
 	public void OnStartPhase ()
@@ -28,14 +40,16 @@ public class PartCharacterController : MonoBehaviour
 	{
 		//Check toggle on characters on start of the phase and send it
 		CharacterManager.StartCharacters ();
-		ShowAutoActivateButtons (false);
 		PartAnswerIndicatorController.Instance.ResetAnswer ();
 	}
 
-	//show skill buttons after attack phase is done
 	public void OnEndPhase ()
 	{
-		ShowAutoActivateButtons (true);
+		//Hide character selection
+		ShowCharacters(false);
+		for (int i = 0; i < charCards.Length; i++) {
+			charCards [i].ResetCardUsed ();
+		}
 	}
 
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
@@ -57,24 +71,20 @@ public class PartCharacterController : MonoBehaviour
 		}
 	}
 
-	private void OnEndQuestionTime ()
+	public void ShowCharacters (bool isShow)
 	{
-		ButtonEnable (false);
+		if (isShow) {
+			for (int i = 0; i < charCards.Length; i++) {
+				charCards [i].SetIsInterActable (true);
+			}
+		} else {
+			for (int i = 0; i < charCards.Length; i++) {
+				charCards [i].SetIsInterActable (false);
+			}
+		}
 	}
 
-	public void ShowAutoActivateButtons (bool isShow)
-	{
-		ButtonEnable (isShow);
-
-	}
-
-	public void ButtonEnable (bool buttonEnable)
-	{
-		charCards [0].ToggleButtonInteractable (buttonEnable);
-		charCards [1].ToggleButtonInteractable (buttonEnable);
-		charCards [2].ToggleButtonInteractable (buttonEnable);
-	}
-
+		
 	#region COROUTINES
 
 	public void ChangeCharacterCard (Action removeCard, Action newCard)

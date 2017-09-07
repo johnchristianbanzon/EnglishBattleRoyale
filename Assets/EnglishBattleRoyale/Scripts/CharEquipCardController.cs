@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 public class CharEquipCardController : MonoBehaviour
 {
@@ -11,16 +12,38 @@ public class CharEquipCardController : MonoBehaviour
 	public Image charImage;
 	public Button charButton;
 	private CharacterModel charCard;
-	private GameObject selectedObject;
-	private static int selectedIndex = 0;
-	public GameObject characterLayout;
-	private static GameObject containerPlacer;
-	private static bool isDragging = false;
-	private static CharacterModel[] charArray = new CharacterModel[3];
 	private bool isTap = false;
 	private Coroutine checkTap;
 	private bool isShowInfo = false;
-	GameObject popUpSkillOverview;
+	private bool isCardUsed = false;
+	public Text priorityNumberText;
+	public Image useEffect;
+	private int priorityNumber = 0;
+
+	private bool isInterActable = false;
+
+	private GameObject popUpSkillOverview;
+
+	public void SetIsInterActable(bool isInterActable){
+		this.isInterActable = isInterActable;
+	
+	}
+
+	public void ResetCardUsed(){
+		useEffect.enabled = false;
+		isCardUsed = false;
+	}
+
+	public void CheckCard(Action<bool, int> onResult){
+		onResult (isCardUsed, priorityNumber);
+	}
+
+
+	void Start(){
+		useEffect.enabled = false;
+		priorityNumberText.enabled = false;
+	}
+
 	#region CHARACTER DATA
 
 	public void SetCharacter (CharacterModel charCard)
@@ -32,26 +55,70 @@ public class CharEquipCardController : MonoBehaviour
 		NewCardAnimation ();
 	}
 
-	public CharacterModel GetCharacter ()
-	{
-		return charCard;
-	}
-
-	public void ShowCharacterDescription (int skillNumber)
-	{
-		GameObject characterDescription = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
-		characterDescription.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard,false);
-	}
-
 	public void InfoButton ()
 	{
 		isShowInfo = !isShowInfo;
 
 		if (isShowInfo) {
 			popUpSkillOverview = SystemPopupController.Instance.ShowPopUp ("PopUpCharacterOverview");
-			popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard,false);
+			popUpSkillOverview.GetComponent<PopUpCharacterOverviewController> ().SetCharCard (charCard, false);
 		} else {
 			Destroy (popUpSkillOverview);
+		}
+	}
+
+	//if not enough gp, character is not interactable
+	void Update ()
+	{
+		if (isInterActable) {
+			if (charCard != null) {
+				if (ScreenBattleController.Instance.partState.playerGPBar.value >= charCard.gpCost) {
+					charButton.interactable = true;
+				} else {
+					charButton.interactable = false;
+				}
+
+				if (isCardUsed) {
+					charButton.interactable = true;
+				}
+			}
+		} else {
+			charButton.interactable = false;
+		}
+	}
+		
+	//deduct or add gp bar when trying to use or not use character
+	public void UseCharacter ()
+	{
+		if (isCardUsed == false) {
+			ScreenBattleController.Instance.partState.playerGPBar.value -= charCard.gpCost;
+			useEffect.enabled = true;
+			priorityNumberText.enabled = true;
+			ScreenBattleController.Instance.partCharacter.priorityNumberList.Add (this);
+
+		} else {
+			ScreenBattleController.Instance.partState.playerGPBar.value += charCard.gpCost;
+			useEffect.enabled = false;
+			priorityNumberText.enabled = false;
+			Debug.Log (priorityNumber);
+			ScreenBattleController.Instance.partCharacter.priorityNumberList.RemoveAt (priorityNumber);
+			priorityNumber = 0;
+
+		}
+		ScreenBattleController.Instance.partCharacter.UpdateCharCardPriority ();
+		isCardUsed = !isCardUsed;
+
+	}
+
+	public void UpdatePriorityNumber(){
+		if (ScreenBattleController.Instance.partCharacter.priorityNumberList.Count > 0) {
+			for (int i = 0; i < ScreenBattleController.Instance.partCharacter.priorityNumberList.Count; i++) {
+				if (ScreenBattleController.Instance.partCharacter.priorityNumberList [i].Equals (this)) {
+					priorityNumber = i;
+
+					priorityNumberText.text = "" + (priorityNumber + 1);
+				}
+			}
 		}
 	}
 
@@ -61,9 +128,12 @@ public class CharEquipCardController : MonoBehaviour
 
 	}
 
+	//show character overview if button not tapped, else activate skill
 	public void OnPointerUp ()
 	{
 		if (isTap) {
+			UseCharacter ();
+		} else {
 			InfoButton ();
 		}
 		StopCoroutine (checkTap);
@@ -74,73 +144,6 @@ public class CharEquipCardController : MonoBehaviour
 		isTap = true;
 		yield return new WaitForSeconds (0.2f);
 		isTap = false;
-	}
-
-	#endregion
-
-	#region CHANGE CARD ORDER
-
-	public void OnEndDrag ()
-	{
-		charImage.raycastTarget = true;
-		selectedObject.transform.SetParent (characterLayout.transform);
-		selectedObject.transform.SetSiblingIndex (selectedIndex);
-		Destroy (containerPlacer);
-		isDragging = false;
-		this.transform.position = startPos;
-
-		Invoke ("SendNewCharOrder", 0.1f);
-	}
-
-	private CharacterModel[] EquipCards ()
-	{
-		CharacterModel[] charEquipCard = new CharacterModel[3];
-		for (int i = charArray.Length - 1; i >= 0; i--) {
-			charEquipCard [i] = this.transform.parent.GetChild (i).GetComponent<CharEquipCardController> ().GetCharacter ();
-		}
-		return charEquipCard;
-	}
-
-	private void SendNewCharOrder ()
-	{
-		for (int i = 0; i < EquipCards ().Length; i++) {
-			charArray [i] = EquipCards () [i];
-		}
-		CharacterManager.SetCharacterOrder (charArray);
-
-		//Checks hierarchy of character UI and updates it's index
-		ScreenBattleController.Instance.partCharacter.SetCharacterOrder ();
-	}
-
-	public void ToggleButtonInteractable (bool toggle)
-	{
-		charButton.interactable = toggle;
-	}
-
-	public void OnBeginDrag ()
-	{
-		selectedObject = this.gameObject;
-		startPos = this.transform.position;
-		selectedObject.transform.SetParent (characterLayout.transform.parent);
-		containerPlacer = SystemResourceController.Instance.LoadPrefab ("Input-UI", characterLayout);
-		charImage.raycastTarget = false;
-		isDragging = true;
-	}
-
-	public void OnPointerEnter ()
-	{
-		if (isDragging) {
-			selectedIndex = transform.GetSiblingIndex ();
-			containerPlacer.transform.SetSiblingIndex (selectedIndex);
-		}
-	}
-
-	public void OnDrag ()
-	{
-		Vector2 pos = new Vector2 (0, 0);
-		Canvas myCanvas = SystemGlobalDataController.Instance.gameCanvas;
-		RectTransformUtility.ScreenPointToLocalPointInRectangle (myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
-		this.transform.position = myCanvas.transform.TransformPoint (pos);
 	}
 
 	#endregion

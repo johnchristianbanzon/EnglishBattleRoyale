@@ -89,20 +89,11 @@ public class PartGestureController : MonoBehaviour, IRPCDicObserver
 		GestureModel gesture = new GestureModel (gestureNumber);
 		SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_GESTURE, gesture);
 	}
-
-	//Hide gesture camera after displaying
-	private void HideGesture ()
-	{
-		ScreenBattleController.Instance.partCameraWorks.HideGestureCamera ();
-	}
+		
 
 	private void ShowGesture (bool isPlayer, string param)
 	{
 		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, param);
-		if (!isPlayer) {
-			ScreenBattleController.Instance.partCameraWorks.ShowGestureCamera ();
-			Invoke ("HideGesture", 1.5f);
-		}
 	}
 
 
