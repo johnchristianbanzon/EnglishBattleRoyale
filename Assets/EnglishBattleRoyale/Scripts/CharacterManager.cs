@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class CharacterManager: IRPCDicObserver
 {
@@ -9,11 +10,12 @@ public class CharacterManager: IRPCDicObserver
 	private static Queue<CharacterModel> playerCharacterQueue = new Queue<CharacterModel> ();
 	private static Queue<CharacterModel> enemyCharacterQueue = new Queue<CharacterModel> ();
 
-	public static void ResetCharacterManager(){
+	public static void ResetCharacterManager ()
+	{
 		characterQueue.Clear ();
 		playerCharacterQueue.Clear ();
 		enemyCharacterQueue.Clear ();
-		Array.Clear(currentCharacterInEquip, 0, currentCharacterInEquip.Length);
+		Array.Clear (currentCharacterInEquip, 0, currentCharacterInEquip.Length);
 	}
 
 	public void Init ()
@@ -27,20 +29,46 @@ public class CharacterManager: IRPCDicObserver
 	public static void StartCharacters ()
 	{
 		List<CharacterModel> charactersToSend = new List<CharacterModel> ();
+		Dictionary<int,int> result = new Dictionary<int, int> ();
 		for (int i = 0; i < currentCharacterInEquip.Length; i++) {
 			//if gp is enough, send character to firebase and remove from equip
-			PlayerManager.SetIsPlayer(true);
-			if (PlayerManager.Player.gp >= currentCharacterInEquip [i].gpCost) {
-				Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [i].name);
-				PlayerManager.Player.gp -= currentCharacterInEquip [i].gpCost;
-				charactersToSend.Add (currentCharacterInEquip [i]);
-				ActivateCharacterUI (i);
+			PlayerManager.SetIsPlayer (true);
+			bool isCardValid = false;
 
-			} else {
-				Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [i].name);
-				break;
+
+			ScreenBattleController.Instance.partCharacter.GetCharCards () [i].CheckCard (delegate(bool arg1, int arg2) {
+				if (arg1) {
+					isCardValid = true;
+					result.Add(i,arg2);
+				} else {
+					
+					isCardValid = false;
+				}
+			});
+
+			if (isCardValid == false) {
+				continue;
 			}
 		}
+
+
+		if (result.Count > 0) {
+			var list = result.Keys.ToList();
+			list.Sort ();
+
+			foreach (var key in list) {
+				if (PlayerManager.Player.gp >= currentCharacterInEquip [key].gpCost) {
+					Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [key].name);
+					PlayerManager.Player.gp -= currentCharacterInEquip [key].gpCost;
+					charactersToSend.Add (currentCharacterInEquip [key]);
+					ActivateCharacterUI (key);
+				} else {
+					Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [key].name);
+				}
+			}
+		}
+
+
 
 		CharacterModelList characterList = new CharacterModelList ();
 		characterList.list = charactersToSend;
@@ -118,7 +146,7 @@ public class CharacterManager: IRPCDicObserver
 
 			//Show activated card on top
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
-				                         ScreenBattleController.Instance.partState.playerCardContainer);
+				                          ScreenBattleController.Instance.partState.playerCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.playerCardContainer.transform.position;
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
 		
@@ -130,7 +158,7 @@ public class CharacterManager: IRPCDicObserver
 
 			//Show activated card on top
 			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
-				ScreenBattleController.Instance.partState.enemyCardContainer);
+				                          ScreenBattleController.Instance.partState.enemyCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.enemyCardContainer.transform.position;
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
 
@@ -161,7 +189,7 @@ public class CharacterManager: IRPCDicObserver
 		return characterList;
 	}
 
-	//TO-DO: store in data, use pantoyprefs or something, if characters already present in data, no need to generate, 
+	//TO-DO: store in data, use pantoyprefs or something, if characters already present in data, no need to generate,
 	//Add 8 random characters to equip by default
 	public static List<CharacterModel>  GetEquipCharacterList ()
 	{

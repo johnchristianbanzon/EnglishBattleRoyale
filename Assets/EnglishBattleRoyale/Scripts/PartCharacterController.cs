@@ -26,6 +26,10 @@ public class PartCharacterController : MonoBehaviour
 		}
 	}
 
+	public CharEquipCardController[] GetCharCards(){
+		return charCards;
+	}
+
 	public void OnStartPhase ()
 	{
 		//Pick character time
@@ -67,9 +71,13 @@ public class PartCharacterController : MonoBehaviour
 	public void ShowCharacters (bool isShow)
 	{
 		if (isShow) {
-			this.transform.position = Vector2.zero;
+			for (int i = 0; i < charCards.Length; i++) {
+				charCards [i].SetIsInterActable (true);
+			}
 		} else {
-			this.transform.position = new Vector2 (0, -5);
+			for (int i = 0; i < charCards.Length; i++) {
+				charCards [i].SetIsInterActable (false);
+			}
 		}
 	}
 

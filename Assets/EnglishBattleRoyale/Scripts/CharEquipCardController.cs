@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 public class CharEquipCardController : MonoBehaviour
 {
@@ -19,8 +20,17 @@ public class CharEquipCardController : MonoBehaviour
 	public Image useEffect;
 	private int priorityNumber = 0;
 
+	private bool isInterActable = false;
+
 	private GameObject popUpSkillOverview;
 
+	public void SetIsInterActable(bool isInterActable){
+		this.isInterActable = isInterActable;
+	}
+
+	public void CheckCard(Action<bool, int> onResult){
+		onResult (isCardUsed, priorityNumber);
+	}
 
 
 	void Start(){
@@ -54,16 +64,20 @@ public class CharEquipCardController : MonoBehaviour
 	//if not enough gp, character is not interactable
 	void Update ()
 	{
-		if (charCard != null) {
-			if (ScreenBattleController.Instance.partState.playerGPBar.value >= charCard.gpCost) {
-				charButton.interactable = true;
-			} else {
-				charButton.interactable = false;
-			}
+		if (isInterActable) {
+			if (charCard != null) {
+				if (ScreenBattleController.Instance.partState.playerGPBar.value >= charCard.gpCost) {
+					charButton.interactable = true;
+				} else {
+					charButton.interactable = false;
+				}
 
-			if (isCardUsed) {
-				charButton.interactable = true;
+				if (isCardUsed) {
+					charButton.interactable = true;
+				}
 			}
+		} else {
+			charButton.interactable = false;
 		}
 	}
 		
@@ -71,13 +85,13 @@ public class CharEquipCardController : MonoBehaviour
 	public void UseCharacter ()
 	{
 		if (isCardUsed == false) {
-//			ScreenBattleController.Instance.partState.playerGPBar.value -= charCard.gpCost;
+			ScreenBattleController.Instance.partState.playerGPBar.value -= charCard.gpCost;
 			useEffect.enabled = true;
 			priorityNumberText.enabled = true;
 			ScreenBattleController.Instance.partCharacter.priorityNumberList.Add (this);
 
 		} else {
-//			ScreenBattleController.Instance.partState.playerGPBar.value += charCard.gpCost;
+			ScreenBattleController.Instance.partState.playerGPBar.value += charCard.gpCost;
 			useEffect.enabled = false;
 			priorityNumberText.enabled = false;
 			Debug.Log (priorityNumber);
