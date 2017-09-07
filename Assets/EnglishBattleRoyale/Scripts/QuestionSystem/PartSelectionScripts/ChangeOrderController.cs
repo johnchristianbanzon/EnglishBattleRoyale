@@ -20,6 +20,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 	/// <param name="answer">Answer.</param>
 	public void ShowSelectionType (string answer,Action<List<GameObject>> onSelectCallBack)
 	{
+		selectionViewContent.GetComponent<HorizontalLayoutGroup> ().enabled = true;
 		this.onSelectCallBack = onSelectCallBack;
 		gameObject.SetActive (true);
 		InitSelectionContainers ();
@@ -120,7 +121,7 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 		for (int i = 0; i < selectionContainers.Length; i++) {
 			selectionContainers [i].transform.SetSiblingIndex (UnityEngine.Random.Range (0, selectionContainers.Length));
 		}
-		if (GetSelectedAnswer ().Equals (questionAnswer)) {
+		if (GetSelectedAnswer ().Equals (questionAnswer.ToUpper())) {
 			ShuffleSelection ();
 		}
 	}
@@ -141,7 +142,6 @@ public class ChangeOrderController : MonoBehaviour, ISelection
 				selectionIndex.Add (i);
 			}
 		}
-//		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		TweenFacade.TweenScaleToLarge (showAnswer.hintContainers[selectionIndex[0]].transform,Vector3.one,0.3f);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;
 		showAnswer.hintContainers [selectionIndex [0]].GetComponentInChildren<Text> ().text = letterArray [selectionIndex [0]].ToString();

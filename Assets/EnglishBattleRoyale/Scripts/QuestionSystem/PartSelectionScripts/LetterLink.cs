@@ -7,7 +7,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 {
 	public LetterLinkEvent[] connectLetterButtons = new LetterLinkEvent[9];
 	public string questionAnswer;
-
+	public LineRenderer lineRender; 
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
@@ -19,6 +19,10 @@ public class LetterLink : MonoBehaviour ,ISelection
 	public void HideSelectionType ()
 	{
 		gameObject.SetActive (false);
+	}
+
+	public void LineRender(){
+	
 	}
 
 	private List<GameObject> popUpSelectionList = new List<GameObject>();
@@ -58,6 +62,7 @@ public class LetterLink : MonoBehaviour ,ISelection
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
+		/*
 		ShowAnswer showAnswer = QuestionSystemController.Instance.partAnswer.showAnswer;
 		List<int> selectionIndex = new List<int>();
 		for (int i = 0; i < showAnswer.hintContainers.Count; i++) {
@@ -65,10 +70,10 @@ public class LetterLink : MonoBehaviour ,ISelection
 				selectionIndex.Add (i);
 			}
 		}
-//		selectionIndex = ListShuffleUtility.Shuffle (selectionIndex);
 		showAnswer.hintContainers[selectionIndex[0]].GetComponentInChildren<Text>().text = questionAnswer[selectionIndex[0]].ToString();
 		showAnswer.hintContainers [selectionIndex [0]].GetComponent<Image> ().color = new Color32 (255,255,255,255);
-		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;
+		showAnswer.hintContainers[selectionIndex[0]].GetComponent<Button> ().interactable = false;*/
+		QuestionSystemController.Instance.correctAnswerButtons [hintIndex].GetComponent<LetterLinkEvent> ().ShowHint ();
 	}
 
 	public void HideSelectionHint(){
@@ -81,6 +86,11 @@ public class LetterLink : MonoBehaviour ,ISelection
 		ShuffleSelection ();
 		QuestionSystemController.Instance.partAnswer.showAnswer.InitHints ();
 		gameObject.SetActive (true);
+		for (int i = 0; i < connectLetterButtons.Length; i++) {
+			if (connectLetterButtons[i].specialEffectObject != null) {
+				Destroy (connectLetterButtons[i].specialEffectObject);
+			}
+		}
 	}
 
 	/// <summary>

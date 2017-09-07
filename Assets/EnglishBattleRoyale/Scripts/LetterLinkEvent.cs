@@ -9,14 +9,22 @@ public class LetterLinkEvent : MonoBehaviour
 	private static string writtenAnswer;
 	private Color selectedColor = new Color (36f / 255, 189f / 255f, 88f / 255f);
 	private Color defaultColor = new Color32 (255,255,255,255);
-
+	public GameObject specialEffectObject = null;
+	private Vector3 _initialPosition;
+	private Vector3 _currentPosition;
 
 	public void OnBeginDrag (GameObject currentSelectedLetter)
 	{
 		startSelection = true;
 		writtenAnswer = "";
 		OnDragSelection (currentSelectedLetter);
+		letterlink.lineRender.sortingOrder = 5;
+//		letterlink.lineRender.SetPosition (0, currentSelectedLetter.transform.position);
 
+		_initialPosition = currentSelectedLetter.transform.position;
+		letterlink.lineRender.SetPosition(0, _initialPosition);
+		letterlink.lineRender.numPositions = 1;	
+//		letterlink.lineRender.enabled = true;
 	}
 
 	public void ShowCorrectAnswer(bool isAnswerCorrect){
@@ -31,9 +39,31 @@ public class LetterLinkEvent : MonoBehaviour
 		}
 	}
 
+	private static int answerCounter = 1;
 	public void OnDragSelection (GameObject currentSelectedLetter)
 	{
+		if (startSelection) {
+//			letterlink.lineRender.SetPosition (1, pos);
+
+//			_currentPosition = pos;
+//			letterlink.lineRender.numPositions = 2;
+//			letterlink.lineRender.SetPosition(1, _currentPosition);
+		}
+
 		if (startSelection && (currentSelectedLetter.GetComponent<Image> ().color != selectedColor)) {
+//			letterlink.lineRender.SetPosition (2, currentSelectedLetter.transform.position);
+
+
+			Vector2 pos = new Vector2 (0, 0);
+			Canvas myCanvas = SystemGlobalDataController.Instance.gameCanvas;
+			this.GetComponent<Image> ().raycastTarget = false;
+			RectTransformUtility.ScreenPointToLocalPointInRectangle (myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
+
+			_currentPosition = pos;
+
+			letterlink.lineRender.numPositions = answerCounter + 1;
+			letterlink.lineRender.SetPosition(answerCounter, currentSelectedLetter.transform.position);	
+			answerCounter++;
 			writtenAnswer += currentSelectedLetter.GetComponentInChildren<Text> ().text;
 			QuestionSystemController.Instance.partAnswer.showAnswer.ShowLetterInView (currentSelectedLetter);
 			currentSelectedLetter.GetComponent<Image> ().color = selectedColor;
@@ -41,9 +71,14 @@ public class LetterLinkEvent : MonoBehaviour
 		}
 	}
 
+	public void ShowHint(){
+		specialEffectObject = SystemResourceController.Instance.LoadPrefab ("LetterLinkSpecialEffect", gameObject);
+	}
 
 	public void OnEndDrag ()
 	{
+		answerCounter = 1;
+		letterlink.lineRender.numPositions = 2;
 		if (letterlink.questionAnswer == writtenAnswer) {
 			startSelection = false;
 			QuestionSystemController.Instance.CheckAnswer (true);

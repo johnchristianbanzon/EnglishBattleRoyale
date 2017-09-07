@@ -142,13 +142,13 @@ public class QuestionSystemController : SingletonMonoBehaviour<QuestionSystemCon
 			break;
 		case QuestionSystemEnums.SpeedyType.Good:
 			speedyEffect = SystemResourceController.Instance.LoadPrefab ("AwesomeEffect",SystemPopupController.Instance.popUp);
-			speedyEffect.GetComponent<Text>().text = "GOOD";
+			speedyEffect.GetComponent<Text>().text = "GREAT!";
 			SystemSoundController.Instance.PlaySFX ("SFX_correct");
 			break;
 		case QuestionSystemEnums.SpeedyType.Rotten:
-			speedyEffect = SystemResourceController.Instance.LoadPrefab ("RottenEffect",SystemPopupController.Instance.popUp);
-			speedyEffect.GetComponent<Text>().text = "NOT BAD";
-			SystemSoundController.Instance.PlaySFX ("SFX_rotten");
+			speedyEffect = SystemResourceController.Instance.LoadPrefab ("AwesomeEffect",SystemPopupController.Instance.popUp);
+			speedyEffect.GetComponent<Text>().text = "GOOD";
+			SystemSoundController.Instance.PlaySFX ("SFX_correct");
 			break;
 		}
 

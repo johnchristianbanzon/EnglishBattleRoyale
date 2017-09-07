@@ -23,6 +23,7 @@ public class StackSwipeController : MonoBehaviour, ISelection
 
 	public void ShowSelectionType (string answer, Action<List<GameObject>> onSelectCallBack)
 	{
+		stackSwipeContent.GetComponent<VerticalLayoutGroup> ().enabled = true;
 		questionAnswer = answer;
 		gameObject.SetActive (true);
 		List<GameObject> correctAnswer = new List<GameObject> ();
