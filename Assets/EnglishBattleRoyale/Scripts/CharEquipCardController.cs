@@ -26,6 +26,12 @@ public class CharEquipCardController : MonoBehaviour
 
 	public void SetIsInterActable(bool isInterActable){
 		this.isInterActable = isInterActable;
+	
+	}
+
+	public void ResetCardUsed(){
+		useEffect.enabled = false;
+		isCardUsed = false;
 	}
 
 	public void CheckCard(Action<bool, int> onResult){

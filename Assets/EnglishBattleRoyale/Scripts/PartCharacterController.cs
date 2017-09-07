@@ -46,7 +46,10 @@ public class PartCharacterController : MonoBehaviour
 	public void OnEndPhase ()
 	{
 		//Hide character selection
-		ScreenBattleController.Instance.partCharacter.ShowCharacters(false);
+		ShowCharacters(false);
+		for (int i = 0; i < charCards.Length; i++) {
+			charCards [i].ResetCardUsed ();
+		}
 	}
 
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
