@@ -13,6 +13,9 @@ public class SelectLetterEvent : MonoBehaviour
 	public bool isCorrect = false;
 	public GameObject containerReplacement;
 	public int containerIndex;
+	public bool hasHint = false;
+	public GameObject hintSpecialEffectObject;
+	public bool isButtonsClickable = true;
 
 	public void Init (bool isCorrect, int letterIndex)
 	{
@@ -29,10 +32,12 @@ public class SelectLetterEvent : MonoBehaviour
 			letter.text = alphabet [randomizeLetterIndex].ToString ();
 		}
 		Destroy (containerReplacement);
+		Destroy (hintSpecialEffectObject);
 		containerIndex = transform.GetSiblingIndex ();
 //		gameObject.GetComponent<Image> ().color = new Color (94f / 255, 255f / 255f, 148f / 255f);
 		gameObject.GetComponent<Image> ().color = Color.white;
 		isSelected = false;
+		hasHint = false;
 		gameObject.GetComponent<Button> ().interactable = true;
 		gameObject.GetComponent<EventTrigger> ().enabled = true;
 	}
@@ -41,16 +46,45 @@ public class SelectLetterEvent : MonoBehaviour
 	{
 		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
 		selectLetter.fillAnswer.CheckAnswerHolder ();
-		if (!isSelected) {
-			if (!selectLetter.fillAnswer.isFull) {
-				InstantiateHiddenContaner (selectedLetter.transform.GetSiblingIndex ());
-				selectLetter.fillAnswer.ShowSelectedLetter (selectedLetter);
-				isSelected = true;
+		if (isButtonsClickable) {
+			if (!isSelected) {
+				if (!selectLetter.fillAnswer.isFull) {
+					if (!CheckHints (selectedLetter)) {
+						InstantiateHiddenContaner (selectedLetter.transform.GetSiblingIndex ());
+						selectLetter.fillAnswer.ShowSelectedLetter (selectedLetter);
+						isSelected = true;
+					} else {
+						TweenFacade.TweenShakePosition (selectedLetter.transform, 0.5f, 15.0f, 20, 90f);
+						isButtonsClickable = false;
+						Invoke ("ButtonClickable", 0.5f);
+					}
+				}
+			} else {
+				ReturnSelectedLetter (selectedLetter);
+				isSelected = false;
 			}
-		} else {
-			ReturnSelectedLetter (selectedLetter);
-			isSelected = false;
 		}
+	}
+
+	private void ButtonClickable(){
+		isButtonsClickable = true;
+	}
+
+	private bool CheckHints(GameObject selectedLetter){
+		for (int i = 0; i < selectLetter.selectionButtons.Length; i++) {
+			if (selectLetter.selectionButtons [i].hasHint && !selectLetter.selectionButtons[i].isSelected) {
+				if (selectedLetter.GetComponent<SelectLetterEvent> ().isCorrect && 
+					selectedLetter.GetComponent<SelectLetterEvent>().letter.text==selectLetter.questionAnswer[selectLetter.fillAnswer.CheckAnswerHolder()].ToString()) {
+				
+				} else {
+					GameObject correctAnswerObject = selectLetter.correctContainers[selectLetter.fillAnswer.CheckAnswerHolder()].gameObject;
+					TweenFacade.TweenJumpTo (correctAnswerObject.transform, new Vector2 (correctAnswerObject.transform.localPosition.x, correctAnswerObject
+						.transform.localPosition.y), 50f, 1, 0.4f, 0);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void InstantiateHiddenContaner (int index)

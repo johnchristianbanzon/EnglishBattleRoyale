@@ -10,7 +10,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 	public SelectLetterEvent[] selectionButtons = new SelectLetterEvent[12];
 	public FillAnswerType fillAnswer;
 	public string questionAnswer;
-	List<SelectLetterEvent> correctContainers = new List<SelectLetterEvent> ();
+	public List<SelectLetterEvent> correctContainers = new List<SelectLetterEvent> ();
 
 	public void OnSelect ()
 	{
@@ -33,11 +33,11 @@ public class SelectLetter : MonoBehaviour, ISelection
 			for (int i = 0; i < popUpSelectionList.Count; i++) {
 				if (i % 2 == 0) {
 					TweenFacade.TweenJumpTo (
-						popUpSelectionList [i].transform, popUpSelectionList [i].transform.localPosition, 40f, 1, 0.1f
+						popUpSelectionList [i].transform, popUpSelectionList [i].transform.localPosition, 40f, 1, 0.5f
 					, 0);
 				} else {
 					TweenFacade.TweenJumpTo (
-						popUpSelectionList [i].transform, popUpSelectionList [i].transform.localPosition, 40f, 1, 0.1f
+						popUpSelectionList [i].transform, popUpSelectionList [i].transform.localPosition, 40f, 1, 0.5f
 						, 0.5f);
 				}
 			}
@@ -55,11 +55,9 @@ public class SelectLetter : MonoBehaviour, ISelection
 		foreach (SelectLetterEvent container in correctContainers) {
 			container.ShowCorrectAnswer (isAnswerCorrect);
 		}
-
 	}
 
 	private List<int> hideSelectionIndex = new List<int> ();
-
 	private List<int> InitHideHint ()
 	{
 		hideSelectionIndex.Clear ();
@@ -93,8 +91,7 @@ public class SelectLetter : MonoBehaviour, ISelection
 	}
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
-	{
-//		if (!QuestionSystemController.Instance.isQuestionRoundOver) {
+	{/*
 		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
 			List<int> correctContainerIndexList = new List<int> ();
 			for (int i = 0; i < correctContainers.Count; i++) {
@@ -129,6 +126,20 @@ public class SelectLetter : MonoBehaviour, ISelection
 			correctContainers [firstContainerIndex].isSelected = true;
 			correctContainers [firstContainerIndex].GetComponent<EventTrigger> ().enabled = false;
 			correctContainers [firstContainerIndex].GetComponent<Button> ().interactable = false;
+		}
+		*/
+		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
+			List<int> correctContainerIndexList = new List<int> ();
+			for (int i = 0; i < correctContainers.Count; i++) {
+				if (correctContainers [i].isCorrect && !correctContainers [i].hasHint && !correctContainers [i].isSelected) {
+					correctContainerIndexList.Add (i);
+				} 
+			}
+			if (correctContainerIndexList.Count > 0) {
+				int firstContainerIndex = correctContainerIndexList [0];
+				correctContainers [firstContainerIndex].hasHint = true;
+				correctContainers[firstContainerIndex].hintSpecialEffectObject = SystemResourceController.Instance.LoadPrefab ("QS_SpecialEffect_SelectLetter_Selection", correctContainers [firstContainerIndex].gameObject);
+			}
 		}
 	}
 

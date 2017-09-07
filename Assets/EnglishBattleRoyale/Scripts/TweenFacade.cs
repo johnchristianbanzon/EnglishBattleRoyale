@@ -73,7 +73,7 @@ public static class TweenFacade{
 		DOTween.Clear ();
 	}
 	public static void TweenJumpTo(Transform obj, Vector3 endValue, float jumpPower,int numJumps,float duration,float delay){
-		obj.transform.DOLocalJump (endValue, jumpPower, numJumps, 1, true).SetDelay (delay);
+		obj.transform.DOLocalJump (endValue, jumpPower, numJumps, duration, true).SetDelay (delay);
 	}
 
 	public static void TweenMoveTo(Transform obj, Vector3 endValue,float duration){
