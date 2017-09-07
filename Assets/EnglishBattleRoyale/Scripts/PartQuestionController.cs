@@ -32,11 +32,7 @@ public class PartQuestionController: MonoBehaviour
 		
 	public void OnStartPhase ()
 	{
-		ScreenBattleController.Instance.partCharacter.ShowAutoActivateButtons (true);
 		RPCDicObserver.AddObserver (PartAnswerIndicatorController.Instance);
-
-		string[] questionTypes = new string[6]{ "SelectLetter", "Typing", "ChangeOrderController", "WordChoice", "SlotMachine", "LetterLink" };
-//		QuestionSystemController.Instance.ShowPopUP (questionTypes [UnityEngine.Random.Range (0, questionTypes.Length)]);
 
 		Invoke("StartQuestion",2.0f);
 	}
@@ -79,6 +75,8 @@ public class PartQuestionController: MonoBehaviour
 				SystemFirebaseDBController.Instance.AnswerPhase (param);
 				QuestionSystemController.Instance.HideQuestionParts();
 				QuestionSystemReturnCallback();
+
+		
 			}
 		);
 	}
@@ -92,6 +90,8 @@ public class PartQuestionController: MonoBehaviour
 	public void OnEndPhase ()
 	{
 		RPCDicObserver.RemoveObserver (PartAnswerIndicatorController.Instance);
+		//show character selection
+		ScreenBattleController.Instance.partCharacter.ShowCharacters(true);
 	}
 
 }

@@ -183,12 +183,6 @@ public class CharacterManager: IRPCDicObserver
 		ScreenBattleController.Instance.partCharacter.SetCharacterUI (characterIndex, character);
 	
 	}
-
-	//When player switch reOrder characters when battle
-	public static void SetCharacterOrder (CharacterModel[] indexArray)
-	{
-		Array.Copy (indexArray, currentCharacterInEquip, 3);
-	}
 		
 
 	//Receive skill list from prepare phase and shuffle for random skill in start and put in queue

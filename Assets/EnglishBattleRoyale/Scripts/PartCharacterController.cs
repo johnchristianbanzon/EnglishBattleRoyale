@@ -8,14 +8,22 @@ public class PartCharacterController : MonoBehaviour
 {
 	public GameObject charCardsContainer;
 	private CharEquipCardController[] charCards = new CharEquipCardController[3];
-
+	public List<CharEquipCardController> priorityNumberList{ get; set; }
 	void Start ()
 	{
+		priorityNumberList = new List<CharEquipCardController>(3);
+		ShowCharacters (false);
 		SetCharacterOrder ();
 		 
 		//Set starting skills during start of battle
 		CharacterManager.SetStartCharacters ();
 
+	}
+
+	public void UpdateCharCardPriority(){
+		for (int i = 0; i < charCards.Length; i++) {
+			charCards [i].UpdatePriorityNumber ();
+		}
 	}
 
 	public void OnStartPhase ()
@@ -28,14 +36,13 @@ public class PartCharacterController : MonoBehaviour
 	{
 		//Check toggle on characters on start of the phase and send it
 		CharacterManager.StartCharacters ();
-		ShowAutoActivateButtons (false);
 		PartAnswerIndicatorController.Instance.ResetAnswer ();
 	}
 
-	//show skill buttons after attack phase is done
 	public void OnEndPhase ()
 	{
-		ShowAutoActivateButtons (true);
+		//Hide character selection
+		ScreenBattleController.Instance.partCharacter.ShowCharacters(false);
 	}
 
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
@@ -57,24 +64,16 @@ public class PartCharacterController : MonoBehaviour
 		}
 	}
 
-	private void OnEndQuestionTime ()
+	public void ShowCharacters (bool isShow)
 	{
-		ButtonEnable (false);
+		if (isShow) {
+			this.transform.position = Vector2.zero;
+		} else {
+			this.transform.position = new Vector2 (0, -5);
+		}
 	}
 
-	public void ShowAutoActivateButtons (bool isShow)
-	{
-		ButtonEnable (isShow);
-
-	}
-
-	public void ButtonEnable (bool buttonEnable)
-	{
-		charCards [0].ToggleButtonInteractable (buttonEnable);
-		charCards [1].ToggleButtonInteractable (buttonEnable);
-		charCards [2].ToggleButtonInteractable (buttonEnable);
-	}
-
+		
 	#region COROUTINES
 
 	public void ChangeCharacterCard (Action removeCard, Action newCard)
