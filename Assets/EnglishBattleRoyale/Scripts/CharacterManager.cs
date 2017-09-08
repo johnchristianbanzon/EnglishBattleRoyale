@@ -39,9 +39,8 @@ public class CharacterManager: IRPCDicObserver
 			ScreenBattleController.Instance.partCharacter.GetCharCards () [i].CheckCard (delegate(bool arg1, int arg2) {
 				if (arg1) {
 					isCardValid = true;
-					result.Add(i,arg2);
+					result.Add(arg2,i);
 				} else {
-					
 					isCardValid = false;
 				}
 			});
@@ -51,19 +50,24 @@ public class CharacterManager: IRPCDicObserver
 			}
 		}
 
-
+		//sort result according to priority number of character in equip
 		if (result.Count > 0) {
+			
+
 			var list = result.Keys.ToList();
 			list.Sort ();
 
 			foreach (var key in list) {
-				if (PlayerManager.Player.gp >= currentCharacterInEquip [key].gpCost) {
-					Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [key].name);
-					PlayerManager.Player.gp -= currentCharacterInEquip [key].gpCost;
-					charactersToSend.Add (currentCharacterInEquip [key]);
-					ActivateCharacterUI (key);
+
+
+				if (PlayerManager.Player.gp >= currentCharacterInEquip [result[key]].gpCost) {
+					Debug.Log ("SENDING TO FIREBASE CHARACTER " + currentCharacterInEquip [result[key]].name);
+					PlayerManager.Player.gp -= currentCharacterInEquip [result[key]].gpCost;
+					charactersToSend.Add (currentCharacterInEquip [result[key]]);
+					ActivateCharacterUI (result[key]);
+					PlayerManager.UpdateStateUI (true);
 				} else {
-					Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [key].name);
+					Debug.Log ("NOT ENOUGH GP FOR CHARACTER " + currentCharacterInEquip [result[key]].name);
 				}
 			}
 		}
@@ -74,6 +78,11 @@ public class CharacterManager: IRPCDicObserver
 		characterList.list = charactersToSend;
 
 		SystemFirebaseDBController.Instance.SetParam (MyConst.RPC_DATA_CHARACTER, (characterList));
+
+		//reset card used effect
+		for (int i = 0; i < ScreenBattleController.Instance.partCharacter.GetCharCards().Length; i++) {
+			ScreenBattleController.Instance.partCharacter.GetCharCards() [i].ResetCardUsed ();
+		}
 	}
 
 	#endregion
@@ -209,7 +218,6 @@ public class CharacterManager: IRPCDicObserver
 	{
 		currentCharacterInEquip [characterIndex] = character;
 		ScreenBattleController.Instance.partCharacter.SetCharacterUI (characterIndex, character);
-	
 	}
 		
 

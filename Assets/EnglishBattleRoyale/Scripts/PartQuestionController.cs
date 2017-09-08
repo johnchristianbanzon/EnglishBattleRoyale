@@ -76,6 +76,7 @@ public class PartQuestionController: MonoBehaviour
 				QuestionSystemController.Instance.HideQuestionParts();
 				QuestionSystemReturnCallback();
 
+				ScreenBattleController.Instance.partCharacter.ShowCharacters(true);
 		
 			}
 		);
@@ -91,7 +92,6 @@ public class PartQuestionController: MonoBehaviour
 	{
 		RPCDicObserver.RemoveObserver (PartAnswerIndicatorController.Instance);
 		//show character selection
-		ScreenBattleController.Instance.partCharacter.ShowCharacters(true);
 	}
 
 }

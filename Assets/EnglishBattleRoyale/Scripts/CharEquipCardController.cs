@@ -24,22 +24,27 @@ public class CharEquipCardController : MonoBehaviour
 
 	private GameObject popUpSkillOverview;
 
-	public void SetIsInterActable(bool isInterActable){
+	public void SetIsInterActable (bool isInterActable)
+	{
 		this.isInterActable = isInterActable;
-	
+		charButton.interactable = isInterActable;
 	}
 
-	public void ResetCardUsed(){
+	public void ResetCardUsed ()
+	{
 		useEffect.enabled = false;
 		isCardUsed = false;
+		priorityNumber = 0;
 	}
 
-	public void CheckCard(Action<bool, int> onResult){
+	public void CheckCard (Action<bool, int> onResult)
+	{
 		onResult (isCardUsed, priorityNumber);
 	}
 
 
-	void Start(){
+	void Start ()
+	{
 		useEffect.enabled = false;
 		priorityNumberText.enabled = false;
 	}
@@ -65,6 +70,8 @@ public class CharEquipCardController : MonoBehaviour
 		} else {
 			Destroy (popUpSkillOverview);
 		}
+
+		StopCoroutine (checkTap);
 	}
 
 	//if not enough gp, character is not interactable
@@ -107,10 +114,11 @@ public class CharEquipCardController : MonoBehaviour
 		}
 		ScreenBattleController.Instance.partCharacter.UpdateCharCardPriority ();
 		isCardUsed = !isCardUsed;
-
+		StopCoroutine (checkTap);
 	}
 
-	public void UpdatePriorityNumber(){
+	public void UpdatePriorityNumber ()
+	{
 		if (ScreenBattleController.Instance.partCharacter.priorityNumberList.Count > 0) {
 			for (int i = 0; i < ScreenBattleController.Instance.partCharacter.priorityNumberList.Count; i++) {
 				if (ScreenBattleController.Instance.partCharacter.priorityNumberList [i].Equals (this)) {
@@ -124,19 +132,20 @@ public class CharEquipCardController : MonoBehaviour
 
 	public void OnPointerDown ()
 	{
-		checkTap = StartCoroutine (CheckTapTimeCoroutine ());
-
+		if (isInterActable) {
+			checkTap = StartCoroutine (CheckTapTimeCoroutine ());
+		}
 	}
 
 	//show character overview if button not tapped, else activate skill
 	public void OnPointerUp ()
 	{
-		if (isTap) {
-			UseCharacter ();
-		} else {
-			InfoButton ();
+		if (isInterActable) {
+			if (isTap) {
+				UseCharacter ();
+			} 
+
 		}
-		StopCoroutine (checkTap);
 	}
 
 	IEnumerator CheckTapTimeCoroutine ()
@@ -144,6 +153,7 @@ public class CharEquipCardController : MonoBehaviour
 		isTap = true;
 		yield return new WaitForSeconds (0.2f);
 		isTap = false;
+		InfoButton ();
 	}
 
 	#endregion
