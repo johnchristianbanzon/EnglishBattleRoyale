@@ -9,22 +9,33 @@ public class Typing : MonoBehaviour, ISelection
 {
 	private string questionAnswer;
 	public GameObject[] selectionButtons = new GameObject[26];
+	private List<GameObject> hintedSelection = new List<GameObject> ();
 
 	public void ShowSelectionType (string questionAnswer, Action<List<GameObject>> onSelectCallBack)
 	{
 		this.questionAnswer = questionAnswer;
+		typingAnswerCounter = 0;
 		initHideHint = false;
 		gameObject.SetActive (true);
 		for (int i = 0; i < selectionButtons.Length; i++) {
 			selectionButtons [i].GetComponent<Button> ().interactable = true;
 		}
+		QuestionSystemController.Instance.correctAnswerButtons = fillAnswer.answerContainers;
+		if (hintedSelection.Count > 0) {
+			for (int i = 0; i < hintedSelection.Count; i++) {
+				Destroy (hintedSelection [i].transform.GetChild (1).gameObject);
+			}
+		}
 	}
+
 	GameObject selectionPopUp;
-	public GameObject ShowSelectionPopUp(){
+
+	public GameObject ShowSelectionPopUp ()
+	{
 		SystemSoundController.Instance.PlaySFX ("SFX_Typing");
 		GameObject selectionPopUp = SystemResourceController.Instance.LoadPrefab ("PopUpTyping", SystemPopupController.Instance.popUp);
 		this.selectionPopUp = selectionPopUp;
-		InvokeRepeating ("TypeLetterPopUp", 0,0.4f);
+		InvokeRepeating ("TypeLetterPopUp", 0, 0.4f);
 		if (typePopUpIndex > 4) {
 			string typingString = "TYPING";
 			selectionPopUp.transform.GetChild (3).GetComponentInChildren<Text> ().text = typingString [3].ToString ();
@@ -34,8 +45,11 @@ public class Typing : MonoBehaviour, ISelection
 		}
 		return selectionPopUp;
 	}
+
 	private int typePopUpIndex = 2;
-	private void TypeLetterPopUp(){
+
+	private void TypeLetterPopUp ()
+	{
 		if (typePopUpIndex < 5) {
 			typePopUpIndex++;
 			string typingString = "TYPING";
@@ -50,7 +64,7 @@ public class Typing : MonoBehaviour, ISelection
 
 	public void ShowCorrectAnswer (bool isAnswerCorrect)
 	{
-		Color answerColor = new Color();
+		Color answerColor = new Color ();
 		if (isAnswerCorrect) {
 			answerColor = new Color32 (255, 223, 0, 255);
 		} else {
@@ -58,11 +72,13 @@ public class Typing : MonoBehaviour, ISelection
 		}
 
 		List<GameObject> answerContainers = QuestionSystemController.Instance.partAnswer.fillAnswer.answerContainers;
-		for (int i = 0; i < answerContainers.Count; i++) {
-			if (answerContainers [i].transform.childCount > 0) {
-				answerContainers [i].transform.GetComponentInChildren<Image> ().color = answerColor;
-			} else {
-				answerContainers [i].transform.GetComponent<Image> ().color = answerColor;
+		if (answerContainers != null) {
+			for (int i = 0; i < answerContainers.Count; i++) {
+				if (answerContainers [i].transform.childCount > 0) {
+					answerContainers [i].transform.GetComponentInChildren<Image> ().color = answerColor;
+				} else {
+					answerContainers [i].transform.GetComponent<Image> ().color = answerColor;
+				}
 			}
 		}
 	}
@@ -103,10 +119,12 @@ public class Typing : MonoBehaviour, ISelection
 		gameObject.SetActive (false);
 	}
 
-	FillAnswerType fillAnswer;
+	public FillAnswerType fillAnswer;
+	private int typingAnswerCounter = 0;
 
 	public void ShowSelectionHint (int hintIndex, GameObject correctAnswerContainer)
 	{
+		/*
 		List<int> randomizedIndexList = new List<int> ();
 		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1)) {
 			fillAnswer = QuestionSystemController.Instance.partAnswer.fillAnswer;
@@ -131,13 +149,41 @@ public class Typing : MonoBehaviour, ISelection
 			answerContainer.GetComponentInChildren<Text> ().color = new Color32 (0, 0, 0, 255);
 			answerContainer.GetComponentInChildren<Text> ().text = questionAnswer [randomizedIndexList [0]].ToString ();
 			answerContainer.GetComponentInChildren<Button> ().interactable = false;
+		}*/
+
+		if (MyConst.ALLOW_SHOW_SELECTLETTER.Equals (1) && !(typingAnswerCounter > questionAnswer.Length - 1)) {
+			fillAnswer = QuestionSystemController.Instance.partAnswer.fillAnswer;
+			bool hasHintAvailable = false;
+			int hintCounter = 0;
+			for (int i = 0; i < selectionButtons.Length; i++) {
+				if (questionAnswer [typingAnswerCounter].ToString () == (selectionButtons [i].GetComponentInChildren<Text> ().text) &&
+				    !(selectionButtons [i].transform.childCount > 1)) {
+					typingAnswerCounter++;
+					hintCounter = i;
+					hasHintAvailable = true;
+					break;
+				}
+			}
+			if (hasHintAvailable) {
+				GameObject selectionHintObject = selectionButtons [hintCounter];
+				SystemResourceController.Instance.LoadPrefab ("QS_SpecialEffect_SelectLetter_Selection", selectionHintObject);
+				hintedSelection.Add (selectionHintObject);
+			}
 		}
 	}
 
 	public void OnSelect ()
 	{
+		GameObject selectedObject = EventSystem.current.currentSelectedGameObject;
 		SystemSoundController.Instance.PlaySFX ("SFX_ClickButton");
-		QuestionSystemController.Instance.partAnswer.fillAnswer.
-		SelectionLetterGot (EventSystem.current.currentSelectedGameObject);
+		if (questionAnswer [fillAnswer.CheckAnswerHolder ()].ToString () == selectedObject.GetComponentInChildren<Text> ().text) {
+			QuestionSystemController.Instance.partAnswer.fillAnswer.
+			SelectionLetterGot (selectedObject);
+		} else {
+			if (hintedSelection.Count > 0) {
+				TweenFacade.TweenJumpTo (hintedSelection [fillAnswer.CheckAnswerHolder()].transform, hintedSelection [fillAnswer.CheckAnswerHolder()].transform.localPosition, 40f, 1, 0.5f, 0);
+			}
+		}
+
 	}
 }

@@ -24,7 +24,7 @@ public class LetterLinkEvent : MonoBehaviour
 
 		_initialPosition = currentSelectedLetter.transform.position;
 		letterlink.lineRender.SetPosition(0, _initialPosition);
-		letterlink.lineRender.numPositions = 1;	
+		letterlink.lineRender.positionCount = 1;	
 //		letterlink.lineRender.enabled = true;
 	}
 
@@ -45,7 +45,7 @@ public class LetterLinkEvent : MonoBehaviour
 	{
 		if (startSelection && (currentSelectedLetter.GetComponent<Image> ().color != selectedColor)) {
 //			letterlink.lineRender.SetPosition (2, currentSelectedLetter.transform.position);
-			letterlink.lineRender.numPositions = answerCounter + 1;
+			letterlink.lineRender.positionCount = answerCounter + 1;
 			letterlink.lineRender.SetPosition (answerCounter, currentSelectedLetter.transform.position);	
 			answerCounter++;
 			writtenAnswer += currentSelectedLetter.GetComponentInChildren<Text> ().text;
@@ -62,7 +62,7 @@ public class LetterLinkEvent : MonoBehaviour
 	public void OnEndDrag ()
 	{
 		answerCounter = 1;
-		letterlink.lineRender.numPositions = 1;
+		letterlink.lineRender.positionCount = 1;
 		if (letterlink.questionAnswer == writtenAnswer) {
 			startSelection = false;
 			QuestionSystemController.Instance.CheckAnswer (true);
