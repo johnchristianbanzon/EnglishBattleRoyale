@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Collections;
 
 public class CharacterManager: IRPCDicObserver
 {
@@ -147,7 +148,7 @@ public class CharacterManager: IRPCDicObserver
 	}
 
 	//TO-DO REFACTOR THIS CODE
-	public static float CharacterActivate (bool isPlayer)
+	public static IEnumerator CharacterActivate (bool isPlayer)
 	{
 		CharacterModel character = null;
 		if (isPlayer) {
@@ -158,9 +159,6 @@ public class CharacterManager: IRPCDicObserver
 				                          ScreenBattleController.Instance.partState.playerCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.playerCardContainer.transform.position;
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
-		
-			//Show card skill effect
-			return ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (true, character.particleID);
 
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
@@ -170,12 +168,17 @@ public class CharacterManager: IRPCDicObserver
 				                          ScreenBattleController.Instance.partState.enemyCardContainer);
 			cardActivate.transform.position = ScreenBattleController.Instance.partState.enemyCardContainer.transform.position;
 			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
-
-			//Show card skill effect
-			return ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (false, character.particleID);
 		
 		}
 
+//		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "castSkill");
+
+		GameObject skillCastDetails = SystemResourceController.Instance.LoadPrefab ("SkillCastDetails", ScreenBattleController.Instance.partState.gameObject);
+
+		yield return skillCastDetails.GetComponent<SkillCastDetailsController> ().SkillDetailCoroutine (character);
+
+		//Show card skill effect
+		yield return ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (isPlayer, character.particleID);
 
 		//animation and sound
 		SystemSoundController.Instance.PlaySFX ("SFX_SKILLACTIVATE");

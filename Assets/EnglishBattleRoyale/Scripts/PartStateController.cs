@@ -25,12 +25,12 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public Text playerHitComboCountText;
 	public Text playerTotalDamageText;
 	public Text playerAwesomeTotalDamageText;
-	public Text playerSkillText;
 
 	public Text enemyHitComboCountText;
 	public Text enemyTotalDamageText;
 	public Text enemyAwesomeTotalDamageText;
-	public Text enemySkillText;
+
+
 
 	public Image playerAwesomeIndicator;
 	public Image enemyAwesomeIndicator;
@@ -43,7 +43,9 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 
 	#region UPDATE PLAYER UI
-	public void InitialUpdateUI (bool isPlayer, PlayerModel player){
+
+	public void InitialUpdateUI (bool isPlayer, PlayerModel player)
+	{
 		if (isPlayer) {
 			playerNameText.text = player.name;
 			playerHPText.text = player.hp.ToString ();
@@ -142,7 +144,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 				isPLayerWin = false;
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "lose");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
-			} else{
+			} else {
 				isPLayerWin = true;
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "lose");
@@ -172,7 +174,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	{
 		//character skill interval
 		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
-			yield return new WaitForSeconds (CharacterManager.CharacterActivate (isPlayer));
+			yield return CharacterManager.CharacterActivate (isPlayer);
 		}
 
 		yield return null;
@@ -290,24 +292,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 	}
 
-	public void ShowSkillIndicator (bool isPlayer, string skillText)
-	{
-		StartCoroutine (ShowSkillIndicatorCoroutine (isPlayer, skillText));
-	}
-
-	IEnumerator ShowSkillIndicatorCoroutine (bool isPlayer, string skillText)
-	{
-		if (isPlayer) {
-			playerSkillText.text = skillText;
-			yield return new WaitForSeconds (1);
-			playerSkillText.text = "";
-		} else {
-			enemySkillText.text = skillText;
-			yield return new WaitForSeconds (1);
-			enemySkillText.text = "";
-		}
-	}
-
 	private void StartPhase1 ()
 	{
 		ScreenBattleController.Instance.StartPhase1 ();
@@ -318,6 +302,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		PlayerManager.SetIsPlayer (true);
 		PlayerManager.Player.td = 0;
 	}
+
 
 	#endregion
 
@@ -361,7 +346,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	#region Game Over
 
-	IEnumerator ShowGameOverScreenCoroutine(bool isGameOver, bool isPLayerWin = false){
+	IEnumerator ShowGameOverScreenCoroutine (bool isGameOver, bool isPLayerWin = false)
+	{
 		yield return new WaitForSeconds (1);
 		gameOverScreen.SetActive (isGameOver);
 		if (isPLayerWin) {
@@ -371,12 +357,13 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 	}
 
-	public void MainMenuButton(){
+	public void MainMenuButton ()
+	{
 		gameOverScreen.SetActive (false);
 		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
-			GameManager.ResetGame();
+			GameManager.ResetGame ();
 			SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
-			ScreenLobbyController.Instance.Init();
+			ScreenLobbyController.Instance.Init ();
 		});
 	}
 
