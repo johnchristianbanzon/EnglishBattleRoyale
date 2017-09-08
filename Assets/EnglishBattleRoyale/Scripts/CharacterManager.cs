@@ -153,36 +153,17 @@ public class CharacterManager: IRPCDicObserver
 		CharacterModel character = null;
 		if (isPlayer) {
 			character = playerCharacterQueue.Dequeue ();
-
-			//Show activated card on top
-			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
-				                          ScreenBattleController.Instance.partState.playerCardContainer);
-			cardActivate.transform.position = ScreenBattleController.Instance.partState.playerCardContainer.transform.position;
-			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
-
 		} else {
 			character = enemyCharacterQueue.Dequeue ();
-
-			//Show activated card on top
-			GameObject cardActivate = SystemResourceController.Instance.LoadPrefab ("CharacterCardActivate",
-				                          ScreenBattleController.Instance.partState.enemyCardContainer);
-			cardActivate.transform.position = ScreenBattleController.Instance.partState.enemyCardContainer.transform.position;
-			cardActivate.GetComponent<CHaracterCardActivateController> ().ShowCard (character.iD);
-		
 		}
 
 //		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "castSkill");
 
 		GameObject skillCastDetails = SystemResourceController.Instance.LoadPrefab ("SkillCastDetails", ScreenBattleController.Instance.partState.gameObject);
-
 		yield return skillCastDetails.GetComponent<SkillCastDetailsController> ().SkillDetailCoroutine (character);
 
 		//Show card skill effect
 		yield return ScreenBattleController.Instance.partAvatars.LoadCardSkillEffect (isPlayer, character.particleID);
-
-		//animation and sound
-		SystemSoundController.Instance.PlaySFX ("SFX_SKILLACTIVATE");
-		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "skill1");
 
 		//Do the calculation
 		CharacterLogic.CharacterActivate (isPlayer, character);
