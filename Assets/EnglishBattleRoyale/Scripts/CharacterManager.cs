@@ -157,7 +157,7 @@ public class CharacterManager: IRPCDicObserver
 			character = enemyCharacterQueue.Dequeue ();
 		}
 
-//		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "castSkill");
+//		ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPlayer, "Cast");
 
 		GameObject skillCastDetails = SystemResourceController.Instance.LoadPrefab ("SkillCastDetails", ScreenBattleController.Instance.partState.gameObject);
 		yield return skillCastDetails.GetComponent<SkillCastDetailsController> ().SkillDetailCoroutine (character);
