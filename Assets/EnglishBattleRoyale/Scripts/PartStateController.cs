@@ -6,8 +6,6 @@ using System;
 
 public class PartStateController : MonoBehaviour, IGameTimeObserver
 {
-	public GameObject playerCardContainer;
-	public GameObject enemyCardContainer;
 	public GameObject gameOverScreen;
 
 	public Text playerNameText;
@@ -22,28 +20,10 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	public Text enemyNameText;
 	public Text enemyHPText;
 
-	public Text playerHitComboCountText;
-	public Text playerTotalDamageText;
-	public Text playerAwesomeTotalDamageText;
-	public Text playerSkillText;
-
-	public Text enemyHitComboCountText;
-	public Text enemyTotalDamageText;
-	public Text enemyAwesomeTotalDamageText;
-	public Text enemySkillText;
-
-	public Image playerAwesomeIndicator;
-	public Image enemyAwesomeIndicator;
-
-	void Start ()
-	{
-		playerAwesomeIndicator.enabled = false;
-		enemyAwesomeIndicator.enabled = false;
-	}
-
-
 	#region UPDATE PLAYER UI
-	public void InitialUpdateUI (bool isPlayer, PlayerModel player){
+
+	public void InitialUpdateUI (bool isPlayer, PlayerModel player)
+	{
 		if (isPlayer) {
 			playerNameText.text = player.name;
 			playerHPText.text = player.hp.ToString ();
@@ -142,7 +122,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 				isPLayerWin = false;
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "lose");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "win");
-			} else{
+			} else {
 				isPLayerWin = true;
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (true, "win");
 				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (false, "lose");
@@ -158,12 +138,6 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 			
 			ResetPlayerDamage ();
 			BattleManager.ClearBattleData ();
-			playerHitComboCountText.text = "";
-			playerTotalDamageText.text = "";
-			enemyTotalDamageText.text = "";
-			enemyHitComboCountText.text = "";
-			playerAwesomeTotalDamageText.text = "";
-			enemyAwesomeTotalDamageText.text = "";
 			Invoke ("StartPhase1", 1);
 		}
 	}
@@ -172,10 +146,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 	{
 		//character skill interval
 		while (CharacterManager.GetCharacterCount (isPlayer) > 0) {
-			yield return new WaitForSeconds (CharacterManager.CharacterActivate (isPlayer));
+			yield return CharacterManager.CharacterActivate (isPlayer);
 		}
-
-		yield return null;
 	}
 
 	IEnumerator CheckAttackCoroutine (bool isPlayer)
@@ -191,121 +163,22 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	public IEnumerator StartBattleAnimation (bool isPLayer, float attackDamage, Action action)
 	{
-		string hitComboCount = "";
-		string totalDamageCount = "";
-		string awesomeCount = "";
 		QuestionResultCountModel playerAnswerParam = PlayerManager.GetQuestionResultCount (true);
 		QuestionResultCountModel enemyAnswerParam = PlayerManager.GetQuestionResultCount (false);
 
 		QuestionResultCountModel answerParam = null;
+		GameObject damageResults;
+
 		if (isPLayer) {
 			answerParam = playerAnswerParam;
+			damageResults = SystemResourceController.Instance.LoadPrefab ("PlayerDamageResults", this.gameObject);
 		} else {
 			answerParam = enemyAnswerParam;
+			damageResults = SystemResourceController.Instance.LoadPrefab ("EnemyDamageResults", this.gameObject);
 		}
+			
+		yield return damageResults.GetComponent<DamageResultsController> ().SetDamageResults (isPLayer, attackDamage, answerParam,action);
 
-		int awesomeCounter = 0;
-		for (int i = 0; i <= answerParam.correctCount; i++) {
-
-			string attackAnimName = "attack" + (i % 3);
-			//random animation
-			ScreenBattleController.Instance.partAvatars.SetTriggerAnim (isPLayer, attackAnimName);
-
-			//wait for attack animation to finish
-			yield return StartCoroutine (AttackWaitAnimationCoroutine (isPLayer, attackAnimName));
-
-
-			if (isPLayer) {
-				ScreenBattleController.Instance.partAvatars.LoadHitEffect (false);
-				//load power effect in arms for every awesome count
-				if (i < PlayerManager.GetQuestionResultCount (true).speedyAwesomeCount) {
-					awesomeCounter++;
-					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (true);
-
-					playerAwesomeTotalDamageText.text = awesomeCounter + " AWESOME";
-					StartCoroutine (ShowAwesomeIndicatorCoroutine (true));
-				}
-				playerHitComboCountText.text = (i + 1) + " HIT COMBO";
-				;
-			} else {
-				ScreenBattleController.Instance.partAvatars.LoadHitEffect (true);
-				//load power effect in arms for every awesome count
-				if (i < PlayerManager.GetQuestionResultCount (false).speedyAwesomeCount) {
-					awesomeCounter++;
-					ScreenBattleController.Instance.partAvatars.LoadArmPowerEffect (false);
-
-					enemyAwesomeTotalDamageText.text = awesomeCounter + " AWESOME";
-					StartCoroutine (ShowAwesomeIndicatorCoroutine (false));
-				}
-
-				enemyHitComboCountText.text = (i + 1) + " HIT COMBO";
-			}
-
-		}
-
-		action ();
-		totalDamageCount = attackDamage + " DAMAGE";
-	
-		if (isPLayer) {
-			playerTotalDamageText.text = totalDamageCount;
-
-		} else {
-			enemyTotalDamageText.text = totalDamageCount;
-	
-		}
-
-		yield return new WaitForSeconds (1);
-
-	}
-
-	//wait for current attack animation to end before proceeding to next attack
-	IEnumerator AttackWaitAnimationCoroutine (bool isPlayer, string attackAnimName)
-	{
-		Animator anim = ScreenBattleController.Instance.partAvatars.GetPlayerAnimator (isPlayer);
-		while (true) {
-
-			if (anim.GetCurrentAnimatorStateInfo (0).IsName (attackAnimName) &&
-			    anim.GetCurrentAnimatorStateInfo (0).normalizedTime >= 0.9f) {
-
-				ScreenBattleController.Instance.partAvatars.SetTriggerAnim (!isPlayer, "hit1");
-				SystemSoundController.Instance.PlaySFX ("SFX_HIT");
-				break;
-			}
-			yield return null;
-		}
-		yield break;
-	}
-
-
-	IEnumerator ShowAwesomeIndicatorCoroutine (bool isPlayer)
-	{
-		if (isPlayer) {
-			playerAwesomeIndicator.enabled = true;
-			yield return new WaitForSeconds (1);
-			playerAwesomeIndicator.enabled = false;
-		} else {
-			enemyAwesomeIndicator.enabled = true;
-			yield return new WaitForSeconds (1);
-			enemyAwesomeIndicator.enabled = false;
-		}
-	}
-
-	public void ShowSkillIndicator (bool isPlayer, string skillText)
-	{
-		StartCoroutine (ShowSkillIndicatorCoroutine (isPlayer, skillText));
-	}
-
-	IEnumerator ShowSkillIndicatorCoroutine (bool isPlayer, string skillText)
-	{
-		if (isPlayer) {
-			playerSkillText.text = skillText;
-			yield return new WaitForSeconds (1);
-			playerSkillText.text = "";
-		} else {
-			enemySkillText.text = skillText;
-			yield return new WaitForSeconds (1);
-			enemySkillText.text = "";
-		}
 	}
 
 	private void StartPhase1 ()
@@ -318,6 +191,7 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		PlayerManager.SetIsPlayer (true);
 		PlayerManager.Player.td = 0;
 	}
+
 
 	#endregion
 
@@ -361,7 +235,8 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 
 	#region Game Over
 
-	IEnumerator ShowGameOverScreenCoroutine(bool isGameOver, bool isPLayerWin = false){
+	IEnumerator ShowGameOverScreenCoroutine (bool isGameOver, bool isPLayerWin = false)
+	{
 		yield return new WaitForSeconds (1);
 		gameOverScreen.SetActive (isGameOver);
 		if (isPLayerWin) {
@@ -371,12 +246,13 @@ public class PartStateController : MonoBehaviour, IGameTimeObserver
 		}
 	}
 
-	public void MainMenuButton(){
+	public void MainMenuButton ()
+	{
 		gameOverScreen.SetActive (false);
 		SystemLoadScreenController.Instance.StartLoadingScreen (delegate() {
-			GameManager.ResetGame();
+			GameManager.ResetGame ();
 			SystemScreenController.Instance.ShowScreen ("ScreenMainMenu");
-			ScreenLobbyController.Instance.Init();
+			ScreenLobbyController.Instance.Init ();
 		});
 	}
 

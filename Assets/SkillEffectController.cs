@@ -8,16 +8,11 @@ public class SkillEffectController : MonoBehaviour {
 	public string skillAudioName = "";
 	public float audioTimeDelay = 0;
 
-
-	void OnEnable(){
+	public IEnumerator Skill(){
 		if (!String.IsNullOrEmpty (skillAudioName)) {
 			StartCoroutine (SkillAudioDelay ());
 		}
-		StartCoroutine (SkillDuration());
-	}
-
-	public float GetSkillDuration(){
-		return skillDuration;
+		yield return StartCoroutine (SkillDuration());
 	}
 
 	IEnumerator SkillAudioDelay(){

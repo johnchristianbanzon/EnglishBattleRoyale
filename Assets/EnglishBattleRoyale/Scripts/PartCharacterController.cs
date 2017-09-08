@@ -7,16 +7,16 @@ using System;
 public class PartCharacterController : MonoBehaviour
 {
 	public GameObject charCardsContainer;
-	private CharEquipCardController[] charCards = new CharEquipCardController[3];
+	public CharEquipCardController[] charCards = new CharEquipCardController[3];
 	public List<CharEquipCardController> priorityNumberList{ get; set; }
 	void Start ()
 	{
-		priorityNumberList = new List<CharEquipCardController>(3);
-		ShowCharacters (false);
-		SetCharacterOrder ();
-		 
 		//Set starting skills during start of battle
 		CharacterManager.SetStartCharacters ();
+
+		priorityNumberList = new List<CharEquipCardController>(3);
+		ShowCharacters (false);
+		 
 
 	}
 
@@ -33,7 +33,7 @@ public class PartCharacterController : MonoBehaviour
 	public void OnStartPhase ()
 	{
 		//Pick character time
-		TimeManager.StartCharacterSelectTimer (5, StartCharacterPhase);
+		TimeManager.StartCharacterSelectTimer (10, StartCharacterPhase);
 	}
 
 	private void StartCharacterPhase ()
@@ -47,9 +47,8 @@ public class PartCharacterController : MonoBehaviour
 	{
 		//Hide character selection
 		ShowCharacters(false);
-		for (int i = 0; i < charCards.Length; i++) {
-			charCards [i].ResetCardUsed ();
-		}
+		priorityNumberList.Clear ();
+
 	}
 
 	public void SetCharacterUI (int characterNumber, CharacterModel charCard)
@@ -62,13 +61,6 @@ public class PartCharacterController : MonoBehaviour
 	public void ActivateCharacterUI (int characterNumber)
 	{
 		charCards [characterNumber].ActivateCardAnimation ();
-	}
-
-	public void SetCharacterOrder ()
-	{
-		for (int i = 0; i < charCards.Length; i++) {
-			charCards [i] = charCardsContainer.transform.GetChild (i).GetComponent<CharEquipCardController> ();
-		}
 	}
 
 	public void ShowCharacters (bool isShow)

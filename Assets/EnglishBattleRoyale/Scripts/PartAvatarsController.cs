@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class PartAvatarsController :  MonoBehaviour
 {
@@ -65,7 +66,7 @@ public class PartAvatarsController :  MonoBehaviour
 	}
 
 
-	public float LoadCardSkillEffect (bool isPlayer, int particleID)
+	public IEnumerator LoadCardSkillEffect (bool isPlayer, int particleID)
 	{
 		CharacterEnums.SkillEffect skillEffect = (CharacterEnums.SkillEffect)particleID;
 
@@ -87,11 +88,11 @@ public class PartAvatarsController :  MonoBehaviour
 		GameObject skillEffectObject;
 		if (isPlayer) {
 			skillEffectObject = LoadEffect (skillEffect.ToString (), player.skillEffectContainer);
-			return skillEffectObject.GetComponent<SkillEffectController> ().GetSkillDuration ();
+			yield return skillEffectObject.GetComponent<SkillEffectController> ().Skill ();
 		} else {
 
 			skillEffectObject = LoadEffect (skillEffect.ToString (), enemy.skillEffectContainer);
-			return skillEffectObject.GetComponent<SkillEffectController> ().GetSkillDuration ();
+			yield return skillEffectObject.GetComponent<SkillEffectController> ().Skill ();
 		}
 
 	}
